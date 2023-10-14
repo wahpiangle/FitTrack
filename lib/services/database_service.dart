@@ -17,7 +17,7 @@ class DatabaseService {
   // TODO
   Future _onCreate(Database db, int version) async {
     await db.execute('''
-      CREATE TABLE workouts(
+      CREATE TABLE (
 
       )
     ''');
@@ -25,6 +25,6 @@ class DatabaseService {
 
   Future<List<Map<String, dynamic>>> getWorkouts() async {
     final db = await database;
-    return db.query('workouts');
+    return db.query('');
   }
 }

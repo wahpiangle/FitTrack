@@ -15,7 +15,8 @@ class _HomeState extends State<Home> {
     return Scaffold(
       body: Center(
           child: FutureBuilder(
-        future: DatabaseService().getWorkouts(),
+        future: DatabaseService()
+            .getWorkouts(), //! this function will not work as the table is not created yet
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             print(snapshot.data);
