@@ -45,7 +45,9 @@ class _LoginScreenState extends State<LoginScreen> {
             } catch (e) {
               if (mounted) {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text(e.toString())),
+                  SnackBar(
+                    content: Text(e.toString()),
+                  ),
                 );
               }
             }
