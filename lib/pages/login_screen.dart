@@ -45,8 +45,8 @@ class _LoginScreenState extends State<LoginScreen> {
             } catch (e) {
               if (mounted) {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Error signing in'),
+                  SnackBar(
+                    content: Text(e.toString()),
                   ),
                 );
               }
