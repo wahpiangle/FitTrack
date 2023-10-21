@@ -2,6 +2,7 @@ plugins {
     id "com.android.application"
     id "kotlin-android"
     id "dev.flutter.flutter-gradle-plugin"
+    id 'com.google.gms.google-services'
 }
 
 def localProperties = new Properties()
@@ -49,9 +50,7 @@ android {
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
-        manifestPlaceholders += [
-            'appAuthRedirectScheme': 'com.googleusercontent.apps.576055934237-vn1k003p9ao9b8ct0kd5tq16i2sb3ti1'
-        ]
+        multiDexEnabled true
     }
 
     buildTypes {
@@ -67,6 +66,7 @@ flutter {
     source '../..'
 }
 
-dependencies {
-    implementation 'com.google.android.gms:play-services-auth:20.7.0'
+dependencies{
+    implementation 'androidx.multidex:multidex:2.0.1'
+    implementation platform('com.google.firebase:firebase-bom:32.4.0')
 }
