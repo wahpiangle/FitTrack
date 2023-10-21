@@ -1,22 +1,26 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:group_project/main.dart';
+import 'package:group_project/pages/home.dart';
 import 'package:group_project/pages/login_screen.dart';
+import 'package:provider/provider.dart';
+
+import '../services/auth_service.dart';
 
 class ProfileScreen extends StatelessWidget {
-  const ProfileScreen({super.key});
+  ProfileScreen({super.key});
+  final AuthService _auth = AuthService();
 
   @override
   Widget build(BuildContext context) {
-    final user = supabase.auth.currentUser;
-    final profileImageUrl = user?.userMetadata?['avatar_url'];
-    final fullName = user?.userMetadata?['full_name'];
+    //the user's information (name, emailm etc.) can be accessed from this variable
+    final user = Provider.of<User?>(context, listen: false);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Profile'),
         actions: [
           TextButton(
             onPressed: () async {
-              await supabase.auth.signOut();
               if (context.mounted) {
                 Navigator.of(context).pushReplacement(
                   MaterialPageRoute(builder: (context) => const LoginScreen()),
@@ -31,20 +35,18 @@ class ProfileScreen extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            if (profileImageUrl != null)
-              ClipOval(
-                child: Image.network(
-                  profileImageUrl,
-                  width: 100,
-                  height: 100,
-                  fit: BoxFit.cover,
-                ),
-              ),
-            const SizedBox(height: 16),
-            Text(
-              fullName ?? '',
+            TextButton(
+              onPressed: () {
+                print(user);
+              },
+              child: Text('test'),
             ),
-            const SizedBox(height: 32),
+            TextButton(
+              onPressed: () async {
+                await _auth.signOut();
+              },
+              child: const Text('Sign out'),
+            )
           ],
         ),
       ),
