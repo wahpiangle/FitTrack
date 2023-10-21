@@ -18,31 +18,19 @@ class ProfileScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color(0xFF1A1A1A),
-        title: Center(child: const
-        Text(
-            'Home',
+        title: Text(
+          'Home',
           style: TextStyle(
             fontWeight: FontWeight.bold,
           ),
-        )
         ),
+        centerTitle: true, // center title horizontally
         leading: IconButton(
           icon: Icon(Icons.menu),
-          //Will lead to Search friends page
-          onPressed: () {},
+          onPressed: () {
+            // Will lead to Search friends page
+          },
         ),
-        actions: [
-          TextButton(
-            onPressed: () async {
-              if (context.mounted) {
-                Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(builder: (context) => const LoginScreen()),
-                );
-              }
-            },
-            child: const Text('Sign out'),
-          )
-        ],
       ),
 
       body: Container(
@@ -54,7 +42,7 @@ class ProfileScreen extends StatelessWidget {
               if (user?.photoURL != null)
                 ClipOval(
                   child: Image.network(
-                    user?.photoURL ?? 'default_image_url',
+                    user?.photoURL ?? 'assets/defaultimage.jpg',
                     width: 100,
                     height: 100,
                     fit: BoxFit.cover,
@@ -67,9 +55,10 @@ class ProfileScreen extends StatelessWidget {
               //const SizedBox(height: 32),
               //Start an Empty Widget
               Padding(
-                padding: EdgeInsets.only(bottom: 100),
+                padding: EdgeInsets.only(bottom: 30),
+                // Start an Empty Workout button
                 child: Container(
-                  width: 300,
+                  width: 360,
                   height: 60,
                   child: TextButton(
                     onPressed: (){},
@@ -86,12 +75,66 @@ class ProfileScreen extends StatelessWidget {
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           color: Color(0xFF1A1A1A),
-                          fontSize: 20,
+                          fontSize: 18,
                         ),
                       ),
                   ),
                 ),
               ),
+
+              //Add a new template rectangle section
+              Container(
+                width: 350,
+                height: 150,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color: Color(0xFF333333),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(15.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        "Add new Template",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 23,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(height:10),
+                      Text(
+                        "Empower your journey with a new workout.",
+                        style: TextStyle(
+                          color: Color(0xFFC1C1C1),
+                          fontSize: 13,
+                        ),
+                      ),
+                      SizedBox(height: 10), // Add some space between the two text widgets
+                      ElevatedButton(
+                        onPressed: () {},
+                        style: ButtonStyle(
+                          minimumSize: MaterialStateProperty.all(Size(250, 40)),
+                          backgroundColor: MaterialStateProperty.all(Color(0xFFE1F0CF)),
+                          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30), // Set the border radius to make it round
+                            ),
+                          ),
+                        ),
+                        child: Text(
+                            'Add New Template',
+                          style: TextStyle(
+                            color: Colors.black,
+                          )
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              )
               //End of Start a widget
       ]
           ),

@@ -12,7 +12,7 @@ class Wrapper extends StatelessWidget {
     final user = Provider.of<User?>(
         context); //look for MyUser type data from the provider
     if (user == null) {
-      return const LoginScreen();
+      return ProfileScreen();
     } else {
       return ProfileScreen();
     }
