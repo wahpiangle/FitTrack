@@ -1,0 +1,41 @@
+{
+  "project_info": {
+    "project_number": "576055934237",
+    "project_id": "fittrack-61776",
+    "storage_bucket": "fittrack-61776.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:576055934237:android:fa1bfe9daa57dac620f5f4",
+        "android_client_info": {
+          "package_name": "com.example.group_project"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDx6KYFe9UzsywPWTYN_s2B_kNZ9LGH36g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "576055934237-p7as7jk6rvs1a58qhjm62hrjd19grdjb.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "576055934237-pt74207afi4midd5nhkvffiabqb0u5sr.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.groupProject"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
