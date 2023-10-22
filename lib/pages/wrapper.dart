@@ -9,8 +9,7 @@ class Wrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final user = Provider.of<User?>(
-        context); //look for MyUser type data from the provider
+    final user = Provider.of<User?>(context);
     if (user == null) {
       return const LoginScreen();
     } else {
