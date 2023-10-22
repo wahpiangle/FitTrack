@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:group_project/pages/home.dart';
 import 'package:group_project/pages/login_screen.dart';
 import 'package:provider/provider.dart';
+import 'package:group_project/pages/NewWorkout.dart';
 
 import '../services/auth_service.dart';
 
@@ -87,11 +88,11 @@ class ProfileScreen extends StatelessWidget {
                 width: 350,
                 height: 150,
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(28),
                   color: Color(0xFF333333),
                 ),
                 child: Padding(
-                  padding: const EdgeInsets.all(15.0),
+                  padding: const EdgeInsets.all(18.0),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -120,7 +121,7 @@ class ProfileScreen extends StatelessWidget {
                           backgroundColor: MaterialStateProperty.all(Color(0xFFE1F0CF)),
                           shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                             RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(30), // Set the border radius to make it round
+                              borderRadius: BorderRadius.circular(40), // Set the border radius to make it round
                             ),
                           ),
                         ),
@@ -134,8 +135,40 @@ class ProfileScreen extends StatelessWidget {
                     ],
                   ),
                 ),
-              )
+              ),
               //End of Start a widget
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 35, vertical: 10),
+                child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        NewWorkout(
+                          imagePath: 'assets/dumbell.png',
+                          workoutText: 'Legs',
+                        ),
+                        NewWorkout(
+                          imagePath: 'assets/dumbell.png',
+                          workoutText: 'Back',
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        NewWorkout(
+                          imagePath: 'assets/dumbell.png',
+                          workoutText: 'Chest',
+                        ),
+                        NewWorkout(
+                          imagePath: 'assets/dumbell.png',
+                          workoutText: 'Arms',
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              )
+
       ]
           ),
       ),
