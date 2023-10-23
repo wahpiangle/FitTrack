@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+//Dart file for Templates for Workout
 class NewWorkout extends StatelessWidget {
   final String imagePath;
   final String workoutText;

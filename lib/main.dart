@@ -28,6 +28,13 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         title: 'Flutter Auth',
         home: Wrapper(),
+        theme: ThemeData(
+          bottomNavigationBarTheme: BottomNavigationBarThemeData(
+            backgroundColor:  Color(0xFF1A1A1A), // Set the background color
+            selectedItemColor: Color(0xFFE1F0CF),    // Set the color of selected item
+            unselectedItemColor: Colors.grey,  // Set the color of unselected items
+          ),
+        ),
       ),
     );
   }
