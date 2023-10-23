@@ -26,10 +26,29 @@ class NewWorkout extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Image.asset(
-                imagePath,
-              width: 30,
-              height: 30,
+            Row(
+              children: [
+                Image.asset(
+                    imagePath,
+                  width: 40,
+                  height: 30,
+                ),
+                SizedBox(width: 70),
+                ColorFiltered(
+                  colorFilter: ColorFilter.mode(
+                    Colors.white,
+                    BlendMode.srcATop,
+                  ),
+                  child: Transform.translate(
+                    offset: Offset(0, -8), // (move up)
+                    child: Image.asset(
+                      'assets/info.png',
+                      width: 20,
+                      height: 10,
+                    ),
+                  ),
+                )
+              ],
             ),
             SizedBox(height: 15),
             Text(
