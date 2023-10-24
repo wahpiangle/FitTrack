@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:group_project/pages/exercises_screen.dart';
 import 'package:group_project/pages/history_screen.dart';
 import 'package:group_project/pages/home.dart';
-import 'package:group_project/pages/login_screen.dart';
 import 'package:group_project/pages/settings_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:group_project/pages/new_workout.dart';
@@ -78,111 +77,109 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
         body: SingleChildScrollView(
           child: Container(
+            padding: const EdgeInsets.all(20),
             color: const Color(0xFF1A1A1A),
             child: Center(
               child: Column(mainAxisSize: MainAxisSize.min, children: [
                 Padding(
-                  padding: const EdgeInsets.only(bottom: 30, top: 30),
+                  padding: const EdgeInsets.only(bottom: 20, top: 20),
                   // Start an Empty Workout button
-                  child: SizedBox(
-                    width: 340,
-                    height: 60,
-                    child: TextButton(
-                      onPressed: () {},
-                      style: ButtonStyle(
-                        backgroundColor:
-                            MaterialStateProperty.all(const Color(0xFFC1C1C1)),
-                        shape:
-                            MaterialStateProperty.all<RoundedRectangleBorder>(
-                          RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(
-                                30), // Set the border radius to make it round
-                          ),
+                  child: TextButton(
+                    onPressed: () {},
+                    style: ButtonStyle(
+                      backgroundColor:
+                          MaterialStateProperty.all(const Color(0xFFC1C1C1)),
+                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30),
                         ),
                       ),
-                      child: const Text(
-                        "Start an empty workout",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xFF1A1A1A),
-                          fontSize: 18,
-                        ),
+                      padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+                        const EdgeInsets.only(
+                            top: 15, bottom: 15, left: 50, right: 50),
+                      ),
+                    ),
+                    child: const Text(
+                      "Start An Empty Workout",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF1A1A1A),
+                        fontSize: 18,
                       ),
                     ),
                   ),
                 ),
-                const SizedBox(height: 10),
-                //Add a new template rectangle section
-                Container(
-                  width: 340,
-                  height: 150,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(28),
-                    color: const Color(0xFF333333),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(18.0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        const Text(
-                          "Add new template",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 23,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const SizedBox(height: 10),
-                        const Text(
-                          "Empower your journey with a new workout.",
-                          style: TextStyle(
-                            color: Color(0xFFC1C1C1),
-                            fontSize: 13,
-                            letterSpacing: 0.4,
-                          ),
-                        ),
-                        const SizedBox(
-                            height:
-                                10), // Add some space between the two text widgets
-                        ElevatedButton(
-                          onPressed: () {
-                            // Navigator.push(
-                            //   context,
-                            //   MaterialPageRoute(builder: (context) =>),
-                            // );
-                          },
-                          style: ButtonStyle(
-                            minimumSize:
-                                MaterialStateProperty.all(const Size(290, 40)),
-                            backgroundColor: MaterialStateProperty.all(
-                                const Color(0xFFE1F0CF)),
-                            shape: MaterialStateProperty.all<
-                                RoundedRectangleBorder>(
-                              RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(
-                                    40), // Set the border radius to make it round
-                              ),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 20, top: 20),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(28),
+                      color: const Color(0xFF333333),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(18.0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          const Text(
+                            "Add new template",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 23,
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
-                          child: const Text('Add New Template',
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold,
-                                letterSpacing: 0.3,
-                              )),
-                        ),
-                      ],
+                          const SizedBox(height: 10),
+                          const Text(
+                            "Empower your journey with a new workout.",
+                            style: TextStyle(
+                              color: Color(0xFFC1C1C1),
+                              fontSize: 13,
+                              letterSpacing: 0.4,
+                            ),
+                          ),
+                          const SizedBox(
+                              height:
+                                  10), // Add some space between the two text widgets
+                          ElevatedButton(
+                            onPressed: () {
+                              // Navigator.push(
+                              //   context,
+                              //   MaterialPageRoute(builder: (context) =>),
+                              // );
+                            },
+                            style: ButtonStyle(
+                              minimumSize: MaterialStateProperty.all(
+                                  const Size(290, 40)),
+                              backgroundColor: MaterialStateProperty.all(
+                                  const Color(0xFFE1F0CF)),
+                              shape: MaterialStateProperty.all<
+                                  RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(
+                                      40), // Set the border radius to make it round
+                                ),
+                              ),
+                            ),
+                            child: const Text('Add New Template',
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold,
+                                  letterSpacing: 0.3,
+                                )),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
-                //End of Start a widget
-                const SizedBox(width: 0, height: 10),
+                const SizedBox(height: 20),
                 const Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         NewWorkout(
                           imagePath: 'assets/dumbell.png',
@@ -194,8 +191,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                       ],
                     ),
+                    SizedBox(height: 15),
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         NewWorkout(
                           imagePath: 'assets/dumbell.png',
