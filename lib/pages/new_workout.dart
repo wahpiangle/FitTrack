@@ -6,7 +6,7 @@ class NewWorkout extends StatelessWidget {
   final String workoutText;
 
 
-  NewWorkout({
+  const NewWorkout({super.key,
     required this.imagePath,
     required this.workoutText,
   });
@@ -15,10 +15,10 @@ class NewWorkout extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: 136,
-      width: 150,
-      margin: EdgeInsets.all(10),
+      width:  150,
+      margin: const EdgeInsets.all(10),
       decoration: BoxDecoration(
-        color: Color(0xFF333333),
+        color: const Color(0xFF333333),
         borderRadius: BorderRadius.circular(10),
       ),
       child: Padding(
@@ -34,32 +34,35 @@ class NewWorkout extends StatelessWidget {
                   width: 40,
                   height: 30,
                 ),
-                SizedBox(width: 70),
+                const SizedBox(width: 70),
                 ColorFiltered(
-                  colorFilter: ColorFilter.mode(
+                  colorFilter: const ColorFilter.mode(
                     Colors.white,
                     BlendMode.srcATop,
                   ),
                   child: Transform.translate(
-                    offset: Offset(0, -8), // (move up)
-                    child: Image.asset(
-                      'assets/info.png',
-                      width: 20,
-                      height: 10,
+                    offset: const Offset(0, -8), // (move up)
+                    child: Opacity(
+                      opacity: 0.7,
+                      child: Image.asset(
+                        'assets/info.png',
+                        width: 18,
+                        height: 20,
+                      ),
                     ),
                   ),
                 )
               ],
             ),
-            SizedBox(height: 15),
+            const SizedBox(height: 15),
             Text(
                 workoutText,
-              style: TextStyle(
+              style: const TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             ElevatedButton(
               onPressed: () {
               },
@@ -67,15 +70,15 @@ class NewWorkout extends StatelessWidget {
                 backgroundColor: MaterialStateProperty.all<Color>(Colors.transparent),
                 shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                   RoundedRectangleBorder(
-                    side: BorderSide(color: Color(0xFFE1F0CF), width: 1.0),
+                    side: const BorderSide(color: Color(0xFFE1F0CF), width: 1.0),
                     borderRadius: BorderRadius.circular(8),
                   ),
                 ), // End of shape configuration
                 padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
-                  EdgeInsets.symmetric(horizontal: 12, vertical: 10), // Adjust the values for width and height
+                  const EdgeInsets.symmetric(horizontal: 12, vertical: 10), // Adjust the values for width and height
                 ),
               ),
-              child: Text('Start Workout'),
+              child: const Text('Start Workout'),
             )
 
           ],

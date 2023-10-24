@@ -27,9 +27,9 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Flutter Auth',
-        home: Wrapper(),
+        home: const Wrapper(),
         theme: ThemeData(
-          bottomNavigationBarTheme: BottomNavigationBarThemeData(
+          bottomNavigationBarTheme: const BottomNavigationBarThemeData(
             backgroundColor:  Color(0xFF1A1A1A), // Set the background color
             selectedItemColor: Color(0xFFE1F0CF),    // Set the color of selected item
             unselectedItemColor: Colors.grey,  // Set the color of unselected items

@@ -4,7 +4,7 @@ class CustomBottomNavigationBar extends StatefulWidget {
   final int currentIndex;
   final Function(int) onItemTapped;
 
-  CustomBottomNavigationBar({
+  const CustomBottomNavigationBar({super.key,
     required this.currentIndex,
     required this.onItemTapped,
   });
@@ -17,52 +17,55 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 80,
+      height: 88,
       child: BottomNavigationBar(
         currentIndex: widget.currentIndex,
         onTap: widget.onItemTapped,
         type: BottomNavigationBarType.fixed,
-        items:  <BottomNavigationBarItem>[
-           BottomNavigationBarItem(
+        items: <BottomNavigationBarItem>[
+          const BottomNavigationBarItem(
             icon: Padding(
-              padding: const EdgeInsets.fromLTRB(0, 12, 0, 0),
+              padding: EdgeInsets.fromLTRB(0, 12, 0, 0),
               child: Icon(Icons.home_outlined),
             ),
             label: '',
           ),
-          BottomNavigationBarItem(
+          const BottomNavigationBarItem(
             icon: Padding(
-              padding: const EdgeInsets.fromLTRB(0, 12, 0, 0),
+              padding: EdgeInsets.fromLTRB(0, 12, 0, 0),
               child: Icon(Icons.insights_rounded),
             ),
             label: '',
           ),
-        BottomNavigationBarItem(
+          BottomNavigationBarItem(
             icon: Container(
-                width: 60,
-                height: 40,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Color(0xFFE1F0CF), // Circle background color
-                ),
+              width: 56,
+              height: 56,
+              margin: const EdgeInsets.only(top: 2.0), // Adjust the top value to move the container down
+              decoration: const BoxDecoration(
+                shape: BoxShape.circle,
+                color: Color(0xFFE1F0CF), // Background color of the circle
+              ),
+              child: const Center(
                 child: Icon(
                   Icons.add,
-                  color: Colors.black,
-                  size: 36,
-                )
+                  color: Colors.black54, // Icon color
+                  size: 30,
+                ),
+              ),
             ),
-          label: '',
-    ),
-          BottomNavigationBarItem(
+            label: '',
+          ), // Nav bar for middle "add workout" button
+          const BottomNavigationBarItem(
             icon: Padding(
-              padding: const EdgeInsets.fromLTRB(0, 12, 0, 0),
+              padding: EdgeInsets.fromLTRB(0, 12, 0, 0),
               child: Icon(Icons.fitness_center_rounded),
             ),
             label: '',
           ),
-          BottomNavigationBarItem(
+          const BottomNavigationBarItem(
             icon: Padding(
-              padding: const EdgeInsets.fromLTRB(0, 12, 0, 0),
+              padding: EdgeInsets.fromLTRB(0, 12, 0, 0),
               child: Icon(Icons.settings_outlined),
             ),
             label: '',
@@ -71,4 +74,5 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
       ),
     );
   }
+
 }

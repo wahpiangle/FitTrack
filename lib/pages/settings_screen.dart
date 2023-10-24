@@ -15,9 +15,9 @@ class SettingsScreen extends StatefulWidget {
 class _SettingsScreenState extends State<SettingsScreen> {
   int _selectedIndex = 4;
   final List<Widget Function()> pages = [
-        () => Home(),
+        () => const Home(),
         () => const HistoryScreen(),
-        () => ProfileScreen(),
+        () => const ProfileScreen(),
         () => const ExercisesListScreen(),
         () => const SettingsScreen(),
   ];
@@ -32,8 +32,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0xFF1A1A1A),
-        title: Text(
+        backgroundColor: const Color(0xFF1A1A1A),
+        title: const Text(
           'Settings',
           style: TextStyle(
             fontWeight: FontWeight.bold,
@@ -41,13 +41,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
         ),
         centerTitle: true, // center title horizontally
         leading: IconButton(
-          icon: Icon(Icons.menu),
+          icon: const Icon(Icons.menu),
           onPressed: () {
             // Will lead to the Search friends page or your desired action
           },
         ),
       ),
-      body: Center(
+      body: const Center(
         child: Text('Settings'),
     ),
       // Nav Bar

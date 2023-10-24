@@ -12,7 +12,7 @@ import 'bottom_nav_bar.dart';
 import '../services/auth_service.dart';
 
 class ProfileScreen extends StatefulWidget {
-  ProfileScreen({super.key});
+  const ProfileScreen({super.key});
 
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
@@ -24,9 +24,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
 // nav bar
   int _selectedIndex = 2;
   final List<Widget Function()> pages = [
-    () => Home(),
+    () => const Home(),
     () => const HistoryScreen(),
-    () => ProfileScreen(),
+    () => const ProfileScreen(),
     () => const ExercisesListScreen(),
     () => const SettingsScreen(),
   ];
@@ -127,7 +127,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         const Text(
-                          "Add new Template",
+                          "Add new template",
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 23,
@@ -140,6 +140,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           style: TextStyle(
                             color: Color(0xFFC1C1C1),
                             fontSize: 13,
+                            letterSpacing: 0.4,
                           ),
                         ),
                         const SizedBox(
@@ -154,7 +155,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           },
                           style: ButtonStyle(
                             minimumSize:
-                                MaterialStateProperty.all(const Size(250, 40)),
+                                MaterialStateProperty.all(const Size(290, 40)),
                             backgroundColor: MaterialStateProperty.all(
                                 const Color(0xFFE1F0CF)),
                             shape: MaterialStateProperty.all<
@@ -168,6 +169,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           child: const Text('Add New Template',
                               style: TextStyle(
                                 color: Colors.black,
+                                fontWeight: FontWeight.bold,
+                                letterSpacing: 0.3,
                               )),
                         ),
                       ],
