@@ -152,7 +152,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             // );
                           },
                           style: ButtonStyle(
-                            minimumSize: MaterialStateProperty.all(Size(250, 40)),
+                            minimumSize: MaterialStateProperty.all(Size(295, 41)),
                             backgroundColor: MaterialStateProperty.all(Color(0xFFE1F0CF)),
                             shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                               RoundedRectangleBorder(
