@@ -179,37 +179,35 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
                 //End of Start a widget
                 const SizedBox(width: 0, height: 10),
-                Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 35, vertical: 15),
-                  child: Column(
-                    children: [
-                      Row(
-                        children: [
-                          NewWorkout(
-                            imagePath: 'assets/dumbell.png',
-                            workoutText: 'Legs',
-                          ),
-                          NewWorkout(
-                            imagePath: 'assets/dumbell.png',
-                            workoutText: 'Back',
-                          ),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          NewWorkout(
-                            imagePath: 'assets/dumbell.png',
-                            workoutText: 'Chest',
-                          ),
-                          NewWorkout(
-                            imagePath: 'assets/dumbell.png',
-                            workoutText: 'Arms',
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
+                const Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        NewWorkout(
+                          imagePath: 'assets/dumbell.png',
+                          workoutText: 'Legs',
+                        ),
+                        NewWorkout(
+                          imagePath: 'assets/dumbell.png',
+                          workoutText: 'Back',
+                        ),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        NewWorkout(
+                          imagePath: 'assets/dumbell.png',
+                          workoutText: 'Chest',
+                        ),
+                        NewWorkout(
+                          imagePath: 'assets/dumbell.png',
+                          workoutText: 'Arms',
+                        ),
+                      ],
+                    ),
+                  ],
                 )
               ] //Children widgets
                   ),
