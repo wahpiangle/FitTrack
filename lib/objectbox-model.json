@@ -43,7 +43,7 @@
     },
     {
       "id": "4:8999125863363426104",
-      "lastPropertyId": "4:8725453449671862922",
+      "lastPropertyId": "5:9180347095561080921",
       "name": "Exercise",
       "properties": [
         {
@@ -72,6 +72,11 @@
           "flags": 520,
           "indexId": "3:1068656247050756256",
           "relationTarget": "Category"
+        },
+        {
+          "id": "5:9180347095561080921",
+          "name": "imagePath",
+          "type": 9
         }
       ],
       "relations": []
