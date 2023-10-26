@@ -30,6 +30,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  cached_network_image: ^3.0.0
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -44,10 +45,14 @@ dependencies:
   cloud_firestore: ^4.11.0
   google_sign_in: ^6.1.5
   provider: ^6.0.5
+  objectbox: ^2.3.1
+  objectbox_flutter_libs: any
+  path_provider: ^2.1.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
@@ -55,6 +60,8 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^2.0.0
+  build_runner: ^2.4.6
+  objectbox_generator: any
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -71,8 +78,7 @@ flutter:
   assets:
     - .env
     - assets/
-    - assets/dumbell.png
-    - assets/info.png
+
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
