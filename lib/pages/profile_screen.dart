@@ -7,6 +7,7 @@ import 'package:group_project/pages/settings_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:group_project/pages/new_workout.dart';
 import 'bottom_nav_bar.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 import '../services/auth_service.dart';
 
@@ -66,10 +67,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 padding: const EdgeInsets.all(8.0),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(50),
-                  child: Image.network(
-                    user?.photoURL ?? 'assets/defaultimage.jpg',
-                    fit: BoxFit.cover,
-                  ),
+                 child: CachedNetworkImage(
+                imageUrl: user?.photoURL ?? 'assets/defaultimage.jpg',
+                  placeholder: (context, url) => CircularProgressIndicator(), // Placeholder for when the image is loading
+                  errorWidget: (context, url, error) => Image.asset('assets/defaultimage.jpg'), // Placeholder for when an error occurs
+                  fit: BoxFit.cover,
+                )
                 ),
               ),
             ),
