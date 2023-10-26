@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'bottom_nav_bar.dart';
+import 'components/bottom_nav_bar.dart';
 import 'package:group_project/pages/exercises_screen.dart';
 import 'package:group_project/pages/history_screen.dart';
 import 'package:group_project/pages/home.dart';
@@ -15,16 +15,17 @@ class SettingsScreen extends StatefulWidget {
 class _SettingsScreenState extends State<SettingsScreen> {
   int _selectedIndex = 4;
   final List<Widget Function()> pages = [
-        () => const Home(),
-        () => const HistoryScreen(),
-        () => const ProfileScreen(),
-        () => const ExercisesListScreen(),
-        () => const SettingsScreen(),
+    () => const Home(),
+    () => const HistoryScreen(),
+    () => const ProfileScreen(),
+    () => const ExercisesListScreen(),
+    () => const SettingsScreen(),
   ];
 
   void _onItemTapped(int index) {
     if (index >= 0 && index < pages.length) {
-      Navigator.of(context).push(MaterialPageRoute(builder: (context) => pages[index]()));
+      Navigator.of(context)
+          .push(MaterialPageRoute(builder: (context) => pages[index]()));
     }
   }
 
@@ -49,7 +50,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       ),
       body: const Center(
         child: Text('Settings'),
-    ),
+      ),
       // Nav Bar
       bottomNavigationBar: CustomBottomNavigationBar(
         currentIndex: _selectedIndex,
@@ -58,4 +59,3 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 }
-
