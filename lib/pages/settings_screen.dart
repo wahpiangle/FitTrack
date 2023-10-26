@@ -5,7 +5,7 @@ import 'package:group_project/pages/history_screen.dart';
 import 'package:group_project/pages/home.dart';
 import 'package:group_project/pages/profile_screen.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:group_project/services/auth_service.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -15,13 +15,13 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
-  int _selectedIndex = 4;
+  final int _selectedIndex = 4;
   final List<Widget Function()> pages = [
-    () => const Home(),
-    () => const HistoryScreen(),
-    () => const ProfileScreen(),
-    () => const ExercisesListScreen(),
-    () => const SettingsScreen(),
+        () => const Home(),
+        () => const HistoryScreen(),
+        () => const ProfileScreen(),
+        () => const ExercisesListScreen(),
+        () => const SettingsScreen(),
   ];
 
   void _onItemTapped(int index) {
@@ -37,7 +37,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       appBar: AppBar(
         backgroundColor: const Color(0xFF1A1A1A),
         title: const Text(
-          'Profile',
+          'Settings',
           style: TextStyle(
             fontWeight: FontWeight.bold,
           ),
@@ -58,36 +58,59 @@ class _SettingsScreenState extends State<SettingsScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                // Add a Column for the Profile heading
+                const Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Text(
+                        'Profile',
+                        style: TextStyle(
+                          fontSize: 25,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 20), // Gap between the heading and content
+                  ],
+                ),
+
                 Row(
                   children: [
                     SizedBox(
-                      width: 100, //size of profile image
-                      height: 100, //size of profile image
-                      child: CachedNetworkImage(
-                        placeholder: (context, url) =>
-                            const CircularProgressIndicator(),
-                        imageUrl: 'https://picsum.photos/250?image=9',
+                      width: 110, // size of profile image
+                      height: 110, // size of profile image
+                      child: ClipOval(
+                        child: CachedNetworkImage(
+                          placeholder: (context, url) =>
+                              const CircularProgressIndicator(), // Placeholder for when the image is loading
+                          errorWidget: (context, url, error) =>
+                              Image.asset('assets/defaultimage.jpg'), // Placeholder for when an error occurs
+                          fit: BoxFit.cover,
+                          imageUrl: '',
+                        ),
                       ),
                     ),
-                    const SizedBox(
-                        width: 40), // The gap between the image and username
+                    const SizedBox(width: 20), // The gap between the image and username
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          'Xxx', // Username text
-                          style: TextStyle(fontSize: 30, color: Colors.white),
+                      children: <Widget>[
+                       const Padding(
+                        padding: EdgeInsets.only(left: 10), // slightly move the username to the right side
+                          child: Text(
+                            'Xxx', // Username text
+                            style: TextStyle(fontSize: 30, color: Colors.white),
+                          ),
                         ),
-                        const SizedBox(
-                            height:
-                                12), // Gap between the username and "Edit Profile" button
+                        const SizedBox(height: 12), // Gap between the username and "Edit Profile" button
                         Container(
                           width: 150, // Set the width of the button
                           decoration: BoxDecoration(
                             color: const Color(
                                 0xFFE1F0CF), // Set the background color to green
-                            borderRadius:
-                                BorderRadius.circular(100), // Rounded corners
+                            borderRadius: BorderRadius.circular(100), // Rounded corners
                           ),
                           child: TextButton(
                             onPressed: () {
@@ -101,7 +124,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               style: TextStyle(
                                 color: Color(0xFF1A1A1A),
                                 fontSize: 16,
-                              ), // Change the button text color to black
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ),
                         ),
@@ -143,7 +167,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ],
             ),
           ),
-          const LogoutButton(), // Call logout class at the bottom of the screen
+          LogoutButton(), // Call logout class at the bottom of the screen
         ],
       ),
       // Nav Bar
@@ -176,65 +200,78 @@ class ProfileMenuItem extends StatelessWidget {
             color: Colors.grey[850],
             borderRadius: BorderRadius.circular(20.0),
           ),
-          child: ListTile(
+          child: InkWell(
             onTap: onPressed,
-            contentPadding: const EdgeInsets.symmetric(horizontal: 16.0),
-            leading: Icon(
-              icon,
-              color: Colors.white,
-              size: 25,
-            ),
-            title: Text(
-              title,
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 18,
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      Icon(
+                        icon,
+                        color: Colors.white,
+                        size: 28,
+                      ),
+                      const SizedBox(width: 12), // Adjust the spacing as needed
+                      Text(
+                        title,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const Icon(
+                    Icons.arrow_forward_ios, // next icon
+                    color: Colors.white,
+                    size: 18,
+                  ),
+                ],
               ),
-            ),
-            trailing: const Icon(
-              Icons.arrow_forward_ios, //next icon
-              color: Colors.white,
-              size: 18,
             ),
           ),
         ),
-        const SizedBox(height: 12),
+        const SizedBox(height: 12), // gap between the menu item
       ],
     );
   }
 }
 
 class LogoutButton extends StatelessWidget {
-  const LogoutButton({super.key});
-
-  Future<void> _signOut() async {
-    try {
-      await FirebaseAuth.instance.signOut();
-      // Handle the sign-out, such as navigating to the login screen
-    } catch (e) {
-      print(e);
-    }
-  }
+  final AuthService authService = AuthService();
+  LogoutButton({Key? key});
 
   @override
   Widget build(BuildContext context) {
     return Positioned(
       left: 0,
       right: 0,
-      bottom: 0, // Place the button at the bottom of the screen
+      bottom: 15,
       child: SizedBox(
-        width: double.infinity, // Expand the button to the full screen width
+        width: double.infinity,
         child: TextButton(
           onPressed: () {
-            _signOut();
+            authService.signOut(); // Call the signOut method from AuthService
           },
           style: TextButton.styleFrom(
             foregroundColor: Colors.red,
-            backgroundColor: Colors.transparent, // Background color
+            backgroundColor: Colors.transparent,
           ),
-          child: const Text("Log Out"),
+          child: const Text(
+            'Log Out',
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
         ),
       ),
     );
   }
 }
+
+
