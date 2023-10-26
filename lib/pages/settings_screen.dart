@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'bottom_nav_bar.dart';
-import 'package:group_project/pages/exercises_screen.dart';
+import 'package:group_project/pages/exercise_list.dart';
 import 'package:group_project/pages/history_screen.dart';
 import 'package:group_project/pages/home.dart';
 import 'package:group_project/pages/profile_screen.dart';
@@ -18,7 +18,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         () => const Home(),
         () => const HistoryScreen(),
         () => const ProfileScreen(),
-        () => const ExercisesListScreen(),
+        () =>  ExerciseListScreen(),
         () => const SettingsScreen(),
   ];
 

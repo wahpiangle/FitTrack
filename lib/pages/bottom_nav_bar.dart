@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
+import 'exercise_list.dart'; // Import the ExerciseListScreen
 
-// Can try with New workout page and settings page
 class CustomBottomNavigationBar extends StatefulWidget {
   final int currentIndex;
   final Function(int) onItemTapped;
 
   const CustomBottomNavigationBar({
-    super.key,
+    Key? key,
     required this.currentIndex,
     required this.onItemTapped,
   });
 
   @override
-  State<CustomBottomNavigationBar> createState() =>
+  _CustomBottomNavigationBarState createState() =>
       _CustomBottomNavigationBarState();
 }
 
@@ -20,10 +20,21 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(
-      //set this to 0 to disable the text below the icons
+      // set this to 0 to disable the text below the icons
       selectedFontSize: 14,
       currentIndex: widget.currentIndex,
-      onTap: widget.onItemTapped,
+      onTap: (index) {
+        // Check the tapped index and navigate accordingly
+        if (index == 3) {
+          // If "Exercises" icon is tapped, navigate to ExerciseListScreen
+          Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => ExerciseListScreen(),
+          ));
+        } else {
+          // For other icons, call the provided onItemTapped function
+          widget.onItemTapped(index);
+        }
+      },
       type: BottomNavigationBarType.fixed,
       items: <BottomNavigationBarItem>[
         const BottomNavigationBarItem(
