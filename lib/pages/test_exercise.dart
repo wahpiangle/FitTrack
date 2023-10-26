@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:group_project/main.dart';
 import 'package:group_project/models/exercise.dart';
 
-class Home extends StatefulWidget {
-  const Home({super.key});
+class Test extends StatefulWidget {
+  const Test({super.key});
 
   @override
-  State<Home> createState() => _HomeState();
+  State<Test> createState() => _TestState();
 }
 
-class _HomeState extends State<Home> {
+class _TestState extends State<Test> {
   late Stream<List<Exercise>> streamExercises;
 
   @override
@@ -22,7 +22,7 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Home Screen'),
+          title: const Text('Test Screen'),
           actions: [
             IconButton(
               onPressed: () {},
@@ -38,9 +38,14 @@ class _HomeState extends State<Home> {
                 itemCount: snapshot.data?.length,
                 itemBuilder: (context, index) {
                   return ListTile(
-                    title: Text(snapshot.data![index].name),
-                    subtitle: Text(snapshot.data![index].bodyPart.target!.name),
-                  );
+                      title: Text(snapshot.data![index].name),
+                      subtitle: Row(
+                        children: <Widget>[
+                          Text(snapshot.data![index].bodyPart.target!.name),
+                          const Text(' - '),
+                          Text(snapshot.data![index].category.target!.name),
+                        ],
+                      ));
                 },
               );
             } else {
@@ -49,7 +54,9 @@ class _HomeState extends State<Home> {
           },
         ),
         floatingActionButton: FloatingActionButton(
-          onPressed: () {},
+          onPressed: () {
+            // objectBox.addExercises();
+          },
           child: const Icon(Icons.add),
         ));
   }
