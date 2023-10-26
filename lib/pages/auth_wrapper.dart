@@ -9,9 +9,9 @@ class Wrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final user = Provider.of<User?>(
-        context); //look for MyUser type data from the provider
+    final user = Provider.of<User?>(context);
     if (user == null) {
+      // TODO set this to the login screen during production
       return ProfileScreen();
     } else {
       return ProfileScreen();
