@@ -272,6 +272,11 @@ class ExerciseListScreenState extends State<ExerciseListScreen> {
                           title: Text(snapshot.data![index].name),
                           subtitle: Row(
                             children: <Widget>[
+                              Image.asset(
+                                snapshot.data![index].imagePath,
+                                width: 50,
+                                height: 50,
+                              ),
                               Text(snapshot.data![index].bodyPart.target!.name),
                               const Text(' - '),
                               Text(snapshot.data![index].category.target!.name),

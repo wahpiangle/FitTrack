@@ -9,10 +9,16 @@ Map<String, Map<String, String>> exerciseMap = {
   'Decline Bench Press': {'Chest': 'Barbell'},
 };
 
+Map<String, String> imageMap = {
+  'Bench Press': 'assets/AbWheel.jpeg',
+  'Incline Bench Press': 'assets/aerobics.jpg',
+  'Decline Bench Press': 'assets/Aroundtheworld.jpeg',
+};
+
 List<Exercise> generateExerciseData() {
   List<Exercise> exerciseData = [];
   exerciseMap.forEach((key, value) {
-    Exercise exercise = Exercise(name: key);
+    Exercise exercise = Exercise(name: key, imagePath: imageMap[key]!);
     exercise.bodyPart.target = bodyPartData.firstWhere((element) {
       return element.name == value.keys.first;
     });
