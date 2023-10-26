@@ -1,22 +1,38 @@
 import 'package:flutter/material.dart';
-import 'exercise_list.dart'; // Import the ExerciseListScreen
+import 'package:group_project/pages/exercise/exercise_list.dart';
+import 'package:group_project/pages/history_screen.dart';
+import 'package:group_project/pages/home.dart';
+import 'package:group_project/pages/workout/workout_screen.dart';
+import 'package:group_project/pages/settings_screen.dart';
 
 class CustomBottomNavigationBar extends StatefulWidget {
   final int currentIndex;
-  final Function(int) onItemTapped;
 
-  const CustomBottomNavigationBar({
-    Key? key,
+  CustomBottomNavigationBar({
+    super.key,
     required this.currentIndex,
-    required this.onItemTapped,
   });
 
   @override
-  _CustomBottomNavigationBarState createState() =>
-      _CustomBottomNavigationBarState();
+  CustomBottomNavigationBarState createState() =>
+      CustomBottomNavigationBarState();
 }
 
-class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
+class CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
+  final List<Widget Function()> pages = [
+    () => const Home(),
+    () => const HistoryScreen(),
+    () => const WorkoutScreen(),
+    () => const ExerciseListScreen(),
+    () => const SettingsScreen(),
+  ];
+  void onItemTapped(int index) {
+    if (index >= 0 && index < pages.length) {
+      Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => pages[index]()));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(
@@ -24,16 +40,7 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
       selectedFontSize: 14,
       currentIndex: widget.currentIndex,
       onTap: (index) {
-        // Check the tapped index and navigate accordingly
-        if (index == 3) {
-          // If "Exercises" icon is tapped, navigate to ExerciseListScreen
-          Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => ExerciseListScreen(),
-          ));
-        } else {
-          // For other icons, call the provided onItemTapped function
-          widget.onItemTapped(index);
-        }
+        onItemTapped(index);
       },
       type: BottomNavigationBarType.fixed,
       items: <BottomNavigationBarItem>[
@@ -54,7 +61,7 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
               color: Color(0xFFE1F0CF), // Background color of the circle
             ),
             child: Container(
-              padding: EdgeInsets.all(8),
+              padding: const EdgeInsets.all(8),
               child: const Center(
                 child: Icon(
                   Icons.add,

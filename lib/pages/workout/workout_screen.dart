@@ -1,84 +1,28 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:group_project/pages/exercise_list.dart';
-import 'package:group_project/pages/history_screen.dart';
-import 'package:group_project/pages/home.dart';
-import 'package:group_project/pages/settings_screen.dart';
+import 'package:group_project/pages/components/top_nav_bar.dart';
 import 'package:provider/provider.dart';
-import 'package:group_project/pages/new_workout.dart';
-import 'components/bottom_nav_bar.dart';
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:group_project/pages/workout/new_workout.dart';
+import '../components/bottom_nav_bar.dart';
 
-import '../services/auth_service.dart';
-
-class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({super.key});
+class WorkoutScreen extends StatefulWidget {
+  const WorkoutScreen({super.key});
 
   @override
-  State<ProfileScreen> createState() => _ProfileScreenState();
+  State<WorkoutScreen> createState() => _WorkoutScreenState();
 }
 
-class _ProfileScreenState extends State<ProfileScreen> {
-  final AuthService _auth = AuthService();
-
+class _WorkoutScreenState extends State<WorkoutScreen> {
 // nav bar
   int _selectedIndex = 2;
-  final List<Widget Function()> pages = [
-    () => const Home(),
-    () => const HistoryScreen(),
-    () => const ProfileScreen(),
-    () =>  ExerciseListScreen(),
-    () => const SettingsScreen(),
-  ];
-
-  void _onItemTapped(int index) {
-    if (index >= 0 && index < pages.length) {
-      Navigator.of(context)
-          .push(MaterialPageRoute(builder: (context) => pages[index]()));
-    }
-  }
 // nav bar
 
   @override
   Widget build(BuildContext context) {
-    //the user's information (name, email etc.) can be accessed from this variable
-    final user = Provider.of<User?>(context, listen: false);
+    final user = Provider.of<User?>(context);
 
     return Scaffold(
-        appBar: AppBar(
-          backgroundColor: const Color(0xFF1A1A1A),
-          title: const Text(
-            'Home',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          centerTitle: true, // center title horizontally
-          leading: IconButton(
-            icon: const Icon(Icons.menu),
-            onPressed: () {
-              // Will lead to Search friends page
-            },
-          ),
-          actions: [
-            GestureDetector(
-              onTap: () {},
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: ClipRRect(
-                    borderRadius: BorderRadius.circular(50),
-                    child: CachedNetworkImage(
-                      imageUrl: user?.photoURL ?? 'assets/defaultimage.jpg',
-                      placeholder: (context, url) =>
-                          const CircularProgressIndicator(),
-                      errorWidget: (context, url, error) =>
-                          Image.asset('assets/defaultimage.jpg'),
-                      fit: BoxFit.cover,
-                    )),
-              ),
-            ),
-          ],
-        ),
+        appBar: TopNavBar(title: 'Home', user: user),
         body: SingleChildScrollView(
           child: Container(
             padding: const EdgeInsets.all(20),
@@ -183,11 +127,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         NewWorkout(
-                          imagePath: 'assets/dumbell.png',
+                          imagePath: 'assets/icons/dumbell.png',
                           workoutText: 'Legs',
                         ),
                         NewWorkout(
-                          imagePath: 'assets/dumbell.png',
+                          imagePath: 'assets/icons/dumbell.png',
                           workoutText: 'Back',
                         ),
                       ],
@@ -197,11 +141,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         NewWorkout(
-                          imagePath: 'assets/dumbell.png',
+                          imagePath: 'assets/icons/dumbell.png',
                           workoutText: 'Chest',
                         ),
                         NewWorkout(
-                          imagePath: 'assets/dumbell.png',
+                          imagePath: 'assets/icons/dumbell.png',
                           workoutText: 'Arms',
                         ),
                       ],
@@ -216,7 +160,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
         //Nav Bar
         bottomNavigationBar: CustomBottomNavigationBar(
           currentIndex: _selectedIndex,
-          onItemTapped: _onItemTapped,
         ));
   }
 }

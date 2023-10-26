@@ -43,7 +43,7 @@ class NewWorkout extends StatelessWidget {
                     child: Opacity(
                       opacity: 0.7,
                       child: Image.asset(
-                        'assets/info.png',
+                        'assets/icons/info.png',
                         width: 20,
                         height: 20,
                       ),
