@@ -25,7 +25,7 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
         appBar: TopNavBar(title: 'Home', user: user),
         body: SingleChildScrollView(
           child: Container(
-            padding: const EdgeInsets.all(20),
+            padding: const EdgeInsets.all(10),
             color: const Color(0xFF1A1A1A),
             child: Center(
               child: Column(mainAxisSize: MainAxisSize.min, children: [

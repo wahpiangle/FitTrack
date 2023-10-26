@@ -56,11 +56,15 @@ class ObjectBox {
     _exerciseBox.getAll();
   }
 
-  void getCategories() {
-    _categoryBox.getAll();
+  List<Category> getCategories() {
+    return _categoryBox.getAll();
   }
 
   void getBodyParts() {
     _bodyPartBox.getAll();
+  }
+
+  void removeExercises() {
+    _exerciseBox.removeAll();
   }
 }

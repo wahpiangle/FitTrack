@@ -5,11 +5,13 @@ import 'package:flutter/material.dart';
 class TopNavBar extends StatelessWidget implements PreferredSizeWidget {
   final User? user;
   final String title;
+  final bool showBackButton;
 
   const TopNavBar({
     super.key,
     required this.title,
     required this.user,
+    this.showBackButton = false,
   });
 
   @override
@@ -23,12 +25,19 @@ class TopNavBar extends StatelessWidget implements PreferredSizeWidget {
         ),
       ),
       centerTitle: true,
-      leading: IconButton(
-        icon: const Icon(Icons.menu),
-        onPressed: () {
-          // Will lead to Search friends page
-        },
-      ),
+      leading: showBackButton
+          ? IconButton(
+              icon: const Icon(Icons.arrow_back),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            )
+          : IconButton(
+              icon: const Icon(Icons.menu),
+              onPressed: () {
+                // Will lead to Search friends page
+              },
+            ),
       actions: [
         GestureDetector(
           onTap: () {},

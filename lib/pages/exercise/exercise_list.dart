@@ -20,6 +20,7 @@ class ExerciseListScreenState extends State<ExerciseListScreen> {
   final int _selectedIndex = 3;
   Map<String, List<Exercise>> exerciseGroups = {};
   late Stream<List<Exercise>> streamExercises;
+  final categories = objectBox.getCategories();
 
   final GlobalKey _filterButtonKey = GlobalKey();
   Rect? filterButtonRect;
@@ -72,52 +73,12 @@ class ExerciseListScreenState extends State<ExerciseListScreen> {
           filterButtonRect!.right,
           filterButtonRect!.bottom + 10.0,
         ),
-        items: <PopupMenuEntry<String>>[
-          PopupMenuItem<String>(
-            value: 'All',
-            child: Text('All'),
-          ),
-          PopupMenuItem<String>(
-            value: 'Core',
-            child: Text('Core'),
-          ),
-          PopupMenuItem<String>(
-            value: 'Arms',
-            child: Text('Arms'),
-          ),
-          PopupMenuItem<String>(
-            value: 'Back',
-            child: Text('Back'),
-          ),
-          PopupMenuItem<String>(
-            value: 'Chest',
-            child: Text('Chest'),
-          ),
-          PopupMenuItem<String>(
-            value: 'Legs',
-            child: Text('Legs'),
-          ),
-          PopupMenuItem<String>(
-            value: 'Shoulders',
-            child: Text('Shoulders'),
-          ),
-          PopupMenuItem<String>(
-            value: 'Other',
-            child: Text('Other'),
-          ),
-          PopupMenuItem<String>(
-            value: 'Olympic',
-            child: Text('Olympic'),
-          ),
-          PopupMenuItem<String>(
-            value: 'Full Body',
-            child: Text('Full Body'),
-          ),
-          PopupMenuItem<String>(
-            value: 'Cardio',
-            child: Text('Cardio'),
-          ),
-        ],
+        items: categories
+            .map((category) => PopupMenuItem<String>(
+                  value: category.name,
+                  child: Text(category.name),
+                ))
+            .toList(),
       ).then((value) {
         if (value != null) {
           filterExercises(searchText, value);
@@ -130,57 +91,32 @@ class ExerciseListScreenState extends State<ExerciseListScreen> {
   Widget build(BuildContext context) {
     final user = Provider.of<User?>(context);
     return Scaffold(
-        appBar: TopNavBar(
-          title: 'Exercise List',
-          user: user,
-        ),
-        body: StreamBuilder(
-          stream: streamExercises,
-          builder: (context, snapshot) {
-            if (!snapshot.hasData) {
-              return const Center(child: CircularProgressIndicator());
-            }
-            return Container(
-              color: const Color(0xFF1A1A1A),
-              child: Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          flex: 4,
-                          child: Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10.0),
-                              border:
-                                  Border.all(color: const Color(0xFF333333)),
-                              color: const Color(0xFF333333),
-                            ),
-                            child: Container(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 16.0),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10.0),
-                                border: Border.all(color: Color(0xFF333333)),
-                              ),
-                              child: TextField(
-                                onChanged: (query) {
-                                  filterExercises(query, selectedCategory);
-                                },
-                                style: const TextStyle(color: Colors.white),
-                                decoration: const InputDecoration(
-                                  hintText: 'Search...',
-                                  border: InputBorder.none,
-                                  hintStyle: TextStyle(color: Colors.white),
-                                ),
-                              ),
-                            ),
+      appBar: TopNavBar(
+        title: 'Exercise List',
+        user: user,
+      ),
+      body: StreamBuilder(
+        stream: streamExercises,
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          return Container(
+            color: const Color(0xFF1A1A1A),
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        flex: 4,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10.0),
+                            border: Border.all(color: const Color(0xFF333333)),
+                            color: const Color(0xFF333333),
                           ),
-                        ),
-                        const SizedBox(width: 10.0),
-                        Expanded(
-                          flex: 1,
                           child: Container(
                             padding:
                                 const EdgeInsets.symmetric(horizontal: 16.0),
@@ -188,112 +124,130 @@ class ExerciseListScreenState extends State<ExerciseListScreen> {
                               borderRadius: BorderRadius.circular(10.0),
                               border:
                                   Border.all(color: const Color(0xFF333333)),
-                              color: const Color(0xFF333333),
                             ),
-                            child: IconButton(
-                              icon: const Icon(Icons.filter_list,
-                                  color: Colors.white, size: 24.0),
-                              onPressed: () {
-                                showFilterMenu(context);
+                            child: TextField(
+                              onChanged: (query) {
+                                filterExercises(query, selectedCategory);
                               },
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 5.0),
-                  SizedBox(
-                    height: 48.0,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        // Show a single circular rectangle for the selected category
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                          child: Container(
-                            width: 80.0,
-                            height: 40.0,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20.0),
-                              border: Border.all(color: Colors.black),
-                              color: const Color(0xFFE1F0CF),
-                            ),
-                            child: Center(
-                              child: Text(
-                                selectedCategory,
-                                style: const TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                              style: const TextStyle(color: Colors.white),
+                              decoration: const InputDecoration(
+                                hintText: 'Search...',
+                                border: InputBorder.none,
+                                hintStyle: TextStyle(color: Colors.white),
                               ),
                             ),
                           ),
                         ),
-                      ],
-                    ),
-                  ),
-                  Expanded(
-                    child: ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: snapshot.data?.length,
-                      itemBuilder: (context, index) {
-                        // final alphabet = exerciseGroups.keys.elementAt(index);
-                        // final groupExercises = exerciseGroups[alphabet] ?? [];
-                        // return Column(
-                        //   crossAxisAlignment: CrossAxisAlignment.start,
-                        //   children: [
-                        //     Padding(
-                        //       padding: const EdgeInsets.all(8.0),
-                        //       child: Text(
-                        //         alphabet,
-                        //         style: const TextStyle(
-                        //           color: Colors.white,
-                        //           fontSize: 18.0,
-                        //           fontWeight: FontWeight.bold,
-                        //         ),
-                        //       ),
-                        //     ),
-                        //         Column(
-                        //           children: groupExercises
-                        //               .where((exercise) =>
-                        //                   exercise.name
-                        //                       .toLowerCase()
-                        //                       .contains(searchText.toLowerCase()) &&
-                        //                   (selectedCategory == 'All' ||
-                        //                       exercise.category == selectedCategory))
-                        //               .map((exercise) =>
-                        //                   ExerciseListItem(exercise: exercise))
-                        //               .toList(),
-                        //         ),
-                        //   ],
-                        // );
-                        return ListTile(
-                          title: Text(snapshot.data![index].name),
-                          subtitle: Row(
-                            children: <Widget>[
-                              Image.asset(
-                                snapshot.data![index].imagePath,
-                                width: 50,
-                                height: 50,
-                              ),
-                              Text(snapshot.data![index].bodyPart.target!.name),
-                              const Text(' - '),
-                              Text(snapshot.data![index].category.target!.name),
-                            ],
+                      ),
+                      const SizedBox(width: 10.0),
+                      Expanded(
+                        flex: 1,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10.0),
+                            border: Border.all(color: const Color(0xFF333333)),
+                            color: const Color(0xFF333333),
                           ),
-                        );
-                      },
-                    ),
+                          child: IconButton(
+                            icon: const Icon(Icons.filter_list,
+                                color: Colors.white, size: 24.0),
+                            onPressed: () {
+                              showFilterMenu(context);
+                            },
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
-            );
-          },
-        ),
-        bottomNavigationBar: CustomBottomNavigationBar(
-          currentIndex: _selectedIndex,
-        ));
+                ),
+                const SizedBox(height: 5.0),
+                SizedBox(
+                  height: 48.0,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      // Show a single circular rectangle for the selected category
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                        child: Container(
+                          width: 80.0,
+                          height: 40.0,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20.0),
+                            border: Border.all(color: Colors.black),
+                            color: const Color(0xFFE1F0CF),
+                          ),
+                          child: Center(
+                            child: Text(
+                              selectedCategory,
+                              style: const TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: snapshot.data?.length,
+                    itemBuilder: (context, index) {
+                      // final alphabet = exerciseGroups.keys.elementAt(index);
+                      // final groupExercises = exerciseGroups[alphabet] ?? [];
+                      // return Column(
+                      //   crossAxisAlignment: CrossAxisAlignment.start,
+                      //   children: [
+                      //     Padding(
+                      //       padding: const EdgeInsets.all(8.0),
+                      //       child: Text(
+                      //         alphabet,
+                      //         style: const TextStyle(
+                      //           color: Colors.white,
+                      //           fontSize: 18.0,
+                      //           fontWeight: FontWeight.bold,
+                      //         ),
+                      //       ),
+                      //     ),
+                      //         Column(
+                      //           children: groupExercises
+                      //               .where((exercise) =>
+                      //                   exercise.name
+                      //                       .toLowerCase()
+                      //                       .contains(searchText.toLowerCase()) &&
+                      //                   (selectedCategory == 'All' ||
+                      //                       exercise.category == selectedCategory))
+                      //               .map((exercise) =>
+                      //                   ExerciseListItem(exercise: exercise))
+                      //               .toList(),
+                      //         ),
+                      //   ],
+                      // );
+                      final exercise = snapshot.data![index];
+                      return ExerciseListItem(exercise: exercise);
+                    },
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          objectBox.removeExercises();
+          objectBox.addExercises();
+        },
+        child: const Icon(Icons.add),
+      ),
+      bottomNavigationBar: CustomBottomNavigationBar(
+        currentIndex: _selectedIndex,
+      ),
+    );
   }
 }
 
@@ -306,24 +260,53 @@ class ExerciseListItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.all(8.0),
-      decoration: BoxDecoration(
-        border: Border.all(color: const Color(0xFF333333)),
-        borderRadius: BorderRadius.circular(8.0),
-        color: const Color(0xFF333333),
-      ),
-      child: ListTile(
-        leading: Image.asset(exercise.imagePath, width: 50, height: 50),
-        title: Text(
-          exercise.name,
-          style: const TextStyle(color: Colors.white),
-        ),
-        trailing: GestureDetector(
+      child: Material(
+        color: const Color(0xFF1A1A1A),
+        child: InkWell(
           onTap: () {
-            Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => ExerciseDetailScreen(exercise),
-            ));
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ExerciseDetailScreen(exercise),
+              ),
+            );
           },
-          child: const Icon(Icons.arrow_forward_ios, color: Colors.white),
+          child: ListTile(
+            leading: ClipRRect(
+                borderRadius: BorderRadius.circular(300.0),
+                child: exercise.imagePath == ''
+                    ? Container(
+                        width: 50,
+                        height: 50,
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFE1F0CF),
+                          borderRadius: BorderRadius.circular(300.0),
+                        ),
+                        child: Center(
+                          child: Text(
+                            exercise.name[0].toUpperCase(),
+                            style: const TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 24.0,
+                            ),
+                          ),
+                        ),
+                      )
+                    : Image.asset(
+                        exercise.imagePath,
+                        width: 50,
+                        height: 50,
+                      )),
+            title: Text(
+              '${exercise.name} (${exercise.category.target!.name})',
+              style: const TextStyle(color: Colors.white),
+            ),
+            subtitle: Text(
+              exercise.category.target!.name,
+              style: TextStyle(color: Colors.grey[500]),
+            ),
+          ),
         ),
       ),
     );
