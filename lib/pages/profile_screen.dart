@@ -6,7 +6,7 @@ import 'package:group_project/pages/home.dart';
 import 'package:group_project/pages/settings_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:group_project/pages/new_workout.dart';
-import 'bottom_nav_bar.dart';
+import 'components/bottom_nav_bar.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 import '../services/auth_service.dart';
@@ -66,14 +66,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: ClipRRect(
-                  borderRadius: BorderRadius.circular(50),
-                 child: CachedNetworkImage(
-                imageUrl: user?.photoURL ?? 'assets/defaultimage.jpg',
-                  placeholder: (context, url) => CircularProgressIndicator(), // Placeholder for when the image is loading
-                  errorWidget: (context, url, error) => Image.asset('assets/defaultimage.jpg'), // Placeholder for when an error occurs
-                  fit: BoxFit.cover,
-                )
-                ),
+                    borderRadius: BorderRadius.circular(50),
+                    child: CachedNetworkImage(
+                      imageUrl: user?.photoURL ?? 'assets/defaultimage.jpg',
+                      placeholder: (context, url) =>
+                          const CircularProgressIndicator(),
+                      errorWidget: (context, url, error) =>
+                          Image.asset('assets/defaultimage.jpg'),
+                      fit: BoxFit.cover,
+                    )),
               ),
             ),
           ],
@@ -142,9 +143,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               letterSpacing: 0.4,
                             ),
                           ),
-                          const SizedBox(
-                              height:
-                                  10), // Add some space between the two text widgets
+                          const SizedBox(height: 10),
                           ElevatedButton(
                             onPressed: () {
                               // Navigator.push(
@@ -160,8 +159,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               shape: MaterialStateProperty.all<
                                   RoundedRectangleBorder>(
                                 RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(
-                                      40), // Set the border radius to make it round
+                                  borderRadius: BorderRadius.circular(40),
                                 ),
                               ),
                             ),
@@ -215,7 +213,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
           ),
         ),
-//Nav Bar
+        //Nav Bar
         bottomNavigationBar: CustomBottomNavigationBar(
           currentIndex: _selectedIndex,
           onItemTapped: _onItemTapped,
