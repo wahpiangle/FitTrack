@@ -1,3 +1,6 @@
 chromedriver
-images/
 links.txt
+gif/*
+store/
+link_test.txt
+png/*

@@ -288,7 +288,7 @@ class ExerciseListItem extends StatelessWidget {
                       height: 50,
                     )),
           title: Text(
-            '${exercise.name} (${exercise.category.target!.name})',
+            exercise.name,
             style: const TextStyle(color: Colors.white),
           ),
           subtitle: Text(
