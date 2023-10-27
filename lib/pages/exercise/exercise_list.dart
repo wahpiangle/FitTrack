@@ -249,53 +249,51 @@ class ExerciseListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Material(
-        color: const Color(0xFF1A1A1A),
-        child: InkWell(
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => ExerciseDetailScreen(exercise),
-              ),
-            );
-          },
-          child: ListTile(
-            leading: ClipRRect(
-                borderRadius: BorderRadius.circular(300.0),
-                child: exercise.imagePath == ''
-                    ? Container(
-                        width: 50,
-                        height: 50,
-                        decoration: BoxDecoration(
-                          color: const Color(0xFFE1F0CF),
-                          borderRadius: BorderRadius.circular(300.0),
-                        ),
-                        child: Center(
-                          child: Text(
-                            exercise.name[0].toUpperCase(),
-                            style: const TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 24.0,
-                            ),
+    return Material(
+      color: const Color(0xFF1A1A1A),
+      child: InkWell(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ExerciseDetailScreen(exercise),
+            ),
+          );
+        },
+        child: ListTile(
+          leading: ClipRRect(
+              borderRadius: BorderRadius.circular(300.0),
+              child: exercise.imagePath == ''
+                  ? Container(
+                      width: 50,
+                      height: 50,
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFE1F0CF),
+                        borderRadius: BorderRadius.circular(300.0),
+                      ),
+                      child: Center(
+                        child: Text(
+                          exercise.name[0].toUpperCase(),
+                          style: const TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 24.0,
                           ),
                         ),
-                      )
-                    : Image.asset(
-                        exercise.imagePath,
-                        width: 50,
-                        height: 50,
-                      )),
-            title: Text(
-              '${exercise.name} (${exercise.category.target!.name})',
-              style: const TextStyle(color: Colors.white),
-            ),
-            subtitle: Text(
-              exercise.category.target!.name,
-              style: TextStyle(color: Colors.grey[500]),
-            ),
+                      ),
+                    )
+                  : Image.asset(
+                      exercise.imagePath,
+                      width: 50,
+                      height: 50,
+                    )),
+          title: Text(
+            '${exercise.name} (${exercise.category.target!.name})',
+            style: const TextStyle(color: Colors.white),
+          ),
+          subtitle: Text(
+            exercise.category.target!.name,
+            style: TextStyle(color: Colors.grey[500]),
           ),
         ),
       ),
