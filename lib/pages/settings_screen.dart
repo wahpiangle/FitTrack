@@ -81,7 +81,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             placeholder: (context, url) =>
                             const CircularProgressIndicator(), // Placeholder for when the image is loading
                             errorWidget: (context, url, error) =>
-                                Image.asset('assets/defaultimage.jpg'), // Placeholder for when an error occurs
+                                Image.asset('assets/icons/defaultimage.jpg'), // Placeholder for when an error occurs
                             fit: BoxFit.cover,
                             imageUrl: '',
                           ),
