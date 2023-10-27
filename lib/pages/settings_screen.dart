@@ -251,6 +251,7 @@ class LogoutButton extends StatelessWidget {
       left: 0,
       right: 0,
       bottom: 15,
+      child: SingleChildScrollView(//to prevent overflow
       child: SizedBox(
         width: double.infinity,
         child: TextButton(
@@ -269,6 +270,7 @@ class LogoutButton extends StatelessWidget {
             ),
           ),
         ),
+      ),
       ),
     );
   }
