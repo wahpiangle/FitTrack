@@ -49,7 +49,6 @@ class ObjectBox {
   }
 
   void addExercises() {
-    print(generateExerciseData());
     _exerciseBox.putMany(generateExerciseData());
   }
 
