@@ -45,40 +45,51 @@ class CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
       type: BottomNavigationBarType.fixed,
       items: <BottomNavigationBarItem>[
         const BottomNavigationBarItem(
-          icon: Icon(Icons.home_outlined),
+          icon: Padding(
+            padding: EdgeInsets.all(5.0),
+            child: Icon(Icons.home_outlined),
+          ),
           label: 'Home',
         ),
         const BottomNavigationBarItem(
-          icon: Icon(Icons.insights_rounded),
+          icon: Padding(
+            padding: EdgeInsets.all(5.0),
+            child: Icon(Icons.insights_rounded),
+          ),
           label: 'History',
         ),
         BottomNavigationBarItem(
           icon: Container(
             // uncomment this when selected text font size is set to 0
             // margin: EdgeInsets.fromLTRB(0, 10, 0, 10),
+            margin: const EdgeInsets.only(top: 10),
             decoration: const BoxDecoration(
               shape: BoxShape.circle,
               color: Color(0xFFE1F0CF), // Background color of the circle
             ),
             child: Container(
-              padding: const EdgeInsets.all(8),
-              child: const Center(
-                child: Icon(
-                  Icons.add,
-                  color: Colors.black54, // Icon color
-                  size: 35,
-                ),
+              padding: const EdgeInsets.all(10),
+              child: const Icon(
+                Icons.add,
+                color: Colors.black54,
+                size: 30,
               ),
             ),
           ),
           label: '',
         ), // Nav bar for middle "add workout" button
         const BottomNavigationBarItem(
-          icon: Icon(Icons.fitness_center_rounded),
+          icon: Padding(
+            padding: EdgeInsets.all(5.0),
+            child: Icon(Icons.fitness_center_rounded),
+          ),
           label: 'Exercises',
         ),
         const BottomNavigationBarItem(
-          icon: Icon(Icons.settings_outlined),
+          icon: Padding(
+            padding: EdgeInsets.all(5.0),
+            child: Icon(Icons.settings_outlined),
+          ),
           label: 'Settings',
         ),
       ],
