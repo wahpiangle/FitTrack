@@ -50,11 +50,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
           },
         ),
       ),
-      body: Stack(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(16),
-            color: const Color(0xFF1A1A1A), // Set background color to black
+      body: SingleChildScrollView(
+          child:Stack(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(16),
+              color: const Color(0xFF1A1A1A), // Set background color to black
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -85,7 +86,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       child: ClipOval(
                         child: CachedNetworkImage(
                           placeholder: (context, url) =>
-                              const CircularProgressIndicator(), // Placeholder for when the image is loading
+                          const CircularProgressIndicator(), // Placeholder for when the image is loading
                           errorWidget: (context, url, error) =>
                               Image.asset('assets/defaultimage.jpg'), // Placeholder for when an error occurs
                           fit: BoxFit.cover,
@@ -97,8 +98,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                       const Padding(
-                        padding: EdgeInsets.only(left: 10), // slightly move the username to the right side
+                        const Padding(
+                          padding: EdgeInsets.only(left: 10), // slightly move the username to the right side
                           child: Text(
                             'Xxx', // Username text
                             style: TextStyle(fontSize: 30, color: Colors.white),
@@ -164,17 +165,23 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     // Navigate to the Terms and Conditions screen
                   },
                 ),
+                const SizedBox(height: 110),//space between menu items and logout button
+                LogoutButton(), // Call logout class at the bottom of the screen
               ],
             ),
           ),
-          LogoutButton(), // Call logout class at the bottom of the screen
+
         ],
       ),
+
+      ),
+
       // Nav Bar
       bottomNavigationBar: CustomBottomNavigationBar(
         currentIndex: _selectedIndex,
         onItemTapped: _onItemTapped,
       ),
+
     );
   }
 }
@@ -250,8 +257,7 @@ class LogoutButton extends StatelessWidget {
     return Positioned(
       left: 0,
       right: 0,
-      bottom: 15,
-      child: SingleChildScrollView(//to prevent overflow
+      bottom: 0,
       child: SizedBox(
         width: double.infinity,
         child: TextButton(
@@ -271,7 +277,7 @@ class LogoutButton extends StatelessWidget {
           ),
         ),
       ),
-      ),
+
     );
   }
 }
