@@ -29,7 +29,10 @@ class CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
   void onItemTapped(int index) {
     if (index >= 0 && index < pages.length) {
       Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => pages[index]()));
+        MaterialPageRoute(
+          builder: (context) => pages[index](),
+        ),
+      );
     }
   }
 

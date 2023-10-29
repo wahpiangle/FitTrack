@@ -7,12 +7,14 @@ Map<String, Map<String, String>> exerciseMap = {
   'Bench Press (Barbell)': {'Chest': 'Barbell'},
   'Incline Bench Press (Barbell)': {'Chest': 'Barbell'},
   'Bench Press (Dumbbell)': {'Chest': 'Dumbbell'},
+  'Deadlift (Barbell)': {'Back': 'Barbell'},
 };
 
 Map<String, String> imageMap = {
   'Bench Press (Barbell)': 'assets/exercises/barbell-bench.png',
   'Incline Bench Press (Barbell)': 'assets/exercises/incline-barbell-bench.png',
   'Bench Press (Dumbbell)': 'assets/exercises/dumbbell-bench.png',
+  'Deadlift (Barbell)': 'assets/exercises/barbell-deadlift.png',
 };
 
 List<Exercise> generateExerciseData() {
