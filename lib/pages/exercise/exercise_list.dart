@@ -7,6 +7,7 @@ import 'package:group_project/models/exercise.dart';
 import 'package:group_project/pages/components/bottom_nav_bar.dart';
 import 'package:group_project/pages/components/top_nav_bar.dart';
 import 'package:group_project/pages/exercise/exercise_detail.dart';
+import 'package:group_project/pages/exercise/exercise_filter_page.dart'; // Import ExerciseFilterPage
 import 'package:provider/provider.dart';
 
 class ExerciseListScreen extends StatefulWidget {
@@ -23,9 +24,9 @@ class ExerciseListScreenState extends State<ExerciseListScreen> {
   Map<String, List<Exercise>> exerciseGroups = {};
   late Stream<List<Exercise>> streamExercises;
   final categories = objectBox.getCategories();
-
   final GlobalKey _filterButtonKey = GlobalKey();
   Rect? filterButtonRect;
+  String selectedBodyPart = 'All';
 
   @override
   void initState() {
@@ -33,7 +34,7 @@ class ExerciseListScreenState extends State<ExerciseListScreen> {
     streamExercises = objectBox.watchAllExercise();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final RenderBox filterButton =
-          _filterButtonKey.currentContext?.findRenderObject() as RenderBox;
+      _filterButtonKey.currentContext?.findRenderObject() as RenderBox;
       final Offset buttonPosition = filterButton.localToGlobal(Offset.zero);
       filterButtonRect = Rect.fromPoints(
         buttonPosition,
@@ -42,7 +43,8 @@ class ExerciseListScreenState extends State<ExerciseListScreen> {
       );
       // groupExercises();
       // Populate the list with 'All' exercises by default
-      filterExercises('', 'All');
+      // Populate the list with the selected category or body part by default
+      filterExercises('', selectedCategory);
     });
   }
 
@@ -65,28 +67,16 @@ class ExerciseListScreenState extends State<ExerciseListScreen> {
     });
   }
 
-  void showFilterMenu(BuildContext context) {
-    if (filterButtonRect != null) {
-      showMenu(
-        context: context,
-        position: RelativeRect.fromLTRB(
-          filterButtonRect!.left + 70.0,
-          filterButtonRect!.bottom + 70.0,
-          filterButtonRect!.right,
-          filterButtonRect!.bottom + 10.0,
-        ),
-        items: categories
-            .map((category) => PopupMenuItem<String>(
-                  value: category.name,
-                  child: Text(category.name),
-                ))
-            .toList(),
-      ).then((value) {
-        if (value != null) {
-          filterExercises(searchText, value);
-        }
-      });
-    }
+  void setSelectedBodyPart(String bodyPart) {
+    setState(() {
+      selectedBodyPart = bodyPart;
+    });
+  }
+
+  void setSelectedCategory(String category) {
+    setState(() {
+      selectedCategory = category;
+    });
   }
 
   @override
@@ -119,17 +109,14 @@ class ExerciseListScreenState extends State<ExerciseListScreen> {
                           child: Container(
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(10.0),
-                              border:
-                                  Border.all(color: const Color(0xFF333333)),
+                              border: Border.all(color: const Color(0xFF333333)),
                               color: const Color(0xFF333333),
                             ),
                             child: Container(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 16.0),
+                              padding: const EdgeInsets.symmetric(horizontal: 16.0),
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(10.0),
-                                border:
-                                    Border.all(color: const Color(0xFF333333)),
+                                border: Border.all(color: const Color(0xFF333333)),
                               ),
                               child: TextField(
                                 onChanged: (query) {
@@ -142,6 +129,7 @@ class ExerciseListScreenState extends State<ExerciseListScreen> {
                                   hintStyle: TextStyle(color: Colors.white),
                                 ),
                               ),
+
                             ),
                           ),
                         ),
@@ -149,22 +137,34 @@ class ExerciseListScreenState extends State<ExerciseListScreen> {
                         Expanded(
                           flex: 1,
                           child: Container(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 16.0),
+                            padding: const EdgeInsets.symmetric(horizontal: 16.0),
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(10.0),
-                              border:
-                                  Border.all(color: const Color(0xFF333333)),
+                              border: Border.all(color: const Color(0xFF333333)),
                               color: const Color(0xFF333333),
                             ),
                             child: IconButton(
                               icon: const Icon(Icons.filter_list,
                                   color: Colors.white, size: 24.0),
                               onPressed: () {
-                                showFilterMenu(context);
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (BuildContext context) {
+                                      return ExerciseFilterPage(
+                                        categories: categories,
+                                        selectedCategory: selectedCategory,
+                                        onFilterApplied: (filterArguments) {
+                                          // Handle the filter applied logic here
+                                          setSelectedCategory(filterArguments.selectedCategory);
+                                          setSelectedBodyPart(filterArguments.selectedBodyPart);
+                                        },
+                                      );
+                                    },
+                                  ),
+                                );
                               },
+                            )
                             ),
-                          ),
                         ),
                       ],
                     ),
@@ -185,7 +185,7 @@ class ExerciseListScreenState extends State<ExerciseListScreen> {
                           ),
                           child: Center(
                             child: Text(
-                              selectedCategory,
+                              selectedCategory == 'All' ? selectedBodyPart : selectedCategory,
                               style: const TextStyle(
                                 color: Colors.black,
                                 fontWeight: FontWeight.bold,
@@ -203,8 +203,7 @@ class ExerciseListScreenState extends State<ExerciseListScreen> {
                       itemCount: groupedExercise.length,
                       itemBuilder: (context, index) {
                         final key = groupedExercise.keys.elementAt(index);
-                        final exercises =
-                            groupedExercise.values.elementAt(index);
+                        final exercises = groupedExercise.values.elementAt(index);
                         return Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -216,11 +215,12 @@ class ExerciseListScreenState extends State<ExerciseListScreen> {
                               ),
                             ),
                             for (final exercise in exercises)
-                              ExerciseListItem(exercise: exercise),
+                              ExerciseListItem(exercise: exercise, searchText: searchText), // Pass searchText here
                           ],
                         );
                       },
-                    ),
+                    )
+
                   )
                 ],
               ),
@@ -242,61 +242,78 @@ class ExerciseListScreenState extends State<ExerciseListScreen> {
   }
 }
 
+
+
 class ExerciseListItem extends StatelessWidget {
   final Exercise exercise;
+  final String searchText;
 
-  const ExerciseListItem({super.key, required this.exercise});
+  ExerciseListItem({super.key, required this.exercise, required this.searchText});
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: const Color(0xFF1A1A1A),
-      child: InkWell(
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => ExerciseDetailScreen(exercise),
+    final exerciseName = exercise.name;
+    final exerciseCategory = exercise.category.target!.name;
+
+    // Check if the exercise name or category contains the search text
+    final containsSearchText =
+        exerciseName.toLowerCase().contains(searchText.toLowerCase()) ||
+            exerciseCategory.toLowerCase().contains(searchText.toLowerCase());
+
+    // If the search text is empty or the exercise matches the search, display it
+    if (searchText.isEmpty || containsSearchText) {
+      return Material(
+        color: const Color(0xFF1A1A1A),
+        child: InkWell(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ExerciseDetailScreen(exercise),
+              ),
+            );
+          },
+          child: ListTile(
+            leading: ClipRRect(
+                borderRadius: BorderRadius.circular(300.0),
+                child: exercise.imagePath == ''
+                    ? Container(
+                  width: 50,
+                  height: 50,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFE1F0CF),
+                    borderRadius: BorderRadius.circular(300.0),
+                  ),
+                  child: Center(
+                    child: Text(
+                      exerciseName[0].toUpperCase(),
+                      style: const TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 24.0,
+                      ),
+                    ),
+                  ),
+                )
+                    : Image.asset(
+                  exercise.imagePath,
+                  width: 50,
+                  height: 50,
+                )),
+            title: Text(
+              '$exerciseName ($exerciseCategory)',
+              style: const TextStyle(color: Colors.white),
             ),
-          );
-        },
-        child: ListTile(
-          leading: ClipRRect(
-              borderRadius: BorderRadius.circular(300.0),
-              child: exercise.imagePath == ''
-                  ? Container(
-                      width: 50,
-                      height: 50,
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFE1F0CF),
-                        borderRadius: BorderRadius.circular(300.0),
-                      ),
-                      child: Center(
-                        child: Text(
-                          exercise.name[0].toUpperCase(),
-                          style: const TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 24.0,
-                          ),
-                        ),
-                      ),
-                    )
-                  : Image.asset(
-                      exercise.imagePath,
-                      width: 50,
-                      height: 50,
-                    )),
-          title: Text(
-            '${exercise.name} (${exercise.category.target!.name})',
-            style: const TextStyle(color: Colors.white),
-          ),
-          subtitle: Text(
-            exercise.category.target!.name,
-            style: TextStyle(color: Colors.grey[500]),
+            subtitle: Text(
+              exerciseCategory,
+              style: TextStyle(color: Colors.grey[500]),
+            ),
           ),
         ),
-      ),
-    );
+      );
+    } else {
+      // Return an empty container if the exercise doesn't match the search
+      return Container();
+    }
   }
 }
