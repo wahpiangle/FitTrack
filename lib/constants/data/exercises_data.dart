@@ -4,17 +4,17 @@ import 'bodypart_data.dart';
 import 'category_data.dart';
 
 Map<String, Map<String, String>> exerciseMap = {
-  'Bench Press': {'Chest': 'Barbell'},
-  'Incline Bench Press': {'Chest': 'Barbell'},
-  'Decline Bench Press': {'Chest': 'Barbell'},
-  'Dumbbell Bench Press': {'Chest': 'Dumbbell'},
+  'Bench Press (Barbell)': {'Chest': 'Barbell'},
+  'Incline Bench Press (Barbell)': {'Chest': 'Barbell'},
+  'Bench Press (Dumbbell)': {'Chest': 'Dumbbell'},
+  'Deadlift (Barbell)': {'Back': 'Barbell'},
 };
 
 Map<String, String> imageMap = {
-  'Bench Press': 'assets/AbWheel.jpeg',
-  'Incline Bench Press': 'assets/aerobics.jpg',
-  'Decline Bench Press': 'assets/Aroundtheworld.jpeg',
-  'Dumbbell Bench Press': '',
+  'Bench Press (Barbell)': 'assets/exercises/barbell-bench.png',
+  'Incline Bench Press (Barbell)': 'assets/exercises/incline-barbell-bench.png',
+  'Bench Press (Dumbbell)': 'assets/exercises/dumbbell-bench.png',
+  'Deadlift (Barbell)': 'assets/exercises/barbell-deadlift.png',
 };
 
 List<Exercise> generateExerciseData() {

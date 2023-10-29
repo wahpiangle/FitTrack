@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:group_project/main.dart';
 import 'package:group_project/models/exercise.dart';
 import 'package:group_project/pages/components/bottom_nav_bar.dart';
+import 'package:group_project/pages/components/crop_image.dart';
 import 'package:group_project/pages/components/top_nav_bar.dart';
 import 'package:group_project/pages/exercise/exercise_detail.dart';
 import 'package:group_project/pages/exercise/exercise_filter_page.dart'; // Import ExerciseFilterPage
@@ -34,7 +35,7 @@ class ExerciseListScreenState extends State<ExerciseListScreen> {
     streamExercises = objectBox.watchAllExercise();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final RenderBox filterButton =
-      _filterButtonKey.currentContext?.findRenderObject() as RenderBox;
+          _filterButtonKey.currentContext?.findRenderObject() as RenderBox;
       final Offset buttonPosition = filterButton.localToGlobal(Offset.zero);
       filterButtonRect = Rect.fromPoints(
         buttonPosition,
@@ -109,14 +110,17 @@ class ExerciseListScreenState extends State<ExerciseListScreen> {
                           child: Container(
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(10.0),
-                              border: Border.all(color: const Color(0xFF333333)),
+                              border:
+                                  Border.all(color: const Color(0xFF333333)),
                               color: const Color(0xFF333333),
                             ),
                             child: Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 16.0),
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(10.0),
-                                border: Border.all(color: const Color(0xFF333333)),
+                                border:
+                                    Border.all(color: const Color(0xFF333333)),
                               ),
                               child: TextField(
                                 onChanged: (query) {
@@ -129,7 +133,6 @@ class ExerciseListScreenState extends State<ExerciseListScreen> {
                                   hintStyle: TextStyle(color: Colors.white),
                                 ),
                               ),
-
                             ),
                           ),
                         ),
@@ -137,34 +140,37 @@ class ExerciseListScreenState extends State<ExerciseListScreen> {
                         Expanded(
                           flex: 1,
                           child: Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10.0),
-                              border: Border.all(color: const Color(0xFF333333)),
-                              color: const Color(0xFF333333),
-                            ),
-                            child: IconButton(
-                              icon: const Icon(Icons.filter_list,
-                                  color: Colors.white, size: 24.0),
-                              onPressed: () {
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (BuildContext context) {
-                                      return ExerciseFilterPage(
-                                        categories: categories,
-                                        selectedCategory: selectedCategory,
-                                        onFilterApplied: (filterArguments) {
-                                          // Handle the filter applied logic here
-                                          setSelectedCategory(filterArguments.selectedCategory);
-                                          setSelectedBodyPart(filterArguments.selectedBodyPart);
-                                        },
-                                      );
-                                    },
-                                  ),
-                                );
-                              },
-                            )
-                            ),
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 16.0),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10.0),
+                                border:
+                                    Border.all(color: const Color(0xFF333333)),
+                                color: const Color(0xFF333333),
+                              ),
+                              child: IconButton(
+                                icon: const Icon(Icons.filter_list,
+                                    color: Colors.white, size: 24.0),
+                                onPressed: () {
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (BuildContext context) {
+                                        return ExerciseFilterPage(
+                                          categories: categories,
+                                          selectedCategory: selectedCategory,
+                                          onFilterApplied: (filterArguments) {
+                                            // Handle the filter applied logic here
+                                            setSelectedCategory(filterArguments
+                                                .selectedCategory);
+                                            setSelectedBodyPart(filterArguments
+                                                .selectedBodyPart);
+                                          },
+                                        );
+                                      },
+                                    ),
+                                  );
+                                },
+                              )),
                         ),
                       ],
                     ),
@@ -185,7 +191,9 @@ class ExerciseListScreenState extends State<ExerciseListScreen> {
                           ),
                           child: Center(
                             child: Text(
-                              selectedCategory == 'All' ? selectedBodyPart : selectedCategory,
+                              selectedCategory == 'All'
+                                  ? selectedBodyPart
+                                  : selectedCategory,
                               style: const TextStyle(
                                 color: Colors.black,
                                 fontWeight: FontWeight.bold,
@@ -198,30 +206,30 @@ class ExerciseListScreenState extends State<ExerciseListScreen> {
                   ),
                   const SizedBox(height: 10.0),
                   Expanded(
-                    child: ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: groupedExercise.length,
-                      itemBuilder: (context, index) {
-                        final key = groupedExercise.keys.elementAt(index);
-                        final exercises = groupedExercise.values.elementAt(index);
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Container(
-                              margin: const EdgeInsets.symmetric(vertical: 5),
-                              child: Text(
-                                key,
-                                style: TextStyle(color: Colors.white),
-                              ),
+                      child: ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: groupedExercise.length,
+                    itemBuilder: (context, index) {
+                      final key = groupedExercise.keys.elementAt(index);
+                      final exercises = groupedExercise.values.elementAt(index);
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            margin: const EdgeInsets.symmetric(vertical: 5),
+                            child: Text(
+                              key,
+                              style: TextStyle(color: Colors.white),
                             ),
-                            for (final exercise in exercises)
-                              ExerciseListItem(exercise: exercise, searchText: searchText), // Pass searchText here
-                          ],
-                        );
-                      },
-                    )
-
-                  )
+                          ),
+                          for (final exercise in exercises)
+                            ExerciseListItem(
+                                exercise: exercise,
+                                searchText: searchText), // Pass searchText here
+                        ],
+                      );
+                    },
+                  ))
                 ],
               ),
             ),
@@ -242,13 +250,12 @@ class ExerciseListScreenState extends State<ExerciseListScreen> {
   }
 }
 
-
-
 class ExerciseListItem extends StatelessWidget {
   final Exercise exercise;
   final String searchText;
 
-  ExerciseListItem({super.key, required this.exercise, required this.searchText});
+  ExerciseListItem(
+      {super.key, required this.exercise, required this.searchText});
 
   @override
   Widget build(BuildContext context) {
@@ -259,61 +266,66 @@ class ExerciseListItem extends StatelessWidget {
     final containsSearchText =
         exerciseName.toLowerCase().contains(searchText.toLowerCase()) ||
             exerciseCategory.toLowerCase().contains(searchText.toLowerCase());
-
-    // If the search text is empty or the exercise matches the search, display it
-    if (searchText.isEmpty || containsSearchText) {
-      return Material(
-        color: const Color(0xFF1A1A1A),
-        child: InkWell(
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => ExerciseDetailScreen(exercise),
-              ),
-            );
-          },
-          child: ListTile(
-            leading: ClipRRect(
-                borderRadius: BorderRadius.circular(300.0),
-                child: exercise.imagePath == ''
-                    ? Container(
-                  width: 50,
-                  height: 50,
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFE1F0CF),
-                    borderRadius: BorderRadius.circular(300.0),
-                  ),
-                  child: Center(
-                    child: Text(
-                      exerciseName[0].toUpperCase(),
-                      style: const TextStyle(
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 24.0,
+if (searchText.isEmpty || containsSearchText) {
+    return Material(
+      color: const Color(0xFF1A1A1A),
+      child: InkWell(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ExerciseDetailScreen(exercise),
+            ),
+          );
+        },
+        child: ListTile(
+          horizontalTitleGap: -10,
+          leading: ClipRRect(
+              borderRadius: BorderRadius.circular(300.0),
+              child: exercise.imagePath == ''
+                  ? Container(
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFE1F0CF),
+                      borderRadius: BorderRadius.circular(300.0),
+                    ),
+                    child: Center(
+                      child: Text(
+                        exercise.name[0].toUpperCase(),
+                        style: const TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 24.0,
+                        ),
                       ),
                     ),
+                  )
+                  : ClipPath(
+                    clipper: MyClipperPath(),
+                    child: Container(
+                      height: 60,
+                      width: 80,
+                      decoration: BoxDecoration(
+                          image: DecorationImage(
+                        image: Image.asset(exercise.imagePath).image,
+                        fit: BoxFit.contain, //or whatever BoxFit you want
+                      )),
+                    ),
                   ),
-                )
-                    : Image.asset(
-                  exercise.imagePath,
-                  width: 50,
-                  height: 50,
-                )),
-            title: Text(
-              '$exerciseName ($exerciseCategory)',
-              style: const TextStyle(color: Colors.white),
-            ),
-            subtitle: Text(
-              exerciseCategory,
-              style: TextStyle(color: Colors.grey[500]),
-            ),
+          ),
+          title: Text(
+            exercise.name,
+            style: const TextStyle(color: Colors.white),
+          ),
+
+          subtitle: Text(
+            exerciseCategory,
+            style: TextStyle(color: Colors.grey[500]),
           ),
         ),
-      );
-    } else {
+      ),
+    );
+  } else {
       // Return an empty container if the exercise doesn't match the search
       return Container();
     }
-  }
 }

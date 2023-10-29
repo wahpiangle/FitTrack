@@ -18,10 +18,13 @@ class TopNavBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       backgroundColor: const Color(0xFF1A1A1A),
-      title: Text(
-        title,
-        style: const TextStyle(
-          fontWeight: FontWeight.bold,
+      title: FittedBox(
+        fit: BoxFit.fitWidth,
+        child: Text(
+          title,
+          style: const TextStyle(
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ),
       centerTitle: true,
@@ -45,14 +48,16 @@ class TopNavBar extends StatelessWidget implements PreferredSizeWidget {
             padding: const EdgeInsets.all(8.0),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(50),
-              child: CachedNetworkImage(
-                imageUrl: user?.photoURL ?? 'assets/icons/defaultimage.jpg',
-                placeholder: (context, url) =>
-                    const CircularProgressIndicator(),
-                errorWidget: (context, url, error) =>
-                    Image.asset('assets/icons/defaultimage.jpg'),
-                fit: BoxFit.cover,
-              ),
+              child: user?.photoURL == null
+                  ? Image.asset('assets/icons/defaultimage.jpg')
+                  : CachedNetworkImage(
+                      imageUrl: user!.photoURL!,
+                      placeholder: (context, url) =>
+                          Image.asset('assets/icons/defaultimage.jpg'),
+                      errorWidget: (context, url, error) =>
+                          Image.asset('assets/icons/defaultimage.jpg'),
+                      fit: BoxFit.cover,
+                    ),
             ),
           ),
         ),
