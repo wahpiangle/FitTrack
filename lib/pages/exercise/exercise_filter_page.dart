@@ -1,24 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:group_project/models/category.dart';
 import 'package:group_project/constants/data/category_data.dart';
 import 'package:group_project/constants/data/bodypart_data.dart';
 
-class FilterArguments {
-  final String selectedCategory;
+class ExerciseFilterPage extends StatefulWidget {
+  final Function(dynamic bodyPart) setBodyPart;
   final String selectedBodyPart;
 
-  FilterArguments(this.selectedCategory, this.selectedBodyPart);
-}
-
-class ExerciseFilterPage extends StatefulWidget {
-  final List<Category> categories;
-  final String selectedCategory;
-  final ValueChanged<FilterArguments> onFilterApplied;
-
   ExerciseFilterPage({
-    required this.categories,
-    required this.selectedCategory,
-    required this.onFilterApplied,
+    super.key,
+    required this.setBodyPart,
+    required this.selectedBodyPart,
   });
 
   @override
@@ -26,22 +17,23 @@ class ExerciseFilterPage extends StatefulWidget {
 }
 
 class _ExerciseFilterPageState extends State<ExerciseFilterPage> {
-  List<String> selectedBodyParts = [];
+  String selectedBodyPart = '';
   List<String> selectedCategories = [];
-  int selectedFiltersCount = 0; // Add a variable to track the selected filters count
+  int selectedFiltersCount = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    selectedBodyPart = widget.selectedBodyPart;
+    selectedFiltersCount = selectedBodyPart.length;
+  }
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
-    final maxGreenBordersPerRow = 3; // Maximum 3 green borders per row
-    final borderSpacing = 8.0;
-    final itemWidth = (screenWidth - (borderSpacing * (maxGreenBordersPerRow + 1))) / maxGreenBordersPerRow;
-    final fontSize = screenWidth * 0.04;
-
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           'Filter',
           style: TextStyle(
             color: Colors.white,
@@ -50,7 +42,7 @@ class _ExerciseFilterPageState extends State<ExerciseFilterPage> {
           ),
         ),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios, color: Colors.white),
+          icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
           onPressed: () {
             Navigator.of(context).pop();
           },
@@ -63,8 +55,8 @@ class _ExerciseFilterPageState extends State<ExerciseFilterPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Separated section for Body Parts
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8.0),
+            const Padding(
+              padding: EdgeInsets.symmetric(vertical: 8.0),
               child: Text(
                 'Body Parts',
                 style: TextStyle(
@@ -74,51 +66,12 @@ class _ExerciseFilterPageState extends State<ExerciseFilterPage> {
                 ),
               ),
             ),
-            Wrap(
-              spacing: borderSpacing,
-              runSpacing: borderSpacing,
-              children: bodyPartData.map((bodyPart) {
-                final isFilterSelected = selectedBodyParts.contains(bodyPart.name);
-                return generateColoredBorderItem(
-                  itemWidth,
-                  isFilterSelected,
-                  Color(0xFF7E7F7A), // Grey border color
-                  const Color(0xFFE1F0CF), // Green border color (#E1F0CF)
-                  fontSize,
-                  bodyPart.name,
-                      () {
-                    setState(() {
-                      if (isFilterSelected) {
-                        selectedBodyParts.remove(bodyPart.name);
-                        selectedFiltersCount--; // Decrement the count
-                      } else if (selectedFiltersCount < 5) {
-                        selectedBodyParts.add(bodyPart.name);
-                        selectedFiltersCount++; // Increment the count
-                      } else {
-                        // Show a warning message if more than 5 filters are selected
-                        showMaxFilterWarning();
-                      }
-                    });
-                  },
-                );
-              }).toList(),
-            ),
-            SizedBox(height: 20.0),
-
-            // Display selected body parts with grey borders
-            if (selectedBodyParts.isNotEmpty)
-              Container(
-                margin: EdgeInsets.symmetric(vertical: 8.0),
-                child: Wrap(
-                  spacing: borderSpacing,
-                  runSpacing: borderSpacing,
-                  children: generateGreyBorderItems(selectedBodyParts, itemWidth, fontSize),
-                ),
-              ),
+            generateItems(bodyPartData, true, false),
+            const SizedBox(height: 20.0),
 
             // Separated section for Categories
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 20.0),
+            const Padding(
+              padding: EdgeInsets.symmetric(vertical: 20.0),
               child: Text(
                 'Categories',
                 style: TextStyle(
@@ -128,124 +81,114 @@ class _ExerciseFilterPageState extends State<ExerciseFilterPage> {
                 ),
               ),
             ),
-            Wrap(
-              spacing: borderSpacing,
-              runSpacing: borderSpacing,
-              children: categoryData.map((category) {
-                final isFilterSelected = selectedCategories.contains(category.name);
-                return generateColoredBorderItem(
-                  itemWidth,
-                  isFilterSelected,
-                  Color(0xFF7E7F7A), // Grey border color
-                  const Color(0xFFE1F0CF), // Green border color (#E1F0CF)
-                  fontSize,
-                  category.name,
-                      () {
-                    setState(() {
-                      if (isFilterSelected) {
-                        selectedCategories.remove(category.name);
-                        selectedFiltersCount--; // Decrement the count
-                      } else if (selectedFiltersCount < 5) {
-                        selectedCategories.add(category.name);
-                        selectedFiltersCount++; // Increment the count
-                      } else {
-                        // Show a warning message if more than 5 filters are selected
-                        showMaxFilterWarning();
-                      }
-                    });
-                  },
-                );
-              }).toList(),
-            ),
-
-            // Display selected categories with grey borders
-            if (selectedCategories.isNotEmpty)
-              Container(
-                margin: EdgeInsets.symmetric(vertical: 8.0),
-                child: Wrap(
-                  spacing: borderSpacing,
-                  runSpacing: borderSpacing,
-                  children: generateGreyBorderItems(selectedCategories, itemWidth, fontSize),
-                ),
-              ),
+            generateItems(categoryData, false, true),
           ],
         ),
       ),
     );
   }
+
+  Widget generateItems(
+    List data,
+    bool isBodyPart,
+    bool isCategory,
+  ) {
+    if (isBodyPart) {
+      return Wrap(
+        spacing: 12,
+        runSpacing: 20,
+        children: data.map((bodyPart) {
+          bool isFilterSelected = selectedBodyPart == bodyPart.name;
+          return generateColoredBorderItem(
+            isFilterSelected,
+            const Color(0xFFE1F0CF), // Green border color (#E1F0CF)
+            18,
+            bodyPart.name,
+            () {
+              setState(() {
+                if (isFilterSelected) {
+                  selectedBodyPart = '';
+                  widget.setBodyPart('');
+                } else {
+                  selectedBodyPart = bodyPart.name;
+                  widget.setBodyPart(bodyPart.name);
+                }
+              });
+            },
+          );
+        }).toList(),
+      );
+    } else if (isCategory) {
+      return Wrap(
+        spacing: 12,
+        runSpacing: 20,
+        children: data.map((category) {
+          final isFilterSelected = selectedCategories.contains(category.name);
+          return generateColoredBorderItem(
+            isFilterSelected,
+            const Color(0xFFE1F0CF), // Green border color (#E1F0CF)
+            18,
+            category.name,
+            () {
+              setState(() {
+                if (isFilterSelected) {
+                  selectedCategories.remove(category.name);
+                  selectedFiltersCount--; // Decrement the count
+                } else if (selectedFiltersCount < 5) {
+                  selectedCategories.add(category.name);
+                  selectedFiltersCount++; // Increment the count
+                } else {
+                  // Show a warning message if more than 5 filters are selected
+                  showMaxFilterWarning();
+                }
+              });
+            },
+          );
+        }).toList(),
+      );
+    } else {
+      return Container();
+    }
+  }
+
   Widget generateColoredBorderItem(
-      double width,
-      bool isFilterSelected,
-      Color borderColor,
-      Color backgroundColor,
-      double fontSize,
-      String text,
-      Function() onTap,
-      ) {
-    return Container(
-      width: width,
-      decoration: BoxDecoration(
-        border: Border.all(
-          color: isFilterSelected ? Colors.yellow : borderColor,
-          width: 2.0, // You can adjust this width as needed
+    bool isFilterSelected,
+    Color selectedColor,
+    double fontSize,
+    String text,
+    Function() onTap,
+  ) {
+    return FittedBox(
+      fit: BoxFit.fitWidth,
+      child: Container(
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(24.0),
+          color: isFilterSelected
+              ? selectedColor
+              : const Color.fromARGB(255, 46, 46, 46),
         ),
-        borderRadius: BorderRadius.circular(12.0),
-        color: isFilterSelected ? const Color(0xFFF9E076) : backgroundColor,
-      ),
-      child: InkWell(
-        onTap: onTap,
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text(
-            text,
-            style: TextStyle(
-              color: const Color(0xFF1A1A1A), // Font color (#8E9090)
-              fontSize: fontSize,
-              fontWeight: isFilterSelected ? FontWeight.bold : FontWeight.normal, // Make the text bold inside the green borders
+        child: Material(
+          color: Colors.transparent,
+          child: InkWell(
+            borderRadius: BorderRadius.circular(24.0),
+            onTap: onTap,
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 8.0),
+              child: Text(
+                text,
+                style: TextStyle(
+                  color: isFilterSelected ? Colors.black : Colors.white,
+                  fontSize: fontSize,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ),
           ),
         ),
       ),
     );
   }
-
-
-  List<Widget> generateGreyBorderItems(List<String> items, double itemWidth, double fontSize) {
-    List<Widget> greyBorders = [];
-    final itemPadding = 8.0; // Padding inside the grey border
-    final greyBorderColor = Color(0xFF7E7F7A); // Grey border color
-    final greyBackgroundColor = Color(0xFF7E7F7A); // Grey background color
-    final fontColor = Color(0xFFDDDDDD); // Font color
-
-    for (int i = 0; i < items.length; i++) {
-      greyBorders.add(
-        Container(
-          width: itemWidth,
-          decoration: BoxDecoration(
-            border: Border.all(
-              color: greyBorderColor,
-              width: 2.0, // Match the width of the green borders
-            ),
-            borderRadius: BorderRadius.circular(12.0),
-            color: greyBackgroundColor,
-          ),
-          child: Padding(
-            padding: EdgeInsets.all(itemPadding),
-            child: Text(
-              items[i],
-              style: TextStyle(
-                color: fontColor,
-                fontSize: fontSize,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-        ),
-      );
-    }
-    return greyBorders;
-  }
-
 
   void showMaxFilterWarning() {
     // Show a warning message when more than 5 filters are selected
@@ -253,14 +196,17 @@ class _ExerciseFilterPageState extends State<ExerciseFilterPage> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text('Maximum Filters Reached'),
-          content: Text('You can select up to 5 filters.'),
+          backgroundColor: const Color(0xFF1A1A1A),
+          title: const Text('Maximum Filters Reached',
+              style: TextStyle(color: Color(0xFFE1F0CF))),
+          content: const Text('You can only select 5 filters.',
+              style: TextStyle(color: Color(0xFFC1C1C1))),
           actions: <Widget>[
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text('OK'),
+              child: const Text('OK'),
             ),
           ],
         );
