@@ -196,9 +196,6 @@ class ExerciseListScreenState extends State<ExerciseListScreen> {
                   SizedBox(
                     width: double.infinity,
                     child: Wrap(
-                      alignment: WrapAlignment.start,
-                      crossAxisAlignment: WrapCrossAlignment.center,
-                      runAlignment: WrapAlignment.start,
                       spacing: 10,
                       runSpacing: 10,
                       children: [
@@ -410,7 +407,7 @@ Widget filterLabel(
       alignment: Alignment.center,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20.0),
-        color: Color(0xFFE1F0CF),
+        color: const Color(0xFFE1F0CF),
       ),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16.0),
