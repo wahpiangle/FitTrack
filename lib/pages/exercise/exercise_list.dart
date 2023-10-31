@@ -98,16 +98,18 @@ class ExerciseListScreenState extends State<ExerciseListScreen> {
             return const Center(child: CircularProgressIndicator());
           }
 
-          final filteredData = snapshot.data!
-              .where(
-                (exercise) =>
-                    (selectedBodyPart == '') ||
-                    (exercise.bodyPart.target!.name == selectedBodyPart) &&
-                        (selectedCategory.isEmpty ||
-                            selectedCategory
-                                .contains(exercise.category.target!.name)),
-              )
-              .toList();
+          final filteredData = snapshot.data!.where((exercise) {
+            final exerciseBodyPart = exercise.bodyPart.target!.name;
+            final exerciseCategory = exercise.category.target!.name;
+
+            // Check if the exercise body part or category matches the selected body part or category
+            final isBodyPartMatch = selectedBodyPart.isEmpty ||
+                exerciseBodyPart == selectedBodyPart;
+            final isCategoryMatch = selectedCategory.isEmpty ||
+                selectedCategory.contains(exerciseCategory);
+
+            return isBodyPartMatch && isCategoryMatch;
+          }).toList();
 
           final groupedExercise = groupExercises(filteredData);
 
@@ -192,26 +194,35 @@ class ExerciseListScreenState extends State<ExerciseListScreen> {
                     ),
                   ),
                   SizedBox(
-                    height: 48.0,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
+                    width: double.infinity,
+                    child: Wrap(
+                      alignment: WrapAlignment.start,
+                      crossAxisAlignment: WrapCrossAlignment.center,
+                      runAlignment: WrapAlignment.start,
+                      spacing: 10,
+                      runSpacing: 10,
                       children: [
-                        //TODO handle filter buttons based on selectedBodyPart and selectedCategory using filterLabel
-                        if (selectedBodyPart.isNotEmpty || selectedCategory.isNotEmpty)
-                          if (selectedBodyPart.isEmpty && selectedCategory.isEmpty)
+                        if (selectedBodyPart.isNotEmpty ||
+                            selectedCategory.isNotEmpty)
+                          if (selectedBodyPart.isEmpty &&
+                              selectedCategory.isEmpty)
                             filterLabel('All', true, () {
                               setSelectedBodyPart('');
                               selectedCategory.clear();
                             }),
-
                         if (selectedBodyPart.isNotEmpty)
                           filterLabel(selectedBodyPart, true, () {
                             setSelectedBodyPart('');
                           }),
-
                         for (final category in selectedCategory)
                           filterLabel(category, true, () {
                             removeSelectedCategory(category);
+                          }),
+                        if (selectedBodyPart.isEmpty &&
+                            selectedCategory.isEmpty)
+                          filterLabel('All', false, () {
+                            setSelectedBodyPart('');
+                            selectedCategory.clear();
                           }),
                       ],
                     ),
@@ -298,37 +309,41 @@ class ExerciseListItem extends StatelessWidget {
           },
           child: ListTile(
             horizontalTitleGap: -10,
-            leading: ClipRRect(
-              borderRadius: BorderRadius.circular(300.0),
-              child: exercise.imagePath == ''
-                  ? Container(
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFE1F0CF),
-                        borderRadius: BorderRadius.circular(300.0),
-                      ),
-                      child: Center(
-                        child: Text(
-                          exercise.name[0].toUpperCase(),
-                          style: const TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 24.0,
+            leading: SizedBox(
+              height: 60,
+              width: 60,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(300.0),
+                child: exercise.imagePath == ''
+                    ? Container(
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFE1F0CF),
+                          borderRadius: BorderRadius.circular(300.0),
+                        ),
+                        child: Center(
+                          child: Text(
+                            exercise.name[0].toUpperCase(),
+                            style: const TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 24.0,
+                            ),
                           ),
                         ),
+                      )
+                    : ClipPath(
+                        clipper: MyClipperPath(),
+                        child: Container(
+                          height: 60,
+                          width: 80,
+                          decoration: BoxDecoration(
+                              image: DecorationImage(
+                            image: Image.asset(exercise.imagePath).image,
+                            fit: BoxFit.contain, //or whatever BoxFit you want
+                          )),
+                        ),
                       ),
-                    )
-                  : ClipPath(
-                      clipper: MyClipperPath(),
-                      child: Container(
-                        height: 60,
-                        width: 80,
-                        decoration: BoxDecoration(
-                            image: DecorationImage(
-                          image: Image.asset(exercise.imagePath).image,
-                          fit: BoxFit.contain, //or whatever BoxFit you want
-                        )),
-                      ),
-                    ),
+              ),
             ),
             title: Text(
               exercise.name,
@@ -354,53 +369,58 @@ Widget filterLabel(
   Function() onTap,
 ) {
   if (isFilterSelected) {
-    Container(
+    return FittedBox(
+      fit: BoxFit.fitWidth,
+      child: SizedBox(
+        height: 35,
+        child: TextButton.icon(
+          icon: const Icon(
+            Icons.close,
+            color: Color(0xFF333333),
+            size: 20,
+          ),
+          style: TextButton.styleFrom(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 10,
+            ),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20.0),
+            ),
+            backgroundColor: const Color(0xFFE1F0CF),
+          ),
+          label: Text(
+            text,
+            style: const TextStyle(
+              color: Colors.black,
+              fontWeight: FontWeight.bold,
+              fontSize: 12.0,
+            ),
+          ),
+          onPressed: () {
+            onTap();
+          },
+        ),
+      ),
+    );
+  }
+  return FittedBox(
+    fit: BoxFit.fitWidth,
+    child: Container(
+      height: 35,
       alignment: Alignment.center,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20.0),
-        border: Border.all(color: Colors.black),
-        color: const Color(0xFFE1F0CF),
+        color: Color(0xFFE1F0CF),
       ),
-      child: TextButton.icon(
-        icon: const Icon(
-          Icons.close,
-          color: Color(0xFF333333),
-          size: 20,
-        ),
-        style: TextButton.styleFrom(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 16,
-          ),
-        ),
-        label: Text(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+        child: Text(
           text,
           style: const TextStyle(
             color: Colors.black,
             fontWeight: FontWeight.bold,
-            fontSize: 16.0,
+            fontSize: 12.0,
           ),
-        ),
-        onPressed: () {
-          onTap();
-        },
-      ),
-    );
-  }
-  return Container(
-    alignment: Alignment.center,
-    decoration: BoxDecoration(
-      borderRadius: BorderRadius.circular(20.0),
-      border: Border.all(color: Colors.black),
-      color: const Color(0xFFE1F0CF),
-    ),
-    child: Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24.0),
-      child: Text(
-        text,
-        style: const TextStyle(
-          color: Colors.black,
-          fontWeight: FontWeight.bold,
-          fontSize: 16.0,
         ),
       ),
     ),
