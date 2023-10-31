@@ -20,7 +20,7 @@ class ExerciseListScreen extends StatefulWidget {
 
 class ExerciseListScreenState extends State<ExerciseListScreen> {
   String searchText = '';
-  List selectedCategory = []; // Default to []
+  List<String> selectedCategory = []; // Default to []
   String selectedBodyPart = '';
   final int _selectedIndex = 3;
   Map<String, List<Exercise>> exerciseGroups = {};
@@ -43,8 +43,7 @@ class ExerciseListScreenState extends State<ExerciseListScreen> {
             filterButton.size.width, filterButton.size.height),
       );
       // Populate the list with 'All' exercises by default
-      // Populate the list with the selected category or body part by default
-      filterExercises('', selectedCategory);
+      filterExercises('');
     });
   }
 
@@ -60,10 +59,9 @@ class ExerciseListScreenState extends State<ExerciseListScreen> {
     return groupedExercises;
   }
 
-  void filterExercises(String query, List category) {
+  void filterExercises(String query) {
     setState(() {
       searchText = query;
-      selectedCategory = category;
     });
   }
 
@@ -73,9 +71,15 @@ class ExerciseListScreenState extends State<ExerciseListScreen> {
     });
   }
 
-  void setSelectedCategory(List category) {
+  void addSelectedCategory(String category) {
     setState(() {
-      selectedCategory = category;
+      selectedCategory.add(category);
+    });
+  }
+
+  void removeSelectedCategory(String category) {
+    setState(() {
+      selectedCategory.remove(category);
     });
   }
 
@@ -94,13 +98,17 @@ class ExerciseListScreenState extends State<ExerciseListScreen> {
             return const Center(child: CircularProgressIndicator());
           }
 
-          final filteredData = snapshot.data!.where((exercise) {
-            if (selectedBodyPart == '') {
-              return true;
-            } else {
-              return exercise.bodyPart.target!.name == selectedBodyPart;
-            }
-          }).toList();
+          final filteredData = snapshot.data!
+              .where(
+                (exercise) =>
+                    (selectedBodyPart == '') ||
+                    (exercise.bodyPart.target!.name == selectedBodyPart) &&
+                        (selectedCategory.isEmpty ||
+                            selectedCategory
+                                .contains(exercise.category.target!.name)),
+              )
+              .toList();
+
           final groupedExercise = groupExercises(filteredData);
 
           return Container(
@@ -132,7 +140,7 @@ class ExerciseListScreenState extends State<ExerciseListScreen> {
                               ),
                               child: TextField(
                                 onChanged: (query) {
-                                  filterExercises(query, selectedCategory);
+                                  filterExercises(query);
                                 },
                                 style: const TextStyle(color: Colors.white),
                                 decoration: const InputDecoration(
@@ -167,6 +175,11 @@ class ExerciseListScreenState extends State<ExerciseListScreen> {
                                         selectedBodyPart: selectedBodyPart,
                                         setBodyPart: (bodyPart) =>
                                             setSelectedBodyPart(bodyPart),
+                                        selectedCategory: selectedCategory,
+                                        addCategory: (category) =>
+                                            addSelectedCategory(category),
+                                        removeCategory: (category) =>
+                                            removeSelectedCategory(category),
                                       );
                                     },
                                   ),
@@ -183,51 +196,7 @@ class ExerciseListScreenState extends State<ExerciseListScreen> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        // Show a single circular rectangle for the selected category
-                        Container(
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20.0),
-                            border: Border.all(color: Colors.black),
-                            color: const Color(0xFFE1F0CF),
-                          ),
-                          child: selectedBodyPart == ''
-                              ? const Padding(
-                                  padding:
-                                      EdgeInsets.symmetric(horizontal: 24.0),
-                                  child: Text(
-                                    'All',
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16.0,
-                                    ),
-                                  ),
-                                )
-                              : TextButton.icon(
-                                  icon: const Icon(
-                                    Icons.close,
-                                    color: Color(0xFF333333),
-                                    size: 20,
-                                  ),
-                                  style: TextButton.styleFrom(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 16,
-                                    ),
-                                  ),
-                                  label: Text(
-                                    selectedBodyPart,
-                                    style: const TextStyle(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16.0,
-                                    ),
-                                  ),
-                                  onPressed: () {
-                                    setSelectedBodyPart('');
-                                  },
-                                ),
-                        ),
+                        //TODO handle filter buttons based on selectedBodyPart and selectedCategory using filterLabel
                       ],
                     ),
                   ),
@@ -246,10 +215,15 @@ class ExerciseListScreenState extends State<ExerciseListScreen> {
                           children: [
                             Container(
                               margin: const EdgeInsets.symmetric(vertical: 5),
-                              child: Text(
-                                key,
-                                style: const TextStyle(color: Colors.white),
-                              ),
+                              child: searchText == ''
+                                  ? Text(
+                                      key,
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    )
+                                  : Container(),
                             ),
                             for (final exercise in exercises)
                               ExerciseListItem(
@@ -289,12 +263,11 @@ class ExerciseListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final exerciseName = exercise.name;
-    final exerciseCategory = exercise.category.target!.name;
+    final exerciseBodyPart = exercise.bodyPart.target!.name;
 
     // Check if the exercise name or category contains the search text
     final containsSearchText =
-        exerciseName.toLowerCase().contains(searchText.toLowerCase()) ||
-            exerciseCategory.toLowerCase().contains(searchText.toLowerCase());
+        exerciseName.toLowerCase().contains(searchText.toLowerCase());
     if (searchText.isEmpty || containsSearchText) {
       return Material(
         color: const Color(0xFF1A1A1A),
@@ -346,7 +319,7 @@ class ExerciseListItem extends StatelessWidget {
               style: const TextStyle(color: Colors.white),
             ),
             subtitle: Text(
-              exerciseCategory,
+              exerciseBodyPart,
               style: TextStyle(color: Colors.grey[500]),
             ),
           ),
@@ -357,4 +330,63 @@ class ExerciseListItem extends StatelessWidget {
       return Container();
     }
   }
+}
+
+Widget filterLabel(
+  String text,
+  bool isFilterSelected,
+  Function() onTap,
+) {
+  if (isFilterSelected) {
+    Container(
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(20.0),
+        border: Border.all(color: Colors.black),
+        color: const Color(0xFFE1F0CF),
+      ),
+      child: TextButton.icon(
+        icon: const Icon(
+          Icons.close,
+          color: Color(0xFF333333),
+          size: 20,
+        ),
+        style: TextButton.styleFrom(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 16,
+          ),
+        ),
+        label: Text(
+          text,
+          style: const TextStyle(
+            color: Colors.black,
+            fontWeight: FontWeight.bold,
+            fontSize: 16.0,
+          ),
+        ),
+        onPressed: () {
+          onTap();
+        },
+      ),
+    );
+  }
+  return Container(
+    alignment: Alignment.center,
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(20.0),
+      border: Border.all(color: Colors.black),
+      color: const Color(0xFFE1F0CF),
+    ),
+    child: Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 24.0),
+      child: Text(
+        text,
+        style: const TextStyle(
+          color: Colors.black,
+          fontWeight: FontWeight.bold,
+          fontSize: 16.0,
+        ),
+      ),
+    ),
+  );
 }

@@ -5,11 +5,17 @@ import 'package:group_project/constants/data/bodypart_data.dart';
 class ExerciseFilterPage extends StatefulWidget {
   final Function(dynamic bodyPart) setBodyPart;
   final String selectedBodyPart;
+  final List<String> selectedCategory;
+  final Function(dynamic category) addCategory;
+  final Function(dynamic category) removeCategory;
 
   ExerciseFilterPage({
     super.key,
     required this.setBodyPart,
     required this.selectedBodyPart,
+    required this.selectedCategory,
+    required this.addCategory,
+    required this.removeCategory,
   });
 
   @override
@@ -19,13 +25,12 @@ class ExerciseFilterPage extends StatefulWidget {
 class _ExerciseFilterPageState extends State<ExerciseFilterPage> {
   String selectedBodyPart = '';
   List<String> selectedCategories = [];
-  int selectedFiltersCount = 0;
 
   @override
   void initState() {
     super.initState();
+    selectedCategories = widget.selectedCategory;
     selectedBodyPart = widget.selectedBodyPart;
-    selectedFiltersCount = selectedBodyPart.length;
   }
 
   @override
@@ -132,14 +137,9 @@ class _ExerciseFilterPageState extends State<ExerciseFilterPage> {
             () {
               setState(() {
                 if (isFilterSelected) {
-                  selectedCategories.remove(category.name);
-                  selectedFiltersCount--; // Decrement the count
-                } else if (selectedFiltersCount < 5) {
-                  selectedCategories.add(category.name);
-                  selectedFiltersCount++; // Increment the count
+                  widget.removeCategory(category.name);
                 } else {
-                  // Show a warning message if more than 5 filters are selected
-                  showMaxFilterWarning();
+                  widget.addCategory(category.name);
                 }
               });
             },
