@@ -144,7 +144,7 @@ class ExerciseListScreenState extends State<ExerciseListScreen> {
                                 },
                                 style: const TextStyle(color: Colors.white),
                                 decoration: const InputDecoration(
-                                  hintText: 'Search Exercise',
+                                  hintText: 'Search exercise...',
                                   border: InputBorder.none,
                                   hintStyle: TextStyle(color: Colors.white),
                                 ),
@@ -197,6 +197,22 @@ class ExerciseListScreenState extends State<ExerciseListScreen> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         //TODO handle filter buttons based on selectedBodyPart and selectedCategory using filterLabel
+                        if (selectedBodyPart.isNotEmpty || selectedCategory.isNotEmpty)
+                          if (selectedBodyPart.isEmpty && selectedCategory.isEmpty)
+                            filterLabel('All', true, () {
+                              setSelectedBodyPart('');
+                              selectedCategory.clear();
+                            }),
+
+                        if (selectedBodyPart.isNotEmpty)
+                          filterLabel(selectedBodyPart, true, () {
+                            setSelectedBodyPart('');
+                          }),
+
+                        for (final category in selectedCategory)
+                          filterLabel(category, true, () {
+                            removeSelectedCategory(category);
+                          }),
                       ],
                     ),
                   ),

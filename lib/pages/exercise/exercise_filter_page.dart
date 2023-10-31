@@ -10,7 +10,7 @@ class ExerciseFilterPage extends StatefulWidget {
   final Function(dynamic category) removeCategory;
 
   ExerciseFilterPage({
-    super.key,
+    Key? key,
     required this.setBodyPart,
     required this.selectedBodyPart,
     required this.selectedCategory,
@@ -94,10 +94,10 @@ class _ExerciseFilterPageState extends State<ExerciseFilterPage> {
   }
 
   Widget generateItems(
-    List data,
-    bool isBodyPart,
-    bool isCategory,
-  ) {
+      List data,
+      bool isBodyPart,
+      bool isCategory,
+      ) {
     if (isBodyPart) {
       return Wrap(
         spacing: 12,
@@ -109,7 +109,7 @@ class _ExerciseFilterPageState extends State<ExerciseFilterPage> {
             const Color(0xFFE1F0CF), // Green border color (#E1F0CF)
             18,
             bodyPart.name,
-            () {
+                () {
               setState(() {
                 if (isFilterSelected) {
                   selectedBodyPart = '';
@@ -134,7 +134,7 @@ class _ExerciseFilterPageState extends State<ExerciseFilterPage> {
             const Color(0xFFE1F0CF), // Green border color (#E1F0CF)
             18,
             category.name,
-            () {
+                () {
               setState(() {
                 if (isFilterSelected) {
                   widget.removeCategory(category.name);
@@ -152,12 +152,12 @@ class _ExerciseFilterPageState extends State<ExerciseFilterPage> {
   }
 
   Widget generateColoredBorderItem(
-    bool isFilterSelected,
-    Color selectedColor,
-    double fontSize,
-    String text,
-    Function() onTap,
-  ) {
+      bool isFilterSelected,
+      Color selectedColor,
+      double fontSize,
+      String text,
+      Function() onTap,
+      ) {
     return FittedBox(
       fit: BoxFit.fitWidth,
       child: Container(
