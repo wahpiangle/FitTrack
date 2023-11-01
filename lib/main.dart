@@ -10,11 +10,10 @@ import 'firebase_options.dart';
 late ObjectBox objectBox;
 
 Future<void> main() async {
-  await dotenv.load(fileName: '.env');
+  WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  WidgetsFlutterBinding.ensureInitialized();
   objectBox = await ObjectBox.create();
   runApp(const MyApp());
 }
