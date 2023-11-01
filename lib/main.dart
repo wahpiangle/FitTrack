@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:group_project/pages/auth_wrapper.dart';
 import 'package:group_project/services/auth_service.dart';
@@ -31,6 +30,9 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         title: 'Flutter Auth',
         home: const Wrapper(),
+        routes: {
+          '/auth': (context) => const Wrapper(),
+        },
         theme: ThemeData(
           bottomNavigationBarTheme: const BottomNavigationBarThemeData(
             backgroundColor: Color(0xFF1A1A1A), // Set the background color

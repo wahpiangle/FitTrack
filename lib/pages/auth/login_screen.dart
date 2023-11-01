@@ -90,7 +90,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     }
                   },
                   icon: Image.asset(
-                    'assets/google.png',
+                    'assets/icons/google.png',
                     height: 30,
                     width: 30,
                   ),

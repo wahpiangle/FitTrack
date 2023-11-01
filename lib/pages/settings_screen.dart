@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:group_project/pages/auth/login_screen.dart';
 import 'package:group_project/pages/components/top_nav_bar.dart';
 import 'package:provider/provider.dart';
 import 'components/bottom_nav_bar.dart';
@@ -226,7 +227,9 @@ class LogoutButton extends StatelessWidget {
       width: double.infinity,
       child: TextButton(
         onPressed: () {
-          authService.signOut(); // Call the signOut method from AuthService
+          authService.signOut();
+          Future.microtask(
+              () => Navigator.of(context).popAndPushNamed('/auth'));
         },
         style: TextButton.styleFrom(
           foregroundColor: Colors.red,
