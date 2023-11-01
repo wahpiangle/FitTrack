@@ -7,7 +7,7 @@ class CurrentWorkoutSession {
   @Id()
   int id;
   String title;
-  Map<Exercise, List<ExerciseSet>>? exercises;
+  List<Map<Exercise, List<ExerciseSet>>>? exercises;
 
   CurrentWorkoutSession({
     this.id = 0,
