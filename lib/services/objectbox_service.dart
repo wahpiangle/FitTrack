@@ -41,6 +41,7 @@ class ObjectBox {
     return ObjectBox._create(store);
   }
 
+//exercises
   Stream<List<Exercise>> watchAllExercise() {
     return _exerciseBox
         .query()
@@ -56,15 +57,21 @@ class ObjectBox {
     _exerciseBox.getAll();
   }
 
+  void removeExercises() {
+    _exerciseBox.removeAll();
+  }
+
+//categories & bodyParts
   List<Category> getCategories() {
     return _categoryBox.getAll();
   }
 
-  void getBodyParts() {
-    _bodyPartBox.getAll();
+//workout session
+  void addExerciseToWorkoutSession(Exercise exercise) {
+    _exerciseBox.put(exercise);
   }
 
-  void removeExercises() {
-    _exerciseBox.removeAll();
+  void removeExerciseFromWorkoutSession(Exercise exercise) {
+    _exerciseBox.remove(exercise.id);
   }
 }
