@@ -103,9 +103,9 @@ class _EmailPasswordLoginState extends State<EmailPasswordLogin> {
                   ),
                   onPressed: () async {
                     if (_formKey.currentState!.validate()) {
-                      dynamic result = await _auth.registerWithEmailAndPassword(email, password);
+                      dynamic result = await _auth.signInWithEmailAndPassword(email, password);
                       if(result == null){
-                        setState(() => error = 'please supply a valid email' );
+                        setState(() => error = 'Could not sign in with those credentials' );
                       }
                     }
                   }

@@ -104,12 +104,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                   onPressed: () async {
                     if (_formKey.currentState!.validate()) {
-                      print(email);
-                      print(password);
-                      // dynamic result = await _auth.registerWithEmailAndPassword(email, password);
-                      // if(result == null){
-                      //   setState(() => error = 'please supply a valid email' );
-                      // }
+                      dynamic result = await _auth.registerWithEmailAndPassword(email, password);
+                      if(result == null){
+                        setState(() => error = 'please supply a valid email' );
+                      }
                     }
                   }
               ),
