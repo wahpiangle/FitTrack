@@ -20,27 +20,42 @@ class _EmailPasswordLoginState extends State<EmailPasswordLogin> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+
+
       backgroundColor: const Color(0xFF1A1A1A),
       // const Color(0xFF1A1A1C),
       appBar: AppBar(
+
         backgroundColor: const Color(0xFF1A1A1A),
         elevation: 0.0,
         title: const Text('Log In'),
         centerTitle: true,
       ),
       body: Container(
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            fit: BoxFit.cover,
+            image: AssetImage('assets/background.png'),
+          ),
+        ),
+        constraints: const BoxConstraints.expand(),
         padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 50.0),
         child: Form(
           key: _formKey,
           child: Column(
+
+            mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
+
               const Text('Email',
                   style: TextStyle(
                     color: Colors.white,
-                    letterSpacing: 2.0,
-                  )),
-              const SizedBox(height: 20.0),
+                    fontSize: 23,
+                    fontWeight: FontWeight.bold,
+                  )
+              ),
+              const SizedBox(height: 10.0),
               TextFormField(
                   decoration: const InputDecoration(
                     hintText: 'you@example.com',
@@ -57,13 +72,15 @@ class _EmailPasswordLoginState extends State<EmailPasswordLogin> {
                   onChanged: (val) {
                     setState(() => email = val);
                   }),
-              const SizedBox(height: 20.0),
+              const SizedBox(height: 30.0),
               const Text('Password',
                   style: TextStyle(
                     color: Colors.white,
-                    letterSpacing: 2.0,
-                  )),
-              const SizedBox(height: 20.0),
+                    fontSize: 23,
+                    fontWeight: FontWeight.bold,
+                  )
+              ),
+              const SizedBox(height: 10.0),
               TextFormField(
                   decoration: const InputDecoration(
                     hintText: '******',
@@ -81,25 +98,47 @@ class _EmailPasswordLoginState extends State<EmailPasswordLogin> {
                   onChanged: (val) {
                     setState(() => password = val);
                   }),
-              const SizedBox(height: 30.0),
-              ElevatedButton(
-                  child: const Text(
-                    'Log In',
-                    style: TextStyle(color: Colors.white),
+              const SizedBox(height: 40.0),
+
+              FractionallySizedBox(
+                widthFactor: 1,
+                child: ElevatedButton(
+                    onPressed: () async {
+                      if (_formKey.currentState!.validate()) {
+                        dynamic result = await _auth.signInWithEmailAndPassword(
+                            email, password);
+                        if (result == null) {
+                          setState(() =>
+                          error = 'Could not sign in with those credentials');
+                        }
+                        if (result != null) {
+                          Future.microtask(() => Navigator.pop(context));
+                        }
+                      }
+                    },
+                  style: ButtonStyle(
+                    minimumSize: MaterialStateProperty.all(
+                        const Size(290, 40)),
+                    backgroundColor: MaterialStateProperty.all(
+                        const Color(0xFFE1F0CF)),
+                    shape: MaterialStateProperty.all<
+                        RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(40),
+                      ),
+                    ),
                   ),
-                  onPressed: () async {
-                    if (_formKey.currentState!.validate()) {
-                      dynamic result = await _auth.signInWithEmailAndPassword(
-                          email, password);
-                      if (result == null) {
-                        setState(() =>
-                            error = 'Could not sign in with those credentials');
-                      }
-                      if (result != null) {
-                        Future.microtask(() => Navigator.pop(context));
-                      }
-                    }
-                  }),
+                  child: const Text('Log In',
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 0.3,
+                        fontSize: 16,
+                      )
+                  ),
+                ),
+              ),
+
               const SizedBox(height: 12.0),
               Text(
                 error,
