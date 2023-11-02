@@ -16,7 +16,7 @@ class ExerciseDetailScreen extends StatefulWidget {
 }
 
 class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
-  int _selectedIndex = 3;
+
 
   @override
   Widget build(BuildContext context) {
@@ -51,8 +51,7 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
             ],
           ),
         ),
-        bottomNavigationBar: CustomBottomNavigationBar(
-          currentIndex: _selectedIndex,
-        ));
+
+    );
   }
 }

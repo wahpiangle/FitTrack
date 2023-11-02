@@ -10,7 +10,7 @@ class CustomBottomNavigationBar extends StatefulWidget {
 
   CustomBottomNavigationBar({
     super.key,
-    required this.currentIndex,
+    required this.currentIndex, required Function(int p1) onTabTapped,
   });
 
   @override

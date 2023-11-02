@@ -14,6 +14,7 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
   objectBox = await ObjectBox.create();
   runApp(const MyApp());
 }

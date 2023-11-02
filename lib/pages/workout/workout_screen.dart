@@ -13,9 +13,6 @@ class WorkoutScreen extends StatefulWidget {
 }
 
 class _WorkoutScreenState extends State<WorkoutScreen> {
-// nav bar
-  int _selectedIndex = 2;
-// nav bar
 
   @override
   Widget build(BuildContext context) {
@@ -167,9 +164,7 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
             ),
           ),
         ),
-        //Nav Bar
-        bottomNavigationBar: CustomBottomNavigationBar(
-          currentIndex: _selectedIndex,
-        ));
+
+    );
   }
 }

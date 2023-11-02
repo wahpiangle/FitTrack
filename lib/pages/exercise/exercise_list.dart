@@ -270,9 +270,7 @@ class ExerciseListScreenState extends State<ExerciseListScreen> {
         },
         child: const Icon(Icons.add),
       ),
-      bottomNavigationBar: CustomBottomNavigationBar(
-        currentIndex: _selectedIndex,
-      ),
+
     );
   }
 }

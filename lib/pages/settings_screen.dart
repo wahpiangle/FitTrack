@@ -143,10 +143,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         ),
       ),
 
-      // Nav Bar
-      bottomNavigationBar: CustomBottomNavigationBar(
-        currentIndex: _selectedIndex,
-      ),
+
     );
   }
 }
