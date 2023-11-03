@@ -49,12 +49,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     hintStyle: const TextStyle(color: Colors.white),
                     enabledBorder: OutlineInputBorder(
                       borderSide:
-                          const BorderSide(color: Colors.white, width: 1.0),
+                          const BorderSide(color: Color(0xFF333333)),
                       borderRadius: BorderRadius.circular(10.0),
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderSide:
-                          const BorderSide(color: Colors.white, width: 3.0),
+                          const BorderSide(color: Colors.white),
                       borderRadius: BorderRadius.circular(10.0),
                     ),
                   ),
@@ -78,18 +78,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     hintStyle: const TextStyle(color: Colors.white),
                     enabledBorder: OutlineInputBorder(
                       borderSide:
-                          const BorderSide(color: Colors.white, width: 1.0),
+                      const BorderSide(color: Color(0xFF333333)),
                       borderRadius: BorderRadius.circular(10.0),
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderSide:
-                          const BorderSide(color: Colors.white, width: 3.0),
+                      const BorderSide(color: Colors.white),
                       borderRadius: BorderRadius.circular(10.0),
                     ),
                   ),
                   obscureText: true,
                   validator: (val) =>
-                      val!.length < 6 ? 'Enter a password 6 chars long' : null,
+                      val!.length < 6 ? 'Enter a password 6 characters long' : null,
                   onChanged: (val) {
                     setState(() => password = val);
                   }),
@@ -102,7 +102,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       dynamic result = await _auth.registerWithEmailAndPassword(
                           email, password);
                       if (result == null) {
-                        setState(() => error = 'please supply a valid email');
+                        setState(() => error = 'Please supply a valid email.');
                       }
                       if (result != null) {
                         Future.microtask(() => Navigator.pop(context));
