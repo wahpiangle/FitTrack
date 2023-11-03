@@ -20,19 +20,15 @@ class _EmailPasswordLoginState extends State<EmailPasswordLogin> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
-
       backgroundColor: const Color(0xFF1A1A1A),
       // const Color(0xFF1A1A1C),
       appBar: AppBar(
-
         backgroundColor: const Color(0xFF1A1A1A),
         elevation: 0.0,
         title: const Text('Login'),
         centerTitle: true,
       ),
       body: Container(
-
         constraints: const BoxConstraints.expand(),
         padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 50.0),
         child: Form(
@@ -40,7 +36,6 @@ class _EmailPasswordLoginState extends State<EmailPasswordLogin> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-
               const Text('Email',
                   style: TextStyle(
                     color: Colors.white,
@@ -59,17 +54,13 @@ class _EmailPasswordLoginState extends State<EmailPasswordLogin> {
                             const BorderSide(color: Colors.white, width: 1.0),
                       borderRadius:
                             BorderRadius.circular(10.0),
-
                     ),
                     focusedBorder: OutlineInputBorder(
                         borderSide:
                             const BorderSide(color: Colors.white, width: 3.0),
                       borderRadius:
                             BorderRadius.circular(10.0),
-
                     ),
-
-
                   ),
                   validator: (val) =>
                       val!.isEmpty ? 'Enter an invalid email' : null,
@@ -95,18 +86,13 @@ class _EmailPasswordLoginState extends State<EmailPasswordLogin> {
                             const BorderSide(color: Colors.white, width: 1.0),
                       borderRadius:
                             BorderRadius.circular(10.0),
-
                     ),
-
                     focusedBorder: OutlineInputBorder(
                         borderSide:
                               const BorderSide(color: Colors.white, width: 3.0),
                       borderRadius:
                             BorderRadius.circular(10.0),
-
-
                     ),
-
                   ),
                   obscureText: true,
                   validator: (val) =>
@@ -115,7 +101,6 @@ class _EmailPasswordLoginState extends State<EmailPasswordLogin> {
                     setState(() => password = val);
                   }),
               const SizedBox(height: 40.0),
-
               FractionallySizedBox(
                 widthFactor: 1,
                 child: ElevatedButton(
@@ -154,7 +139,6 @@ class _EmailPasswordLoginState extends State<EmailPasswordLogin> {
                   ),
                 ),
               ),
-
               const SizedBox(height: 12.0),
               Text(
                 error,

@@ -29,14 +29,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
         title: const Text('Register'),
       ),
       body: Container(
-
         padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 50.0),
         child: Form(
           key: _formKey,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-
               const Text('Email',
                   style: TextStyle(
                     color: Colors.white,
@@ -45,38 +43,21 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   )),
               const SizedBox(height: 10.0),
               TextFormField(
-                  style: const TextStyle(
-                      color: Colors.white
-                  ),
-
-
-                  decoration:  InputDecoration(
-
+                  style: const TextStyle(color: Colors.white),
+                  decoration: InputDecoration(
                     hintText: 'you@example.com',
                     hintStyle: const TextStyle(color: Colors.white),
-
                     enabledBorder: OutlineInputBorder(
-                        borderSide:
-                            const BorderSide(color: Colors.white, width: 1.0),
-
-                       borderRadius:
-                            BorderRadius.circular(10.0),
-
-
+                      borderSide:
+                          const BorderSide(color: Colors.white, width: 1.0),
+                      borderRadius: BorderRadius.circular(10.0),
                     ),
-
-                    focusedBorder:  OutlineInputBorder(
-                        borderSide: const BorderSide(color: Colors.white, width: 3.0),
-
-                      borderRadius:
-                            BorderRadius.circular(10.0),
-
-
+                    focusedBorder: OutlineInputBorder(
+                      borderSide:
+                          const BorderSide(color: Colors.white, width: 3.0),
+                      borderRadius: BorderRadius.circular(10.0),
                     ),
                   ),
-
-
-
                   validator: (val) =>
                       val!.isEmpty ? 'Enter an invalid email' : null,
                   onChanged: (val) {
@@ -88,28 +69,22 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     color: Colors.white,
                     fontSize: 23,
                     fontWeight: FontWeight.bold,
-                  )
-              ),
+                  )),
               const SizedBox(height: 10.0),
               TextFormField(
                   style: const TextStyle(color: Colors.white),
                   decoration: InputDecoration(
-
                     hintText: '******',
                     hintStyle: const TextStyle(color: Colors.white),
                     enabledBorder: OutlineInputBorder(
-                        borderSide:
-                            const BorderSide(color: Colors.white, width: 1.0),
-                      borderRadius:
-                            BorderRadius.circular(10.0),
-
+                      borderSide:
+                          const BorderSide(color: Colors.white, width: 1.0),
+                      borderRadius: BorderRadius.circular(10.0),
                     ),
-                    focusedBorder:  OutlineInputBorder(
-                        borderSide: const BorderSide(color: Colors.white, width: 3.0),
-                      borderRadius:
-                            BorderRadius.circular(10.0),
-
-
+                    focusedBorder: OutlineInputBorder(
+                      borderSide:
+                          const BorderSide(color: Colors.white, width: 3.0),
+                      borderRadius: BorderRadius.circular(10.0),
                     ),
                   ),
                   obscureText: true,
@@ -119,30 +94,26 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     setState(() => password = val);
                   }),
               const SizedBox(height: 40.0),
-
               FractionallySizedBox(
                 widthFactor: 1,
                 child: ElevatedButton(
-                    onPressed: () async {
-                      if (_formKey.currentState!.validate()) {
-                        dynamic result = await _auth.registerWithEmailAndPassword(
-                            email, password);
-                        if (result == null) {
-                          setState(() => error = 'please supply a valid email');
-                        }
-                        if (result != null) {
-                          Future.microtask(() => Navigator.pop(context));
-                        }
+                  onPressed: () async {
+                    if (_formKey.currentState!.validate()) {
+                      dynamic result = await _auth.registerWithEmailAndPassword(
+                          email, password);
+                      if (result == null) {
+                        setState(() => error = 'please supply a valid email');
                       }
-                    },
-
+                      if (result != null) {
+                        Future.microtask(() => Navigator.pop(context));
+                      }
+                    }
+                  },
                   style: ButtonStyle(
-                    minimumSize: MaterialStateProperty.all(
-                        const Size(290, 40)),
-                    backgroundColor: MaterialStateProperty.all(
-                        const Color(0xffe1f0cf)),
-                    shape: MaterialStateProperty.all<
-                        RoundedRectangleBorder>(
+                    minimumSize: MaterialStateProperty.all(const Size(290, 40)),
+                    backgroundColor:
+                        MaterialStateProperty.all(const Color(0xffe1f0cf)),
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                       RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(40),
                       ),
@@ -154,16 +125,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         fontWeight: FontWeight.bold,
                         letterSpacing: 0.3,
                         fontSize: 16,
-                      )
-                  ),
+                      )),
                 ),
               ),
-
               const SizedBox(height: 12.0),
               Text(
                 error,
                 style: const TextStyle(color: Colors.red, fontSize: 14.0),
-
               ),
             ],
           ),
