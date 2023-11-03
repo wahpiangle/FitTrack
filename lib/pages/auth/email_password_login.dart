@@ -28,23 +28,16 @@ class _EmailPasswordLoginState extends State<EmailPasswordLogin> {
 
         backgroundColor: const Color(0xFF1A1A1A),
         elevation: 0.0,
-        title: const Text('Log In'),
+        title: const Text('Login'),
         centerTitle: true,
       ),
       body: Container(
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-            fit: BoxFit.cover,
-            image: AssetImage('assets/background.png'),
-          ),
-        ),
+
         constraints: const BoxConstraints.expand(),
         padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 50.0),
         child: Form(
           key: _formKey,
           child: Column(
-
-            mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
 
@@ -57,15 +50,26 @@ class _EmailPasswordLoginState extends State<EmailPasswordLogin> {
               ),
               const SizedBox(height: 10.0),
               TextFormField(
-                  decoration: const InputDecoration(
+                  style: const TextStyle(color: Colors.white),
+                  decoration: InputDecoration(
                     hintText: 'you@example.com',
-                    fillColor: Colors.white,
-                    filled: true,
+                    hintStyle: const TextStyle(color: Colors.white),
                     enabledBorder: OutlineInputBorder(
                         borderSide:
-                            BorderSide(color: Colors.white, width: 2.0)),
+                            const BorderSide(color: Colors.white, width: 1.0),
+                      borderRadius:
+                            BorderRadius.circular(10.0),
+
+                    ),
                     focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.pink, width: 2.0)),
+                        borderSide:
+                            const BorderSide(color: Colors.white, width: 3.0),
+                      borderRadius:
+                            BorderRadius.circular(10.0),
+
+                    ),
+
+
                   ),
                   validator: (val) =>
                       val!.isEmpty ? 'Enter an invalid email' : null,
@@ -82,15 +86,27 @@ class _EmailPasswordLoginState extends State<EmailPasswordLogin> {
               ),
               const SizedBox(height: 10.0),
               TextFormField(
-                  decoration: const InputDecoration(
+                  style: const TextStyle(color: Colors.white),
+                  decoration: InputDecoration(
                     hintText: '******',
-                    fillColor: Colors.white,
-                    filled: true,
+                    hintStyle: const TextStyle(color: Colors.white),
                     enabledBorder: OutlineInputBorder(
                         borderSide:
-                            BorderSide(color: Colors.white, width: 2.0)),
+                            const BorderSide(color: Colors.white, width: 1.0),
+                      borderRadius:
+                            BorderRadius.circular(10.0),
+
+                    ),
+
                     focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.pink, width: 2.0)),
+                        borderSide:
+                              const BorderSide(color: Colors.white, width: 3.0),
+                      borderRadius:
+                            BorderRadius.circular(10.0),
+
+
+                    ),
+
                   ),
                   obscureText: true,
                   validator: (val) =>
@@ -120,7 +136,7 @@ class _EmailPasswordLoginState extends State<EmailPasswordLogin> {
                     minimumSize: MaterialStateProperty.all(
                         const Size(290, 40)),
                     backgroundColor: MaterialStateProperty.all(
-                        const Color(0xFFE1F0CF)),
+                        const Color(0xffe1f0cf)),
                     shape: MaterialStateProperty.all<
                         RoundedRectangleBorder>(
                       RoundedRectangleBorder(
@@ -128,7 +144,7 @@ class _EmailPasswordLoginState extends State<EmailPasswordLogin> {
                       ),
                     ),
                   ),
-                  child: const Text('Log In',
+                  child: const Text('Login',
                       style: TextStyle(
                         color: Colors.black,
                         fontWeight: FontWeight.bold,
@@ -151,3 +167,4 @@ class _EmailPasswordLoginState extends State<EmailPasswordLogin> {
     );
   }
 }
+
