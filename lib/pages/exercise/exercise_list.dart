@@ -90,6 +90,7 @@ class ExerciseListScreenState extends State<ExerciseListScreen> {
       appBar: TopNavBar(
         title: 'Exercise List',
         user: user,
+
       ),
       body: StreamBuilder(
         stream: streamExercises,
