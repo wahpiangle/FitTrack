@@ -12,6 +12,8 @@ class CurrentWorkoutSession {
   CurrentWorkoutSession({
     this.id = 0,
     this.title = 'Workout',
-    this.exercises,
-  });
+    List<Map<Exercise, List<ExerciseSet>>>? exercises,
+  }) {
+    this.exercises = exercises ?? [];
+  }
 }

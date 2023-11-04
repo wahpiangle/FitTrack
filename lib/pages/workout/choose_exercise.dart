@@ -1,10 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:group_project/models/exercise.dart';
+import 'package:group_project/pages/components/crop_image.dart';
 
 class ChooseExercise extends StatefulWidget {
   final List<Exercise> exercises;
+  final List<Exercise> selectedExercises;
+  final void Function(Exercise selectedExercise) selectExercise;
+  final void Function(Exercise selectedExercise) removeExercise;
 
-  ChooseExercise({required this.exercises});
+  const ChooseExercise({
+    super.key,
+    required this.exercises,
+    required this.selectedExercises,
+    required this.selectExercise,
+    required this.removeExercise,
+  });
 
   @override
   _ChooseExerciseState createState() => _ChooseExerciseState();
@@ -26,15 +36,20 @@ class _ChooseExerciseState extends State<ChooseExercise> {
       } else {
         filteredExercises = widget.exercises
             .where((exercise) =>
-            exercise.name.toLowerCase().contains(query.toLowerCase()))
+                exercise.name.toLowerCase().contains(query.toLowerCase()))
             .toList();
       }
     });
   }
 
-  // 1. Add the _selectExercise method
   void _selectExercise(Exercise selectedExercise) {
-    Navigator.pop(context, selectedExercise);
+    Navigator.pop(context);
+    // widget.selectExercise(selectedExercise);
+    if (widget.selectedExercises.contains(selectedExercise)) {
+      widget.removeExercise(selectedExercise);
+    } else {
+      widget.selectExercise(selectedExercise);
+    }
   }
 
   @override
@@ -42,12 +57,12 @@ class _ChooseExerciseState extends State<ChooseExercise> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios),
+          icon: const Icon(Icons.arrow_back_ios),
           onPressed: () {
             Navigator.pop(context);
           },
         ),
-        title: Text("Choose an Exercise"),
+        title: const Text("Choose an Exercise"),
         backgroundColor: Color(0xFF1A1A1A),
       ),
       body: Container(
@@ -58,8 +73,8 @@ class _ChooseExerciseState extends State<ChooseExercise> {
               padding: const EdgeInsets.all(10),
               child: TextField(
                 onChanged: filterExercises,
-                style: TextStyle(color: Colors.white),
-                decoration: InputDecoration(
+                style: const TextStyle(color: Colors.white),
+                decoration: const InputDecoration(
                   hintText: 'Search for an exercise...',
                   hintStyle: TextStyle(color: Colors.white70),
                   prefixIcon: Icon(Icons.search, color: Colors.white),
@@ -71,41 +86,73 @@ class _ChooseExerciseState extends State<ChooseExercise> {
                 itemCount: filteredExercises.length,
                 itemBuilder: (context, index) {
                   final exercise = filteredExercises[index];
-                  return GestureDetector( // 2. Wrap each exercise item with GestureDetector
-                    onTap: () {
-                      _selectExercise(exercise);
-                    },
-                    child: Container(
-                      margin: EdgeInsets.symmetric(vertical: 10),
-                      padding: EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        color: Color(0xFF333333),
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      child: Row(
-                        children: [
-                          Container(
-                            width: 50,
-                            height: 70,
-                            child: Image.asset(
-                              exercise.imagePath,
-                              alignment: Alignment.centerLeft,
-                              fit: BoxFit.cover,
+                  return Material(
+                    color: const Color(0xFF1A1A1A),
+                    child: InkWell(
+                      onTap: () {
+                        _selectExercise(exercise);
+                      },
+                      child: Container(
+                        margin: const EdgeInsets.symmetric(vertical: 5),
+                        child: ListTile(
+                          horizontalTitleGap: -10,
+                          leading: SizedBox(
+                            height: 100,
+                            width: 100,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(300.0),
+                              child: exercise.imagePath == ''
+                                  ? Container(
+                                      decoration: BoxDecoration(
+                                        color: const Color(0xFFE1F0CF),
+                                        borderRadius:
+                                            BorderRadius.circular(300.0),
+                                      ),
+                                      child: Center(
+                                        child: Text(
+                                          exercise.name[0].toUpperCase(),
+                                          style: const TextStyle(
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 24.0,
+                                          ),
+                                        ),
+                                      ),
+                                    )
+                                  : ClipPath(
+                                      clipper: MyClipperPath(),
+                                      child: Container(
+                                        height: 60,
+                                        width: 80,
+                                        decoration: BoxDecoration(
+                                            image: DecorationImage(
+                                          image: Image.asset(exercise.imagePath)
+                                              .image,
+                                          fit: BoxFit
+                                              .contain, //or whatever BoxFit you want
+                                        )),
+                                      ),
+                                    ),
                             ),
                           ),
-                          SizedBox(width: 10),
-                          Expanded(
-                            flex: 2,
+                          title: Padding(
+                            padding: const EdgeInsets.only(bottom: 10),
                             child: Text(
                               exercise.name,
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
+                              style: const TextStyle(
                                 color: Colors.white,
+                                fontSize: 18,
                               ),
                             ),
                           ),
-                        ],
+                          subtitle: Text(
+                            exercise.bodyPart.target!.name,
+                            style: TextStyle(
+                              color: Colors.grey[500],
+                              fontSize: 14,
+                            ),
+                          ),
+                        ),
                       ),
                     ),
                   );

@@ -2,7 +2,9 @@ import 'package:group_project/constants/data/category_data.dart';
 import 'package:group_project/constants/data/exercises_data.dart';
 import 'package:group_project/models/body_part.dart';
 import 'package:group_project/models/category.dart';
+import 'package:group_project/models/current_workout_session.dart';
 import 'package:group_project/models/exercise.dart';
+import 'package:group_project/models/exercise_set.dart';
 import 'package:group_project/objectbox.g.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
@@ -14,11 +16,13 @@ class ObjectBox {
   late final Box<BodyPart> _bodyPartBox;
   late final Box<Exercise> _exerciseBox;
   late final Box<Category> _categoryBox;
+  late final Box<CurrentWorkoutSession> _currentWorkoutSessionBox;
 
   ObjectBox._create(this.store) {
     _bodyPartBox = Box<BodyPart>(store);
     _exerciseBox = Box<Exercise>(store);
     _categoryBox = Box<Category>(store);
+    _currentWorkoutSessionBox = Box<CurrentWorkoutSession>(store);
 
     //initialization of data into the device
     if (_bodyPartBox.isEmpty()) {
@@ -29,6 +33,10 @@ class ObjectBox {
     }
     if (_categoryBox.isEmpty()) {
       _categoryBox.putMany(categoryData);
+    }
+    //! There should only be one current workout session at all times
+    if (!_currentWorkoutSessionBox.isEmpty()) {
+      _currentWorkoutSessionBox.put(CurrentWorkoutSession());
     }
   }
 
@@ -53,8 +61,8 @@ class ObjectBox {
     _exerciseBox.putMany(generateExerciseData());
   }
 
-  void getExercises() {
-    _exerciseBox.getAll();
+  List<Exercise> getAllExercises() {
+    return _exerciseBox.getAll();
   }
 
   void removeExercises() {
@@ -67,11 +75,23 @@ class ObjectBox {
   }
 
 //workout session
-  void addExerciseToWorkoutSession(Exercise exercise) {
-    _exerciseBox.put(exercise);
+  CurrentWorkoutSession getCurrentWorkoutSession() {
+    return _currentWorkoutSessionBox.getAll().first;
   }
 
-  void removeExerciseFromWorkoutSession(Exercise exercise) {
-    _exerciseBox.remove(exercise.id);
+  void addExerciseToCurrentWorkoutSession(Exercise exercise) {
+    final currentWorkoutSession = getCurrentWorkoutSession();
+    currentWorkoutSession.exercises!.add({
+      exercise: [
+        ExerciseSet(
+          reps: 0,
+          weight: 0,
+        )
+      ]
+    });
+  }
+
+  void removeCurrentWorkoutSession() {
+    _currentWorkoutSessionBox.removeAll();
   }
 }

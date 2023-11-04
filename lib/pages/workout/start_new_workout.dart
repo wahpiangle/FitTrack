@@ -1,11 +1,10 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:group_project/pages/home.dart';
 import 'package:group_project/pages/workout/choose_exercise.dart';
 import 'package:group_project/models/exercise.dart';
-import 'package:group_project/constants/data/exercises_data.dart';
 import 'package:group_project/models/exercise_set.dart';
 import 'package:group_project/models/current_workout_session.dart';
+import 'package:group_project/pages/workout/workout_screen.dart';
 
 class StartNewWorkout extends StatefulWidget {
   final List<Exercise> exerciseData;
@@ -13,10 +12,12 @@ class StartNewWorkout extends StatefulWidget {
   StartNewWorkout({required this.exerciseData});
 
   @override
-  _StartNewWorkoutState createState() => _StartNewWorkoutState(exerciseData: exerciseData);
+  _StartNewWorkoutState createState() =>
+      _StartNewWorkoutState(exerciseData: exerciseData);
 }
 
-class _StartNewWorkoutState extends State<StartNewWorkout> with TickerProviderStateMixin {
+class _StartNewWorkoutState extends State<StartNewWorkout>
+    with TickerProviderStateMixin {
   late Timer _timer;
   int _seconds = 0;
   late AnimationController _controller;
@@ -24,10 +25,7 @@ class _StartNewWorkoutState extends State<StartNewWorkout> with TickerProviderSt
   bool _isTimerRunning = false;
   TextEditingController _workoutNoteController = TextEditingController();
   final List<Exercise> exerciseData;
-  Exercise? selectedExercise; // Store the selected exercise
-  bool isAddExerciseVisible = true;
-  bool isAddSetsVisible = false; // Initially, "Add Sets" button is hidden.
-  TextEditingController setIdController = TextEditingController();
+  List<Exercise> selectedExercises = [];
   TextEditingController weightsController = TextEditingController();
   TextEditingController setsController = TextEditingController();
   TextEditingController repsController = TextEditingController();
@@ -37,8 +35,10 @@ class _StartNewWorkoutState extends State<StartNewWorkout> with TickerProviderSt
   CurrentWorkoutSession _currentWorkoutSession = CurrentWorkoutSession();
   List<Widget> setBorders = [];
 
-
-  List<Widget> createSetBorders(List<Widget> currentSetBorders, TextEditingController weightsController, TextEditingController repsController) {
+  List<Widget> createSetBorders(
+      List<Widget> currentSetBorders,
+      TextEditingController weightsController,
+      TextEditingController repsController) {
     // Create a new set border widget based on the weight and reps provided.
     // You can customize this function to create the desired set border widget.
     final newSetBorder = Container(
@@ -51,12 +51,12 @@ class _StartNewWorkoutState extends State<StartNewWorkout> with TickerProviderSt
         ),
         borderRadius: BorderRadius.circular(10), // Border radius
       ),
-      margin: EdgeInsets.all(10), // Margin around the border
-      padding: EdgeInsets.all(10), // Padding inside the border
+      margin: const EdgeInsets.all(10), // Margin around the border
+      padding: const EdgeInsets.all(10), // Padding inside the border
       child: Row(
         children: [
           Text("Weight: ${weightsController.text}"), // Display weight
-          SizedBox(width: 10),
+          const SizedBox(width: 10),
           Text("Reps: ${repsController.text}"), // Display reps
         ],
       ),
@@ -67,13 +67,12 @@ class _StartNewWorkoutState extends State<StartNewWorkout> with TickerProviderSt
     return currentSetBorders;
   }
 
-
   @override
   void initState() {
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: Duration(seconds: 1),
+      duration: const Duration(seconds: 1),
     );
 
     _animation = Tween<double>(begin: 1, end: 0).animate(_controller);
@@ -85,7 +84,7 @@ class _StartNewWorkoutState extends State<StartNewWorkout> with TickerProviderSt
 
   void _startTimer() {
     if (!_isTimerRunning) {
-      _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+      _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
         setState(() {
           _seconds++;
           _controller.reset();
@@ -103,41 +102,28 @@ class _StartNewWorkoutState extends State<StartNewWorkout> with TickerProviderSt
     }
   }
 
-  Future<void> _navigateToChooseExercise() async {
-    // Navigate to the ChooseExercise screen and wait for the result (selected exercise)
-    final exercise = await Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => ChooseExercise(exercises: exerciseData),
-      ),
-    );
+  void selectExercise(Exercise selectedExercise) {
+    setState(() {
+      selectedExercises.add(selectedExercise);
+    });
+  }
 
-    // Check if an exercise was selected and handle it
-    if (exercise != null) {
-      // Handle the selected exercise (e.g., add it to the list of selected exercises)
-      setState(() {
-        selectedExercise = exercise;
-        isAddExerciseVisible = false; // Hide the "Add Exercise" button
-        isAddSetsVisible = true; // Show the "Add Sets" button
-      });
-    }
+  void removeExercise(Exercise selectedExercise) {
+    setState(() {
+      selectedExercises.remove(selectedExercise);
+    });
   }
 
   void _addSets() {
-    // Check if an exercise is selected
-    if (selectedExercise != null) {
+    if (selectedExercises.isNotEmpty) {
       int weight = int.tryParse(weightsController.text) ?? 0;
       int reps = int.tryParse(repsController.text) ?? 0;
 
-      // Validate the input if needed
-
-      // Create a new ExerciseSet object
       ExerciseSet newExerciseSet = ExerciseSet(weight: weight, reps: reps);
 
-      // Find the index of the selected exercise in the list of exercises
-      int exerciseIndex = _currentWorkoutSession.exercises?.indexWhere((exerciseData) {
-        return exerciseData.keys.first == selectedExercise;
-      }) ?? -1;
+      int exerciseIndex = _currentWorkoutSession.exercises!.indexWhere(
+          (exerciseData) =>
+              exerciseData.keys.first.name == selectedExercises.first.name);
 
       if (exerciseIndex >= 0) {
         // If the exercise is found, add the set to it
@@ -157,25 +143,22 @@ class _StartNewWorkoutState extends State<StartNewWorkout> with TickerProviderSt
     }
   }
 
-// Create and return a new set border widget
   Widget createSetBorder(int weight, int reps) {
     return Container(
-      // Define the appearance of the set border widget.
-      // You can customize this to your needs.
       decoration: BoxDecoration(
         border: Border.all(
-          color: Colors.white, // Border color
+          color: Colors.white,
           width: 2.0, // Border width
         ),
-        borderRadius: BorderRadius.circular(10), // Border radius
+        borderRadius: BorderRadius.circular(10),
       ),
-      margin: EdgeInsets.all(10), // Margin around the border
-      padding: EdgeInsets.all(10), // Padding inside the border
+      margin: const EdgeInsets.all(10),
+      padding: const EdgeInsets.all(10),
       child: Row(
         children: [
-          Text("Weight: $weight"), // Display weight
-          SizedBox(width: 10),
-          Text("Reps: $reps"), // Display reps
+          Text("Weight: $weight"),
+          const SizedBox(width: 10),
+          Text("Reps: $reps"),
         ],
       ),
     );
@@ -187,184 +170,147 @@ class _StartNewWorkoutState extends State<StartNewWorkout> with TickerProviderSt
     );
   }
 
-
-
-
-
   Widget _buildSelectedExercise() {
-    if (selectedExercise != null) {
+    if (selectedExercises.isNotEmpty) {
       double screenWidth = MediaQuery.of(context).size.width;
-
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            selectedExercise!.name,
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
+      return SizedBox(
+        width: screenWidth,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              // selectedExercise!.name,
+              "Exercise Name",
+              style: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFFE1F0CF),
+              ),
             ),
-          ),
-          SizedBox(height: 10),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "Set ID:",
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  ),
-                  Container(
-                    width: screenWidth * 0.2, // Adjust the width as a fraction of the screen width
-                    padding: EdgeInsets.all(5),
-                    decoration: BoxDecoration(
-                      color: Color(0xFF333333),
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                    child: TextField(
-                      controller: setIdController,
+            const SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "1",
                       style: TextStyle(
                         fontSize: 16,
+                        fontWeight: FontWeight.bold,
                         color: Colors.white,
                       ),
-                      decoration: InputDecoration(
-                        filled: true,
-                        fillColor: Colors.transparent,
-                        border: OutlineInputBorder(
-                          borderSide: BorderSide.none,
+                    ),
+                  ],
+                ),
+                const SizedBox(width: 10),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      "Weight",
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                    Container(
+                      width: screenWidth *
+                          0.2, // Adjust the width as a fraction of the screen width
+                      padding: const EdgeInsets.all(5),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF333333),
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                      child: TextField(
+                        controller: weightsController,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          color: Colors.white,
+                        ),
+                        decoration: const InputDecoration(
+                          filled: true,
+                          fillColor: Colors.transparent,
+                          border: OutlineInputBorder(
+                            borderSide: BorderSide.none,
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-              SizedBox(width: 10),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "Weights",
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  ),
-                  Container(
-                    width: screenWidth * 0.2, // Adjust the width as a fraction of the screen width
-                    padding: EdgeInsets.all(5),
-                    decoration: BoxDecoration(
-                      color: Color(0xFF333333),
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                    child: TextField(
-                      controller: weightsController,
+                  ],
+                ),
+                const SizedBox(width: 10),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      "Reps",
                       style: TextStyle(
                         fontSize: 16,
+                        fontWeight: FontWeight.bold,
                         color: Colors.white,
                       ),
-                      decoration: InputDecoration(
-                        filled: true,
-                        fillColor: Colors.transparent,
-                        border: OutlineInputBorder(
-                          borderSide: BorderSide.none,
+                    ),
+                    Container(
+                      width: screenWidth *
+                          0.15, // Adjust the width as a fraction of the screen width
+                      padding: const EdgeInsets.all(5),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF333333),
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                      child: TextField(
+                        controller: repsController,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          color: Colors.white,
+                        ),
+                        decoration: const InputDecoration(
+                          filled: true,
+                          fillColor: Colors.transparent,
+                          border: OutlineInputBorder(
+                            borderSide: BorderSide.none,
+                          ),
                         ),
                       ),
                     ),
+                  ],
+                ),
+              ],
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              style: ButtonStyle(
+                backgroundColor:
+                    MaterialStateProperty.all<Color>(const Color(0xFF333333)),
+                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                  RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15.0),
                   ),
-                ],
+                ),
               ),
-              SizedBox(width: 10),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "Sets",
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
+              onPressed: _addSets,
+              child: const Center(
+                child: Text(
+                  "Add Sets",
+                  style: TextStyle(
+                    fontSize: 18,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
                   ),
-                  Container(
-                    width: screenWidth * 0.15, // Adjust the width as a fraction of the screen width
-                    padding: EdgeInsets.all(5),
-                    decoration: BoxDecoration(
-                      color: Color(0xFF333333),
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                    child: TextField(
-                      controller: setsController,
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.white,
-                      ),
-                      decoration: InputDecoration(
-                        filled: true,
-                        fillColor: Colors.transparent,
-                        border: OutlineInputBorder(
-                          borderSide: BorderSide.none,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
+                ),
               ),
-              SizedBox(width: 10),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "Reps",
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  ),
-                  Container(
-                    width: screenWidth * 0.15, // Adjust the width as a fraction of the screen width
-                    padding: EdgeInsets.all(5),
-                    decoration: BoxDecoration(
-                      color: Color(0xFF333333),
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                    child: TextField(
-                      controller: repsController,
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.white,
-                      ),
-                      decoration: InputDecoration(
-                        filled: true,
-                        fillColor: Colors.transparent,
-                        border: OutlineInputBorder(
-                          borderSide: BorderSide.none,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ],
+            ),
+          ],
+        ),
       );
     } else {
-      return SizedBox.shrink();
+      return const SizedBox.shrink();
     }
   }
-
-
-
 
   @override
   void dispose() {
@@ -373,7 +319,6 @@ class _StartNewWorkoutState extends State<StartNewWorkout> with TickerProviderSt
     }
     _controller.dispose();
     _workoutNoteController.dispose();
-    setIdController.dispose();
     weightsController.dispose();
     setsController.dispose();
     repsController.dispose();
@@ -385,206 +330,151 @@ class _StartNewWorkoutState extends State<StartNewWorkout> with TickerProviderSt
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios),
+          icon: const Icon(Icons.arrow_back_ios),
           onPressed: () {
             Navigator.pop(context);
           },
         ),
-        title: Row(
+        actions: [
+          // Center this
+
+          Center(
+            child: Material(
+              color: Colors.transparent,
+              child: InkWell(
+                borderRadius: BorderRadius.circular(8),
+                onTap: () {},
+                child: const Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Text(
+                    "Finish",
+                    style: TextStyle(
+                      color: Color(0xFFE1F0CF),
+                      fontSize: 18,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+        title: const Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
+            // TODO: Rest Timer
             Text(
-              "Workout",
+              "Timer",
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 18,
               ),
             ),
-            Text(
-              "Finish",
-              style: TextStyle(
-                color: Color(0xFFE1F0CF),
-                fontSize: 18,
-              ),
-            ),
           ],
         ),
-        backgroundColor: Color(0xFF1A1A1A),
+        backgroundColor: const Color(0xFF1A1A1A),
       ),
-      backgroundColor: Color(0xFF1A1A1A),
-      body: Center(
+      backgroundColor: const Color(0xFF1A1A1A),
+      body: Padding(
+        padding: const EdgeInsets.all(20.0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            SizedBox(height: 20),
             Container(
-              alignment: Alignment.center,
-              child: Text(
-                _formatTime(_seconds),
+              alignment: Alignment.topLeft,
+              child: const Text(
+                'New Workout',
                 style: TextStyle(
-                  fontSize: 90,
-                  fontFamily: 'Digital',
                   color: Colors.white,
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
             ),
-            SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ElevatedButton(
-                  style: ButtonStyle(
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(18.0),
-                      ),
-                    ),
-                    backgroundColor: MaterialStateProperty.all<Color>(Color(0xFFE1F0CF)),
-                  ),
-                  onPressed: () {
-                    _startTimer();
-                  },
-                  child: Text(
-                    "Start Timer",
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-                SizedBox(width: 20),
-                ElevatedButton(
-                  style: ButtonStyle(
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(18.0),
-                      ),
-                    ),
-                    backgroundColor: MaterialStateProperty.all<Color>(Color(0xFFE1F0CF)),
-                  ),
-                  onPressed: () {
-                    _stopTimer();
-                  },
-                  child: Text(
-                    "Stop Timer",
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(height: 40),
-            Container(
-              width: 350,
-              child: TextField(
-                controller: _workoutNoteController,
-                style: TextStyle(
+            const SizedBox(height: 20),
+            TextField(
+              controller: _workoutNoteController,
+              style: const TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
+              onChanged: (value) {
+                //TODO: Handle the workout note
+              },
+              decoration: InputDecoration(
+                hintText: 'Add a workout note',
+                hintStyle: const TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
                 ),
-                decoration: InputDecoration(
-                  hintText: 'Add a workout note...',
-                  hintStyle: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  fillColor: Color(0xFF333333),
-                  filled: true,
-                  border: OutlineInputBorder(
+                fillColor: const Color(0xFF333333),
+                filled: true,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(15.0),
+                ),
+              ),
+            ),
+            const SizedBox(height: 20),
+            _buildSelectedExercise(),
+            const SizedBox(height: 10),
+            TextButton(
+              style: ButtonStyle(
+                padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+                    const EdgeInsets.all(15)),
+                backgroundColor:
+                    MaterialStateProperty.all<Color>(const Color(0xFF1A1A1A)),
+                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                  RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(15.0),
                   ),
                 ),
               ),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ChooseExercise(
+                      exercises: exerciseData,
+                      selectedExercises: selectedExercises,
+                      selectExercise: selectExercise,
+                      removeExercise: removeExercise,
+                    ),
+                  ),
+                );
+              },
+              child: const SizedBox(
+                child: Center(
+                  child: Text(
+                    "ADD EXERCISE",
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: Color(0xFFE1F0CF),
+                      letterSpacing: 2,
+                    ),
+                  ),
+                ),
+              ),
             ),
-            SizedBox(height: 20),
-            if (isAddExerciseVisible) // Only show the "Add Exercise" button if it's visible
-              ElevatedButton(
-                style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all<Color>(Color(0xFF333333)),
-                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                    RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15.0),
-                    ),
+            TextButton(
+              style: ButtonStyle(
+                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                  RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(18.0),
                   ),
                 ),
-                onPressed: _navigateToChooseExercise,
-                child: Container(
-                  width: 200,
-                  height: 50,
-                  child: Center(
-                    child: Text(
-                      "Add Exercise",
-                      style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ),
+                backgroundColor:
+                    MaterialStateProperty.all<Color>(const Color(0xFF1A1A1A)),
               ),
-
-            _buildSelectedExercise(), // Display the selected exercise
-            SizedBox(height: 20),
-            if (isAddSetsVisible) // Show the "Add Sets" button only when exercise is chosen
-              ElevatedButton(
-                style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all<Color>(Color(0xFF333333)),
-                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                    RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15.0),
-                    ),
-                  ),
-                ),
-                onPressed: _addSets,
-                child: Container(
-                  width: 200,
-                  height: 50,
-                  child: Center(
-                    child: Text(
-                      "Add Sets",
-                      style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            SizedBox(height: 10),
-            Container(
-              width: 200,
-              height: 50,
-              decoration: BoxDecoration(
-                color: Color(0xFF333333),
-                borderRadius: BorderRadius.circular(15.0),
-              ),
-              child: ElevatedButton(
-                style: ButtonStyle(
-                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                    RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(18.0),
-                    ),
-                  ),
-                  backgroundColor: MaterialStateProperty.all<Color>(Color(0xFF333333)),
-                ),
-                onPressed: () {
-                  // Navigate back to the Home screen when the button is pressed
-                  Navigator.of(context).pushReplacement(MaterialPageRoute(
-                    builder: (context) => Home(),
-                  ));
-                },
-                child: Text(
-                  "Cancel Workout",
-                  style: TextStyle(
-                    fontSize: 18,
-                    color: Colors.red,
-                    fontWeight: FontWeight.bold,
-                  ),
+              onPressed: () {
+                // Navigate back to the Home screen when the button is pressed
+                Navigator.of(context).pushReplacement(MaterialPageRoute(
+                  builder: (context) => const WorkoutScreen(),
+                ));
+              },
+              child: const Text(
+                "CANCEL WORKOUT",
+                style: TextStyle(
+                  fontSize: 18,
+                  color: Colors.red,
+                  letterSpacing: 2,
                 ),
               ),
             ),
@@ -600,11 +490,4 @@ class _StartNewWorkoutState extends State<StartNewWorkout> with TickerProviderSt
     final remainingSeconds = (seconds % 60).toString().padLeft(2, '0');
     return "$hours:$minutes:$remainingSeconds";
   }
-}
-
-void main() {
-  List<Exercise> exerciseData = generateExerciseData(); // Fetch exerciseData from your source
-  runApp(MaterialApp(
-    home: StartNewWorkout(exerciseData: exerciseData),
-  ));
 }
