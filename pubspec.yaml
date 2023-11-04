@@ -21,6 +21,7 @@ version: 1.0.0+1
 environment:
   sdk: '>=3.1.0 <4.0.0'
 
+
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
 # consider running `flutter pub upgrade --major-versions`. Alternatively,
@@ -48,6 +49,7 @@ dependencies:
   objectbox: ^2.3.1
   objectbox_flutter_libs: any
   path_provider: ^2.1.1
+  percent_indicator: ^3.0.1
 
 dev_dependencies:
   flutter_test:
@@ -80,7 +82,10 @@ flutter:
     - assets/
     - assets/icons/
     - assets/exercises/
-
+  fonts:
+    - family: Digital
+      fonts:
+        - asset: assets/fonts/DS-DIGI.TTF
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
