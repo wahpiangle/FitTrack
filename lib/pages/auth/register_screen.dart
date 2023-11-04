@@ -128,10 +128,25 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       )),
                 ),
               ),
+              const SizedBox(height: 20.0),
+              Center(
+                child: TextButton(
+                  child: const Text('Already a member? Login',
+                      style: TextStyle(
+                        color: Colors.white,
+                      )
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).pushReplacementNamed("login");
+                  },
+                ),
+              ),
               const SizedBox(height: 12.0),
-              Text(
-                error,
-                style: const TextStyle(color: Colors.red, fontSize: 14.0),
+              Center(
+                child: Text(
+                  error,
+                  style: const TextStyle(color: Colors.red, fontSize: 14.0),
+                ),
               ),
             ],
           ),

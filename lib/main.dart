@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:group_project/pages/auth/email_password_login.dart';
+import 'package:group_project/pages/auth/register_screen.dart';
 import 'package:group_project/pages/auth_wrapper.dart';
 import 'package:group_project/services/auth_service.dart';
 import 'package:group_project/services/objectbox_service.dart';
@@ -32,6 +34,8 @@ class MyApp extends StatelessWidget {
         home: const Wrapper(),
         routes: {
           '/auth': (context) => const Wrapper(),
+          "login" : (context) => const EmailPasswordLogin(),
+          "register": (context) => const RegisterScreen(),
         },
         theme: ThemeData(
           bottomNavigationBarTheme: const BottomNavigationBarThemeData(

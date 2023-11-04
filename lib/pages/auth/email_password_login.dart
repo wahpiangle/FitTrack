@@ -139,10 +139,25 @@ class _EmailPasswordLoginState extends State<EmailPasswordLogin> {
                   ),
                 ),
               ),
+              const SizedBox(height: 20.0),
+              Center(
+                child: TextButton(
+                  child: const Text('Don\'t have an account? Create one now',
+                      style: TextStyle(
+                        color: Colors.white,
+                      )
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).pushReplacementNamed("register");
+                  },
+                ),
+              ),
               const SizedBox(height: 12.0),
-              Text(
-                error,
-                style: const TextStyle(color: Colors.red, fontSize: 14.0),
+              Center(
+                child: Text(
+                  error,
+                  style: const TextStyle(color: Colors.red, fontSize: 14.0),
+                ),
               ),
             ],
           ),
