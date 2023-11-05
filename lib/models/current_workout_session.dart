@@ -1,5 +1,3 @@
-import 'package:group_project/models/exercise.dart';
-import 'package:group_project/models/exercise_set.dart';
 import 'package:objectbox/objectbox.dart';
 
 @Entity()

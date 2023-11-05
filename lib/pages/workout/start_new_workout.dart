@@ -22,15 +22,12 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
   late AnimationController _controller;
   late Animation<double> _animation;
   bool _isTimerRunning = false;
-  TextEditingController _workoutNoteController = TextEditingController();
   final List<Exercise> exerciseData;
   TextEditingController weightsController = TextEditingController();
   TextEditingController repsController = TextEditingController();
   Stream<CurrentWorkoutSession>? _currentWorkoutSessionStream;
 
   _StartNewWorkoutState({required this.exerciseData});
-
-  CurrentWorkoutSession _currentWorkoutSession = CurrentWorkoutSession();
   List<Widget> setBorders = [];
 
   List<Widget> createSetBorders(
@@ -169,7 +166,6 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
       _timer.cancel();
     }
     _controller.dispose();
-    _workoutNoteController.dispose();
     weightsController.dispose();
     repsController.dispose();
     super.dispose();
@@ -232,42 +228,6 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
               padding: const EdgeInsets.all(20.0),
               child: Column(
                 children: [
-                  Container(
-                    alignment: Alignment.topLeft,
-                    child: Text(
-                      //TODO: Handle the workout title
-                      snapshot.data!.title,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  TextField(
-                    controller: _workoutNoteController,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    onChanged: (value) {
-                      //TODO: Handle the workout note
-                    },
-                    decoration: InputDecoration(
-                      hintText: 'Add a workout note',
-                      hintStyle: const TextStyle(
-                        color: Color(0xFFC1C1C1),
-                        fontWeight: FontWeight.bold,
-                      ),
-                      fillColor: const Color(0xFF333333),
-                      filled: true,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15.0),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 20),
                   snapshot.data?.exercises != null &&
                           snapshot.data!.exercises!.isNotEmpty
                       ? ExerciseTile(
