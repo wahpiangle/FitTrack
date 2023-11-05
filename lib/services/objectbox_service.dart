@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:group_project/constants/data/category_data.dart';
 import 'package:group_project/constants/data/exercises_data.dart';
 import 'package:group_project/models/body_part.dart';
@@ -34,8 +36,7 @@ class ObjectBox {
     if (_categoryBox.isEmpty()) {
       _categoryBox.putMany(categoryData);
     }
-    //! There should only be one current workout session at all times
-    if (!_currentWorkoutSessionBox.isEmpty()) {
+    if (_currentWorkoutSessionBox.isEmpty()) {
       _currentWorkoutSessionBox.put(CurrentWorkoutSession());
     }
   }
@@ -75,23 +76,52 @@ class ObjectBox {
   }
 
 //workout session
+  void createWorkoutSession() {
+    if (_currentWorkoutSessionBox.isEmpty()) {
+      _currentWorkoutSessionBox.put(CurrentWorkoutSession());
+    }
+  }
+
+  Stream<CurrentWorkoutSession> watchCurrentWorkoutSession() {
+    return _currentWorkoutSessionBox
+        .query()
+        .watch(triggerImmediately: true)
+        .map((query) => query.find().first);
+  }
+
   CurrentWorkoutSession getCurrentWorkoutSession() {
     return _currentWorkoutSessionBox.getAll().first;
   }
 
   void addExerciseToCurrentWorkoutSession(Exercise exercise) {
-    final currentWorkoutSession = getCurrentWorkoutSession();
-    currentWorkoutSession.exercises!.add({
-      exercise: [
-        ExerciseSet(
-          reps: 0,
-          weight: 0,
-        )
+    CurrentWorkoutSession currentWorkoutSession = getCurrentWorkoutSession();
+    currentWorkoutSession.exercises.add(jsonEncode({
+      exercise.name: [
+        ExerciseSet(weight: 1, reps: 1).toJson(),
       ]
-    });
+    }));
+    _currentWorkoutSessionBox.put(currentWorkoutSession, mode: PutMode.update);
   }
 
   void removeCurrentWorkoutSession() {
     _currentWorkoutSessionBox.removeAll();
+  }
+
+  void removeExerciseFromCurrentWorkoutSession(Exercise selectedExercise) {
+    CurrentWorkoutSession currentWorkoutSession = getCurrentWorkoutSession();
+    currentWorkoutSession.exercises
+        .removeWhere((exercise) => exercise.contains(selectedExercise.name));
+    _currentWorkoutSessionBox.put(currentWorkoutSession);
+  }
+
+  String getLength() {
+    return _currentWorkoutSessionBox.getAll().length.toString();
+  }
+
+  void testAddWorkoutToSession() {
+    CurrentWorkoutSession currentWorkoutSession = getCurrentWorkoutSession();
+    currentWorkoutSession.title = 'New Workout';
+    currentWorkoutSession.exercises = [];
+    _currentWorkoutSessionBox.put(currentWorkoutSession);
   }
 }

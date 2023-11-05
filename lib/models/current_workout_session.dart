@@ -7,13 +7,13 @@ class CurrentWorkoutSession {
   @Id()
   int id;
   String title;
-  List<Map<Exercise, List<ExerciseSet>>>? exercises;
+
+  // List<Map<Exercise, List<ExerciseSet>>> exercises;
+  List<String> exercises;
 
   CurrentWorkoutSession({
     this.id = 0,
     this.title = 'Workout',
-    List<Map<Exercise, List<ExerciseSet>>>? exercises,
-  }) {
-    this.exercises = exercises ?? [];
-  }
+    this.exercises = const [],
+  });
 }

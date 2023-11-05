@@ -45,6 +45,7 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
                       widthFactor: 1,
                       child: TextButton(
                         onPressed: () {
+                          objectBox.createWorkoutSession();
                           Navigator.push(
                             context,
                             MaterialPageRoute(

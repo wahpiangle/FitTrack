@@ -1,10 +1,12 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:group_project/models/exercise.dart';
 import 'package:group_project/pages/components/crop_image.dart';
 
 class ChooseExercise extends StatefulWidget {
   final List<Exercise> exercises;
-  final List<Exercise> selectedExercises;
+  final List<String> selectedExercises;
   final void Function(Exercise selectedExercise) selectExercise;
   final void Function(Exercise selectedExercise) removeExercise;
 
@@ -44,12 +46,11 @@ class _ChooseExerciseState extends State<ChooseExercise> {
 
   void _selectExercise(Exercise selectedExercise) {
     Navigator.pop(context);
-    // widget.selectExercise(selectedExercise);
-    if (widget.selectedExercises.contains(selectedExercise)) {
-      widget.removeExercise(selectedExercise);
-    } else {
-      widget.selectExercise(selectedExercise);
-    }
+    // if(widget.selectedExercises.contains(selectedExercise.name)) {
+    //   widget.removeExercise(selectedExercise);
+    // } else {
+    widget.selectExercise(selectedExercise);
+    // }
   }
 
   @override
@@ -63,10 +64,10 @@ class _ChooseExerciseState extends State<ChooseExercise> {
           },
         ),
         title: const Text("Choose an Exercise"),
-        backgroundColor: Color(0xFF1A1A1A),
+        backgroundColor: const Color(0xFF1A1A1A),
       ),
       body: Container(
-        color: Color(0xFF1A1A1A),
+        color: const Color(0xFF1A1A1A),
         child: Column(
           children: [
             Padding(

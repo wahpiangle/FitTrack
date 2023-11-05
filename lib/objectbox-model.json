@@ -99,9 +99,33 @@
         }
       ],
       "relations": []
+    },
+    {
+      "id": "6:5203651438849109687",
+      "lastPropertyId": "3:2394956069188890098",
+      "name": "CurrentWorkoutSession",
+      "properties": [
+        {
+          "id": "1:5119767499007449665",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:7673918692334490422",
+          "name": "title",
+          "type": 9
+        },
+        {
+          "id": "3:2394956069188890098",
+          "name": "exercises",
+          "type": 30
+        }
+      ],
+      "relations": []
     }
   ],
-  "lastEntityId": "5:4284795017742900900",
+  "lastEntityId": "6:5203651438849109687",
   "lastIndexId": "3:1068656247050756256",
   "lastRelationId": "1:8318397962555478176",
   "lastSequenceId": "0:0",
