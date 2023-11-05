@@ -98,7 +98,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 controller: usernameController,
                 style: const TextStyle(color: Colors.white),
                 decoration: InputDecoration(
-                  labelText: 'Enter New Username',
+                  labelText: 'Enter new username',
                   labelStyle: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 22),
                   enabledBorder: const UnderlineInputBorder(
                     borderSide: BorderSide(color: Colors.grey, width: 1.5),
@@ -140,7 +140,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                               borderRadius: BorderRadius.circular(30.0), // Make it round
                             ),
                           ),
-                          child: const Text('Cancel'),
+                          child: const Text('Cancel',style: TextStyle(color:Colors.black,fontWeight: FontWeight.bold)),
                         ),
                       ),
                       const SizedBox(width: 20), // Add space between the buttons
@@ -149,7 +149,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
                         child: ElevatedButton(
                           onPressed: () {
                             if (usernameController.text.length > maxUsernameLength) {
-                              usernameController.clear();
                               setState(() {
                                 showWarning = true;
                               });
@@ -171,7 +170,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                               borderRadius: BorderRadius.circular(30.0), // Make it round
                             ),
                           ),
-                          child: const Text('Save Changes', style: TextStyle(color:Colors.black)),
+                          child: const Text('Save Changes', style: TextStyle(color:Colors.black,fontWeight: FontWeight.bold)),
                         ),
                       ),
 

@@ -45,7 +45,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   String generateUsername() {
-    String username = 'user_${DateTime.now().millisecondsSinceEpoch}';
+    String username = 'User_${DateTime.now().millisecondsSinceEpoch}';
 
     // Limit the username to 15 characters
     if (username.length > 15) {

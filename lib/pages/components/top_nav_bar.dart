@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'dart:io';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:group_project/pages/settings_screen.dart';
 
 class TopNavBar extends StatelessWidget implements PreferredSizeWidget {
   final User? user;
@@ -49,6 +50,10 @@ class TopNavBar extends StatelessWidget implements PreferredSizeWidget {
       actions: [
         GestureDetector(
           onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => SettingsScreen()),
+            );
 
           },
           child: Padding(
