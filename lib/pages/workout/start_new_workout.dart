@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:group_project/main.dart';
 import 'package:group_project/models/exercise.dart';
 import 'package:group_project/models/current_workout_session.dart';
-import 'package:group_project/pages/workout/choose_exercise.dart';
 import 'package:group_project/pages/workout/exercise_tile.dart';
 
 class StartNewWorkout extends StatefulWidget {
