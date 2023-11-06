@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:group_project/main.dart';
 import 'package:group_project/models/exercise.dart';
 import 'package:group_project/models/current_workout_session.dart';
+import 'package:group_project/pages/workout/choose_exercise.dart';
 import 'package:group_project/pages/workout/exercise_tile.dart';
 
 class StartNewWorkout extends StatefulWidget {
@@ -228,16 +229,12 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
               padding: const EdgeInsets.all(20.0),
               child: Column(
                 children: [
-                  snapshot.data?.exercises != null &&
-                          snapshot.data!.exercises!.isNotEmpty
-                      ? ExerciseTile(
-                          exerciseData: exerciseData,
-                          selectedExercises: snapshot.data!.exercises,
-                          selectExercise: selectExercise,
-                          removeExercise: removeExercise,
-                        )
-                      : const SizedBox.shrink(),
-                  const SizedBox(height: 10),
+                  ExerciseTile(
+                    exerciseData: exerciseData,
+                    selectedExercises: snapshot.data!.exercises,
+                    selectExercise: selectExercise,
+                    removeExercise: removeExercise,
+                  ),
                 ],
               ),
             );
