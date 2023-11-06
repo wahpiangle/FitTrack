@@ -26,6 +26,7 @@ class ExerciseTile extends StatefulWidget {
 }
 
 class _ExerciseTileState extends State<ExerciseTile> {
+  bool checkBox = false;
   @override
   Widget build(BuildContext context) {
     return Expanded(
@@ -96,7 +97,8 @@ class _ExerciseTileState extends State<ExerciseTile> {
                           const SizedBox(height: 20),
                           Column(
                             children: generateExerciseSetTiles(
-                                selectedExercise.exerciseSets),
+                              selectedExercise.exerciseSets,
+                            ),
                           )
                         ],
                       ),
@@ -192,7 +194,8 @@ class _ExerciseTileState extends State<ExerciseTile> {
                         const SizedBox(height: 20),
                         Column(
                           children: generateExerciseSetTiles(
-                              selectedExercise.exerciseSets),
+                            selectedExercise.exerciseSets,
+                          ),
                         )
                       ],
                     ),
@@ -209,135 +212,187 @@ class _ExerciseTileState extends State<ExerciseTile> {
 
 List<Widget> generateExerciseSetTiles(List<ExerciseSet> exerciseSet) {
   return [
-    Column(
-      children: [
-        Row(
-          children: exerciseSet.asMap().entries.map((entry) {
-            int index = entry.key;
-            ExerciseSet set = entry.value;
-            return Expanded(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Column(
+    SizedBox(
+      width: double.infinity,
+      child: Column(
+        children: [
+          GridView.builder(
+            itemCount: exerciseSet.asMap().entries.length,
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 1,
+              mainAxisExtent: 100,
+            ),
+            shrinkWrap: true,
+            itemBuilder: (context, index) {
+              int setIndex = index;
+              ExerciseSet set =
+                  exerciseSet.asMap().entries.elementAt(setIndex).value;
+
+              return GridTile(
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        "1",
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
+                      if (index == 0)
+                        const Expanded(
+                          flex: 1,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            mainAxisSize: MainAxisSize.max,
+                            children: [
+                              Expanded(
+                                flex: 1,
+                                child: Center(
+                                  child: Text(
+                                    "Set",
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              SizedBox(width: 20),
+                              Expanded(
+                                flex: 1,
+                                child: Center(
+                                  child: Text(
+                                    "Weight",
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              SizedBox(width: 20),
+                              Expanded(
+                                flex: 1,
+                                child: Center(
+                                  child: Text(
+                                    "Reps",
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
+                      Expanded(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                              flex: 1,
+                              child: Text(
+                                textAlign: TextAlign.center,
+                                "${setIndex + 1}",
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 20),
+                            Expanded(
+                              flex: 1,
+                              child: Container(
+                                margin:
+                                    const EdgeInsets.symmetric(vertical: 10),
+                                decoration: BoxDecoration(
+                                  color: const Color(0xFF333333),
+                                  borderRadius: BorderRadius.circular(5),
+                                ),
+                                child: TextField(
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    color: Colors.white,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                  controller: TextEditingController(
+                                    text: "${set.weight}",
+                                  ),
+                                  decoration: const InputDecoration(
+                                    filled: true,
+                                    fillColor: Colors.transparent,
+                                    border: OutlineInputBorder(
+                                      borderSide: BorderSide.none,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 20),
+                            Expanded(
+                              flex: 1,
+                              child: Container(
+                                margin:
+                                    const EdgeInsets.symmetric(vertical: 10),
+                                decoration: BoxDecoration(
+                                  color: const Color(0xFF333333),
+                                  borderRadius: BorderRadius.circular(5),
+                                ),
+                                child: TextField(
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    color: Colors.white,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                  controller: TextEditingController(
+                                    text: "${set.reps}",
+                                  ),
+                                  decoration: const InputDecoration(
+                                    filled: true,
+                                    fillColor: Colors.transparent,
+                                    border: OutlineInputBorder(
+                                      borderSide: BorderSide.none,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
                     ],
                   ),
-                  const SizedBox(width: 20),
-                  Expanded(
-                    flex: 1,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          "Weight",
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
-                        ),
-                        Container(
-                          margin: const EdgeInsets.symmetric(vertical: 10),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFF333333),
-                            borderRadius: BorderRadius.circular(5),
-                          ),
-                          child: const TextField(
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.white,
-                            ),
-                            decoration: InputDecoration(
-                              filled: true,
-                              fillColor: Colors.transparent,
-                              border: OutlineInputBorder(
-                                borderSide: BorderSide.none,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(width: 20),
-                  Expanded(
-                    flex: 1,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          "Reps",
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
-                        ),
-                        Container(
-                          margin: const EdgeInsets.symmetric(vertical: 10),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFF333333),
-                            borderRadius: BorderRadius.circular(5),
-                          ),
-                          child: const TextField(
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.white,
-                            ),
-                            decoration: InputDecoration(
-                              filled: true,
-                              fillColor: Colors.transparent,
-                              border: OutlineInputBorder(
-                                borderSide: BorderSide.none,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  //TODO: Checkbox
-                ],
+                ),
+              );
+            },
+          ),
+          const SizedBox(height: 10),
+          ElevatedButton(
+            style: ButtonStyle(
+              backgroundColor:
+                  MaterialStateProperty.all<Color>(const Color(0xFF333333)),
+              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15.0),
+                ),
               ),
-            );
-          }).toList(),
-        ),
-        const SizedBox(height: 10),
-        ElevatedButton(
-          style: ButtonStyle(
-            backgroundColor:
-                MaterialStateProperty.all<Color>(const Color(0xFF333333)),
-            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-              RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(15.0),
+            ),
+            // onPressed: _addSets,
+            onPressed: () {},
+            child: const Center(
+              child: Text(
+                "Add Set",
+                style: TextStyle(
+                  fontSize: 18,
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
           ),
-          // onPressed: _addSets,
-          onPressed: () {},
-          child: const Center(
-            child: Text(
-              "Add Set",
-              style: TextStyle(
-                fontSize: 18,
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-        ),
-      ],
+        ],
+      ),
     ),
   ];
 }
