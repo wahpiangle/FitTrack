@@ -3,16 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:group_project/main.dart';
 import 'package:group_project/models/exercise.dart';
 import 'package:group_project/models/current_workout_session.dart';
-import 'package:group_project/pages/workout/exercise_tile.dart';
+import 'package:group_project/pages/workout/components/exercise_tile.dart';
 
 class StartNewWorkout extends StatefulWidget {
   final List<Exercise> exerciseData;
-
-  StartNewWorkout({required this.exerciseData});
+  StartNewWorkout({super.key, required this.exerciseData});
 
   @override
-  _StartNewWorkoutState createState() =>
-      _StartNewWorkoutState(exerciseData: exerciseData);
+  _StartNewWorkoutState createState() => _StartNewWorkoutState();
 }
 
 class _StartNewWorkoutState extends State<StartNewWorkout>
@@ -22,12 +20,11 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
   late AnimationController _controller;
   late Animation<double> _animation;
   bool _isTimerRunning = false;
-  final List<Exercise> exerciseData;
+  late List<Exercise> exerciseData;
   TextEditingController weightsController = TextEditingController();
   TextEditingController repsController = TextEditingController();
   Stream<CurrentWorkoutSession>? _currentWorkoutSessionStream;
 
-  _StartNewWorkoutState({required this.exerciseData});
   List<Widget> setBorders = [];
 
   List<Widget> createSetBorders(
@@ -63,6 +60,7 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
   @override
   void initState() {
     super.initState();
+    exerciseData = widget.exerciseData;
     _currentWorkoutSessionStream = objectBox.watchCurrentWorkoutSession();
     _controller = AnimationController(
       vsync: this,
@@ -240,9 +238,6 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
           }
         },
       ),
-      floatingActionButton: FloatingActionButton(onPressed: () {
-        objectBox.testAddWorkoutToSession();
-      }),
     );
   }
 

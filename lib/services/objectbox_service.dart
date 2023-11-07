@@ -104,10 +104,6 @@ class ObjectBox {
     _currentWorkoutSessionBox.put(currentWorkoutSession, mode: PutMode.update);
   }
 
-  void removeCurrentWorkoutSession() {
-    _currentWorkoutSessionBox.removeAll();
-  }
-
   void removeExerciseFromCurrentWorkoutSession(Exercise selectedExercise) {
     CurrentWorkoutSession currentWorkoutSession = getCurrentWorkoutSession();
     currentWorkoutSession.exercises
@@ -115,9 +111,8 @@ class ObjectBox {
     _currentWorkoutSessionBox.put(currentWorkoutSession);
   }
 
-  void testAddWorkoutToSession() {
+  void clearCurrentWorkoutSession() {
     CurrentWorkoutSession currentWorkoutSession = getCurrentWorkoutSession();
-    currentWorkoutSession.title = 'New Workout';
     currentWorkoutSession.exercises = [];
     _currentWorkoutSessionBox.put(currentWorkoutSession);
   }

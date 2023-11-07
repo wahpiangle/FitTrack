@@ -49,8 +49,9 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) =>
-                                  StartNewWorkout(exerciseData: exerciseData),
+                              builder: (context) => StartNewWorkout(
+                                exerciseData: exerciseData,
+                              ),
                             ),
                           );
                         },

@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:group_project/models/exercise.dart';
 import 'package:group_project/models/exercise_set.dart';
 import 'package:group_project/models/exercise_set_info.dart';
-import 'package:group_project/pages/workout/choose_exercise.dart';
-import 'package:group_project/pages/workout/workout_screen.dart';
+import 'package:group_project/pages/workout/components/add_exercise_button.dart';
+import 'package:group_project/pages/workout/components/cancel_workout_button.dart';
 
 class ExerciseTile extends StatefulWidget {
   final List<Exercise> exerciseData;
@@ -71,72 +71,13 @@ class _ExerciseTileState extends State<ExerciseTile> {
                 ),
               ),
               const SizedBox(height: 20),
-              TextButton(
-                style: ButtonStyle(
-                  padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
-                      const EdgeInsets.all(15)),
-                  backgroundColor:
-                      MaterialStateProperty.all<Color>(const Color(0xFF1A1A1A)),
-                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                    RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15.0),
-                    ),
-                  ),
-                ),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ChooseExercise(
-                        exercises: widget.exerciseData,
-                        selectedExercises: widget.selectedExercises,
-                        selectExercise: widget.selectExercise,
-                        removeExercise: widget.removeExercise,
-                      ),
-                    ),
-                  );
-                },
-                child: const Center(
-                  child: Text(
-                    "ADD EXERCISE",
-                    style: TextStyle(
-                      fontSize: 18,
-                      color: Color(0xFFE1F0CF),
-                      letterSpacing: 2,
-                    ),
-                  ),
-                ),
+              AddExerciseButton(
+                exerciseData: widget.exerciseData,
+                selectedExercises: widget.selectedExercises,
+                selectExercise: widget.selectExercise,
+                removeExercise: widget.removeExercise,
               ),
-              TextButton(
-                style: ButtonStyle(
-                  padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
-                      const EdgeInsets.all(15)),
-                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                    RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(18.0),
-                    ),
-                  ),
-                  backgroundColor:
-                      MaterialStateProperty.all<Color>(const Color(0xFF1A1A1A)),
-                ),
-                onPressed: () {
-                  Navigator.of(context).pushReplacement(
-                    MaterialPageRoute(
-                      builder: (context) => const WorkoutScreen(),
-                    ),
-                  );
-                },
-                child: const Center(
-                  child: Text(
-                    "CANCEL WORKOUT",
-                    style: TextStyle(
-                      fontSize: 18,
-                      color: Colors.red,
-                      letterSpacing: 2,
-                    ),
-                  ),
-                ),
-              ),
+              const CancelWorkoutButton(),
             ]);
           }
           if (index == 0) {
@@ -198,7 +139,7 @@ class _ExerciseTileState extends State<ExerciseTile> {
                     ),
                     const SizedBox(height: 20),
                     Column(
-                      children: generateExerciseSetTiles(
+                      children: _generateExerciseSetTiles(
                         selectedExercise.name,
                         selectedExercise.exerciseSets,
                       ),
@@ -210,72 +151,13 @@ class _ExerciseTileState extends State<ExerciseTile> {
           }
           if (index == widget.selectedExercises.length) {
             return Column(children: [
-              TextButton(
-                style: ButtonStyle(
-                  padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
-                      const EdgeInsets.all(15)),
-                  backgroundColor:
-                      MaterialStateProperty.all<Color>(const Color(0xFF1A1A1A)),
-                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                    RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15.0),
-                    ),
-                  ),
-                ),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ChooseExercise(
-                        exercises: widget.exerciseData,
-                        selectedExercises: widget.selectedExercises,
-                        selectExercise: widget.selectExercise,
-                        removeExercise: widget.removeExercise,
-                      ),
-                    ),
-                  );
-                },
-                child: const Center(
-                  child: Text(
-                    "ADD EXERCISE",
-                    style: TextStyle(
-                      fontSize: 18,
-                      color: Color(0xFFE1F0CF),
-                      letterSpacing: 2,
-                    ),
-                  ),
-                ),
+              AddExerciseButton(
+                exerciseData: widget.exerciseData,
+                selectedExercises: widget.selectedExercises,
+                selectExercise: widget.selectExercise,
+                removeExercise: widget.removeExercise,
               ),
-              TextButton(
-                style: ButtonStyle(
-                  padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
-                      const EdgeInsets.all(15)),
-                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                    RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(18.0),
-                    ),
-                  ),
-                  backgroundColor:
-                      MaterialStateProperty.all<Color>(const Color(0xFF1A1A1A)),
-                ),
-                onPressed: () {
-                  Navigator.of(context).pushReplacement(
-                    MaterialPageRoute(
-                      builder: (context) => const WorkoutScreen(),
-                    ),
-                  );
-                },
-                child: const Center(
-                  child: Text(
-                    "CANCEL WORKOUT",
-                    style: TextStyle(
-                      fontSize: 18,
-                      color: Colors.red,
-                      letterSpacing: 2,
-                    ),
-                  ),
-                ),
-              ),
+              const CancelWorkoutButton(),
             ]);
           } else {
             ExerciseSetInfo selectedExercise = ExerciseSetInfo.fromJson(
@@ -296,7 +178,7 @@ class _ExerciseTileState extends State<ExerciseTile> {
                   ),
                   const SizedBox(height: 20),
                   Column(
-                    children: generateExerciseSetTiles(
+                    children: _generateExerciseSetTiles(
                       selectedExercise.name,
                       selectedExercise.exerciseSets,
                     ),
@@ -311,7 +193,7 @@ class _ExerciseTileState extends State<ExerciseTile> {
   }
 }
 
-List<Widget> generateExerciseSetTiles(
+List<Widget> _generateExerciseSetTiles(
   String exerciseName,
   List<ExerciseSet> exerciseSet,
 ) {
@@ -339,7 +221,7 @@ List<Widget> generateExerciseSetTiles(
                             child: Text(
                               "Set",
                               style: TextStyle(
-                                fontSize: 16,
+                                fontSize: 18,
                                 fontWeight: FontWeight.bold,
                                 color: Colors.white,
                               ),
@@ -353,7 +235,7 @@ List<Widget> generateExerciseSetTiles(
                             child: Text(
                               "Weight",
                               style: TextStyle(
-                                fontSize: 16,
+                                fontSize: 18,
                                 fontWeight: FontWeight.bold,
                                 color: Colors.white,
                               ),
@@ -367,7 +249,7 @@ List<Widget> generateExerciseSetTiles(
                             child: Text(
                               "Reps",
                               style: TextStyle(
-                                fontSize: 16,
+                                fontSize: 18,
                                 fontWeight: FontWeight.bold,
                                 color: Colors.white,
                               ),
@@ -384,7 +266,9 @@ List<Widget> generateExerciseSetTiles(
                         Dismissible(
                           key: UniqueKey(),
                           direction: DismissDirection.endToStart,
-                          onDismissed: (direction) => {print('d')},
+                          onDismissed: (direction) => {
+                            // TODO: remove set
+                          },
                           background: Container(
                             color: Colors.red,
                             alignment: Alignment.centerRight,
@@ -403,7 +287,7 @@ List<Widget> generateExerciseSetTiles(
                                   textAlign: TextAlign.center,
                                   "${setIndex + 1}",
                                   style: const TextStyle(
-                                    fontSize: 16,
+                                    fontSize: 18,
                                     color: Colors.white,
                                   ),
                                 ),
@@ -412,15 +296,13 @@ List<Widget> generateExerciseSetTiles(
                               Expanded(
                                 flex: 1,
                                 child: Container(
-                                  margin:
-                                      const EdgeInsets.symmetric(vertical: 10),
                                   decoration: BoxDecoration(
                                     color: const Color(0xFF333333),
                                     borderRadius: BorderRadius.circular(5),
                                   ),
                                   child: TextField(
                                     style: const TextStyle(
-                                      fontSize: 16,
+                                      fontSize: 18,
                                       color: Colors.white,
                                     ),
                                     textAlign: TextAlign.center,
@@ -428,6 +310,7 @@ List<Widget> generateExerciseSetTiles(
                                       text: "${set.weight}",
                                     ),
                                     decoration: const InputDecoration(
+                                      contentPadding: EdgeInsets.all(0),
                                       filled: true,
                                       fillColor: Colors.transparent,
                                       border: OutlineInputBorder(
@@ -449,7 +332,7 @@ List<Widget> generateExerciseSetTiles(
                                   ),
                                   child: TextField(
                                     style: const TextStyle(
-                                      fontSize: 16,
+                                      fontSize: 18,
                                       color: Colors.white,
                                     ),
                                     textAlign: TextAlign.center,
@@ -457,6 +340,7 @@ List<Widget> generateExerciseSetTiles(
                                       text: "${set.reps}",
                                     ),
                                     decoration: const InputDecoration(
+                                      contentPadding: EdgeInsets.all(0),
                                       filled: true,
                                       fillColor: Colors.transparent,
                                       border: OutlineInputBorder(
@@ -497,7 +381,9 @@ List<Widget> generateExerciseSetTiles(
                 children: [
                   Dismissible(
                     key: UniqueKey(),
-                    onDismissed: (direction) => {print('d')},
+                    onDismissed: (direction) => {
+                      // TODO: Remove the set from the exerciseSet list
+                    },
                     direction: DismissDirection.endToStart,
                     background: Container(
                       color: Colors.red,
@@ -517,7 +403,7 @@ List<Widget> generateExerciseSetTiles(
                             textAlign: TextAlign.center,
                             "${setIndex + 1}",
                             style: const TextStyle(
-                              fontSize: 16,
+                              fontSize: 18,
                               color: Colors.white,
                             ),
                           ),
@@ -533,7 +419,7 @@ List<Widget> generateExerciseSetTiles(
                             ),
                             child: TextField(
                               style: const TextStyle(
-                                fontSize: 16,
+                                fontSize: 18,
                                 color: Colors.white,
                               ),
                               textAlign: TextAlign.center,
@@ -541,6 +427,7 @@ List<Widget> generateExerciseSetTiles(
                                 text: "${set.weight}",
                               ),
                               decoration: const InputDecoration(
+                                contentPadding: EdgeInsets.all(0),
                                 filled: true,
                                 fillColor: Colors.transparent,
                                 border: OutlineInputBorder(
@@ -561,7 +448,7 @@ List<Widget> generateExerciseSetTiles(
                             ),
                             child: TextField(
                               style: const TextStyle(
-                                fontSize: 16,
+                                fontSize: 18,
                                 color: Colors.white,
                               ),
                               textAlign: TextAlign.center,
@@ -569,6 +456,7 @@ List<Widget> generateExerciseSetTiles(
                                 text: "${set.reps}",
                               ),
                               decoration: const InputDecoration(
+                                contentPadding: EdgeInsets.all(0),
                                 filled: true,
                                 fillColor: Colors.transparent,
                                 border: OutlineInputBorder(
@@ -615,8 +503,9 @@ List<Widget> generateExerciseSetTiles(
               ),
             ),
           ),
-          // onPressed: _addSets,
-          onPressed: () {},
+          onPressed: () {
+            // TODO: Add set
+          },
           child: const Center(
             child: Text(
               "Add Set",

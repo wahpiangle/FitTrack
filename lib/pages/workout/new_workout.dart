@@ -8,11 +8,11 @@ class NewWorkout extends StatelessWidget {
   final List<Exercise> exerciseData; // Add this line
 
   const NewWorkout({
-    Key? key,
+    super.key,
     required this.imagePath,
     required this.workoutText,
     required this.exerciseData, // Add this line
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -73,15 +73,19 @@ class NewWorkout extends StatelessWidget {
                   onPressed: () {
                     Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => StartNewWorkout(exerciseData: exerciseData), // Pass exerciseData here
-                        )
-                    );
+                        MaterialPageRoute(
+                          builder: (context) => StartNewWorkout(
+                            exerciseData: exerciseData,
+                          ),
+                        ));
                   },
                   style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all<Color>(Colors.transparent),
+                    backgroundColor:
+                        MaterialStateProperty.all<Color>(Colors.transparent),
                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                       RoundedRectangleBorder(
-                        side: const BorderSide(color: Color(0xFFE1F0CF), width: 1.0),
+                        side: const BorderSide(
+                            color: Color(0xFFE1F0CF), width: 1.0),
                         borderRadius: BorderRadius.circular(8),
                       ),
                     ),

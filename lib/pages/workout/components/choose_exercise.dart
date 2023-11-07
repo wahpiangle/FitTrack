@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:group_project/models/exercise.dart';
 import 'package:group_project/pages/components/crop_image.dart';
@@ -46,11 +44,7 @@ class _ChooseExerciseState extends State<ChooseExercise> {
 
   void _selectExercise(Exercise selectedExercise) {
     Navigator.pop(context);
-    // if(widget.selectedExercises.contains(selectedExercise.name)) {
-    //   widget.removeExercise(selectedExercise);
-    // } else {
     widget.selectExercise(selectedExercise);
-    // }
   }
 
   @override
