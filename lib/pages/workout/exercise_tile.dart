@@ -333,9 +333,9 @@ List<Widget> generateExerciseSetTiles(
                     const Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Center(
-                          child: SizedBox(
-                            width: 30,
+                        SizedBox(
+                          width: 30,
+                          child: Center(
                             child: Text(
                               "Set",
                               style: TextStyle(
@@ -373,7 +373,9 @@ List<Widget> generateExerciseSetTiles(
                               ),
                             ),
                           ),
-                        )
+                        ),
+                        SizedBox(width: 20),
+                        SizedBox(width: 40)
                       ],
                     ),
                     Column(
@@ -381,8 +383,17 @@ List<Widget> generateExerciseSetTiles(
                       children: [
                         Dismissible(
                           key: UniqueKey(),
+                          direction: DismissDirection.endToStart,
                           onDismissed: (direction) => {print('d')},
-                          background: Container(color: Colors.red),
+                          background: Container(
+                            color: Colors.red,
+                            alignment: Alignment.centerRight,
+                            padding: const EdgeInsets.symmetric(horizontal: 20),
+                            child: const Icon(
+                              Icons.delete,
+                              color: Colors.white,
+                            ),
+                          ),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -455,6 +466,24 @@ List<Widget> generateExerciseSetTiles(
                                   ),
                                 ),
                               ),
+                              const SizedBox(width: 10),
+                              SizedBox(
+                                width: 40,
+                                child: Material(
+                                  color: Colors.transparent,
+                                  child: InkWell(
+                                    borderRadius: BorderRadius.circular(8),
+                                    onTap: () {},
+                                    child: const Padding(
+                                      padding: EdgeInsets.all(8.0),
+                                      child: Icon(
+                                        Icons.check,
+                                        color: Color(0xFFE1F0CF),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              )
                             ],
                           ),
                         )
@@ -463,14 +492,22 @@ List<Widget> generateExerciseSetTiles(
                   ],
                 );
               }
-
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Dismissible(
                     key: UniqueKey(),
                     onDismissed: (direction) => {print('d')},
-                    background: Container(color: Colors.red),
+                    direction: DismissDirection.endToStart,
+                    background: Container(
+                      color: Colors.red,
+                      alignment: Alignment.centerRight,
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: const Icon(
+                        Icons.delete,
+                        color: Colors.white,
+                      ),
+                    ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -541,6 +578,24 @@ List<Widget> generateExerciseSetTiles(
                             ),
                           ),
                         ),
+                        const SizedBox(width: 10),
+                        SizedBox(
+                          width: 40,
+                          child: Material(
+                            color: Colors.transparent,
+                            child: InkWell(
+                              borderRadius: BorderRadius.circular(8),
+                              onTap: () {},
+                              child: const Padding(
+                                padding: EdgeInsets.all(8.0),
+                                child: Icon(
+                                  Icons.check,
+                                  color: Color(0xFFE1F0CF),
+                                ),
+                              ),
+                            ),
+                          ),
+                        )
                       ],
                     ),
                   )

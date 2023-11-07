@@ -98,6 +98,7 @@ class ObjectBox {
     currentWorkoutSession.exercises.add(jsonEncode({
       exercise.name: [
         ExerciseSet(weight: 1, reps: 1).toJson(),
+        ExerciseSet(weight: 1, reps: 1).toJson(),
       ]
     }));
     _currentWorkoutSessionBox.put(currentWorkoutSession, mode: PutMode.update);
@@ -112,10 +113,6 @@ class ObjectBox {
     currentWorkoutSession.exercises
         .removeWhere((exercise) => exercise.contains(selectedExercise.name));
     _currentWorkoutSessionBox.put(currentWorkoutSession);
-  }
-
-  String getLength() {
-    return _currentWorkoutSessionBox.getAll().length.toString();
   }
 
   void testAddWorkoutToSession() {
