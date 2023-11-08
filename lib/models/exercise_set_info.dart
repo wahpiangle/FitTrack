@@ -14,4 +14,11 @@ class ExerciseSetInfo {
           .toList(),
     );
   }
+
+  //to JSON
+  Map<String, dynamic> toJson() {
+    return {
+      name: exerciseSets.map((exerciseSet) => exerciseSet.toJson()).toList()
+    };
+  }
 }

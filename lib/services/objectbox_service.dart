@@ -7,6 +7,7 @@ import 'package:group_project/models/category.dart';
 import 'package:group_project/models/current_workout_session.dart';
 import 'package:group_project/models/exercise.dart';
 import 'package:group_project/models/exercise_set.dart';
+import 'package:group_project/models/exercise_set_info.dart';
 import 'package:group_project/objectbox.g.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
@@ -98,7 +99,7 @@ class ObjectBox {
     currentWorkoutSession.exercises.add(jsonEncode({
       exercise.name: [
         ExerciseSet(weight: 1, reps: 1).toJson(),
-        ExerciseSet(weight: 1, reps: 1).toJson(),
+        ExerciseSet(weight: 2, reps: 2).toJson(),
       ]
     }));
     _currentWorkoutSessionBox.put(currentWorkoutSession, mode: PutMode.update);
@@ -114,6 +115,26 @@ class ObjectBox {
   void clearCurrentWorkoutSession() {
     CurrentWorkoutSession currentWorkoutSession = getCurrentWorkoutSession();
     currentWorkoutSession.exercises = [];
+    _currentWorkoutSessionBox.put(currentWorkoutSession);
+  }
+
+  void removeSetFromExercise(String exerciseName, int setIndex) {
+    CurrentWorkoutSession currentWorkoutSession = getCurrentWorkoutSession();
+
+    ExerciseSetInfo exerciseSetInfo = ExerciseSetInfo.fromJson(
+      (jsonDecode(
+        currentWorkoutSession.exercises.firstWhere(
+          (exercise) => exercise.contains(exerciseName),
+        ),
+      )),
+    );
+    exerciseSetInfo.exerciseSets.removeAt(setIndex);
+    currentWorkoutSession.exercises[currentWorkoutSession.exercises
+            .indexWhere((exercise) => exercise.contains(exerciseName))] =
+        jsonEncode(
+      exerciseSetInfo.toJson(),
+    );
+
     _currentWorkoutSessionBox.put(currentWorkoutSession);
   }
 }

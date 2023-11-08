@@ -223,7 +223,7 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
             return const Center(child: CircularProgressIndicator());
           } else {
             return Padding(
-              padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
+              padding: const EdgeInsets.symmetric(vertical: 20),
               child: Column(
                 children: [
                   ExerciseTile(
