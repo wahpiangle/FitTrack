@@ -5,6 +5,7 @@ import 'package:group_project/services/auth_service.dart';
 import 'package:group_project/services/objectbox_service.dart';
 import 'package:provider/provider.dart';
 import 'firebase_options.dart';
+import 'package:group_project/pages/components/top_nav_bar.dart';
 
 late ObjectBox objectBox;
 
@@ -23,9 +24,14 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return StreamProvider.value(
-      value: AuthService().user,
-      initialData: null,
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => ProfileImageProvider()), // Provide the ProfileImageProvider
+        StreamProvider.value(
+          value: AuthService().user,
+          initialData: null,
+        ),
+      ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Flutter Auth',
