@@ -129,12 +129,17 @@ class ObjectBox {
       )),
     );
     exerciseSetInfo.exerciseSets.removeAt(setIndex);
-    currentWorkoutSession.exercises[currentWorkoutSession.exercises
-            .indexWhere((exercise) => exercise.contains(exerciseName))] =
-        jsonEncode(
-      exerciseSetInfo.toJson(),
-    );
-
+    if (exerciseSetInfo.exerciseSets.isEmpty) {
+      currentWorkoutSession.exercises
+          .removeWhere((exercise) => exercise.contains(exerciseName));
+    } else {
+      currentWorkoutSession.exercises[currentWorkoutSession.exercises
+              .indexWhere((exercise) => exercise.contains(exerciseName))] =
+          jsonEncode(
+        exerciseSetInfo.toJson(),
+      );
+    }
+    print(currentWorkoutSession.exercises);
     _currentWorkoutSessionBox.put(currentWorkoutSession);
   }
 }
