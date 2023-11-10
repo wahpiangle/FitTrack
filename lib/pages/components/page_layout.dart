@@ -36,11 +36,11 @@ class _PageLayoutState extends State<PageLayout> {
       appBar: TopNavBar(
         title: _pageTitles[_currentIndex],
         user: user,
-      ), body: _buildBody(),
+      ), body: _updateContent(),
       bottomNavigationBar: CustomBottomNavigationBar(
         currentIndex: _currentIndex,
         onTabTapped: (index) {
-          // Update the selected page when a navigation item is tapped.
+          // Update selected page when navigation item is tapped
           setState(() {
             _currentIndex = index;
           });
@@ -49,7 +49,7 @@ class _PageLayoutState extends State<PageLayout> {
     );
   }
 
-  Widget _buildBody() {
+  Widget _updateContent() {
     // Switch  content based on the selected page index
     switch (_currentIndex) {
       case 0:
