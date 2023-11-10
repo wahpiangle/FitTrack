@@ -19,7 +19,6 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
     final user = Provider.of<User?>(context);
 
     return Scaffold(
-        appBar: TopNavBar(title: 'Home', user: user),
         body: SingleChildScrollView(
           child: Container(
             padding: const EdgeInsets.all(20),

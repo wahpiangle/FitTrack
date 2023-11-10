@@ -67,11 +67,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final user = Provider.of<User?>(context);
 
     return Scaffold(
-      appBar: TopNavBar(
-        title: 'Settings',
-        user: user,
-
-      ),
       body: SingleChildScrollView(
         child: Stack(
           children: [

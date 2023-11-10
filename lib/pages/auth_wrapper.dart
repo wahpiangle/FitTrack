@@ -13,7 +13,7 @@ class Wrapper extends StatelessWidget {
     final user = Provider.of<User?>(context);
     if (user == null) {
       // TODO set this to the login screen during production
-      return WorkoutScreen();
+      return PageLayout();
     } else {
       return WorkoutScreen();
     }

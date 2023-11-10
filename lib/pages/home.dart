@@ -22,15 +22,6 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Text('Home Screen'),
-          actions: [
-            IconButton(
-              onPressed: () {},
-              icon: const Icon(Icons.delete),
-            )
-          ],
-        ),
         body: StreamBuilder(
           stream: streamExercises,
           builder: (context, snapshot) {

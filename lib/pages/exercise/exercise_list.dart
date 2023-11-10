@@ -87,11 +87,6 @@ class ExerciseListScreenState extends State<ExerciseListScreen> {
   Widget build(BuildContext context) {
     final user = Provider.of<User?>(context);
     return Scaffold(
-      appBar: TopNavBar(
-        title: 'Exercise List',
-        user: user,
-
-      ),
       body: StreamBuilder(
         stream: streamExercises,
         builder: (context, snapshot) {
