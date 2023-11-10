@@ -13,9 +13,9 @@ class Wrapper extends StatelessWidget {
     final user = Provider.of<User?>(context);
     if (user == null) {
       // TODO set this to the login screen during production
-      return PageLayout();
+      return const PageLayout();
     } else {
-      return WorkoutScreen();
+      return const WorkoutScreen();
     }
   }
 }
