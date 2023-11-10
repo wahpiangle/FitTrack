@@ -3,8 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:group_project/pages/components/top_nav_bar.dart';
 import 'package:provider/provider.dart';
 import 'components/bottom_nav_bar.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:group_project/services/auth_service.dart';
+import 'package:group_project/pages/auth/online_edit.dart';
+import 'package:group_project/pages/auth/offline_edit.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:io';
+
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -15,14 +19,58 @@ class SettingsScreen extends StatefulWidget {
 
 class _SettingsScreenState extends State<SettingsScreen> {
   final int _selectedIndex = 4;
+  late SharedPreferences _prefs;
+  late String username = '';
+  late String profileImage = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserData();
+  }
+
+  _loadUserData() async {
+    _prefs = await SharedPreferences.getInstance();
+    setState(() {
+      if (_prefs.getBool('isLoggedIn') ?? false) {
+        // If the user is logged in, fetch data from online storage
+        username = ''; // Fetch username from Firebase
+        profileImage = ''; // Fetch profile image from Firebase
+      } else {
+        // If the user is not logged in, get data from local storage
+        username = _prefs.getString('username') ?? generateUsername();
+        profileImage = _prefs.getString('profile_image') ?? 'assets/icons/defaultimage.jpg';
+      }
+    });
+  }
+
+  String generateUsername() {
+    String username = 'User_${DateTime.now().millisecondsSinceEpoch}';
+
+    // Limit the username to 15 characters
+    if (username.length > 15) {
+      username = username.substring(0, 15);
+    }
+
+    return username;
+  }
+
+  _saveUserData() async {
+    await _prefs.setString('username', username);
+    await _prefs.setString('profile_image', profileImage);
+
+  }
 
   @override
   Widget build(BuildContext context) {
+
     final user = Provider.of<User?>(context);
+
     return Scaffold(
       appBar: TopNavBar(
         title: 'Settings',
         user: user,
+
       ),
       body: SingleChildScrollView(
         child: Stack(
@@ -42,7 +90,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         child: Text(
                           'Profile',
                           style: TextStyle(
-                            fontSize: 25,
+                            fontSize: 24,
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
                           ),
@@ -54,22 +102,21 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   Row(
                     children: [
                       SizedBox(
-                        width: 110,
-                        height: 110,
+                        width: 100,
+                        height: 100,
                         child: ClipOval(
-                          child: user?.photoURL == null
-                              ? Image.asset('assets/icons/defaultimage.jpg')
-                              : CachedNetworkImage(
-                                  imageUrl: user!.photoURL!,
-                                  placeholder: (context, url) => Image.asset(
-                                      'assets/icons/defaultimage.jpg'),
-                                  errorWidget: (context, url, error) =>
-                                      Image.asset(
-                                          'assets/icons/defaultimage.jpg'),
-                                  fit: BoxFit.cover,
+                          child:  (profileImage.isEmpty || profileImage == 'assets/icons/defaultimage.jpg')
+                              ? const CircleAvatar(
+                          radius: 50,
+                          backgroundImage: AssetImage('assets/icons/defaultimage.jpg'),
+                        )
+                              : CircleAvatar(
+                            radius: 50,
+                            backgroundImage: FileImage(File(profileImage)),
+                          ),
                                 ),
                         ),
-                      ),
+
                       const SizedBox(width: 20),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -77,9 +124,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           Padding(
                             padding: const EdgeInsets.only(left: 10),
                             child: Text(
-                              user?.displayName ?? 'User',
+                             // user?.displayName ?? 'User',
+                              username,
+                              maxLines: 1,
                               style: const TextStyle(
-                                  fontSize: 30, color: Colors.white),
+                                  fontSize: 24, color: Colors.white),
                             ),
                           ),
                           const SizedBox(height: 12),
@@ -90,7 +139,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               borderRadius: BorderRadius.circular(100),
                             ),
                             child: TextButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                // Check if the user is logged in or not
+                                if (user != null) {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (context) => EditProfile(user: user)),
+                                  );
+                                } else {
+                                  _editProfile(context);
+                                }
+
+                              },
                               child: const Text(
                                 'Edit Profile',
                                 style: TextStyle(
@@ -105,7 +165,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 30),
+                  const SizedBox(height: 60),
                   ProfileMenuItem(
                     title: "Notifications",
                     icon: Icons.notifications,
@@ -121,11 +181,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     },
                   ),
                   ProfileMenuItem(
-                    title: "Privacy Policy",
-                    icon: Icons.privacy_tip,
+                    title: "Sign Up",
+                    icon: Icons.key_outlined,
                     onPressed: () {
                       // Navigate to the Terms and Conditions screen
                     },
+
                   ),
                   ProfileMenuItem(
                     title: "Terms and Conditions",
@@ -134,7 +195,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       // Navigate to the Terms and Conditions screen
                     },
                   ),
-                  const SizedBox(height: 50),
+                  const SizedBox(height: 110),
                   LogoutButton(),
                 ],
               ),
@@ -146,6 +207,33 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
     );
   }
+  void updateProfileImage(String newProfileImage){
+    setState(() {
+      profileImage = newProfileImage;
+      _saveUserData(); // Save updated profile image
+    });
+
+  }
+
+  void _editProfile(BuildContext context) async {
+    Map<String, dynamic>? result = await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => EditProfilePage(username: username, profileImage: profileImage)),
+    );
+
+    if (result != null && result.containsKey('username') && result['username'] != null) {
+      setState(() {
+        username = result['username']!;
+        if (result.containsKey('profileImage')) {
+          profileImage = result['profileImage'];
+          _saveUserData();
+        }
+      });
+    }
+  }
+
+
+
 }
 
 class ProfileMenuItem extends StatelessWidget {
@@ -240,3 +328,7 @@ class LogoutButton extends StatelessWidget {
     );
   }
 }
+
+
+
+
