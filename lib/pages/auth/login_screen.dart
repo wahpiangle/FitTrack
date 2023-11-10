@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:group_project/pages/auth/email_password_login.dart';
 import 'package:group_project/pages/auth/register_screen.dart';
-import 'package:group_project/pages/workout/workout_screen.dart';
 import 'package:magic_text/magic_text.dart';
 import 'package:group_project/services/auth_service.dart';
 
