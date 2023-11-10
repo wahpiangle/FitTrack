@@ -13,7 +13,7 @@ import 'dart:io';
 
 class SettingsScreen extends StatefulWidget {
 
-  const SettingsScreen({Key? key}) : super(key: key);
+  const SettingsScreen({super.key});
 
   @override
   State<SettingsScreen> createState() => _SettingsScreenState();
@@ -53,21 +53,24 @@ class _SettingsScreenState extends State<SettingsScreen> {
     User? currentUser = AuthService().getCurrentUser();
 
     if (currentUser != null) {
-      setState(() {
-        username = currentUser.displayName ?? '';
-        profileImage = currentUser.photoURL ?? '';
-        Provider.of<ProfileImageProvider>(context, listen: false)
-            .updateProfileImage(profileImage);
-      });
-    } else {
-      // New user using email/Gmail login method
-      _generateAndUploadRandomUsername();
+      if (currentUser.displayName == null || currentUser.displayName!.isEmpty) {
+        // New user using email/Gmail login method
+        await _generateAndUploadRandomUsername();
+      } else {
+        // Existing user, load the data
+        setState(() {
+          username = currentUser.displayName ?? '';
+          profileImage = currentUser.photoURL ?? '';
+          Provider.of<ProfileImageProvider>(context, listen: false)
+              .updateProfileImage(profileImage);
+        });
+      }
     }
   }
 
   _generateAndUploadRandomUsername() async {
     String newUsername = generateUsername();
-    User? currentUser = await AuthService().getCurrentUser();
+    User? currentUser = AuthService().getCurrentUser();
 
     if (currentUser != null) {
       // Update Firebase user profile with the random username
@@ -78,7 +81,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
       });
     }
   }
-
 
   _loadAnonymousUserData() {
     username = _prefs.getString('username') ?? generateUsername();
@@ -96,6 +98,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
     return username;
   }
+
 
 
   _saveUserData() async {
