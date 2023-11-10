@@ -11,8 +11,7 @@ class Wrapper extends StatelessWidget {
   Widget build(BuildContext context) {
     final user = Provider.of<User?>(context);
     if (user == null) {
-      // TODO set this to the login screen during production
-      return WorkoutScreen();
+      return LoginScreen();
     } else {
       return WorkoutScreen();
     }

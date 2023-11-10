@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:group_project/pages/auth/email_password_login.dart';
 import 'package:group_project/pages/auth/register_screen.dart';
+import 'package:group_project/pages/workout/workout_screen.dart';
 import 'package:magic_text/magic_text.dart';
 import 'package:group_project/services/auth_service.dart';
 
@@ -90,7 +91,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     }
                   },
                   icon: Image.asset(
-                    'assets/google.png',
+                    'assets/icons/google.png',
                     height: 30,
                     width: 30,
                   ),
@@ -179,6 +180,38 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ),
                   ],
+                ),
+              ),
+              const SizedBox(height: 20),
+              Center(
+                child: TextButton(
+                  onPressed: () async {
+                    dynamic result = await _auth.signInAnon();
+                    if(result == null){
+                      print('error signing in');
+                    } else {
+                      print('signed in');
+                      print(result.uid);
+                    }
+                  },
+                  style: ButtonStyle(
+                    shape: MaterialStateProperty.all(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30),
+                     ),
+                    ),
+                  ),
+                  child: const Padding(
+                    padding: EdgeInsets.fromLTRB(30, 12, 30, 12),
+                    child: Text(
+                      'Continue as Guest',
+                      style: TextStyle(
+                          decoration: TextDecoration.underline,
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
                 ),
               ),
               const SizedBox(height: 20),
