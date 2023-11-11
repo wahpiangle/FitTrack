@@ -4,25 +4,6 @@
   "_note3": "If you have VCS merge conflicts, you must resolve them according to ObjectBox docs.",
   "entities": [
     {
-      "id": "1:291077880433517389",
-      "lastPropertyId": "2:2567799525395227376",
-      "name": "Test",
-      "properties": [
-        {
-          "id": "1:2825989832794719963",
-          "name": "id",
-          "type": 6,
-          "flags": 1
-        },
-        {
-          "id": "2:2567799525395227376",
-          "name": "name",
-          "type": 9
-        }
-      ],
-      "relations": []
-    },
-    {
       "id": "2:6857853311853128321",
       "lastPropertyId": "2:1750610689674645898",
       "name": "BodyPart",
@@ -115,33 +96,117 @@
           "id": "2:7673918692334490422",
           "name": "title",
           "type": 9
+        }
+      ],
+      "relations": [
+        {
+          "id": "5:9104425147996837501",
+          "name": "exercisesSetsInfo",
+          "targetId": "10:1820858489364473134"
+        }
+      ]
+    },
+    {
+      "id": "7:3746532471321315396",
+      "lastPropertyId": "5:9138861087088139292",
+      "name": "ExerciseSet",
+      "properties": [
+        {
+          "id": "1:9139473268908762699",
+          "name": "id",
+          "type": 6,
+          "flags": 1
         },
         {
-          "id": "3:2394956069188890098",
-          "name": "exercises",
-          "type": 30
+          "id": "2:5571218456461062758",
+          "name": "weight",
+          "type": 6
+        },
+        {
+          "id": "3:2029824694950884313",
+          "name": "reps",
+          "type": 6
+        },
+        {
+          "id": "4:2054046102750542612",
+          "name": "isCompleted",
+          "type": 1
+        },
+        {
+          "id": "5:9138861087088139292",
+          "name": "exerciseSetInfoId",
+          "type": 11,
+          "flags": 520,
+          "indexId": "4:6650087091303056651",
+          "relationTarget": "ExercisesSetsInfo"
         }
       ],
       "relations": []
+    },
+    {
+      "id": "10:1820858489364473134",
+      "lastPropertyId": "3:4809623337499391650",
+      "name": "ExercisesSetsInfo",
+      "properties": [
+        {
+          "id": "1:8779143154988666368",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:4558520611782402113",
+          "name": "name",
+          "type": 9
+        },
+        {
+          "id": "3:4809623337499391650",
+          "name": "currentWorkoutSessionId",
+          "type": 11,
+          "flags": 520,
+          "indexId": "7:5333632471282907498",
+          "relationTarget": "CurrentWorkoutSession"
+        }
+      ],
+      "relations": [
+        {
+          "id": "6:8676555494170821584",
+          "name": "exerciseSets",
+          "targetId": "7:3746532471321315396"
+        }
+      ]
     }
   ],
-  "lastEntityId": "6:5203651438849109687",
-  "lastIndexId": "3:1068656247050756256",
-  "lastRelationId": "1:8318397962555478176",
+  "lastEntityId": "10:1820858489364473134",
+  "lastIndexId": "7:5333632471282907498",
+  "lastRelationId": "6:8676555494170821584",
   "lastSequenceId": "0:0",
   "modelVersion": 5,
   "modelVersionParserMinimum": 5,
   "retiredEntityUids": [
-    4999423151929670120
+    4999423151929670120,
+    291077880433517389,
+    5776171249161748084,
+    2667045106668319529
   ],
   "retiredIndexUids": [],
   "retiredPropertyUids": [
     7023199563579400897,
     1003896692653844350,
-    3743107910149441460
+    3743107910149441460,
+    2825989832794719963,
+    2567799525395227376,
+    2394956069188890098,
+    2078313656233314674,
+    6958839798918359476,
+    5709708361196651438,
+    6712349527996703541,
+    6484899983913584176,
+    4974240773481281494
   ],
   "retiredRelationUids": [
-    8318397962555478176
+    8318397962555478176,
+    6208819610691451520
   ],
   "version": 1
 }

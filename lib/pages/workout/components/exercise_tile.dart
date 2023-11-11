@@ -1,15 +1,14 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
+import 'package:group_project/main.dart';
 import 'package:group_project/models/exercise.dart';
-import 'package:group_project/models/exercise_set_info.dart';
+import 'package:group_project/models/exercise_sets_info.dart';
 import 'package:group_project/pages/workout/components/add_exercise_button.dart';
 import 'package:group_project/pages/workout/components/cancel_workout_button.dart';
 import 'package:group_project/pages/workout/components/set_tiles.dart';
 
 class ExerciseTile extends StatefulWidget {
   final List<Exercise> exerciseData;
-  final List<String> selectedExercises;
+  final List<ExercisesSetsInfo> selectedExercises;
   final void Function(Exercise selectedExercise) selectExercise;
   final void Function(Exercise selectedExercise) removeExercise;
 
@@ -27,6 +26,20 @@ class ExerciseTile extends StatefulWidget {
 
 class _ExerciseTileState extends State<ExerciseTile> {
   bool checkBox = false;
+
+  void removeSet(int exerciseSetId) {
+    objectBox.removeSetFromExercise(exerciseSetId);
+    setState(() {
+      widget.selectedExercises.toList().forEach((exercisesSetsInfo) {
+        exercisesSetsInfo.exerciseSets.toList().forEach((exerciseSet) {
+          if (exerciseSet.id == exerciseSetId) {
+            exercisesSetsInfo.exerciseSets.remove(exerciseSet);
+          }
+        });
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Expanded(
@@ -84,9 +97,8 @@ class _ExerciseTileState extends State<ExerciseTile> {
             );
           }
           if (index == 0) {
-            ExerciseSetInfo selectedExercise = ExerciseSetInfo.fromJson(
-              jsonDecode(widget.selectedExercises[index]),
-            );
+            ExercisesSetsInfo selectedExercise =
+                widget.selectedExercises[index];
             return Column(children: [
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10.0),
@@ -148,8 +160,10 @@ class _ExerciseTileState extends State<ExerciseTile> {
                     ),
                     const SizedBox(height: 20),
                     SetTiles(
+                      exercisesSetsInfoId: selectedExercise.id,
                       exerciseName: selectedExercise.name,
                       exerciseSet: selectedExercise.exerciseSets,
+                      removeSet: removeSet,
                     )
                   ],
                 ),
@@ -167,9 +181,8 @@ class _ExerciseTileState extends State<ExerciseTile> {
               const CancelWorkoutButton(),
             ]);
           } else {
-            ExerciseSetInfo selectedExercise = ExerciseSetInfo.fromJson(
-              jsonDecode(widget.selectedExercises[index]),
-            );
+            ExercisesSetsInfo selectedExercise =
+                widget.selectedExercises[index];
             return Container(
               margin: const EdgeInsets.symmetric(vertical: 10),
               child: Column(
@@ -188,8 +201,10 @@ class _ExerciseTileState extends State<ExerciseTile> {
                   ),
                   const SizedBox(height: 20),
                   SetTiles(
+                    exercisesSetsInfoId: selectedExercise.id,
                     exerciseName: selectedExercise.name,
                     exerciseSet: selectedExercise.exerciseSets,
+                    removeSet: removeSet,
                   )
                 ],
               ),

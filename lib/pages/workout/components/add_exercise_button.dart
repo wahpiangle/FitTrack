@@ -4,7 +4,7 @@ import 'package:group_project/pages/workout/components/choose_exercise.dart';
 
 class AddExerciseButton extends StatelessWidget {
   final List<Exercise> exerciseData;
-  final List<String> selectedExercises;
+  final List<dynamic> selectedExercises; //TODO
   final void Function(Exercise selectedExercise) selectExercise;
   final void Function(Exercise selectedExercise) removeExercise;
 

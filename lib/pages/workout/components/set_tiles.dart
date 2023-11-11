@@ -3,12 +3,17 @@ import 'package:group_project/main.dart';
 import 'package:group_project/models/exercise_set.dart';
 
 class SetTiles extends StatefulWidget {
+  final int exercisesSetsInfoId;
   final String exerciseName;
   final List<ExerciseSet> exerciseSet;
+  final void Function(int exerciseSetId) removeSet;
+
   const SetTiles({
     super.key,
+    required this.exercisesSetsInfoId,
     required this.exerciseName,
     required this.exerciseSet,
+    required this.removeSet,
   });
 
   @override
@@ -88,12 +93,7 @@ class _SetTilesState extends State<SetTiles> {
                       child: Dismissible(
                         key: UniqueKey(),
                         direction: DismissDirection.endToStart,
-                        onDismissed: (direction) => {
-                          objectBox.removeSetFromExercise(
-                            widget.exerciseName,
-                            setIndex,
-                          )
-                        },
+                        onDismissed: (direction) => {widget.removeSet(set.id)},
                         background: Container(
                           color: Colors.red,
                           alignment: Alignment.centerRight,
@@ -206,10 +206,7 @@ class _SetTilesState extends State<SetTiles> {
               return Dismissible(
                 key: UniqueKey(),
                 onDismissed: (direction) => {
-                  objectBox.removeSetFromExercise(
-                    widget.exerciseName,
-                    setIndex,
-                  )
+                  widget.removeSet(set.id),
                 },
                 direction: DismissDirection.endToStart,
                 background: Container(

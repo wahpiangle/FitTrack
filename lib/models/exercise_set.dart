@@ -1,18 +1,19 @@
+import 'package:group_project/models/exercise_sets_info.dart';
+import 'package:objectbox/objectbox.dart';
+
+@Entity()
 class ExerciseSet {
-  final int weight;
-  final int reps;
+  @Id()
+  int id;
+  int weight;
+  int reps;
   bool isCompleted = false;
 
-  ExerciseSet({required this.weight, required this.reps});
+  final exerciseSetInfo = ToOne<ExercisesSetsInfo>();
 
-  ExerciseSet.fromJson(Map<String, dynamic> json)
-      : weight = json['weight'],
-        reps = json['reps'],
-        isCompleted = json['isCompleted'];
-
-  Map<String, dynamic> toJson() => {
-        'weight': weight,
-        'reps': reps,
-        'isCompleted': isCompleted,
-      };
+  ExerciseSet({
+    this.id = 0,
+    required this.weight,
+    required this.reps,
+  });
 }

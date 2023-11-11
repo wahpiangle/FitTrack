@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:group_project/constants/data/category_data.dart';
 import 'package:group_project/constants/data/exercises_data.dart';
 import 'package:group_project/models/body_part.dart';
@@ -7,7 +5,7 @@ import 'package:group_project/models/category.dart';
 import 'package:group_project/models/current_workout_session.dart';
 import 'package:group_project/models/exercise.dart';
 import 'package:group_project/models/exercise_set.dart';
-import 'package:group_project/models/exercise_set_info.dart';
+import 'package:group_project/models/exercise_sets_info.dart';
 import 'package:group_project/objectbox.g.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
@@ -20,12 +18,16 @@ class ObjectBox {
   late final Box<Exercise> _exerciseBox;
   late final Box<Category> _categoryBox;
   late final Box<CurrentWorkoutSession> _currentWorkoutSessionBox;
+  late final Box<ExerciseSet> _exerciseSetBox;
+  late final Box<ExercisesSetsInfo> _exerciseSetInfoBox;
 
   ObjectBox._create(this.store) {
     _bodyPartBox = Box<BodyPart>(store);
     _exerciseBox = Box<Exercise>(store);
     _categoryBox = Box<Category>(store);
     _currentWorkoutSessionBox = Box<CurrentWorkoutSession>(store);
+    _exerciseSetBox = Box<ExerciseSet>(store);
+    _exerciseSetInfoBox = Box<ExercisesSetsInfo>(store);
 
     //initialization of data into the device
     if (_bodyPartBox.isEmpty()) {
@@ -96,50 +98,40 @@ class ObjectBox {
 
   void addExerciseToCurrentWorkoutSession(Exercise exercise) {
     CurrentWorkoutSession currentWorkoutSession = getCurrentWorkoutSession();
-    currentWorkoutSession.exercises.add(jsonEncode({
-      exercise.name: [
-        ExerciseSet(weight: 1, reps: 1).toJson(),
-        ExerciseSet(weight: 2, reps: 2).toJson(),
-      ]
-    }));
-    _currentWorkoutSessionBox.put(currentWorkoutSession, mode: PutMode.update);
+    final exercisesSetInfo = ExercisesSetsInfo(name: exercise.name);
+    // TODO: Change this to only 1 set
+    exercisesSetInfo.exerciseSets.add(ExerciseSet(reps: 1, weight: 1));
+    exercisesSetInfo.exerciseSets.add(ExerciseSet(reps: 2, weight: 2));
+    currentWorkoutSession.exercisesSetsInfo.add(exercisesSetInfo);
+    _currentWorkoutSessionBox.put(currentWorkoutSession);
   }
 
   void removeExerciseFromCurrentWorkoutSession(Exercise selectedExercise) {
     CurrentWorkoutSession currentWorkoutSession = getCurrentWorkoutSession();
-    currentWorkoutSession.exercises
-        .removeWhere((exercise) => exercise.contains(selectedExercise.name));
-    _currentWorkoutSessionBox.put(currentWorkoutSession);
+    currentWorkoutSession.exercisesSetsInfo.removeWhere(
+        (exercisesSetsInfo) => exercisesSetsInfo.name == selectedExercise.name);
   }
 
   void clearCurrentWorkoutSession() {
     CurrentWorkoutSession currentWorkoutSession = getCurrentWorkoutSession();
-    currentWorkoutSession.exercises = [];
+
+    // delete all exercise sets of the current workout session
+    for (var exercisesSetsInfo in currentWorkoutSession.exercisesSetsInfo) {
+      exercisesSetsInfo.exerciseSets.toList().forEach((exerciseSet) {
+        _exerciseSetBox.remove(exerciseSet.id);
+      });
+    }
+
+    // delete all exercise set info of the current workout session
+    currentWorkoutSession.exercisesSetsInfo
+        .toList()
+        .forEach((exercisesSetsInfo) {
+      _exerciseSetInfoBox.remove(exercisesSetsInfo.id);
+    });
     _currentWorkoutSessionBox.put(currentWorkoutSession);
   }
 
-  void removeSetFromExercise(String exerciseName, int setIndex) {
-    CurrentWorkoutSession currentWorkoutSession = getCurrentWorkoutSession();
-
-    ExerciseSetInfo exerciseSetInfo = ExerciseSetInfo.fromJson(
-      (jsonDecode(
-        currentWorkoutSession.exercises.firstWhere(
-          (exercise) => exercise.contains(exerciseName),
-        ),
-      )),
-    );
-    exerciseSetInfo.exerciseSets.removeAt(setIndex);
-    if (exerciseSetInfo.exerciseSets.isEmpty) {
-      currentWorkoutSession.exercises
-          .removeWhere((exercise) => exercise.contains(exerciseName));
-    } else {
-      currentWorkoutSession.exercises[currentWorkoutSession.exercises
-              .indexWhere((exercise) => exercise.contains(exerciseName))] =
-          jsonEncode(
-        exerciseSetInfo.toJson(),
-      );
-    }
-    print(currentWorkoutSession.exercises);
-    _currentWorkoutSessionBox.put(currentWorkoutSession);
+  void removeSetFromExercise(int setId) {
+    _exerciseSetBox.remove(setId);
   }
 }

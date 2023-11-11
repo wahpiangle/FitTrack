@@ -27,36 +27,6 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
 
   List<Widget> setBorders = [];
 
-  List<Widget> createSetBorders(
-      List<Widget> currentSetBorders,
-      TextEditingController weightsController,
-      TextEditingController repsController) {
-    // Create a new set border widget based on the weight and reps provided.
-    // You can customize this function to create the desired set border widget.
-    final newSetBorder = Container(
-      decoration: BoxDecoration(
-        border: Border.all(
-          color: Colors.white,
-          width: 2.0,
-        ),
-        borderRadius: BorderRadius.circular(10),
-      ),
-      margin: const EdgeInsets.all(10),
-      padding: const EdgeInsets.all(10),
-      child: Row(
-        children: [
-          Text("Weight: ${weightsController.text}"),
-          const SizedBox(width: 10),
-          Text("Reps: ${repsController.text}"),
-        ],
-      ),
-    );
-
-    currentSetBorders.add(newSetBorder);
-
-    return currentSetBorders;
-  }
-
   @override
   void initState() {
     super.initState();
@@ -228,7 +198,8 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
                 children: [
                   ExerciseTile(
                     exerciseData: exerciseData,
-                    selectedExercises: snapshot.data!.exercises,
+                    selectedExercises:
+                        snapshot.data!.exercisesSetsInfo.toList(),
                     selectExercise: selectExercise,
                     removeExercise: removeExercise,
                   ),

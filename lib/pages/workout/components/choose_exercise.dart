@@ -4,7 +4,7 @@ import 'package:group_project/pages/components/crop_image.dart';
 
 class ChooseExercise extends StatefulWidget {
   final List<Exercise> exercises;
-  final List<String> selectedExercises;
+  final List<dynamic> selectedExercises; //TODO
   final void Function(Exercise selectedExercise) selectExercise;
   final void Function(Exercise selectedExercise) removeExercise;
 
