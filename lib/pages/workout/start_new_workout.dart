@@ -7,7 +7,8 @@ import 'package:group_project/pages/workout/components/exercise_tile.dart';
 
 class StartNewWorkout extends StatefulWidget {
   final List<Exercise> exerciseData;
-  StartNewWorkout({super.key, required this.exerciseData});
+
+  StartNewWorkout({Key? key, required this.exerciseData}) : super(key: key);
 
   @override
   _StartNewWorkoutState createState() => _StartNewWorkoutState();
@@ -31,8 +32,6 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
       List<Widget> currentSetBorders,
       TextEditingController weightsController,
       TextEditingController repsController) {
-    // Create a new set border widget based on the weight and reps provided.
-    // You can customize this function to create the desired set border widget.
     final newSetBorder = Container(
       decoration: BoxDecoration(
         border: Border.all(
@@ -102,41 +101,12 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
     objectBox.removeExerciseFromCurrentWorkoutSession(selectedExercise);
   }
 
-  // void _addSets() {
-  //   if (selectedExercises.isNotEmpty) {
-  //     int weight = int.tryParse(weightsController.text) ?? 0;
-  //     int reps = int.tryParse(repsController.text) ?? 0;
-
-  //     ExerciseSet newExerciseSet = ExerciseSet(weight: weight, reps: reps);
-
-  //     int exerciseIndex = _currentWorkoutSession.exercises!.indexWhere(
-  //         (exerciseData) =>
-  //             exerciseData.keys.first.name == selectedExercises.first.name);
-
-  //     if (exerciseIndex >= 0) {
-  //       // If the exercise is found, add the set to it
-  //       final exerciseData = _currentWorkoutSession.exercises![exerciseIndex];
-  //       final exercise = exerciseData.keys.first;
-  //       exerciseData[exercise]!.add(newExerciseSet);
-
-  //       // Add the newly created set border to the widget tree
-  //       setState(() {
-  //         setBorders = createSetBorders([], weightsController, repsController);
-  //       });
-  //     }
-
-  //     // Optionally, you can clear the text controllers
-  //     weightsController.clear();
-  //     repsController.clear();
-  //   }
-  // }
-
   Widget createSetBorder(int weight, int reps) {
     return Container(
       decoration: BoxDecoration(
         border: Border.all(
           color: Colors.white,
-          width: 2.0, // Border width
+          width: 2.0,
         ),
         borderRadius: BorderRadius.circular(10),
       ),
@@ -203,7 +173,6 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
         title: const Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            // TODO: Rest Timer
             Text(
               "Timer",
               style: TextStyle(
@@ -237,6 +206,59 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
             );
           }
         },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          showModalBottomSheet(
+            context: context,
+            builder: (BuildContext context) {
+              return SingleChildScrollView(
+                child: Container(
+                  padding: const EdgeInsets.all(20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Text(
+                        "Workout Data",
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      // Display each exercise in the workout data
+                      for (Exercise exercise in exerciseData)
+                        Container(
+                          margin: const EdgeInsets.symmetric(vertical: 10),
+                          padding: const EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: Colors.white,
+                              width: 2.0,
+                            ),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text("Exercise Name: ${exercise.name}"),
+                              const SizedBox(height: 5),
+                              Text("Sets: ${exercise.sets}"),
+                              const SizedBox(height: 5),
+                              Text("Reps: ${exercise.reps}"),
+                              // Add more exercise details as needed
+                            ],
+                          ),
+                        ),
+                      // Add more widgets or workout data here
+                    ],
+                  ),
+                ),
+              );
+            },
+          );
+        },
+        child: Icon(Icons.add),
       ),
     );
   }

@@ -5,17 +5,38 @@ import 'package:group_project/models/exercise_set.dart';
 class SetTiles extends StatefulWidget {
   final String exerciseName;
   final List<ExerciseSet> exerciseSet;
+
   const SetTiles({
-    super.key,
+    Key? key,
     required this.exerciseName,
     required this.exerciseSet,
-  });
+  }) : super(key: key);
 
   @override
   State<SetTiles> createState() => _SetTilesState();
 }
 
 class _SetTilesState extends State<SetTiles> {
+  void _addSet() {
+    ExerciseSet emptySet = ExerciseSet(weight: 0, reps: 0);
+    setState(() {
+      widget.exerciseSet.add(emptySet);
+    });
+  }
+
+  void _addAnotherRow() {
+    ExerciseSet emptySet = ExerciseSet(weight: 0, reps: 0);
+    setState(() {
+      widget.exerciseSet.add(emptySet);
+    });
+  }
+
+  void _deleteRow(int index) {
+    setState(() {
+      widget.exerciseSet.removeAt(index);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -23,12 +44,11 @@ class _SetTilesState extends State<SetTiles> {
         ScrollConfiguration(
           behavior: NoGlowBehaviour(),
           child: ListView.builder(
-            itemCount: widget.exerciseSet.asMap().entries.length,
+            itemCount: widget.exerciseSet.length,
             shrinkWrap: true,
             itemBuilder: (context, index) {
               int setIndex = index;
-              ExerciseSet set =
-                  widget.exerciseSet.asMap().entries.elementAt(setIndex).value;
+              ExerciseSet set = widget.exerciseSet[setIndex];
               if (index == 0) {
                 return Column(
                   children: [
@@ -88,11 +108,9 @@ class _SetTilesState extends State<SetTiles> {
                       child: Dismissible(
                         key: UniqueKey(),
                         direction: DismissDirection.endToStart,
-                        onDismissed: (direction) => {
-                          objectBox.removeSetFromExercise(
-                            widget.exerciseName,
-                            setIndex,
-                          )
+                        onDismissed: (direction) {
+                          // Delete the entire row when dismissed
+                          _deleteRow(0);
                         },
                         background: Container(
                           color: Colors.red,
@@ -152,7 +170,7 @@ class _SetTilesState extends State<SetTiles> {
                                 flex: 1,
                                 child: Container(
                                   margin:
-                                      const EdgeInsets.symmetric(vertical: 10),
+                                  const EdgeInsets.symmetric(vertical: 10),
                                   decoration: BoxDecoration(
                                     color: const Color(0xFF333333),
                                     borderRadius: BorderRadius.circular(5),
@@ -184,12 +202,15 @@ class _SetTilesState extends State<SetTiles> {
                                   color: Colors.transparent,
                                   child: InkWell(
                                     borderRadius: BorderRadius.circular(8),
-                                    onTap: () {},
+                                    onTap: () {
+                                      // Call the delete method when the button is pressed
+                                      _deleteRow(0);
+                                    },
                                     child: const Padding(
                                       padding: EdgeInsets.all(8.0),
                                       child: Icon(
                                         Icons.check,
-                                        color: Color(0xFFE1F0CF),
+                                        color: Colors.white,
                                       ),
                                     ),
                                   ),
@@ -205,11 +226,9 @@ class _SetTilesState extends State<SetTiles> {
               }
               return Dismissible(
                 key: UniqueKey(),
-                onDismissed: (direction) => {
-                  objectBox.removeSetFromExercise(
-                    widget.exerciseName,
-                    setIndex,
-                  )
+                onDismissed: (direction) {
+                  // Delete the entire row when dismissed
+                  _deleteRow(setIndex);
                 },
                 direction: DismissDirection.endToStart,
                 background: Container(
@@ -303,12 +322,15 @@ class _SetTilesState extends State<SetTiles> {
                             color: Colors.transparent,
                             child: InkWell(
                               borderRadius: BorderRadius.circular(8),
-                              onTap: () {},
+                              onTap: () {
+                                // Call the delete method when the button is pressed
+                                _deleteRow(setIndex);
+                              },
                               child: const Padding(
                                 padding: EdgeInsets.all(8.0),
                                 child: Icon(
                                   Icons.check,
-                                  color: Color(0xFFE1F0CF),
+                                  color: Colors.white,
                                 ),
                               ),
                             ),
@@ -328,16 +350,14 @@ class _SetTilesState extends State<SetTiles> {
           child: ElevatedButton(
             style: ButtonStyle(
               backgroundColor:
-                  MaterialStateProperty.all<Color>(const Color(0xFF333333)),
+              MaterialStateProperty.all<Color>(const Color(0xFF333333)),
               shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                 RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(15.0),
                 ),
               ),
             ),
-            onPressed: () {
-              // TODO: Add set
-            },
+            onPressed: _addAnotherRow,
             child: const Center(
               child: Text(
                 "Add Set",
