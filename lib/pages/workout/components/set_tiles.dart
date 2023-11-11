@@ -32,10 +32,16 @@ class _SetTilesState extends State<SetTiles> {
   }
 
   void _deleteRow(int index) {
-    setState(() {
-      widget.exerciseSet.removeAt(index);
-    });
+    // Implement the desired action when the checkmark button is pressed
+    // For now, I'm just printing a message, replace this with your intended action
+    print("Checkmark button pressed for row $index");
+
+    // Optionally, you can remove the following line if you don't want to delete the row
+    // setState(() {
+    //   widget.exerciseSet.removeAt(index);
+    // });
   }
+
 
   @override
   Widget build(BuildContext context) {
