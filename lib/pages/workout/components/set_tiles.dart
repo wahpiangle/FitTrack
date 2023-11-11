@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:group_project/main.dart';
 import 'package:group_project/models/exercise_set.dart';
 
 class SetTiles extends StatefulWidget {
@@ -28,12 +27,11 @@ class _SetTilesState extends State<SetTiles> {
         ScrollConfiguration(
           behavior: NoGlowBehaviour(),
           child: ListView.builder(
-            itemCount: widget.exerciseSet.asMap().entries.length,
+            itemCount: widget.exerciseSet.length,
             shrinkWrap: true,
             itemBuilder: (context, index) {
               int setIndex = index;
-              ExerciseSet set =
-                  widget.exerciseSet.asMap().entries.elementAt(setIndex).value;
+              ExerciseSet set = widget.exerciseSet[setIndex];
               if (index == 0) {
                 return Column(
                   children: [
@@ -184,12 +182,14 @@ class _SetTilesState extends State<SetTiles> {
                                   color: Colors.transparent,
                                   child: InkWell(
                                     borderRadius: BorderRadius.circular(8),
-                                    onTap: () {},
+                                    onTap: () {
+                                      // Call the delete method when the button is pressed
+                                    },
                                     child: const Padding(
                                       padding: EdgeInsets.all(8.0),
                                       child: Icon(
                                         Icons.check,
-                                        color: Color(0xFFE1F0CF),
+                                        color: Colors.white,
                                       ),
                                     ),
                                   ),
@@ -300,12 +300,14 @@ class _SetTilesState extends State<SetTiles> {
                             color: Colors.transparent,
                             child: InkWell(
                               borderRadius: BorderRadius.circular(8),
-                              onTap: () {},
+                              onTap: () {
+                                // Call the delete method when the button is pressed
+                              },
                               child: const Padding(
                                 padding: EdgeInsets.all(8.0),
                                 child: Icon(
                                   Icons.check,
-                                  color: Color(0xFFE1F0CF),
+                                  color: Colors.white,
                                 ),
                               ),
                             ),

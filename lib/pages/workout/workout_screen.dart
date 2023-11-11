@@ -25,6 +25,17 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
     exerciseData = objectBox.getAllExercises();
   }
 
+  Future<void> _startNewWorkout(BuildContext context) async {
+    objectBox.createWorkoutSession();
+
+    await showModalBottomSheet(
+      context: context,
+      builder: (context) => StartNewWorkout(
+        exerciseData: exerciseData,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<User?>(context);
@@ -44,19 +55,11 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
                   widthFactor: 1,
                   child: TextButton(
                     onPressed: () {
-                      objectBox.createWorkoutSession();
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => StartNewWorkout(
-                            exerciseData: exerciseData,
-                          ),
-                        ),
-                      );
+                      _startNewWorkout(context);
                     },
                     style: ButtonStyle(
                       backgroundColor:
-                          MaterialStateProperty.all(const Color(0xFFC1C1C1)),
+                      MaterialStateProperty.all(const Color(0xFFC1C1C1)),
                       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                         RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(30),

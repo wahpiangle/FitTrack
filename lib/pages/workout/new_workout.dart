@@ -8,7 +8,7 @@ class NewWorkout extends StatelessWidget {
   final List<Exercise> exerciseData; // Add this line
 
   const NewWorkout({
-    super.key,
+    Key? key,
     required this.imagePath,
     required this.workoutText,
     required this.exerciseData, // Add this line
@@ -70,18 +70,17 @@ class NewWorkout extends StatelessWidget {
               FractionallySizedBox(
                 widthFactor: 1,
                 child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => StartNewWorkout(
-                            exerciseData: exerciseData,
-                          ),
-                        ));
+                  onPressed: () async {
+                    await showModalBottomSheet(
+                      context: context,
+                      builder: (context) => StartNewWorkout(
+                        exerciseData: exerciseData,
+                      ),
+                    );
                   },
                   style: ButtonStyle(
                     backgroundColor:
-                        MaterialStateProperty.all<Color>(Colors.transparent),
+                    MaterialStateProperty.all<Color>(Colors.transparent),
                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                       RoundedRectangleBorder(
                         side: const BorderSide(
