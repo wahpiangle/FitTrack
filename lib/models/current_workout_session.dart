@@ -7,10 +7,11 @@ class CurrentWorkoutSession {
   int id;
   String title;
 
-  // List<Map<Exercise, List<ExerciseSet>>> exercises;
   // 1 current workout session can have multiple exercises
   // each exercise can have multiple sets
   final exercisesSetsInfo = ToMany<ExercisesSetsInfo>();
+
+  // TODO: add timer
 
   CurrentWorkoutSession({
     this.id = 0,
