@@ -6,7 +6,7 @@ import 'package:objectbox/objectbox.dart';
 class ExercisesSetsInfo {
   @Id()
   int id;
-  String name;
+  String name; //TODO: Convert this to a ToOne<Exercise> relationships
 
   final currentWorkoutSession = ToOne<CurrentWorkoutSession>();
   final exerciseSets = ToMany<ExerciseSet>();
