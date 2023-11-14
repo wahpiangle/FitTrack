@@ -17,4 +17,6 @@ class ExerciseSet {
     required this.weight,
     required this.reps,
   });
+
+
 }

@@ -30,12 +30,27 @@ class _ExerciseTileState extends State<ExerciseTile> {
   void removeSet(int exerciseSetId) {
     objectBox.removeSetFromExercise(exerciseSetId);
     setState(() {
-      widget.selectedExercises.toList().forEach((exercisesSetsInfo) {
-        exercisesSetsInfo.exerciseSets.toList().forEach((exerciseSet) {
-          if (exerciseSet.id == exerciseSetId) {
-            exercisesSetsInfo.exerciseSets.remove(exerciseSet);
-          }
+      widget.selectedExercises.forEach((exercisesSetsInfo) {
+        exercisesSetsInfo.exerciseSets.removeWhere((exerciseSet) =>
+        exerciseSet.id == exerciseSetId);
+      });
+    });
+    // Optionally, call removeExerciseName here if needed
+    // removeExerciseName(exerciseSetId);
+  }
+
+
+  void removeExerciseName(int exerciseSetId) {
+    // Remove set from the exercise
+    objectBox.removeSetFromExercise(exerciseSetId);
+
+    // Remove exercise sets with no sets in the list
+    setState(() {
+      widget.selectedExercises.removeWhere((exercisesSetsInfo) {
+        exercisesSetsInfo.exerciseSets.removeWhere((exerciseSet) {
+          return exerciseSet.id == exerciseSetId;
         });
+        return exercisesSetsInfo.exerciseSets.isEmpty;
       });
     });
   }
@@ -164,7 +179,11 @@ class _ExerciseTileState extends State<ExerciseTile> {
                       exerciseName: selectedExercise.name,
                       exerciseSet: selectedExercise.exerciseSets,
                       removeSet: removeSet,
+                      removeExerciseName: (int exerciseNameId) {
+                        removeExerciseName(exerciseNameId);
+                      },
                     )
+
                   ],
                 ),
               ),
@@ -205,7 +224,11 @@ class _ExerciseTileState extends State<ExerciseTile> {
                     exerciseName: selectedExercise.name,
                     exerciseSet: selectedExercise.exerciseSets,
                     removeSet: removeSet,
+                    removeExerciseName: (int exerciseNameId) {
+                      removeExerciseName(exerciseNameId);
+                    },
                   )
+
                 ],
               ),
             );
