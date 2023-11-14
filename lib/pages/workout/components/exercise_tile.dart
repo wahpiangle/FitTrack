@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:group_project/main.dart';
 import 'package:group_project/models/exercise.dart';
-import 'package:group_project/models/exercise_sets_info.dart';
+import 'package:group_project/models/exercises_sets_info.dart';
 import 'package:group_project/pages/workout/components/add_exercise_button.dart';
 import 'package:group_project/pages/workout/components/cancel_workout_button.dart';
 import 'package:group_project/pages/workout/components/set_tiles.dart';
@@ -150,7 +150,7 @@ class _ExerciseTileState extends State<ExerciseTile> {
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 10),
                       child: Text(
-                        selectedExercise.name,
+                        selectedExercise.exercise.target!.name,
                         style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
@@ -161,7 +161,7 @@ class _ExerciseTileState extends State<ExerciseTile> {
                     const SizedBox(height: 20),
                     SetTiles(
                       exercisesSetsInfoId: selectedExercise.id,
-                      exerciseName: selectedExercise.name,
+                      exerciseName: selectedExercise.exercise.target!.name,
                       exerciseSet: selectedExercise.exerciseSets,
                       removeSet: removeSet,
                     )
@@ -191,7 +191,7 @@ class _ExerciseTileState extends State<ExerciseTile> {
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 10.0),
                     child: Text(
-                      selectedExercise.name,
+                      selectedExercise.exercise.target!.name,
                       style: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
@@ -202,7 +202,7 @@ class _ExerciseTileState extends State<ExerciseTile> {
                   const SizedBox(height: 20),
                   SetTiles(
                     exercisesSetsInfoId: selectedExercise.id,
-                    exerciseName: selectedExercise.name,
+                    exerciseName: selectedExercise.exercise.target!.name,
                     exerciseSet: selectedExercise.exerciseSets,
                     removeSet: removeSet,
                   )
