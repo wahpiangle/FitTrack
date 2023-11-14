@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:group_project/models/exercise_set.dart';
+//import 'package:group_project/models/exercise_sets_info.dart';
 
 
 
@@ -193,7 +194,10 @@ class _SetTilesState extends State<SetTiles> {
             onPressed: () {
               setState(() {
                 // Add a new set when the button is pressed
-                sets.add(ExerciseSet(id: sets.length + 1, weight: 0, reps: 0));
+                ExerciseSet newSet = ExerciseSet(id: sets.length + 1, weight: 0, reps: 0);
+                sets.add(newSet);
+                //ObjectBoxService.saveExercisesSetsInfo(exercisesSetsInfo);
+
               });
             },
             child: const Center(
@@ -251,6 +255,9 @@ class _SetTilesState extends State<SetTiles> {
       ),
     );
   }
+}
+
+class ObjectBoxService {
 }
 
 class NoGlowBehaviour extends ScrollBehavior {
