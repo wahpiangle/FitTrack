@@ -6,14 +6,12 @@ class ChooseExercise extends StatefulWidget {
   final List<Exercise> exercises;
   final List<dynamic> selectedExercises; //TODO
   final void Function(Exercise selectedExercise) selectExercise;
-  final void Function(Exercise selectedExercise) removeExercise;
 
   const ChooseExercise({
     super.key,
     required this.exercises,
     required this.selectedExercises,
     required this.selectExercise,
-    required this.removeExercise,
   });
 
   @override

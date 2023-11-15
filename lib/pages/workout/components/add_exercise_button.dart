@@ -6,14 +6,13 @@ class AddExerciseButton extends StatelessWidget {
   final List<Exercise> exerciseData;
   final List<dynamic> selectedExercises; //TODO
   final void Function(Exercise selectedExercise) selectExercise;
-  final void Function(Exercise selectedExercise) removeExercise;
 
-  const AddExerciseButton(
-      {super.key,
-      required this.exerciseData,
-      required this.selectedExercises,
-      required this.selectExercise,
-      required this.removeExercise});
+  const AddExerciseButton({
+    super.key,
+    required this.exerciseData,
+    required this.selectedExercises,
+    required this.selectExercise,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +36,6 @@ class AddExerciseButton extends StatelessWidget {
               exercises: exerciseData,
               selectedExercises: selectedExercises,
               selectExercise: selectExercise,
-              removeExercise: removeExercise,
             ),
           ),
         );

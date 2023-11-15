@@ -80,7 +80,7 @@ class NewWorkout extends StatelessWidget {
                   },
                   style: ButtonStyle(
                     backgroundColor:
-                    MaterialStateProperty.all<Color>(Colors.transparent),
+                        MaterialStateProperty.all<Color>(Colors.transparent),
                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                       RoundedRectangleBorder(
                         side: const BorderSide(

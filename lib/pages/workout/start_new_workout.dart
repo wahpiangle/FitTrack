@@ -11,7 +11,7 @@ class StartNewWorkout extends StatefulWidget {
   StartNewWorkout({Key? key, required this.exerciseData}) : super(key: key);
 
   @override
-  _StartNewWorkoutState createState() => _StartNewWorkoutState();
+  State<StartNewWorkout> createState() => _StartNewWorkoutState();
 }
 
 class _StartNewWorkoutState extends State<StartNewWorkout>
@@ -67,10 +67,6 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
 
   void selectExercise(Exercise selectedExercise) {
     objectBox.addExerciseToCurrentWorkoutSession(selectedExercise);
-  }
-
-  void removeExercise(Exercise selectedExercise) {
-    objectBox.removeExerciseFromCurrentWorkoutSession(selectedExercise);
   }
 
   Widget createSetBorder(int weight, int reps) {
@@ -172,7 +168,6 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
                     selectedExercises:
                         snapshot.data!.exercisesSetsInfo.toList(),
                     selectExercise: selectExercise,
-                    removeExercise: removeExercise,
                   ),
                 ],
               ),
@@ -182,54 +177,55 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          showModalBottomSheet(
-            context: context,
-            builder: (BuildContext context) {
-              return SingleChildScrollView(
-                child: Container(
-                  padding: const EdgeInsets.all(20),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Text(
-                        "Workout Data",
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-                      // Display each exercise in the workout data
-                      for (Exercise exercise in exerciseData)
-                        Container(
-                          margin: const EdgeInsets.symmetric(vertical: 10),
-                          padding: const EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              color: Colors.white,
-                              width: 2.0,
-                            ),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text("Exercise Name: ${exercise.name}"),
-                              const SizedBox(height: 5),
-                              Text("Sets: ${exercise.sets}"),
-                              const SizedBox(height: 5),
-                              Text("Reps: ${exercise.reps}"),
-                              // Add more exercise details as needed
-                            ],
-                          ),
-                        ),
-                      // Add more widgets or workout data here
-                    ],
-                  ),
-                ),
-              );
-            },
-          );
+          //   showModalBottomSheet(
+          //     context: context,
+          //     builder: (BuildContext context) {
+          //       return SingleChildScrollView(
+          //         child: Container(
+          //           padding: const EdgeInsets.all(20),
+          //           child: Column(
+          //             crossAxisAlignment: CrossAxisAlignment.stretch,
+          //             children: [
+          //               const Text(
+          //                 "Workout Data",
+          //                 style: TextStyle(
+          //                   fontSize: 20,
+          //                   fontWeight: FontWeight.bold,
+          //                 ),
+          //               ),
+          //               const SizedBox(height: 10),
+          //               // Display each exercise in the workout data
+          //               for (Exercise exercise in exerciseData)
+          //                 Container(
+          //                   margin: const EdgeInsets.symmetric(vertical: 10),
+          //                   padding: const EdgeInsets.all(10),
+          //                   decoration: BoxDecoration(
+          //                     border: Border.all(
+          //                       color: Colors.white,
+          //                       width: 2.0,
+          //                     ),
+          //                     borderRadius: BorderRadius.circular(10),
+          //                   ),
+          //                   child: Column(
+          //                     crossAxisAlignment: CrossAxisAlignment.start,
+          //                     children: [
+          //                       Text("Exercise Name: ${exercise.name}"),
+          //                       const SizedBox(height: 5),
+          //                       Text("Sets: ${exercise.sets}"),
+          //                       const SizedBox(height: 5),
+          //                       Text("Reps: ${exercise.reps}"),
+          //                       // Add more exercise details as needed
+          //                     ],
+          //                   ),
+          //                 ),
+          //               // Add more widgets or workout data here
+          //             ],
+          //           ),
+          //         ),
+          //       );
+          //     },
+          //   );
+          objectBox.test();
         },
         child: Icon(Icons.add),
       ),

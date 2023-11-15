@@ -111,8 +111,14 @@ class ObjectBox {
 
   void removeExerciseFromCurrentWorkoutSession(Exercise selectedExercise) {
     CurrentWorkoutSession currentWorkoutSession = getCurrentWorkoutSession();
-    currentWorkoutSession.exercisesSetsInfo.removeWhere((exercisesSetsInfo) =>
-        exercisesSetsInfo.exercise.target!.name == selectedExercise.name);
+    currentWorkoutSession.exercisesSetsInfo
+        .toList()
+        .forEach((exercisesSetsInfo) {
+      if (exercisesSetsInfo.exercise.target!.id == selectedExercise.id) {
+        currentWorkoutSession.exercisesSetsInfo.remove(exercisesSetsInfo);
+      }
+    });
+    _currentWorkoutSessionBox.put(currentWorkoutSession);
   }
 
   void clearCurrentWorkoutSession() {
@@ -136,5 +142,14 @@ class ObjectBox {
 
   void removeSetFromExercise(int setId) {
     _exerciseSetBox.remove(setId);
+  }
+
+  void test() {
+    CurrentWorkoutSession currentWorkoutSession = getCurrentWorkoutSession();
+    for (ExercisesSetsInfo exercisesSetsInfo
+        in currentWorkoutSession.exercisesSetsInfo) {
+      print(exercisesSetsInfo.exercise.target!.name);
+      print(exercisesSetsInfo.exerciseSets.length);
+    }
   }
 }
