@@ -282,7 +282,7 @@ class _SetTilesState extends State<SetTiles> {
                           child: InkWell(
                             borderRadius: BorderRadius.circular(8),
                             onTap: () {
-                              // Call the delete method when the button is pressed
+                              //TODO set isComplete to true in exerciseSet & make the set green to indicate that it is complete
                             },
                             child: const Padding(
                               padding: EdgeInsets.all(8.0),
