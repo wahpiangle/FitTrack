@@ -121,6 +121,11 @@ class ObjectBox {
     _currentWorkoutSessionBox.put(currentWorkoutSession);
   }
 
+  void addSetToExercise(ExercisesSetsInfo exercisesSetsInfo) {
+    exercisesSetsInfo.exerciseSets.add(ExerciseSet(reps: 1, weight: 1));
+    _exercisesSetsInfoBox.put(exercisesSetsInfo);
+  }
+
   void clearCurrentWorkoutSession() {
     CurrentWorkoutSession currentWorkoutSession = getCurrentWorkoutSession();
 

@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:group_project/models/exercise_set.dart';
 import 'package:group_project/models/exercises_sets_info.dart';
+import 'package:group_project/pages/workout/components/tiles/components/set_labels.dart';
 
 class SetTiles extends StatefulWidget {
   final ExercisesSetsInfo exercisesSetsInfo;
   final void Function(int exerciseSetId, ExercisesSetsInfo exercisesSetsInfo)
       removeSet;
+  final void Function(ExercisesSetsInfo exercisesSetsInfo) addSet;
 
   const SetTiles({
     super.key,
     required this.exercisesSetsInfo,
     required this.removeSet,
+    required this.addSet,
   });
 
   @override
@@ -64,54 +67,7 @@ class _SetTilesState extends State<SetTiles> {
                   children: [
                     const Padding(
                       padding: EdgeInsets.all(10),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          SizedBox(
-                            width: 30,
-                            child: Center(
-                              child: Text(
-                                "Set",
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
-                          ),
-                          SizedBox(width: 20),
-                          Expanded(
-                            flex: 1,
-                            child: Center(
-                              child: Text(
-                                "Weight",
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
-                          ),
-                          SizedBox(width: 20),
-                          Expanded(
-                            flex: 1,
-                            child: Center(
-                              child: Text(
-                                "Reps",
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
-                          ),
-                          SizedBox(width: 20),
-                          SizedBox(width: 40)
-                        ],
-                      ),
+                      child: SetLabels(),
                     ),
                     Dismissible(
                       key: UniqueKey(),
@@ -359,9 +315,7 @@ class _SetTilesState extends State<SetTiles> {
               ),
             ),
             onPressed: () {
-              setState(() {
-                //TODO: Add set
-              });
+              widget.addSet(widget.exercisesSetsInfo);
             },
             child: const Center(
               child: Text(

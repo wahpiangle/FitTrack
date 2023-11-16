@@ -7,7 +7,7 @@ class CancelWorkoutButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    void _cancelWorkout(BuildContext context) {
+    void cancelWorkout(BuildContext context) {
       showDialog(
           context: context,
           builder: (BuildContext ctx) {
@@ -74,7 +74,7 @@ class CancelWorkoutButton extends StatelessWidget {
             MaterialStateProperty.all<Color>(const Color(0xFF1A1A1A)),
       ),
       onPressed: () {
-        _cancelWorkout(context);
+        cancelWorkout(context);
       },
       child: const Center(
         child: Text(

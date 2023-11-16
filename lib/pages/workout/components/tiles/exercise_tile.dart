@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:group_project/main.dart';
 import 'package:group_project/models/exercise.dart';
+import 'package:group_project/models/exercise_set.dart';
 import 'package:group_project/models/exercises_sets_info.dart';
-import 'package:group_project/pages/workout/components/add_exercise_button.dart';
-import 'package:group_project/pages/workout/components/cancel_workout_button.dart';
-import 'package:group_project/pages/workout/components/set_tiles.dart';
+import 'package:group_project/pages/workout/components/tiles/components/cancel_workout_button.dart';
+import 'package:group_project/pages/workout/components/tiles/components/add_exercise_button.dart';
+import 'package:group_project/pages/workout/components/tiles/set_tiles.dart';
 import 'package:group_project/pages/workout/components/workout_header.dart';
 
 class ExerciseTile extends StatefulWidget {
@@ -37,6 +38,12 @@ class _ExerciseTileState extends State<ExerciseTile> {
         exercisesSetsInfo.exerciseSets
             .removeWhere((exerciseSet) => exerciseSet.id == exerciseSetId);
       }
+    });
+  }
+
+  void addSet(ExercisesSetsInfo exercisesSetsInfo) {
+    setState(() {
+      objectBox.addSetToExercise(exercisesSetsInfo);
     });
   }
 
@@ -85,6 +92,7 @@ class _ExerciseTileState extends State<ExerciseTile> {
                     SetTiles(
                       exercisesSetsInfo: selectedExercise,
                       removeSet: removeSet,
+                      addSet: addSet,
                     )
                   ],
                 ),
@@ -123,6 +131,7 @@ class _ExerciseTileState extends State<ExerciseTile> {
                   SetTiles(
                     exercisesSetsInfo: selectedExercise,
                     removeSet: removeSet,
+                    addSet: addSet,
                   )
                 ],
               ),
