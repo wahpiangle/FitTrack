@@ -27,6 +27,7 @@ class AuthService {
     }
   }
 
+
   //sign in with email and password
   Future signInWithEmailAndPassword(String email, String password) async {
     try {
@@ -59,6 +60,29 @@ class AuthService {
       rethrow;
     }
   }
+
+  User? getCurrentUser() {
+    return _auth.currentUser;
+  }
+
+  Future<void> updateUserProfile({
+    required String displayName,
+    String? photoURL,
+  }) async {
+    try {
+      User? user = getCurrentUser();
+
+      if (user != null) {
+        await user.updateProfile(displayName: displayName, photoURL: photoURL);
+        await user.reload();
+        user = getCurrentUser();
+      }
+    } catch (e) {
+      print(e.toString());
+      rethrow;
+    }
+  }
+
 
   //sign in with Google
   Future signInWithGoogle() async {
