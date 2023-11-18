@@ -8,7 +8,7 @@ import 'package:group_project/pages/workout/components/tiles/exercise_tile.dart'
 class StartNewWorkout extends StatefulWidget {
   final List<Exercise> exerciseData;
 
-  StartNewWorkout({Key? key, required this.exerciseData}) : super(key: key);
+  const StartNewWorkout({super.key, required this.exerciseData});
 
   @override
   State<StartNewWorkout> createState() => _StartNewWorkoutState();
@@ -17,7 +17,6 @@ class StartNewWorkout extends StatefulWidget {
 class _StartNewWorkoutState extends State<StartNewWorkout>
     with TickerProviderStateMixin {
   late Timer _timer;
-  int _seconds = 0;
   late AnimationController _controller;
   late Animation<double> _animation;
   bool _isTimerRunning = false;
@@ -49,7 +48,6 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
     if (!_isTimerRunning) {
       _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
         setState(() {
-          _seconds++;
           _controller.reset();
           _controller.forward();
         });
@@ -177,54 +175,6 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          //   showModalBottomSheet(
-          //     context: context,
-          //     builder: (BuildContext context) {
-          //       return SingleChildScrollView(
-          //         child: Container(
-          //           padding: const EdgeInsets.all(20),
-          //           child: Column(
-          //             crossAxisAlignment: CrossAxisAlignment.stretch,
-          //             children: [
-          //               const Text(
-          //                 "Workout Data",
-          //                 style: TextStyle(
-          //                   fontSize: 20,
-          //                   fontWeight: FontWeight.bold,
-          //                 ),
-          //               ),
-          //               const SizedBox(height: 10),
-          //               // Display each exercise in the workout data
-          //               for (Exercise exercise in exerciseData)
-          //                 Container(
-          //                   margin: const EdgeInsets.symmetric(vertical: 10),
-          //                   padding: const EdgeInsets.all(10),
-          //                   decoration: BoxDecoration(
-          //                     border: Border.all(
-          //                       color: Colors.white,
-          //                       width: 2.0,
-          //                     ),
-          //                     borderRadius: BorderRadius.circular(10),
-          //                   ),
-          //                   child: Column(
-          //                     crossAxisAlignment: CrossAxisAlignment.start,
-          //                     children: [
-          //                       Text("Exercise Name: ${exercise.name}"),
-          //                       const SizedBox(height: 5),
-          //                       Text("Sets: ${exercise.sets}"),
-          //                       const SizedBox(height: 5),
-          //                       Text("Reps: ${exercise.reps}"),
-          //                       // Add more exercise details as needed
-          //                     ],
-          //                   ),
-          //                 ),
-          //               // Add more widgets or workout data here
-          //             ],
-          //           ),
-          //         ),
-          //       );
-          //     },
-          //   );
           objectBox.test();
         },
         child: Icon(Icons.add),
