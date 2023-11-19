@@ -1,9 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:group_project/pages/components/bottom_nav_bar.dart';
 import 'package:group_project/pages/components/top_nav_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:group_project/pages/workout/new_workout.dart';
-import '../components/bottom_nav_bar.dart';
 
 class WorkoutScreen extends StatefulWidget {
   const WorkoutScreen({super.key});
@@ -13,9 +13,7 @@ class WorkoutScreen extends StatefulWidget {
 }
 
 class _WorkoutScreenState extends State<WorkoutScreen> {
-// nav bar
   int _selectedIndex = 2;
-// nav bar
 
   @override
   Widget build(BuildContext context) {
