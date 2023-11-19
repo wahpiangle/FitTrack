@@ -1,34 +1,19 @@
 import 'package:flutter/material.dart';
-import '../../../models/current_workout_session.dart';
-import '../../../services/objectbox_service.dart';
+import 'package:group_project/main.dart';
 
 class WorkoutHeader extends StatefulWidget {
-  final CurrentWorkoutSession currentWorkoutSession;
-  final ObjectBox objectBoxService;
-
   const WorkoutHeader({
-    Key? key,
-    required this.currentWorkoutSession,
-    required this.objectBoxService,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
-  State<WorkoutHeader> createState() => _WorkoutHeaderState(objectBoxService);
+  State<WorkoutHeader> createState() => _WorkoutHeaderState();
 }
 
-
 class _WorkoutHeaderState extends State<WorkoutHeader> {
-  final ObjectBox objectBoxService;
-
-  _WorkoutHeaderState(this.objectBoxService); // Update the constructor
-
   void onTextFieldChanged(String newText) {
-    CurrentWorkoutSession currentWorkoutSession = objectBoxService.getCurrentWorkoutSession();
-    currentWorkoutSession.note = newText;
-    objectBoxService.updateCurrentWorkoutSessionNote(newText);
-    print('New note value: $newText');
+    objectBox.updateCurrentWorkoutSessionNote(newText);
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +24,7 @@ class _WorkoutHeaderState extends State<WorkoutHeader> {
           Container(
             alignment: Alignment.topLeft,
             child: Text(
-              widget.currentWorkoutSession.title,
+              'Workout',
               style: const TextStyle(
                 color: Colors.white,
                 fontSize: 24,

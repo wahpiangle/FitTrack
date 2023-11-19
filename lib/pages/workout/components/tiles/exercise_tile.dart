@@ -47,8 +47,6 @@ class _ExerciseTileState extends State<ExerciseTile> {
     });
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     return Expanded(
@@ -59,12 +57,7 @@ class _ExerciseTileState extends State<ExerciseTile> {
           if (widget.selectedExercises.isEmpty) {
             return Column(
               children: [
-                WorkoutHeader(
-                  currentWorkoutSession: CurrentWorkoutSession(),
-                  objectBoxService: objectBox, // Pass the ObjectBox instance here
-                ),
-
-
+                WorkoutHeader(),
                 AddExerciseButton(
                   exerciseData: widget.exerciseData,
                   selectedExercises: widget.selectedExercises,
@@ -78,11 +71,7 @@ class _ExerciseTileState extends State<ExerciseTile> {
             ExercisesSetsInfo selectedExercise =
                 widget.selectedExercises[index];
             return Column(children: [
-              WorkoutHeader(
-                currentWorkoutSession: CurrentWorkoutSession(),
-                objectBoxService: objectBox, // Pass the ObjectBox instance here
-              ),
-
+              WorkoutHeader(),
               Container(
                 margin: const EdgeInsets.symmetric(vertical: 10),
                 child: Column(
