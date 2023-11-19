@@ -3,9 +3,14 @@ import 'package:group_project/pages/auth/email_password_login.dart';
 import 'package:group_project/pages/auth/register_screen.dart';
 import 'package:magic_text/magic_text.dart';
 import 'package:group_project/services/auth_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:group_project/services/user_state.dart';
+import 'package:provider/provider.dart';
+
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
+
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -13,6 +18,7 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final AuthService _auth = AuthService();
+  late SharedPreferences _prefs; // Define _prefs at the class level
 
   @override
   void initState() {
@@ -21,6 +27,10 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+
+    final UserStateProvider userStateProvider =
+    Provider.of<UserStateProvider>(context, listen: false);
+
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
@@ -186,12 +196,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: TextButton(
                   onPressed: () async {
                     dynamic result = await _auth.signInAnon();
-                    if(result == null){
-                      print('error signing in');
-                    } else {
-                      print('signed in');
-                      print(result.uid);
-                    }
                   },
                   style: ButtonStyle(
                     shape: MaterialStateProperty.all(

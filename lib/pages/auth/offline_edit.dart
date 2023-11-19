@@ -6,6 +6,7 @@ import 'dart:io';
 
 
 class EditProfilePage extends StatefulWidget{
+
   final String username;
   final String profileImage;
 
