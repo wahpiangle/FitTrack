@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:group_project/services/auth_service.dart';
 
@@ -16,12 +17,12 @@ class _EmailPasswordLoginState extends State<EmailPasswordLogin> {
   String email = '';
   String password = '';
   String error = '';
+  String errorMessage = '';
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFF1A1A1A),
-      // const Color(0xFF1A1A1C),
       appBar: AppBar(
         backgroundColor: const Color(0xFF1A1A1A),
         elevation: 0.0,
@@ -106,15 +107,18 @@ class _EmailPasswordLoginState extends State<EmailPasswordLogin> {
                 child: ElevatedButton(
                     onPressed: () async {
                       if (_formKey.currentState!.validate()) {
-                        dynamic result = await _auth.signInWithEmailAndPassword(
-                            email, password);
-                        if (result == null) {
-                          setState(() =>
-                          error = 'Could not sign in with those credentials.');
-                        }
-                        if (result != null) {
+                        try {
+                          await _auth.signInWithEmailAndPassword(email, password);
                           Future.microtask(() => Navigator.pop(context));
+                          errorMessage= '';
+                        } on FirebaseAuthException catch (error) {
+                          if (error.code == "invalid-email"){
+                            errorMessage = 'The email format is invalid.';
+                          } else {
+                            errorMessage = 'The email or password you\'ve entered is incorrect.';
+                          }
                         }
+                        setState(() {});
                       }
                     },
                   style: ButtonStyle(
@@ -155,8 +159,10 @@ class _EmailPasswordLoginState extends State<EmailPasswordLogin> {
               const SizedBox(height: 12.0),
               Center(
                 child: Text(
-                  error,
-                  style: const TextStyle(color: Colors.red, fontSize: 14.0),
+                    errorMessage,
+                    style: const TextStyle(
+                      color:Colors.red,
+                    )
                 ),
               ),
             ],

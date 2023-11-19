@@ -186,18 +186,12 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: TextButton(
                   onPressed: () async {
                     dynamic result = await _auth.signInAnon();
-                    if(result == null){
-                      print('error signing in');
-                    } else {
-                      print('signed in');
-                      print(result.uid);
-                    }
                   },
                   style: ButtonStyle(
                     shape: MaterialStateProperty.all(
                       RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(30),
-                     ),
+                      ),
                     ),
                   ),
                   child: const Padding(
