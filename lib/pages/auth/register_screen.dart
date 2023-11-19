@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:group_project/services/auth_service.dart';
 
@@ -16,6 +17,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   String email = '';
   String password = '';
   String error = '';
+  String errorMessage = '';
 
   @override
   Widget build(BuildContext context) {
@@ -99,14 +101,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 child: ElevatedButton(
                   onPressed: () async {
                     if (_formKey.currentState!.validate()) {
-                      dynamic result = await _auth.registerWithEmailAndPassword(
-                          email, password);
-                      if (result == null) {
-                        setState(() => error = 'Please supply a valid email.');
-                      }
-                      if (result != null) {
+                      try {
+                        await _auth.registerWithEmailAndPassword(email, password);
                         Future.microtask(() => Navigator.pop(context));
+                        errorMessage = '';
+                      } on FirebaseAuthException catch (error){
+                        if (error.code == "invalid-email"){
+                          errorMessage = 'The email format is invalid.';
+                        } else {
+                          errorMessage = 'The email is already taken by another account.';
+                        }
                       }
+                      setState(() {});
                     }
                   },
                   style: ButtonStyle(
@@ -144,8 +150,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
               const SizedBox(height: 12.0),
               Center(
                 child: Text(
-                  error,
-                  style: const TextStyle(color: Colors.red, fontSize: 14.0),
+                    errorMessage,
+                    style: const TextStyle(
+                      color:Colors.red,
+                    )
                 ),
               ),
             ],
