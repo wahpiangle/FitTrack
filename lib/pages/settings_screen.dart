@@ -9,10 +9,7 @@ import 'package:group_project/pages/auth/offline_edit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:io';
 
-
-
 class SettingsScreen extends StatefulWidget {
-
   const SettingsScreen({super.key});
 
   @override
@@ -20,13 +17,11 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
-
   final int _selectedIndex = 4;
   late SharedPreferences _prefs;
   late String username = '';
   late String profileImage = '';
-  late bool isAnonymous= false;
-
+  late bool isAnonymous = false;
 
   @override
   void initState() {
@@ -84,8 +79,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   _loadAnonymousUserData() {
     username = _prefs.getString('username') ?? generateUsername();
-    profileImage = _prefs.getString('profile_image') ??
-        'assets/icons/defaultimage.jpg';
+    profileImage =
+        _prefs.getString('profile_image') ?? 'assets/icons/defaultimage.jpg';
   }
 
   String generateUsername() {
@@ -99,8 +94,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
     return username;
   }
 
-
-
   _saveUserData() async {
     if (isAnonymous) {
       await _prefs.setString('username', username);
@@ -110,9 +103,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
-
     final UserStateProvider userStateProvider =
-    Provider.of<UserStateProvider>(context);
+        Provider.of<UserStateProvider>(context);
 
     bool isLoggedIn = userStateProvider.userState.isLoggedIn;
     final user = Provider.of<User?>(context);
@@ -121,7 +113,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
       appBar: TopNavBar(
         title: 'Settings',
         user: user,
-
       ),
       body: SingleChildScrollView(
         child: Stack(
@@ -156,18 +147,21 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         width: 100,
                         height: 100,
                         child: ClipOval(
-                          child:  (profileImage.isEmpty || profileImage == 'assets/icons/defaultimage.jpg')
+                          child: (profileImage.isEmpty ||
+                                  profileImage ==
+                                      'assets/icons/defaultimage.jpg')
                               ? const CircleAvatar(
-                          radius: 50,
-                          backgroundImage: AssetImage('assets/icons/defaultimage.jpg'),
-                        )
+                                  radius: 50,
+                                  backgroundImage: AssetImage(
+                                      'assets/icons/defaultimage.jpg'),
+                                )
                               : CircleAvatar(
-                            radius: 50,
-                            backgroundImage: FileImage(File(profileImage)),
-                          ),
+                                  radius: 50,
+                                  backgroundImage:
+                                      FileImage(File(profileImage)),
                                 ),
                         ),
-
+                      ),
                       const SizedBox(width: 20),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -175,7 +169,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           Padding(
                             padding: const EdgeInsets.only(left: 10),
                             child: Text(
-                             // user?.displayName ?? 'User',
+                              // user?.displayName ?? 'User',
                               username,
                               maxLines: 1,
                               style: const TextStyle(
@@ -261,6 +255,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       ),
     );
   }
+
   void updateProfileImage(String newProfileImage) {
     setState(() {
       profileImage = newProfileImage;
@@ -276,27 +271,28 @@ class _SettingsScreenState extends State<SettingsScreen> {
   void _editProfile(BuildContext context) async {
     Map<String, dynamic>? result = await Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => EditProfilePage(username: username, profileImage: profileImage)),
+      MaterialPageRoute(
+          builder: (context) =>
+              EditProfilePage(username: username, profileImage: profileImage)),
     );
 
-    if (result != null && result.containsKey('username') && result['username'] != null) {
+    if (result != null &&
+        result.containsKey('username') &&
+        result['username'] != null) {
       setState(() {
         username = result['username']!;
         if (result.containsKey('profileImage')) {
           profileImage = result['profileImage'];
           // Update Firebase user profile for authenticated users
           if (!isAnonymous) {
-            AuthService().updateUserProfile(displayName: username, photoURL: profileImage);
+            AuthService().updateUserProfile(
+                displayName: username, photoURL: profileImage);
           }
           _saveUserData();
         }
       });
     }
   }
-
-
-
-
 }
 
 class ProfileMenuItem extends StatelessWidget {
@@ -393,7 +389,3 @@ class LogoutButton extends StatelessWidget {
     );
   }
 }
-
-
-
-
