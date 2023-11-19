@@ -49,7 +49,7 @@ class ObjectBox {
     final docsDir = await getApplicationDocumentsDirectory();
     // Future<Store> openStore() {...} is defined in the generated objectbox.g.dart
     final store =
-        await openStore(directory: p.join(docsDir.path, "obx-example"));
+    await openStore(directory: p.join(docsDir.path, "obx-example"));
     return ObjectBox._create(store);
   }
 
@@ -152,9 +152,23 @@ class ObjectBox {
   void test() {
     CurrentWorkoutSession currentWorkoutSession = getCurrentWorkoutSession();
     for (ExercisesSetsInfo exercisesSetsInfo
-        in currentWorkoutSession.exercisesSetsInfo) {
+    in currentWorkoutSession.exercisesSetsInfo) {
       print(exercisesSetsInfo.exercise.target!.name);
       print(exercisesSetsInfo.exerciseSets.length);
     }
   }
+
+  void onTextFieldChanged(String newText) {
+    CurrentWorkoutSession currentWorkoutSession = getCurrentWorkoutSession();
+    currentWorkoutSession.note = newText;
+    _currentWorkoutSessionBox.put(currentWorkoutSession);
+  }
+
+  void updateCurrentWorkoutSessionNote(String newText) {
+    CurrentWorkoutSession currentWorkoutSession = getCurrentWorkoutSession();
+    currentWorkoutSession.note = newText;
+    _currentWorkoutSessionBox.put(currentWorkoutSession);
+    print('Updated note: ${currentWorkoutSession.note}');
+  }
+
 }

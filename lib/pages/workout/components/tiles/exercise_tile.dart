@@ -6,6 +6,7 @@ import 'package:group_project/pages/workout/components/tiles/components/cancel_w
 import 'package:group_project/pages/workout/components/tiles/components/add_exercise_button.dart';
 import 'package:group_project/pages/workout/components/tiles/set_tiles.dart';
 import 'package:group_project/pages/workout/components/workout_header.dart';
+import 'package:group_project/models/current_workout_session.dart';
 
 class ExerciseTile extends StatefulWidget {
   final List<Exercise> exerciseData;
@@ -46,6 +47,8 @@ class _ExerciseTileState extends State<ExerciseTile> {
     });
   }
 
+
+
   @override
   Widget build(BuildContext context) {
     return Expanded(
@@ -56,7 +59,12 @@ class _ExerciseTileState extends State<ExerciseTile> {
           if (widget.selectedExercises.isEmpty) {
             return Column(
               children: [
-                const WorkoutHeader(),
+                WorkoutHeader(
+                  currentWorkoutSession: CurrentWorkoutSession(),
+                  objectBoxService: objectBox, // Pass the ObjectBox instance here
+                ),
+
+
                 AddExerciseButton(
                   exerciseData: widget.exerciseData,
                   selectedExercises: widget.selectedExercises,
@@ -70,7 +78,11 @@ class _ExerciseTileState extends State<ExerciseTile> {
             ExercisesSetsInfo selectedExercise =
                 widget.selectedExercises[index];
             return Column(children: [
-              const WorkoutHeader(),
+              WorkoutHeader(
+                currentWorkoutSession: CurrentWorkoutSession(),
+                objectBoxService: objectBox, // Pass the ObjectBox instance here
+              ),
+
               Container(
                 margin: const EdgeInsets.symmetric(vertical: 10),
                 child: Column(
