@@ -164,4 +164,9 @@ class ObjectBox {
     _currentWorkoutSessionBox.put(currentWorkoutSession);
     print('Updated note: ${currentWorkoutSession.note}');
   }
+
+  String getCurrentWorkoutSessionNote() {
+    CurrentWorkoutSession currentWorkoutSession = getCurrentWorkoutSession();
+    return currentWorkoutSession.note;
+  }
 }

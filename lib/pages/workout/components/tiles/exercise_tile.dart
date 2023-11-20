@@ -57,7 +57,7 @@ class _ExerciseTileState extends State<ExerciseTile> {
           if (widget.selectedExercises.isEmpty) {
             return Column(
               children: [
-                WorkoutHeader(),
+                const WorkoutHeader(),
                 AddExerciseButton(
                   exerciseData: widget.exerciseData,
                   selectedExercises: widget.selectedExercises,
@@ -71,7 +71,7 @@ class _ExerciseTileState extends State<ExerciseTile> {
             ExercisesSetsInfo selectedExercise =
                 widget.selectedExercises[index];
             return Column(children: [
-              WorkoutHeader(),
+              const WorkoutHeader(),
               Container(
                 margin: const EdgeInsets.symmetric(vertical: 10),
                 child: Column(
