@@ -6,7 +6,6 @@ import 'package:group_project/pages/workout/components/tiles/components/cancel_w
 import 'package:group_project/pages/workout/components/tiles/components/add_exercise_button.dart';
 import 'package:group_project/pages/workout/components/tiles/set_tiles.dart';
 import 'package:group_project/pages/workout/components/workout_header.dart';
-import 'package:group_project/models/current_workout_session.dart';
 
 class ExerciseTile extends StatefulWidget {
   final List<Exercise> exerciseData;
@@ -25,8 +24,6 @@ class ExerciseTile extends StatefulWidget {
 }
 
 class _ExerciseTileState extends State<ExerciseTile> {
-  bool checkBox = false;
-
   void removeSet(int exerciseSetId, ExercisesSetsInfo exercisesSetsInfo) {
     objectBox.removeSetFromExercise(exerciseSetId);
     if (exercisesSetsInfo.exerciseSets.length == 1) {
@@ -44,6 +41,20 @@ class _ExerciseTileState extends State<ExerciseTile> {
   void addSet(ExercisesSetsInfo exercisesSetsInfo) {
     setState(() {
       objectBox.addSetToExercise(exercisesSetsInfo);
+    });
+  }
+
+  void setIsCompleted(int exerciseSetId) {
+    objectBox.completeExerciseSet(exerciseSetId);
+    setState(() {
+      for (ExercisesSetsInfo exercisesSetsInfo in widget.selectedExercises) {
+        exercisesSetsInfo.exerciseSets
+            .where((exerciseSet) => exerciseSet.id == exerciseSetId)
+            .toList()
+            .forEach((exerciseSet) {
+          exerciseSet.isCompleted = !exerciseSet.isCompleted;
+        });
+      }
     });
   }
 
@@ -93,6 +104,7 @@ class _ExerciseTileState extends State<ExerciseTile> {
                       exercisesSetsInfo: selectedExercise,
                       removeSet: removeSet,
                       addSet: addSet,
+                      setIsCompleted: setIsCompleted,
                     )
                   ],
                 ),
@@ -132,6 +144,7 @@ class _ExerciseTileState extends State<ExerciseTile> {
                     exercisesSetsInfo: selectedExercise,
                     removeSet: removeSet,
                     addSet: addSet,
+                    setIsCompleted: setIsCompleted,
                   )
                 ],
               ),

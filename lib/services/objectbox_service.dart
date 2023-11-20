@@ -162,11 +162,16 @@ class ObjectBox {
     CurrentWorkoutSession currentWorkoutSession = getCurrentWorkoutSession();
     currentWorkoutSession.note = newText;
     _currentWorkoutSessionBox.put(currentWorkoutSession);
-    print('Updated note: ${currentWorkoutSession.note}');
   }
 
   String getCurrentWorkoutSessionNote() {
     CurrentWorkoutSession currentWorkoutSession = getCurrentWorkoutSession();
     return currentWorkoutSession.note;
+  }
+
+  void completeExerciseSet(int exerciseSetId) {
+    ExerciseSet exerciseSet = _exerciseSetBox.get(exerciseSetId)!;
+    exerciseSet.isCompleted = !exerciseSet.isCompleted;
+    _exerciseSetBox.put(exerciseSet);
   }
 }
