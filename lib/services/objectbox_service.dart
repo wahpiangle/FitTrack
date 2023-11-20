@@ -157,4 +157,11 @@ class ObjectBox {
       print(exercisesSetsInfo.exerciseSets.length);
     }
   }
+
+  void updateCurrentWorkoutSessionNote(String newText) {
+    CurrentWorkoutSession currentWorkoutSession = getCurrentWorkoutSession();
+    currentWorkoutSession.note = newText;
+    _currentWorkoutSessionBox.put(currentWorkoutSession);
+    print('Updated note: ${currentWorkoutSession.note}');
+  }
 }
