@@ -167,9 +167,15 @@ class _SetTilesState extends State<SetTiles> {
                               SizedBox(
                                 width: 40,
                                 child: Material(
-                                  color: Colors.transparent,
+                                  shape: const RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(8),
+                                    ),
+                                  ),
+                                  color: set.isCompleted
+                                      ? Colors.green[300]
+                                      : const Color(0xFF333333),
                                   child: InkWell(
-                                    borderRadius: BorderRadius.circular(8),
                                     onTap: () {
                                       widget.setIsCompleted(set.id);
                                     },
@@ -285,9 +291,15 @@ class _SetTilesState extends State<SetTiles> {
                       SizedBox(
                         width: 40,
                         child: Material(
-                          color: Colors.transparent,
+                          shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(8),
+                            ),
+                          ),
+                          color: set.isCompleted
+                              ? Colors.green[300]
+                              : const Color(0xFF333333),
                           child: InkWell(
-                            borderRadius: BorderRadius.circular(8),
                             onTap: () {
                               widget.setIsCompleted(set.id);
                             },
