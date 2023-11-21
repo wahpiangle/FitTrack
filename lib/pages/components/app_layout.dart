@@ -8,9 +8,9 @@ import 'package:group_project/pages/home.dart';
 import 'package:group_project/pages/workout/workout_screen.dart';
 import 'package:group_project/pages/settings_screen.dart';
 
-
-
 class AppLayout extends StatefulWidget {
+  const AppLayout({super.key});
+
   @override
   _AppLayoutState createState() => _AppLayoutState();
 }
@@ -57,17 +57,17 @@ class _AppLayoutState extends State<AppLayout> {
   Widget _buildBody() {
     switch (_currentIndex) {
       case 0:
-        return  const Home();
+        return const Home();
       case 1:
-        return  const HistoryScreen();
+        return const HistoryScreen();
       case 2:
-        return  const WorkoutScreen();
+        return const WorkoutScreen();
       case 3:
-        return  const ExerciseListScreen();
+        return const ExerciseListScreen();
       case 4:
-        return  const SettingsScreen();
+        return const SettingsScreen();
       default:
-        return  const SizedBox.shrink();
+        return const SizedBox.shrink();
     }
   }
 
