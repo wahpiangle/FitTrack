@@ -32,6 +32,7 @@ class TopNavBar extends StatelessWidget implements PreferredSizeWidget {
           title,
           style: const TextStyle(
             fontWeight: FontWeight.bold,
+            color: Colors.white,
           ),
         ),
       ),

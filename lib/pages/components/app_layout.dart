@@ -16,7 +16,7 @@ class AppLayout extends StatefulWidget {
 }
 
 class _AppLayoutState extends State<AppLayout> {
-  int _currentIndex = 0; // Initial index, can be changed based on your needs
+  int _currentIndex = 2; // Initial index, can be changed based on your needs
   User? user;
 
   @override
@@ -57,17 +57,17 @@ class _AppLayoutState extends State<AppLayout> {
   Widget _buildBody() {
     switch (_currentIndex) {
       case 0:
-        return const Home();
+        return  const Home();
       case 1:
-        return const HistoryScreen();
+        return  const HistoryScreen();
       case 2:
-        return const WorkoutScreen();
+        return  const WorkoutScreen();
       case 3:
-        return const ExerciseListScreen();
+        return  const ExerciseListScreen();
       case 4:
-        return const SettingsScreen();
+        return  const SettingsScreen();
       default:
-        return const SizedBox.shrink();
+        return  const SizedBox.shrink();
     }
   }
 
