@@ -23,9 +23,9 @@ class _WorkoutHeaderState extends State<WorkoutHeader> {
         children: [
           Container(
             alignment: Alignment.topLeft,
-            child: Text(
+            child: const Text(
               'Workout',
-              style: const TextStyle(
+              style: TextStyle(
                 color: Colors.white,
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
@@ -33,7 +33,8 @@ class _WorkoutHeaderState extends State<WorkoutHeader> {
             ),
           ),
           const SizedBox(height: 20),
-          TextField(
+          TextFormField(
+            initialValue: objectBox.getCurrentWorkoutSessionNote(),
             style: const TextStyle(
               color: Colors.white,
               fontWeight: FontWeight.bold,
