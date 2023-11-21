@@ -2,7 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:group_project/pages/components/top_nav_bar.dart';
 import 'package:provider/provider.dart';
-import 'components/bottom_nav_bar.dart';
 import 'package:group_project/services/auth_service.dart';
 import 'package:group_project/services/user_state.dart';
 import 'package:group_project/pages/auth/offline_edit.dart';
@@ -17,7 +16,6 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
-  final int _selectedIndex = 4;
   late SharedPreferences _prefs;
   late String username = '';
   late String profileImage = '';
@@ -107,152 +105,147 @@ class _SettingsScreenState extends State<SettingsScreen> {
         Provider.of<UserStateProvider>(context);
 
     bool isLoggedIn = userStateProvider.userState.isLoggedIn;
-    final user = Provider.of<User?>(context);
 
     return Scaffold(
-      appBar: TopNavBar(
-        title: 'Settings',
-        user: user,
-      ),
-      body: SingleChildScrollView(
-        child: Stack(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(16),
-              color: const Color(0xFF1A1A1A),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Add a Column for the Profile heading
-                  const Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child: Text(
-                          'Profile',
-                          style: TextStyle(
-                            fontSize: 24,
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 10),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      SizedBox(
-                        width: 100,
-                        height: 100,
-                        child: ClipOval(
-                          child: (profileImage.isEmpty ||
-                                  profileImage ==
-                                      'assets/icons/defaultimage.jpg')
-                              ? const CircleAvatar(
-                                  radius: 50,
-                                  backgroundImage: AssetImage(
-                                      'assets/icons/defaultimage.jpg'),
-                                )
-                              : CircleAvatar(
-                                  radius: 50,
-                                  backgroundImage:
-                                      FileImage(File(profileImage)),
-                                ),
-                        ),
-                      ),
-                      const SizedBox(width: 20),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.only(left: 10),
-                            child: Text(
-                              // user?.displayName ?? 'User',
-                              username,
-                              maxLines: 1,
-                              style: const TextStyle(
-                                  fontSize: 24, color: Colors.white),
+      body: Container(
+        height: double.infinity,
+        color: const Color(0xFF1A1A1A),
+        child: SingleChildScrollView(
+          child: Stack(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Add a Column for the Profile heading
+                    const Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: Text(
+                            'Profile',
+                            style: TextStyle(
+                              fontSize: 24,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
-                          const SizedBox(height: 12),
-                          Container(
-                            width: 150,
-                            decoration: BoxDecoration(
-                              color: const Color(0xFFE1F0CF),
-                              borderRadius: BorderRadius.circular(100),
+                        ),
+                        SizedBox(height: 10),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        SizedBox(
+                          width: 100,
+                          height: 100,
+                          child: ClipOval(
+                            child: (profileImage.isEmpty ||
+                                    profileImage ==
+                                        'assets/icons/defaultimage.jpg')
+                                ? const CircleAvatar(
+                                    radius: 50,
+                                    backgroundImage: AssetImage(
+                                        'assets/icons/defaultimage.jpg'),
+                                  )
+                                : CircleAvatar(
+                                    radius: 50,
+                                    backgroundImage:
+                                        FileImage(File(profileImage)),
+                                  ),
+                          ),
+                        ),
+                        const SizedBox(width: 20),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Padding(
+                              padding: const EdgeInsets.only(left: 10),
+                              child: Text(
+                                // user?.displayName ?? 'User',
+                                username,
+                                maxLines: 1,
+                                style: const TextStyle(
+                                    fontSize: 24, color: Colors.white),
+                              ),
                             ),
-                            child: TextButton(
-                              onPressed: () {
-                                // Check if the user is logged in or not
-                                if (isLoggedIn) {
-                                  _editProfile(context);
-                                } else {
-                                  _editProfile(context);
-                                }
-                              },
-                              child: const Text(
-                                'Edit Profile',
-                                style: TextStyle(
-                                  color: Color(0xFF1A1A1A),
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
+                            const SizedBox(height: 12),
+                            Container(
+                              width: 150,
+                              decoration: BoxDecoration(
+                                color: const Color(0xFFE1F0CF),
+                                borderRadius: BorderRadius.circular(100),
+                              ),
+                              child: TextButton(
+                                onPressed: () {
+                                  // Check if the user is logged in or not
+                                  if (isLoggedIn) {
+                                    _editProfile(context);
+                                  } else {
+                                    _editProfile(context);
+                                  }
+                                },
+                                child: const Text(
+                                  'Edit Profile',
+                                  style: TextStyle(
+                                    color: Color(0xFF1A1A1A),
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 60),
-                  ProfileMenuItem(
-                    title: "Notifications",
-                    icon: Icons.notifications,
-                    onPressed: () {
-                      // Navigate to the Notifications screen
-                    },
-                  ),
-                  ProfileMenuItem(
-                    title: "Help Centre",
-                    icon: Icons.info,
-                    onPressed: () {
-                      // Navigate to the Privacy Policy screen
-                    },
-                  ),
-                  ProfileMenuItem(
-                    title: isAnonymous ? "Sign Up / Log In" : "Edit Password",
-                    icon: Icons.key_outlined,
-                    onPressed: () {
-                      // Navigate to the corresponding screen based on login state
-                      if (isAnonymous) {
-                        // Navigate to sign-up or login screen
-                      } else {
-                        // Navigate to edit password screen
-                      }
-                    },
-                  ),
-                  ProfileMenuItem(
-                    title: "Terms and Conditions",
-                    icon: Icons.gavel,
-                    onPressed: () {
-                      // Navigate to the Terms and Conditions screen
-                    },
-                  ),
-                  const SizedBox(height: 40),
-                  LogoutButton(),
-                ],
+                          ],
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 60),
+                    ProfileMenuItem(
+                      title: "Notifications",
+                      icon: Icons.notifications,
+                      onPressed: () {
+                        // Navigate to the Notifications screen
+                      },
+                    ),
+                    ProfileMenuItem(
+                      title: "Help Centre",
+                      icon: Icons.info,
+                      onPressed: () {
+                        // Navigate to the Privacy Policy screen
+                      },
+                    ),
+                    ProfileMenuItem(
+                      title: isAnonymous ? "Sign Up / Log In" : "Edit Password",
+                      icon: Icons.key_outlined,
+                      onPressed: () {
+                        // Navigate to the corresponding screen based on login state
+                        if (isAnonymous) {
+                          // Navigate to sign-up or login screen
+                        } else {
+                          // Navigate to edit password screen
+                        }
+                      },
+                    ),
+                    ProfileMenuItem(
+                      title: "Terms and Conditions",
+                      icon: Icons.gavel,
+                      onPressed: () {
+                        // Navigate to the Terms and Conditions screen
+                      },
+                    ),
+                    const SizedBox(height: 40),
+                    LogoutButton(),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
 
       // Nav Bar
-      bottomNavigationBar: CustomBottomNavigationBar(
-        currentIndex: _selectedIndex,
-      ),
     );
   }
 

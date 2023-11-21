@@ -1,11 +1,7 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:group_project/main.dart';
 import 'package:group_project/models/exercise.dart';
-import 'package:group_project/pages/components/bottom_nav_bar.dart';
-import 'package:group_project/pages/components/top_nav_bar.dart';
 import 'package:group_project/pages/workout/start_new_workout.dart';
-import 'package:provider/provider.dart';
 import 'package:group_project/pages/workout/new_workout.dart';
 
 class WorkoutScreen extends StatefulWidget {
@@ -16,7 +12,6 @@ class WorkoutScreen extends StatefulWidget {
 }
 
 class _WorkoutScreenState extends State<WorkoutScreen> {
-  final int _selectedIndex = 2;
   late List<Exercise> exerciseData;
 
   @override
@@ -38,10 +33,7 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final user = Provider.of<User?>(context);
-
     return Scaffold(
-      appBar: TopNavBar(title: 'Home', user: user),
       body: Container(
         height: double.infinity,
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
@@ -186,9 +178,6 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
             ],
           ),
         ),
-      ),
-      bottomNavigationBar: CustomBottomNavigationBar(
-        currentIndex: _selectedIndex,
       ),
     );
   }

@@ -92,7 +92,12 @@ class NewWorkout extends StatelessWidget {
                       const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
                     ),
                   ),
-                  child: const Text('Start Workout'),
+                  child: const Text(
+                      'Start Workout',
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
+                  ),
                 ),
               ),
             ],
