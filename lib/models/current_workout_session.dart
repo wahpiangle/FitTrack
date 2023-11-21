@@ -36,9 +36,7 @@ class CurrentWorkoutSession {
   }
 
   set duration(int newDuration) {
-    // You can optionally implement a setter for the duration
-    // This might be useful in certain scenarios
-    // For example, resetting the duration to zero
+
     startTime = DateTime.now().millisecondsSinceEpoch - (newDuration * 1000);
   }
 }

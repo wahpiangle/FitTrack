@@ -10,6 +10,12 @@ class TimerProvider with ChangeNotifier {
     // startTimer();
   }
 
+
+  void resetTimer() {
+    _currentDuration = 0;
+    notifyListeners();
+  }
+
   int get currentDuration => _currentDuration;
 
   void startTimer() {

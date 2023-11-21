@@ -12,8 +12,7 @@ class StartNewWorkout extends StatefulWidget {
   GlobalKey<_StartNewWorkoutState>();
   final List<Exercise> exerciseData;
 
-  const StartNewWorkout({Key? key, required this.exerciseData})
-      : super(key: key);
+  const StartNewWorkout({super.key, required this.exerciseData});
 
   @override
   State<StartNewWorkout> createState() => _StartNewWorkoutState();
@@ -53,7 +52,7 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
   }
 
   Future<void> _updateCurrentWorkoutSession() async {
-    final workoutSession = await objectBox.getCurrentWorkoutSession();
+    final workoutSession = objectBox.getCurrentWorkoutSession();
     setState(() {
       currentWorkoutSession = workoutSession;
     });
@@ -68,7 +67,7 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
   void selectExercise(Exercise selectedExercise) {
     objectBox.addExerciseToCurrentWorkoutSession(selectedExercise);
     final timerProvider = Provider.of<TimerProvider>(context, listen: false);
-    if (!_isTimerRunning && currentWorkoutSession.exercisesSetsInfo.isNotEmpty) {
+    if (!_isTimerRunning) {
       timerProvider.startTimer();
       setState(() {
         _isTimerRunning = true;
@@ -108,7 +107,6 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
     _controller.dispose();
     weightsController.dispose();
     repsController.dispose();
-    Provider.of<TimerProvider>(context, listen: false).stopTimer();
     super.dispose();
   }
 
@@ -151,7 +149,7 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
               builder: (context, timerProvider, child) {
                 return Text(
                   "Timer: ${formatDuration(timerProvider.currentDuration)}",
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Colors.white,
                     fontSize: 18,
                   ),
@@ -179,6 +177,7 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
                     selectedExercises:
                     snapshot.data!.exercisesSetsInfo.toList(),
                     selectExercise: selectExercise,
+                    timerProvider: timerProvider,
                   ),
                 ],
               ),
@@ -190,7 +189,7 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
         onPressed: () {
           objectBox.test();
         },
-        child: Icon(Icons.add),
+        child: const Icon(Icons.add),
       ),
     );
   }

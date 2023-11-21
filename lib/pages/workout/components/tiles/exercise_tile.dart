@@ -6,24 +6,37 @@ import 'package:group_project/pages/workout/components/tiles/components/cancel_w
 import 'package:group_project/pages/workout/components/tiles/components/add_exercise_button.dart';
 import 'package:group_project/pages/workout/components/tiles/set_tiles.dart';
 import 'package:group_project/pages/workout/components/workout_header.dart';
+import 'package:group_project/pages/workout/components/tiles/components/timer_provider.dart';
+import 'package:provider/provider.dart';
 
 class ExerciseTile extends StatefulWidget {
   final List<Exercise> exerciseData;
   final List<ExercisesSetsInfo> selectedExercises;
   final void Function(Exercise selectedExercise) selectExercise;
+  final TimerProvider timerProvider;
 
   const ExerciseTile({
     super.key,
     required this.exerciseData,
     required this.selectedExercises,
     required this.selectExercise,
+    required this.timerProvider,
   });
 
   @override
   State<ExerciseTile> createState() => _ExerciseTileState();
 }
 
+
 class _ExerciseTileState extends State<ExerciseTile> {
+  late TimerProvider timerProvider;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    timerProvider = Provider.of<TimerProvider>(context);
+  }
+
   void removeSet(int exerciseSetId, ExercisesSetsInfo exercisesSetsInfo) {
     objectBox.removeSetFromExercise(exerciseSetId);
     if (exercisesSetsInfo.exerciseSets.length == 1) {
@@ -74,7 +87,7 @@ class _ExerciseTileState extends State<ExerciseTile> {
                   selectedExercises: widget.selectedExercises,
                   selectExercise: widget.selectExercise,
                 ),
-                 CancelWorkoutButton(),
+                 CancelWorkoutButton(timerProvider: widget.timerProvider),
               ],
             );
           }
@@ -118,7 +131,7 @@ class _ExerciseTileState extends State<ExerciseTile> {
                 selectedExercises: widget.selectedExercises,
                 selectExercise: widget.selectExercise,
               ),
-              CancelWorkoutButton(),
+              CancelWorkoutButton(timerProvider: widget.timerProvider ),
             ]);
           } else {
             ExercisesSetsInfo selectedExercise =

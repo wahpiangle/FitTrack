@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:group_project/pages/workout/start_new_workout.dart';
 import 'package:group_project/models/exercise.dart';
-import 'package:group_project/pages/workout/components/tiles/components/timer_provider.dart';
-import 'package:provider/provider.dart';
+
 
 class NewWorkout extends StatelessWidget {
   final String imagePath;
@@ -73,8 +72,6 @@ class NewWorkout extends StatelessWidget {
                 widthFactor: 1,
                 child: ElevatedButton(
                   onPressed: () async {
-                    final timerProvider =
-                    Provider.of<TimerProvider>(context, listen: false);
                     await showModalBottomSheet(
                       context: context,
                       builder: (context) => StartNewWorkout(
