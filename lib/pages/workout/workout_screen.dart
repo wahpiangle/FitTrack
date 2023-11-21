@@ -19,17 +19,26 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
     super.initState();
     exerciseData = objectBox.getAllExercises();
   }
-
   Future<void> _startNewWorkout(BuildContext context) async {
     objectBox.createWorkoutSession();
 
     await showModalBottomSheet(
       context: context,
-      builder: (context) => StartNewWorkout(
-        exerciseData: exerciseData,
-      ),
+      isScrollControlled: true, // Set to true to make the sheet take up the whole screen height
+      builder: (context) {
+        return ClipRRect(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(20.0)), // Set the desired corner radius
+          child: Container(
+            height: MediaQuery.of(context).size.height * 0.9, // 90% of the screen height
+            child: StartNewWorkout(
+              exerciseData: exerciseData,
+            ),
+          ),
+        );
+      },
     );
   }
+
 
   @override
   Widget build(BuildContext context) {

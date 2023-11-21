@@ -110,7 +110,11 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios),
+          icon: const Icon(
+            Icons.arrow_back_ios,
+            color: Colors.white,
+            size: 18.0,
+          ),
           onPressed: () {
             Navigator.pop(context);
           },
@@ -136,17 +140,29 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
             ),
           ),
         ],
-        title: const Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              "Timer",
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 18,
-              ),
+        title: Align(
+          alignment: Alignment.center,
+          child: Center(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Container(
+                  height: 5,
+                  width: 50, // Set the desired width of the border
+                  color: Colors.white,
+                  margin: const EdgeInsets.only(bottom: 8.0),
+                ),
+                Text(
+                  "Timer",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
         backgroundColor: const Color(0xFF1A1A1A),
       ),
@@ -164,7 +180,7 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
                   ExerciseTile(
                     exerciseData: exerciseData,
                     selectedExercises:
-                        snapshot.data!.exercisesSetsInfo.toList(),
+                    snapshot.data!.exercisesSetsInfo.toList(),
                     selectExercise: selectExercise,
                   ),
                 ],
@@ -174,11 +190,14 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
         },
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          // Your FAB action here
+        },
         child: Icon(Icons.add),
       ),
     );
   }
+
 
   String _formatTime(int seconds) {
     final hours = (seconds ~/ 3600).toString().padLeft(2, '0');
