@@ -27,8 +27,7 @@ class _ExerciseTileState extends State<ExerciseTile> {
   void removeSet(int exerciseSetId, ExercisesSetsInfo exercisesSetsInfo) {
     objectBox.removeSetFromExercise(exerciseSetId);
     if (exercisesSetsInfo.exerciseSets.length == 1) {
-      objectBox.removeExerciseFromCurrentWorkoutSession(
-          exercisesSetsInfo.exercise.target!);
+      objectBox.removeExerciseFromCurrentWorkoutSession(exercisesSetsInfo.id);
     }
     setState(() {
       for (ExercisesSetsInfo exercisesSetsInfo in widget.selectedExercises) {

@@ -174,9 +174,7 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
         },
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          objectBox.test();
-        },
+        onPressed: () {},
         child: Icon(Icons.add),
       ),
     );
