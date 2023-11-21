@@ -4,11 +4,16 @@ import 'package:group_project/main.dart';
 import 'package:group_project/models/exercise.dart';
 import 'package:group_project/models/current_workout_session.dart';
 import 'package:group_project/pages/workout/components/tiles/exercise_tile.dart';
+import 'package:provider/provider.dart';
+import 'package:group_project/pages/workout/components/tiles/components/timer_provider.dart';
 
 class StartNewWorkout extends StatefulWidget {
+  static final GlobalKey<_StartNewWorkoutState> startNewWorkoutKey =
+  GlobalKey<_StartNewWorkoutState>();
   final List<Exercise> exerciseData;
 
-  const StartNewWorkout({super.key, required this.exerciseData});
+  const StartNewWorkout({Key? key, required this.exerciseData})
+      : super(key: key);
 
   @override
   State<StartNewWorkout> createState() => _StartNewWorkoutState();
@@ -16,21 +21,21 @@ class StartNewWorkout extends StatefulWidget {
 
 class _StartNewWorkoutState extends State<StartNewWorkout>
     with TickerProviderStateMixin {
-  late Timer _timer;
   late AnimationController _controller;
   late Animation<double> _animation;
-  bool _isTimerRunning = false;
-  late List<Exercise> exerciseData;
   TextEditingController weightsController = TextEditingController();
   TextEditingController repsController = TextEditingController();
   Stream<CurrentWorkoutSession>? _currentWorkoutSessionStream;
+  late CurrentWorkoutSession currentWorkoutSession;
+  bool _isTimerRunning = false;
 
   List<Widget> setBorders = [];
 
   @override
+  @override
   void initState() {
     super.initState();
-    exerciseData = widget.exerciseData;
+    currentWorkoutSession = CurrentWorkoutSession();
     _currentWorkoutSessionStream = objectBox.watchCurrentWorkoutSession();
     _controller = AnimationController(
       vsync: this,
@@ -42,29 +47,33 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
     _animation.addListener(() {
       setState(() {});
     });
+
+    // Retrieve the current workout session when the state is initialized
+    _updateCurrentWorkoutSession();
   }
 
-  void _startTimer() {
-    if (!_isTimerRunning) {
-      _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-        setState(() {
-          _controller.reset();
-          _controller.forward();
-        });
-      });
-      _isTimerRunning = true;
-    }
-  }
+  Future<void> _updateCurrentWorkoutSession() async {
+    final workoutSession = await objectBox.getCurrentWorkoutSession();
+    setState(() {
+      currentWorkoutSession = workoutSession;
+    });
 
-  void _stopTimer() {
-    if (_isTimerRunning) {
-      _timer.cancel();
-      _isTimerRunning = false;
-    }
+    // // Start the timer if the workout session has started and exercises are added
+    // if (currentWorkoutSession.startTime != 0 &&
+    //     currentWorkoutSession.exercisesSetsInfo.isNotEmpty) {
+    //   Provider.of<TimerProvider>(context, listen: false).startTimer();
+    // }
   }
 
   void selectExercise(Exercise selectedExercise) {
     objectBox.addExerciseToCurrentWorkoutSession(selectedExercise);
+    final timerProvider = Provider.of<TimerProvider>(context, listen: false);
+    if (!_isTimerRunning && currentWorkoutSession.exercisesSetsInfo.isNotEmpty) {
+      timerProvider.startTimer();
+      setState(() {
+        _isTimerRunning = true;
+      });
+    }
   }
 
   Widget createSetBorder(int weight, int reps) {
@@ -96,17 +105,16 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
 
   @override
   void dispose() {
-    if (_isTimerRunning) {
-      _timer.cancel();
-    }
     _controller.dispose();
     weightsController.dispose();
     repsController.dispose();
+    Provider.of<TimerProvider>(context, listen: false).stopTimer();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    final timerProvider = Provider.of<TimerProvider>(context);
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -136,15 +144,19 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
             ),
           ),
         ],
-        title: const Row(
+        title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              "Timer",
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 18,
-              ),
+            Consumer<TimerProvider>(
+              builder: (context, timerProvider, child) {
+                return Text(
+                  "Timer: ${formatDuration(timerProvider.currentDuration)}",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                  ),
+                );
+              },
             ),
           ],
         ),
@@ -157,14 +169,15 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
           if (!snapshot.hasData) {
             return const Center(child: CircularProgressIndicator());
           } else {
+            currentWorkoutSession = snapshot.data!;
             return Padding(
               padding: const EdgeInsets.symmetric(vertical: 20),
               child: Column(
                 children: [
                   ExerciseTile(
-                    exerciseData: exerciseData,
+                    exerciseData: widget.exerciseData,
                     selectedExercises:
-                        snapshot.data!.exercisesSetsInfo.toList(),
+                    snapshot.data!.exercisesSetsInfo.toList(),
                     selectExercise: selectExercise,
                   ),
                 ],
@@ -182,7 +195,7 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
     );
   }
 
-  String _formatTime(int seconds) {
+  String formatDuration(int seconds) {
     final hours = (seconds ~/ 3600).toString().padLeft(2, '0');
     final minutes = ((seconds % 3600) ~/ 60).toString().padLeft(2, '0');
     final remainingSeconds = (seconds % 60).toString().padLeft(2, '0');

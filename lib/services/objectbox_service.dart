@@ -174,4 +174,10 @@ class ObjectBox {
     exerciseSet.isCompleted = !exerciseSet.isCompleted;
     _exerciseSetBox.put(exerciseSet);
   }
+
+  void updateWorkoutDuration(int duration) {
+    final currentWorkoutSession = getCurrentWorkoutSession();
+    currentWorkoutSession.duration = duration;
+    _currentWorkoutSessionBox.put(currentWorkoutSession);
+  }
 }

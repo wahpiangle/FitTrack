@@ -7,6 +7,8 @@ import 'package:group_project/pages/components/top_nav_bar.dart';
 import 'package:group_project/pages/workout/start_new_workout.dart';
 import 'package:provider/provider.dart';
 import 'package:group_project/pages/workout/new_workout.dart';
+import 'package:group_project/pages/workout/components/tiles/components/timer_provider.dart';
+
 
 class WorkoutScreen extends StatefulWidget {
   const WorkoutScreen({super.key});
@@ -39,6 +41,7 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<User?>(context);
+    final timerProvider = Provider.of<TimerProvider>(context);
 
     return Scaffold(
       appBar: TopNavBar(title: 'Home', user: user),
@@ -59,7 +62,7 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
                     },
                     style: ButtonStyle(
                       backgroundColor:
-                          MaterialStateProperty.all(const Color(0xFFC1C1C1)),
+                      MaterialStateProperty.all(const Color(0xFFC1C1C1)),
                       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                         RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(30),

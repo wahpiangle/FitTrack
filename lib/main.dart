@@ -9,6 +9,7 @@ import 'package:provider/provider.dart';
 import 'firebase_options.dart';
 import 'package:group_project/pages/components/top_nav_bar.dart';
 import 'package:group_project/services/user_state.dart';
+import 'package:group_project/pages/workout/components/tiles/components/timer_provider.dart';
 
 late ObjectBox objectBox;
 
@@ -29,6 +30,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        ChangeNotifierProvider(create: (context) => TimerProvider()),
         ChangeNotifierProvider(create: (context) => UserStateProvider()),
         ChangeNotifierProvider(create: (context) => ProfileImageProvider()), // Provide the ProfileImageProvider
         StreamProvider.value(

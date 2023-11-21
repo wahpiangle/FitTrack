@@ -7,6 +7,7 @@ class CurrentWorkoutSession {
   int id;
   String title;
   String note;
+  int startTime;
 
   // 1 current workout session can have multiple exercises
   // each exercise can have multiple sets
@@ -18,5 +19,26 @@ class CurrentWorkoutSession {
     this.id = 0,
     this.title = 'Workout',
     this.note = '',
+    this.startTime = 0,
   });
+
+  void startTimer() {
+    startTime = DateTime.now().millisecondsSinceEpoch;
+  }
+
+  // Get the duration of the workout session in seconds
+  int get duration {
+    if (startTime == 0) {
+      return 0; // Workout session hasn't started yet
+    }
+    int currentTime = DateTime.now().millisecondsSinceEpoch;
+    return ((currentTime - startTime) / 1000).floor();
+  }
+
+  set duration(int newDuration) {
+    // You can optionally implement a setter for the duration
+    // This might be useful in certain scenarios
+    // For example, resetting the duration to zero
+    startTime = DateTime.now().millisecondsSinceEpoch - (newDuration * 1000);
+  }
 }

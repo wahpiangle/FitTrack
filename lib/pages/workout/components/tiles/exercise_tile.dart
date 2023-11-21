@@ -74,7 +74,7 @@ class _ExerciseTileState extends State<ExerciseTile> {
                   selectedExercises: widget.selectedExercises,
                   selectExercise: widget.selectExercise,
                 ),
-                const CancelWorkoutButton(),
+                 CancelWorkoutButton(),
               ],
             );
           }
@@ -118,7 +118,7 @@ class _ExerciseTileState extends State<ExerciseTile> {
                 selectedExercises: widget.selectedExercises,
                 selectExercise: widget.selectExercise,
               ),
-              const CancelWorkoutButton(),
+              CancelWorkoutButton(),
             ]);
           } else {
             ExercisesSetsInfo selectedExercise =
