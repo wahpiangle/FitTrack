@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:group_project/main.dart';
-import 'package:group_project/pages/workout/workout_screen.dart';
 
 class CancelWorkoutButton extends StatelessWidget {
   const CancelWorkoutButton({super.key});
@@ -41,11 +40,6 @@ class CancelWorkoutButton extends StatelessWidget {
                 TextButton(
                   onPressed: () {
                     Navigator.of(context).pop();
-                    Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(
-                        builder: (context) => const WorkoutScreen(),
-                      ),
-                    );
                     objectBox.clearCurrentWorkoutSession();
                   },
                   child: const Text(

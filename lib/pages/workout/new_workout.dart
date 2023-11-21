@@ -8,7 +8,7 @@ class NewWorkout extends StatelessWidget {
   final List<Exercise> exerciseData; // Add this line
 
   const NewWorkout({
-    Key? key,
+    super.key,
     required this.imagePath,
     required this.workoutText,
     required this.exerciseData, // Add this line
@@ -93,7 +93,7 @@ class NewWorkout extends StatelessWidget {
                     ),
                   ),
                   child: const Text(
-                      'Start Workout',
+                    'Start Workout',
                     style: TextStyle(
                       color: Colors.white,
                     ),
