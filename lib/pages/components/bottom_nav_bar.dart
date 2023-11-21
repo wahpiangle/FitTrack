@@ -8,9 +8,6 @@ import 'package:group_project/pages/settings_screen.dart';
 class CustomBottomNavigationBar extends StatefulWidget {
   final int currentIndex;
 
-
-
-
   CustomBottomNavigationBar({
     super.key,
     required this.currentIndex,
