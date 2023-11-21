@@ -8,6 +8,9 @@ import 'package:group_project/pages/settings_screen.dart';
 class CustomBottomNavigationBar extends StatefulWidget {
   final int currentIndex;
 
+
+
+
   CustomBottomNavigationBar({
     super.key,
     required this.currentIndex,
@@ -20,11 +23,11 @@ class CustomBottomNavigationBar extends StatefulWidget {
 
 class CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
   final List<Widget Function()> pages = [
-    () => const Home(),
-    () => const HistoryScreen(),
-    () => const WorkoutScreen(),
-    () => const ExerciseListScreen(),
-    () => const SettingsScreen(),
+        () => const Home(),
+        () => const HistoryScreen(),
+        () => const WorkoutScreen(),
+        () => const ExerciseListScreen(),
+        () => const SettingsScreen(),
   ];
   void onItemTapped(int index) {
     if (index >= 0 && index < pages.length) {

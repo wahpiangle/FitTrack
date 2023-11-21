@@ -36,17 +36,17 @@ class TopNavBar extends StatelessWidget implements PreferredSizeWidget {
       centerTitle: true,
       leading: showBackButton
           ? IconButton(
-              icon: const Icon(Icons.arrow_back),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-            )
+        icon: const Icon(Icons.arrow_back),
+        onPressed: () {
+          Navigator.pop(context);
+        },
+      )
           : IconButton(
-              icon: const Icon(Icons.menu),
-              onPressed: () {
-                // Will lead to Search friends page
-              },
-            ),
+        icon: const Icon(Icons.menu),
+        onPressed: () {
+          // Will lead to Search friends page
+        },
+      ),
       actions: [
         GestureDetector(
           onTap: () {

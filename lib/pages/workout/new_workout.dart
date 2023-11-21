@@ -85,7 +85,12 @@ class NewWorkout extends StatelessWidget {
                               10), // Adjust the values for width and height
                     ),
                   ),
-                  child: const Text('Start Workout'),
+                  child: const Text(
+                      'Start Workout',
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
+                  ),
                 ),
               )
             ],
