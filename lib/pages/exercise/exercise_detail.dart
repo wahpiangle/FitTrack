@@ -23,8 +23,6 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
     final user = Provider.of<User?>(context);
     return Scaffold(
         backgroundColor: ExerciseListThemes.appBarBackground,
-        appBar: TopNavBar(
-            title: 'Exercise Detail', user: user, showBackButton: true),
         body: SingleChildScrollView(
           child: Row(
             children: [
@@ -51,8 +49,6 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
             ],
           ),
         ),
-        bottomNavigationBar: CustomBottomNavigationBar(
-          currentIndex: _selectedIndex,
-        ));
+       );
   }
 }
