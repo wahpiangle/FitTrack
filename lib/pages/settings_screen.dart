@@ -2,7 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:group_project/pages/components/top_nav_bar.dart';
 import 'package:provider/provider.dart';
-import 'components/bottom_nav_bar.dart';
 import 'package:group_project/services/auth_service.dart';
 import 'package:group_project/services/user_state.dart';
 import 'package:group_project/pages/auth/offline_edit.dart';
@@ -21,7 +20,7 @@ class SettingsScreen extends StatefulWidget {
 
 class _SettingsScreenState extends State<SettingsScreen> {
 
-  final int _selectedIndex = 4;
+  // final int _selectedIndex = 4;
   late SharedPreferences _prefs;
   late String username = '';
   late String profileImage = '';

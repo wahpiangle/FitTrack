@@ -13,7 +13,7 @@ class WorkoutScreen extends StatefulWidget {
 }
 
 class _WorkoutScreenState extends State<WorkoutScreen> {
-  int _selectedIndex = 2;
+  // int _selectedIndex = 2;
 
   @override
   Widget build(BuildContext context) {

@@ -9,9 +9,11 @@ class TopNavBar extends StatelessWidget implements PreferredSizeWidget {
   final User? user;
   final String title;
   final bool showBackButton;
+  final int pageIndex;
 
   const TopNavBar({
-    super.key,
+    Key? key,
+    required this.pageIndex,
     required this.title,
     required this.user,
     this.showBackButton = false,

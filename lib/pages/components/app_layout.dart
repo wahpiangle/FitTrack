@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:group_project/pages/components/bottom_nav_bar.dart';
 import 'package:group_project/pages/components/top_nav_bar.dart';
@@ -16,14 +17,16 @@ class AppLayout extends StatefulWidget {
 
 class _AppLayoutState extends State<AppLayout> {
   int _currentIndex = 0; // Initial index, can be changed based on your needs
+  User? user;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: TopNavBar(
-      //   pageIndex: _currentIndex,
-      //   title: _getPageTitle(),
-      // ),
+      appBar: TopNavBar(
+        pageIndex: _currentIndex,
+        title: _getPageTitle(),
+        user: user,
+      ),
       body: _buildBody(),
       bottomNavigationBar: CustomBottomNavigationBar(
         currentIndex: _currentIndex,
@@ -41,7 +44,7 @@ class _AppLayoutState extends State<AppLayout> {
       case 1:
         return 'History';
       case 2:
-        return 'Workout';
+        return 'New Workout';
       case 3:
         return 'Exercise List';
       case 4:
