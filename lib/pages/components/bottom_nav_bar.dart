@@ -9,7 +9,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
   final int currentIndex;
   final void Function(int) onTabTapped;
 
-  CustomBottomNavigationBar({
+  const CustomBottomNavigationBar({
     Key? key,
     required this.currentIndex,
     required this.onTabTapped,
@@ -21,10 +21,8 @@ class CustomBottomNavigationBar extends StatelessWidget {
     return BottomNavigationBar(
       // set this to 0 to disable the text below the icons
       selectedFontSize: 14,
-      currentIndex: widget.currentIndex,
-      onTap: (index) {
-        onItemTapped(index);
-      },
+      currentIndex: currentIndex,
+      onTap: onTabTapped,
       type: BottomNavigationBarType.fixed,
       items: <BottomNavigationBarItem>[
         const BottomNavigationBarItem(
