@@ -5,36 +5,16 @@ import 'package:group_project/pages/home.dart';
 import 'package:group_project/pages/workout/workout_screen.dart';
 import 'package:group_project/pages/settings_screen.dart';
 
-class CustomBottomNavigationBar extends StatefulWidget {
+class CustomBottomNavigationBar extends StatelessWidget {
   final int currentIndex;
+  final void Function(int) onTabTapped;
 
   CustomBottomNavigationBar({
-    super.key,
+    Key? key,
     required this.currentIndex,
-  });
+    required this.onTabTapped,
+  }) : super(key: key);
 
-  @override
-  CustomBottomNavigationBarState createState() =>
-      CustomBottomNavigationBarState();
-}
-
-class CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
-  final List<Widget Function()> pages = [
-        () => const Home(),
-        () => const HistoryScreen(),
-        () => const WorkoutScreen(),
-        () => const ExerciseListScreen(),
-        () => const SettingsScreen(),
-  ];
-  void onItemTapped(int index) {
-    if (index >= 0 && index < pages.length) {
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(
-          builder: (context) => pages[index](),
-        ),
-      );
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
