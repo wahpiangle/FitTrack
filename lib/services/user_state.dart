@@ -6,9 +6,6 @@ class UserState {
   UserState(this.isLoggedIn);
 }
 
-
-
-
 class UserStateProvider extends ChangeNotifier {
   UserState _userState = UserState(false);
 

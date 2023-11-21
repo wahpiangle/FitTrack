@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:group_project/pages/workout/start_new_workout.dart';
+import 'package:group_project/models/exercise.dart';
 
-//Dart file for Templates for Workout
 class NewWorkout extends StatelessWidget {
   final String imagePath;
   final String workoutText;
+  final List<Exercise> exerciseData; // Add this line
 
   const NewWorkout({
-    super.key,
+    Key? key,
     required this.imagePath,
     required this.workoutText,
+    required this.exerciseData, // Add this line
   });
 
   @override
@@ -41,7 +44,7 @@ class NewWorkout extends StatelessWidget {
                       BlendMode.srcATop,
                     ),
                     child: Transform.translate(
-                      offset: const Offset(0, -8), // (move up)
+                      offset: const Offset(0, -8),
                       child: Opacity(
                         opacity: 0.7,
                         child: Image.asset(
@@ -51,7 +54,7 @@ class NewWorkout extends StatelessWidget {
                         ),
                       ),
                     ),
-                  )
+                  ),
                 ],
               ),
               const SizedBox(height: 15),
@@ -67,7 +70,14 @@ class NewWorkout extends StatelessWidget {
               FractionallySizedBox(
                 widthFactor: 1,
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () async {
+                    await showModalBottomSheet(
+                      context: context,
+                      builder: (context) => StartNewWorkout(
+                        exerciseData: exerciseData,
+                      ),
+                    );
+                  },
                   style: ButtonStyle(
                     backgroundColor:
                         MaterialStateProperty.all<Color>(Colors.transparent),
@@ -77,12 +87,9 @@ class NewWorkout extends StatelessWidget {
                             color: Color(0xFFE1F0CF), width: 1.0),
                         borderRadius: BorderRadius.circular(8),
                       ),
-                    ), // End of shape configuration
+                    ),
                     padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
-                      const EdgeInsets.symmetric(
-                          horizontal: 12,
-                          vertical:
-                              10), // Adjust the values for width and height
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
                     ),
                   ),
                   child: const Text(
@@ -92,7 +99,7 @@ class NewWorkout extends StatelessWidget {
                     ),
                   ),
                 ),
-              )
+              ),
             ],
           ),
         ),
