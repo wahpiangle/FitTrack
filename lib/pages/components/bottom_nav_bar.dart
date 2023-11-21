@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:group_project/pages/exercise/exercise_list.dart';
-import 'package:group_project/pages/history_screen.dart';
-import 'package:group_project/pages/home.dart';
-import 'package:group_project/pages/workout/workout_screen.dart';
-import 'package:group_project/pages/settings_screen.dart';
+
 
 class CustomBottomNavigationBar extends StatelessWidget {
   final int currentIndex;
