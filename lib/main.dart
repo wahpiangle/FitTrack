@@ -34,7 +34,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => UserStateProvider()),
-        ChangeNotifierProvider(create: (context) => ProfileImageProvider()), // Provide the ProfileImageProvider
+        ChangeNotifierProvider(create: (context) => ProfileImageProvider()),
         StreamProvider.value(
           value: AuthService().user,
           initialData: null,
@@ -46,7 +46,7 @@ class MyApp extends StatelessWidget {
         home: const Wrapper(),
         routes: {
           '/auth': (context) => const Wrapper(),
-          "login" : (context) => const EmailPasswordLogin(),
+          "login": (context) => const EmailPasswordLogin(),
           "register": (context) => const RegisterScreen(),
           "settings_login": (context) => const SettingsLogin(),
           "settings_signup": (context) => const SettingsSignup(),
@@ -55,11 +55,9 @@ class MyApp extends StatelessWidget {
         },
         theme: ThemeData(
           bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-            backgroundColor: Color(0xFF1A1A1A), // Set the background color
-            selectedItemColor:
-                Color(0xFFE1F0CF), // Set the color of selected item
-            unselectedItemColor:
-                Colors.grey, // Set the color of unselected items
+            backgroundColor: Color(0xFF1A1A1A),
+            selectedItemColor: Color(0xFFE1F0CF),
+            unselectedItemColor: Colors.grey,
           ),
         ),
       ),

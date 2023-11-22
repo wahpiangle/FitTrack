@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:group_project/pages/auth/login_screen.dart';
-import 'package:group_project/pages/workout/workout_screen.dart';
+import 'package:group_project/pages/components/app_layout.dart';
 import 'package:provider/provider.dart';
 
 class Wrapper extends StatelessWidget {
@@ -11,9 +11,9 @@ class Wrapper extends StatelessWidget {
   Widget build(BuildContext context) {
     final user = Provider.of<User?>(context);
     if (user == null) {
-      return LoginScreen();
+      return const LoginScreen();
     } else {
-      return WorkoutScreen();
+      return const AppLayout();
     }
   }
 }

@@ -14,4 +14,8 @@ class Exercise {
   final category = ToOne<Category>();
 
   Exercise({this.id = 0, required this.name, this.imagePath = ''});
+
+  get sets => null;
+
+  get reps => null;
 }
