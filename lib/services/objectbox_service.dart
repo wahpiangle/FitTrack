@@ -180,4 +180,8 @@ class ObjectBox {
     currentWorkoutSession.duration = duration;
     _currentWorkoutSessionBox.put(currentWorkoutSession);
   }
+
+
+
 }
+

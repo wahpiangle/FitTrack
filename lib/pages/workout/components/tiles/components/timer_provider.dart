@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 
 class TimerProvider with ChangeNotifier {
-  late Timer _timer;
+  Timer? _timer;
   int _currentDuration = 0;
   bool _isTimerRunning = false;
 
@@ -29,7 +29,7 @@ class TimerProvider with ChangeNotifier {
   }
 
   void stopTimer() {
-    _timer.cancel();
+    _timer?.cancel();
     _isTimerRunning = false; // Set the flag to false when the timer stops
   }
 

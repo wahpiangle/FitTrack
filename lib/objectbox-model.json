@@ -83,7 +83,7 @@
     },
     {
       "id": "6:5203651438849109687",
-      "lastPropertyId": "4:1413881761337256622",
+      "lastPropertyId": "6:5129109765425170449",
       "name": "CurrentWorkoutSession",
       "properties": [
         {
@@ -101,6 +101,16 @@
           "id": "4:1413881761337256622",
           "name": "note",
           "type": 9
+        },
+        {
+          "id": "5:456242171868699305",
+          "name": "startTime",
+          "type": 6
+        },
+        {
+          "id": "6:5129109765425170449",
+          "name": "duration",
+          "type": 6
         }
       ],
       "relations": [
