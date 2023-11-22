@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:group_project/pages/auth/edit_password.dart';
 import 'package:group_project/pages/components/top_nav_bar.dart';
 import 'package:provider/provider.dart';
 import 'components/bottom_nav_bar.dart';
@@ -234,7 +235,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       // Navigate to the corresponding screen based on login state
                       if (isAnonymous) {
                         // Navigate to sign-up or login screen
+                        Future.microtask(
+                                () => Navigator.of(context).popAndPushNamed('settings_signup'));
                       } else {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => const EditPassword(),
+                          ),
+                        );
                         // Navigate to edit password screen
                       }
                     },
