@@ -8,12 +8,16 @@ import 'package:group_project/pages/workout/components/tiles/set_tiles.dart';
 import 'package:group_project/pages/workout/components/workout_header.dart';
 import 'package:group_project/pages/workout/components/tiles/components/timer_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:group_project/pages/workout/components/tiles/components/rest_timer_provider.dart';
+import 'package:group_project/pages/workout/start_new_workout.dart';
+import 'package:group_project/pages/workout/components/tiles/components/rest_timer_widget.dart';
 
 class ExerciseTile extends StatefulWidget {
   final List<Exercise> exerciseData;
   final List<ExercisesSetsInfo> selectedExercises;
   final void Function(Exercise selectedExercise) selectExercise;
   final TimerProvider timerProvider;
+  final RestTimerProvider restTimerProvider;
 
   const ExerciseTile({
     super.key,
@@ -21,6 +25,7 @@ class ExerciseTile extends StatefulWidget {
     required this.selectedExercises,
     required this.selectExercise,
     required this.timerProvider,
+    required this.restTimerProvider,
   });
 
   @override
@@ -30,11 +35,14 @@ class ExerciseTile extends StatefulWidget {
 
 class _ExerciseTileState extends State<ExerciseTile> {
   late TimerProvider timerProvider;
+  late RestTimerProvider restTimerProvider;
+  bool isSetCompleted = false;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     timerProvider = Provider.of<TimerProvider>(context);
+    restTimerProvider = Provider.of<RestTimerProvider>(context);
   }
 
   void removeSet(int exerciseSetId, ExercisesSetsInfo exercisesSetsInfo) {
@@ -66,6 +74,11 @@ class _ExerciseTileState extends State<ExerciseTile> {
             .toList()
             .forEach((exerciseSet) {
           exerciseSet.isCompleted = !exerciseSet.isCompleted;
+          widget.timerProvider.isSetCompleted = exerciseSet.isCompleted;
+
+          if (exerciseSet.isCompleted) {
+            widget.restTimerProvider.resetRestTimer(exerciseSet.restTimeInSeconds);
+          }
         });
       }
     });
@@ -133,9 +146,12 @@ class _ExerciseTileState extends State<ExerciseTile> {
               ),
               CancelWorkoutButton(timerProvider: widget.timerProvider ),
             ]);
-          } else {
-            ExercisesSetsInfo selectedExercise =
-                widget.selectedExercises[index];
+          }else {
+            ExercisesSetsInfo selectedExercise = widget.selectedExercises[index];
+            isSetCompleted = selectedExercise.exerciseSets.any((exerciseSet) => exerciseSet.isCompleted);
+            // Display RestTimerWidget if set is completed
+            Widget restTimerWidget = isSetCompleted ? RestTimerWidget() : SizedBox.shrink();
+
             return Container(
               margin: const EdgeInsets.symmetric(vertical: 10),
               child: Column(
@@ -143,13 +159,19 @@ class _ExerciseTileState extends State<ExerciseTile> {
                 children: [
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                    child: Text(
-                      selectedExercise.exercise.target!.name,
-                      style: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFFE1F0CF),
-                      ),
+                    child: Row(
+                      children: [
+                        Text(
+                          selectedExercise.exercise.target!.name,
+                          style: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFFE1F0CF),
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        restTimerWidget,
+                      ],
                     ),
                   ),
                   const SizedBox(height: 20),
@@ -158,7 +180,7 @@ class _ExerciseTileState extends State<ExerciseTile> {
                     removeSet: removeSet,
                     addSet: addSet,
                     setIsCompleted: setIsCompleted,
-                  )
+                  ),
                 ],
               ),
             );
@@ -167,4 +189,13 @@ class _ExerciseTileState extends State<ExerciseTile> {
       ),
     );
   }
+
+  String formatDuration(int seconds) {
+    final hours = (seconds ~/ 3600).toString().padLeft(2, '0');
+    final minutes = ((seconds % 3600) ~/ 60).toString().padLeft(2, '0');
+    final remainingSeconds = (seconds % 60).toString().padLeft(2, '0');
+    return "$hours:$minutes:$remainingSeconds";
+  }
+
+
 }

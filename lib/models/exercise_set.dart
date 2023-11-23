@@ -8,6 +8,7 @@ class ExerciseSet {
   int weight;
   int reps;
   bool isCompleted = false;
+  int restTimeInSeconds;
 
   final exerciseSetInfo = ToOne<ExercisesSetsInfo>();
 
@@ -16,6 +17,7 @@ class ExerciseSet {
     this.id = 0,
     required this.weight,
     required this.reps,
+    required this.restTimeInSeconds,
   });
 
 

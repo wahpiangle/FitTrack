@@ -10,6 +10,9 @@ import 'firebase_options.dart';
 import 'package:group_project/pages/components/top_nav_bar.dart';
 import 'package:group_project/services/user_state.dart';
 import 'package:group_project/pages/workout/components/tiles/components/timer_provider.dart';
+import 'package:group_project/pages/workout/components/tiles/components/rest_timer_provider.dart';
+import 'package:group_project/pages/workout/workout_screen.dart';
+
 
 late ObjectBox objectBox;
 
@@ -28,8 +31,10 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    final restTimerProvider = RestTimerProvider();
     return MultiProvider(
       providers: [
+        ChangeNotifierProvider(create: (context) => RestTimerProvider()),
         ChangeNotifierProvider(create: (context) => TimerProvider()),
         ChangeNotifierProvider(create: (context) => UserStateProvider()),
         ChangeNotifierProvider(create: (context) => ProfileImageProvider()), // Provide the ProfileImageProvider

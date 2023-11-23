@@ -49,7 +49,7 @@ class CancelWorkoutButton extends StatelessWidget {
                     timerProvider.resetTimer();
                     Navigator.of(context).pushReplacement(
                       MaterialPageRoute(
-                        builder: (context) => const WorkoutScreen(),
+                        builder: (context) =>  WorkoutScreen(),
                       ),
                     );
                     objectBox.clearCurrentWorkoutSession();

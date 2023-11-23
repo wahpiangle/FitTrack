@@ -24,7 +24,7 @@
     },
     {
       "id": "4:8999125863363426104",
-      "lastPropertyId": "5:9180347095561080921",
+      "lastPropertyId": "6:8427381781882279494",
       "name": "Exercise",
       "properties": [
         {
@@ -58,6 +58,11 @@
           "id": "5:9180347095561080921",
           "name": "imagePath",
           "type": 9
+        },
+        {
+          "id": "6:8427381781882279494",
+          "name": "restTimeInSeconds",
+          "type": 6
         }
       ],
       "relations": []
@@ -123,7 +128,7 @@
     },
     {
       "id": "7:3746532471321315396",
-      "lastPropertyId": "5:9138861087088139292",
+      "lastPropertyId": "6:6161241240739064184",
       "name": "ExerciseSet",
       "properties": [
         {
@@ -154,6 +159,11 @@
           "flags": 520,
           "indexId": "4:6650087091303056651",
           "relationTarget": "ExercisesSetsInfo"
+        },
+        {
+          "id": "6:6161241240739064184",
+          "name": "restTimeInSeconds",
+          "type": 6
         }
       ],
       "relations": []

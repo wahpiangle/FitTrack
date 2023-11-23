@@ -2,12 +2,22 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 
 class TimerProvider with ChangeNotifier {
+  Map<int, Timer?> _exerciseTimers = {};
+
   Timer? _timer;
   int _currentDuration = 0;
   bool _isTimerRunning = false;
+  bool _isSetCompleted = false;
 
   TimerProvider() {
     // startTimer();
+  }
+
+  bool get isSetCompleted => _isSetCompleted;
+
+  set isSetCompleted(bool value) {
+    _isSetCompleted = value;
+    notifyListeners();
   }
 
 
@@ -33,6 +43,20 @@ class TimerProvider with ChangeNotifier {
     _isTimerRunning = false; // Set the flag to false when the timer stops
   }
 
+  void startExerciseTimer(int exerciseId) {
+    if (!_exerciseTimers.containsKey(exerciseId)) {
+      _exerciseTimers[exerciseId] = Timer.periodic(const Duration(seconds: 1), (timer) {
+        // handle exercise timer logic here
+        notifyListeners();
+      });
+    }
+  }
+
+  void stopExerciseTimer(int exerciseId) {
+    _exerciseTimers[exerciseId]?.cancel();
+    _exerciseTimers.remove(exerciseId);
+    notifyListeners();
+  }
 
   @override
   void dispose() {

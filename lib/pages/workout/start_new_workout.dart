@@ -6,6 +6,9 @@ import 'package:group_project/models/current_workout_session.dart';
 import 'package:group_project/pages/workout/components/tiles/exercise_tile.dart';
 import 'package:provider/provider.dart';
 import 'package:group_project/pages/workout/components/tiles/components/timer_provider.dart';
+import 'package:group_project/pages/workout/components/tiles/components/rest_timer_provider.dart';
+
+
 
 class StartNewWorkout extends StatefulWidget {
   static final GlobalKey<_StartNewWorkoutState> startNewWorkoutKey =
@@ -20,6 +23,8 @@ class StartNewWorkout extends StatefulWidget {
 
 class _StartNewWorkoutState extends State<StartNewWorkout>
     with TickerProviderStateMixin {
+
+  late RestTimerProvider _restTimerProvider;
   late AnimationController _controller;
   late Animation<double> _animation;
   TextEditingController weightsController = TextEditingController();
@@ -31,9 +36,17 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
   List<Widget> setBorders = [];
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Access the RestTimerProvider using Provider.of
+    //_restTimerProvider = Provider.of<RestTimerProvider>(context);
+  }
+
+  @override
   @override
   void initState() {
     super.initState();
+    _restTimerProvider = RestTimerProvider();
     currentWorkoutSession = CurrentWorkoutSession();
     _currentWorkoutSessionStream = objectBox.watchCurrentWorkoutSession();
     _controller = AnimationController(
@@ -46,6 +59,13 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
     _animation.addListener(() {
       setState(() {});
     });
+
+    // _restTimerProvider.restTimerStream.listen((restDuration) {
+    //   // Update UI with restDuration (e.g., display it in a Text widget)
+    //   setState(() {
+    //     // Update UI with restDuration
+    //   });
+    // });
 
     // Retrieve the current workout session when the state is initialized
     _updateCurrentWorkoutSession();
@@ -69,11 +89,35 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
     final timerProvider = Provider.of<TimerProvider>(context, listen: false);
     if (!_isTimerRunning) {
       timerProvider.startTimer();
+      timerProvider.startExerciseTimer(selectedExercise.id);
       setState(() {
         _isTimerRunning = true;
       });
     }
+
+    startRestTimer(selectedExercise.restTimeInSeconds);
   }
+
+  void startRestTimer(int duration) {
+    _restTimerProvider.startRestTimer(duration);
+  }
+
+  void stopRestTimer() {
+    _restTimerProvider.stopRestTimer();
+    setState(() {
+      _isTimerRunning = false;
+    });
+  }
+
+  void resetRestTimer() {
+
+    _restTimerProvider.resetRestTimer(60);
+    setState(() {
+      _isTimerRunning = false;
+    });
+  }
+
+
 
   Widget createSetBorder(int weight, int reps) {
     return Container(
@@ -108,88 +152,95 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
     weightsController.dispose();
     repsController.dispose();
     super.dispose();
+
   }
+
+
 
   @override
   Widget build(BuildContext context) {
     final timerProvider = Provider.of<TimerProvider>(context);
-    return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-        actions: [
-          Center(
-            child: Material(
-              color: Colors.transparent,
-              child: InkWell(
-                borderRadius: BorderRadius.circular(8),
-                onTap: () {},
-                child: const Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: Text(
-                    "Finish",
-                    style: TextStyle(
-                      color: Color(0xFFE1F0CF),
-                      fontSize: 18,
+    return ChangeNotifierProvider(
+      create: (context) => _restTimerProvider,
+      child: Scaffold(
+        appBar: AppBar(
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back_ios),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+          actions: [
+            Center(
+              child: Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(8),
+                  onTap: () {},
+                  child: const Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Text(
+                      "Finish",
+                      style: TextStyle(
+                        color: Color(0xFFE1F0CF),
+                        fontSize: 18,
+                      ),
                     ),
                   ),
                 ),
               ),
             ),
-          ),
-        ],
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Consumer<TimerProvider>(
-              builder: (context, timerProvider, child) {
-                return Text(
-                  "Timer: ${formatDuration(timerProvider.currentDuration)}",
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 18,
-                  ),
-                );
-              },
-            ),
           ],
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Consumer<TimerProvider>(
+                builder: (context, timerProvider, child) {
+                  return Text(
+                    "Timer: ${formatDuration(timerProvider.currentDuration)}",
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                    ),
+                  );
+                },
+              ),
+            ],
+          ),
+          backgroundColor: const Color(0xFF1A1A1A),
         ),
         backgroundColor: const Color(0xFF1A1A1A),
-      ),
-      backgroundColor: const Color(0xFF1A1A1A),
-      body: StreamBuilder<CurrentWorkoutSession>(
-        stream: _currentWorkoutSessionStream,
-        builder: (context, snapshot) {
-          if (!snapshot.hasData) {
-            return const Center(child: CircularProgressIndicator());
-          } else {
-            currentWorkoutSession = snapshot.data!;
-            return Padding(
-              padding: const EdgeInsets.symmetric(vertical: 20),
-              child: Column(
-                children: [
-                  ExerciseTile(
-                    exerciseData: widget.exerciseData,
-                    selectedExercises:
-                    snapshot.data!.exercisesSetsInfo.toList(),
-                    selectExercise: selectExercise,
-                    timerProvider: timerProvider,
-                  ),
-                ],
-              ),
-            );
-          }
-        },
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          objectBox.test();
-        },
-        child: const Icon(Icons.add),
+        body: StreamBuilder<CurrentWorkoutSession>(
+          stream: _currentWorkoutSessionStream,
+          builder: (context, snapshot) {
+            if (!snapshot.hasData) {
+              return const Center(child: CircularProgressIndicator());
+            } else {
+              currentWorkoutSession = snapshot.data!;
+              return Padding(
+                padding: const EdgeInsets.symmetric(vertical: 20),
+                child: Column(
+                  children: [
+                    ExerciseTile(
+                      exerciseData: widget.exerciseData,
+                      selectedExercises:
+                      snapshot.data!.exercisesSetsInfo.toList(),
+                      selectExercise: selectExercise,
+                      timerProvider: timerProvider,
+                      restTimerProvider: _restTimerProvider,
+                    ),
+                  ],
+                ),
+              );
+            }
+          },
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            objectBox.test();
+          },
+          child: const Icon(Icons.add),
+        ),
       ),
     );
   }
@@ -200,4 +251,6 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
     final remainingSeconds = (seconds % 60).toString().padLeft(2, '0');
     return "$hours:$minutes:$remainingSeconds";
   }
+
+
 }

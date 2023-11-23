@@ -102,8 +102,8 @@ class ObjectBox {
     exercisesSetInfo.exercise.target = exercise;
 
     // TODO: Change this to only 1 set
-    exercisesSetInfo.exerciseSets.add(ExerciseSet(reps: 1, weight: 1));
-    exercisesSetInfo.exerciseSets.add(ExerciseSet(reps: 2, weight: 2));
+    exercisesSetInfo.exerciseSets.add(ExerciseSet(reps: 1, weight: 1,restTimeInSeconds: 60));
+    exercisesSetInfo.exerciseSets.add(ExerciseSet(reps: 2, weight: 2,restTimeInSeconds: 60));
     currentWorkoutSession.exercisesSetsInfo.add(exercisesSetInfo);
     _exercisesSetsInfoBox.put(exercisesSetInfo);
     _currentWorkoutSessionBox.put(currentWorkoutSession);
@@ -122,7 +122,7 @@ class ObjectBox {
   }
 
   void addSetToExercise(ExercisesSetsInfo exercisesSetsInfo) {
-    exercisesSetsInfo.exerciseSets.add(ExerciseSet(reps: 1, weight: 1));
+    exercisesSetsInfo.exerciseSets.add(ExerciseSet(reps: 1, weight: 1,restTimeInSeconds: 60));
     _exercisesSetsInfoBox.put(exercisesSetsInfo);
   }
 

@@ -12,8 +12,9 @@ class Exercise {
 
   final bodyPart = ToOne<BodyPart>();
   final category = ToOne<Category>();
+  final int restTimeInSeconds;
 
-  Exercise({this.id = 0, required this.name, this.imagePath = ''});
+  Exercise({this.id = 0, required this.name, this.imagePath = '',required this.restTimeInSeconds,});
 
   get sets => null;
 

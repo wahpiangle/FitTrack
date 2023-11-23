@@ -8,11 +8,11 @@ import 'package:group_project/pages/workout/start_new_workout.dart';
 import 'package:provider/provider.dart';
 import 'package:group_project/pages/workout/new_workout.dart';
 import 'package:group_project/pages/workout/components/tiles/components/timer_provider.dart';
+import 'package:group_project/pages/workout/components/tiles/components/rest_timer_provider.dart';
 
 
 class WorkoutScreen extends StatefulWidget {
   const WorkoutScreen({super.key});
-
   @override
   State<WorkoutScreen> createState() => _WorkoutScreenState();
 }
@@ -42,6 +42,8 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
   Widget build(BuildContext context) {
     final user = Provider.of<User?>(context);
     final timerProvider = Provider.of<TimerProvider>(context);
+   // final restTimerProvider = Provider.of<RestTimerProvider>(context);
+
 
     return Scaffold(
       appBar: TopNavBar(title: 'Home', user: user),
