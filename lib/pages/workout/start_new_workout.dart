@@ -33,6 +33,7 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
   late CurrentWorkoutSession currentWorkoutSession;
   bool _isTimerRunning = false;
 
+
   List<Widget> setBorders = [];
 
   @override
@@ -93,9 +94,15 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
       setState(() {
         _isTimerRunning = true;
       });
+      final hasCompletedSets = selectedExercise.exerciseSets.any((set) => set.isCompleted);
+
+      if (hasCompletedSets) {
+        // Only start the rest timer if there are completed sets
+        _restTimerProvider.startRestTimer(selectedExercise.restTimeInSeconds);
+      }
     }
 
-    startRestTimer(selectedExercise.restTimeInSeconds);
+    //startRestTimer(selectedExercise.restTimeInSeconds);
   }
 
   void startRestTimer(int duration) {
