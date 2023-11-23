@@ -1,5 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:group_project/pages/auth/edit_password.dart';
+import 'package:group_project/pages/auth/register_screen.dart';
 import 'package:group_project/pages/components/top_nav_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:group_project/services/auth_service.dart';
@@ -223,8 +225,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         // Navigate to the corresponding screen based on login state
                         if (isAnonymous) {
                           // Navigate to sign-up or login screen
+                          FirebaseAuth.instance.signOut();
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => const RegisterScreen(),
+                            ),
+                          );
                         } else {
                           // Navigate to edit password screen
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => const EditPassword(),
+                            ),
+                          );
                         }
                       },
                     ),
