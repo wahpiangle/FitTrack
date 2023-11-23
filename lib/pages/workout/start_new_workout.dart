@@ -33,7 +33,6 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
   TextEditingController repsController = TextEditingController();
   Stream<CurrentWorkoutSession>? _currentWorkoutSessionStream;
   late CurrentWorkoutSession currentWorkoutSession;
-  bool _isTimerRunning = false;
   int _restTimerDuration = 60;//default rest timer value
 
 
@@ -247,7 +246,7 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
-            objectBox.test();
+           // objectBox.test();
           },
           child: const Icon(Icons.add),
         ),
