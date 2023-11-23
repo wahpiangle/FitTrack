@@ -15,6 +15,7 @@ class RestTimerProvider with ChangeNotifier {
   bool get isTimerRunning => _isTimerRunning;
   bool get isPaused => _isPaused;
 
+
   void startRestTimer(int duration,BuildContext context) {
       print("Start Rest Timer: $duration");
       _restDuration = duration;
@@ -38,6 +39,7 @@ class RestTimerProvider with ChangeNotifier {
       notifyListeners();
 
   }
+
 
 
   void pauseTimer() {

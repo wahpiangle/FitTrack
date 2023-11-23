@@ -53,6 +53,8 @@ dependencies:
   percent_indicator: ^3.0.1
   shared_preferences: ^2.2.2
   image_picker: ^1.0.4
+  flutter_picker: ^2.1.0
+  numberpicker: ^2.1.2
 
   
 dev_dependencies:

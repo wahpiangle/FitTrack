@@ -7,8 +7,6 @@ import 'package:group_project/pages/components/top_nav_bar.dart';
 import 'package:group_project/pages/workout/start_new_workout.dart';
 import 'package:provider/provider.dart';
 import 'package:group_project/pages/workout/new_workout.dart';
-import 'package:group_project/pages/workout/components/tiles/components/timer_provider.dart';
-import 'package:group_project/pages/workout/components/tiles/components/rest_timer_provider.dart';
 
 
 class WorkoutScreen extends StatefulWidget {
@@ -41,8 +39,6 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<User?>(context);
-    final timerProvider = Provider.of<TimerProvider>(context);
-   // final restTimerProvider = Provider.of<RestTimerProvider>(context);
 
 
     return Scaffold(

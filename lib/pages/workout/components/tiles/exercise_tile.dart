@@ -100,7 +100,7 @@ class _ExerciseTileState extends State<ExerciseTile> {
                   selectedExercises: widget.selectedExercises,
                   selectExercise: widget.selectExercise,
                 ),
-                 CancelWorkoutButton(timerProvider: widget.timerProvider),
+                 CancelWorkoutButton(timerProvider: widget.timerProvider,restTimerProvider: widget.restTimerProvider,),
               ],
             );
           }
@@ -144,7 +144,7 @@ class _ExerciseTileState extends State<ExerciseTile> {
                 selectedExercises: widget.selectedExercises,
                 selectExercise: widget.selectExercise,
               ),
-              CancelWorkoutButton(timerProvider: widget.timerProvider ),
+              CancelWorkoutButton(timerProvider: widget.timerProvider,restTimerProvider: widget.restTimerProvider, ),
             ]);
           }else {
             ExercisesSetsInfo selectedExercise = widget.selectedExercises[index];
@@ -170,7 +170,10 @@ class _ExerciseTileState extends State<ExerciseTile> {
                           ),
                         ),
                         const SizedBox(width: 10),
-                        restTimerWidget,
+                        const Spacer(),
+                        Expanded(
+                          child: restTimerWidget,
+                        ),
                       ],
                     ),
                   ),

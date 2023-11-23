@@ -4,6 +4,8 @@ import 'package:provider/provider.dart';
 import 'package:group_project/pages/workout/components/tiles/components/rest_timer_provider.dart';
 
 class RestTimerWidget extends StatelessWidget {
+  const RestTimerWidget({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Consumer<RestTimerProvider>(
@@ -55,7 +57,7 @@ class RestTimerWidget extends StatelessWidget {
 class TimerDetailsDialog extends StatefulWidget {
   final RestTimerProvider restTimerProvider;
 
-  const TimerDetailsDialog({Key? key, required this.restTimerProvider}) : super(key: key);
+  const TimerDetailsDialog({super.key, required this.restTimerProvider});
 
   @override
   _TimerDetailsDialogState createState() => _TimerDetailsDialogState();
@@ -76,7 +78,7 @@ class _TimerDetailsDialogState extends State<TimerDetailsDialog> {
   }
 
   void _startUpdatingTimer() {
-    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       setState(() {
         _currentDuration = widget.restTimerProvider.currentDuration;
       });
@@ -110,27 +112,27 @@ class _TimerDetailsDialogState extends State<TimerDetailsDialog> {
                     _timer.cancel();
                     Navigator.of(context).pop();
                   },
-                  icon: Icon(Icons.close, size: 32, color: const Color(0xFFC1C1C1)), // Icon color
+                  icon: const Icon(Icons.close, size: 32, color: Color(0xFFC1C1C1)), // Icon color
                 ),
               ],
             ),
-            Text(
+            const Text(
               "Rest Timer",
               style: TextStyle(
-                color: const Color(0xFFE1F0CF), // White color for text
+                color: Color(0xFFE1F0CF), // White color for text
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             Text(
               "${formatDuration(widget.restTimerProvider.currentDuration)}",
-              style: TextStyle(
-                color: const Color(0xFFE1F0CF), // White color for text
+              style: const TextStyle(
+                color: Color(0xFFE1F0CF), // White color for text
                 fontSize: 64, // Enlarge the font size
               ),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -150,7 +152,7 @@ class _TimerDetailsDialogState extends State<TimerDetailsDialog> {
                 ),
                 IconButton(
                   onPressed: () => _showEditDialog(context),
-                  icon: Icon(Icons.edit, size: 32, color: const Color(0xFFC1C1C1)), // Icon color
+                  icon: const Icon(Icons.edit, size: 32, color: Color(0xFFC1C1C1)), // Icon color
                 ),
               ],
             ),
@@ -188,32 +190,32 @@ class _TimerDetailsDialogState extends State<TimerDetailsDialog> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(
+                const Text(
                   "Edit Timer",
                   style: TextStyle(
-                    color: const Color(0xFFE1F0CF),
+                    color: Color(0xFFE1F0CF),
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
                 Text(
                   "Current Duration: ${formatDuration(widget.restTimerProvider.currentDuration)}",
-                  style: TextStyle(
-                    color: const Color(0xFFE1F0CF),
+                  style: const TextStyle(
+                    color: Color(0xFFE1F0CF),
                     fontSize: 16,
                   ),
                 ),
                 TextFormField(
                   controller: _editController,
                   keyboardType: TextInputType.number,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: "Enter New Duration (in seconds)",
-                    labelStyle: TextStyle(color: const Color(0xFFC1C1C1)),
+                    labelStyle: TextStyle(color: Color(0xFFC1C1C1)),
                   ),
-                  style: TextStyle(color: const Color(0xFFE1F0CF)),
+                  style: const TextStyle(color: Color(0xFFE1F0CF)),
                 ),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
@@ -223,21 +225,21 @@ class _TimerDetailsDialogState extends State<TimerDetailsDialog> {
                         widget.restTimerProvider.resetRestTimer(newDuration,context);
                         Navigator.of(context).pop();
                       },
-                      child: Text(
-                        "Update",
-                        style: TextStyle(color: const Color(0xFF1A1A1A)), // Button text color
-                      ),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFFE1F0CF), // Button background color
+                      ),
+                      child: const Text(
+                        "Update",
+                        style: TextStyle(color: Color(0xFF1A1A1A)), // Button text color
                       ),
                     ),
                     TextButton(
                       onPressed: () {
                         Navigator.of(context).pop();
                       },
-                      child: Text(
+                      child: const Text(
                         "Cancel",
-                        style: TextStyle(color: const Color(0xFFE1F0CF)), // Button text color
+                        style: TextStyle(color: Color(0xFFE1F0CF)), // Button text color
                       ),
                     ),
                   ],
