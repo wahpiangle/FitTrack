@@ -102,7 +102,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   onPressed: () async {
                     if (_formKey.currentState!.validate()) {
                       try {
+                        showDialog(
+                          context: context,
+                          builder: (context) {
+                            return const Center(child: CircularProgressIndicator());
+                          },
+                        );
                         await _auth.registerWithEmailAndPassword(email, password);
+                        Future.microtask(() => Navigator.of(context).pop());
                         Future.microtask(() => Navigator.pop(context));
                         errorMessage = '';
                       } on FirebaseAuthException catch (error){

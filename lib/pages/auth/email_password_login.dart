@@ -108,7 +108,14 @@ class _EmailPasswordLoginState extends State<EmailPasswordLogin> {
                     onPressed: () async {
                       if (_formKey.currentState!.validate()) {
                         try {
+                          showDialog(
+                              context: context,
+                              builder: (context) {
+                                return const Center(child: CircularProgressIndicator());
+                              },
+                          );
                           await _auth.signInWithEmailAndPassword(email, password);
+                          Future.microtask(() => Navigator.of(context).pop());
                           Future.microtask(() => Navigator.pop(context));
                           errorMessage= '';
                         } on FirebaseAuthException catch (error) {
