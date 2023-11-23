@@ -83,6 +83,9 @@ class ObjectBox {
     if (_currentWorkoutSessionBox.isEmpty()) {
       _currentWorkoutSessionBox.put(CurrentWorkoutSession());
     }
+    CurrentWorkoutSession currentWorkoutSession = getCurrentWorkoutSession();
+    currentWorkoutSession.isActive = true;
+    _currentWorkoutSessionBox.put(currentWorkoutSession);
   }
 
   Stream<CurrentWorkoutSession> watchCurrentWorkoutSession() {
@@ -109,15 +112,10 @@ class ObjectBox {
     _currentWorkoutSessionBox.put(currentWorkoutSession);
   }
 
-  void removeExerciseFromCurrentWorkoutSession(Exercise selectedExercise) {
+  void removeExerciseFromCurrentWorkoutSession(int exercisesSetsInfoId) {
     CurrentWorkoutSession currentWorkoutSession = getCurrentWorkoutSession();
-    currentWorkoutSession.exercisesSetsInfo
-        .toList()
-        .forEach((exercisesSetsInfo) {
-      if (exercisesSetsInfo.exercise.target!.id == selectedExercise.id) {
-        currentWorkoutSession.exercisesSetsInfo.remove(exercisesSetsInfo);
-      }
-    });
+    currentWorkoutSession.exercisesSetsInfo.removeWhere(
+        (exercisesSetsInfo) => exercisesSetsInfo.id == exercisesSetsInfoId);
     _currentWorkoutSessionBox.put(currentWorkoutSession);
   }
 
@@ -129,14 +127,12 @@ class ObjectBox {
   void clearCurrentWorkoutSession() {
     CurrentWorkoutSession currentWorkoutSession = getCurrentWorkoutSession();
 
-    // delete all exercise sets of the current workout session
     for (var exercisesSetsInfo in currentWorkoutSession.exercisesSetsInfo) {
       exercisesSetsInfo.exerciseSets.toList().forEach((exerciseSet) {
         _exerciseSetBox.remove(exerciseSet.id);
       });
     }
 
-    // delete all exercise set info of the current workout session
     currentWorkoutSession.exercisesSetsInfo
         .toList()
         .forEach((exercisesSetsInfo) {
@@ -147,15 +143,6 @@ class ObjectBox {
 
   void removeSetFromExercise(int setId) {
     _exerciseSetBox.remove(setId);
-  }
-
-  void test() {
-    CurrentWorkoutSession currentWorkoutSession = getCurrentWorkoutSession();
-    for (ExercisesSetsInfo exercisesSetsInfo
-        in currentWorkoutSession.exercisesSetsInfo) {
-      print(exercisesSetsInfo.exercise.target!.name);
-      print(exercisesSetsInfo.exerciseSets.length);
-    }
   }
 
   void updateCurrentWorkoutSessionNote(String newText) {

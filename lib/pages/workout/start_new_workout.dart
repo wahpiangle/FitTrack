@@ -27,6 +27,8 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
   late RestTimerProvider _restTimerProvider;
   late AnimationController _controller;
   late Animation<double> _animation;
+  bool _isTimerRunning = false;
+  late List<Exercise> exerciseData;
   TextEditingController weightsController = TextEditingController();
   TextEditingController repsController = TextEditingController();
   Stream<CurrentWorkoutSession>? _currentWorkoutSessionStream;

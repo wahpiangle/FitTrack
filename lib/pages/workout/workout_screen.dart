@@ -16,7 +16,6 @@ class WorkoutScreen extends StatefulWidget {
 }
 
 class _WorkoutScreenState extends State<WorkoutScreen> {
-  final int _selectedIndex = 2;
   late List<Exercise> exerciseData;
 
   @override
@@ -42,7 +41,6 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
 
 
     return Scaffold(
-      appBar: TopNavBar(title: 'Home', user: user),
       body: Container(
         height: double.infinity,
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
@@ -187,9 +185,6 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
             ],
           ),
         ),
-      ),
-      bottomNavigationBar: CustomBottomNavigationBar(
-        currentIndex: _selectedIndex,
       ),
     );
   }

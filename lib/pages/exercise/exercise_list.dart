@@ -1,15 +1,12 @@
 import 'dart:collection';
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:group_project/main.dart';
 import 'package:group_project/models/exercise.dart';
-import 'package:group_project/pages/components/bottom_nav_bar.dart';
 import 'package:group_project/pages/components/crop_image.dart';
-import 'package:group_project/pages/components/top_nav_bar.dart';
+import 'package:group_project/pages/exercise/components/exercises_list_filters.dart';
+import 'package:group_project/pages/exercise/components/filter_label.dart';
 import 'package:group_project/pages/exercise/exercise_detail.dart';
-import 'package:group_project/pages/exercise/exercise_filter_page.dart'; // Import ExerciseFilterPage
-import 'package:provider/provider.dart';
 
 class ExerciseListScreen extends StatefulWidget {
   const ExerciseListScreen({super.key});
@@ -22,27 +19,14 @@ class ExerciseListScreenState extends State<ExerciseListScreen> {
   String searchText = '';
   List<String> selectedCategory = []; // Default to []
   String selectedBodyPart = '';
-  final int _selectedIndex = 3;
   Map<String, List<Exercise>> exerciseGroups = {};
-  late Stream<List<Exercise>> streamExercises;
+  Stream<List<Exercise>> streamExercises = objectBox.watchAllExercise();
   final categories = objectBox.getCategories();
-  final GlobalKey _filterButtonKey = GlobalKey();
-  Rect? filterButtonRect;
 
   @override
   void initState() {
     super.initState();
-    streamExercises = objectBox.watchAllExercise();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final RenderBox filterButton =
-          _filterButtonKey.currentContext?.findRenderObject() as RenderBox;
-      final Offset buttonPosition = filterButton.localToGlobal(Offset.zero);
-      filterButtonRect = Rect.fromPoints(
-        buttonPosition,
-        buttonPosition.translate(
-            filterButton.size.width, filterButton.size.height),
-      );
-      // Populate the list with 'All' exercises by default
       filterExercises('');
     });
   }
@@ -85,20 +69,19 @@ class ExerciseListScreenState extends State<ExerciseListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final user = Provider.of<User?>(context);
     return Scaffold(
-      appBar: TopNavBar(
-        title: 'Exercise List',
-        user: user,
-
-      ),
       body: StreamBuilder(
         stream: streamExercises,
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
-            return const Center(child: CircularProgressIndicator());
+            return Container(
+              color: const Color(0xFF1A1A1A),
+              height: double.infinity,
+              child: const Center(
+                child: CircularProgressIndicator(),
+              ),
+            );
           }
-
           final filteredData = snapshot.data!.where((exercise) {
             final exerciseBodyPart = exercise.bodyPart.target!.name;
             final exerciseCategory = exercise.category.target!.name;
@@ -120,82 +103,17 @@ class ExerciseListScreenState extends State<ExerciseListScreen> {
               padding: const EdgeInsets.all(20.0),
               child: Column(
                 children: [
-                  Container(
-                    margin: const EdgeInsets.only(bottom: 20.0),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          flex: 4,
-                          child: Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10.0),
-                              border:
-                                  Border.all(color: const Color(0xFF333333)),
-                              color: const Color(0xFF333333),
-                            ),
-                            child: Container(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 16.0),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10.0),
-                                border:
-                                    Border.all(color: const Color(0xFF333333)),
-                              ),
-                              child: TextField(
-                                onChanged: (query) {
-                                  filterExercises(query);
-                                },
-                                style: const TextStyle(color: Colors.white),
-                                decoration: const InputDecoration(
-                                  hintText: 'Search exercise...',
-                                  border: InputBorder.none,
-                                  hintStyle: TextStyle(color: Colors.white),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 10.0),
-                        Expanded(
-                          flex: 1,
-                          child: Container(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 16.0),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10.0),
-                              border:
-                                  Border.all(color: const Color(0xFF333333)),
-                              color: const Color(0xFF333333),
-                            ),
-                            child: IconButton(
-                              icon: const Icon(Icons.filter_list,
-                                  color: Colors.white, size: 24.0),
-                              onPressed: () {
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (BuildContext context) {
-                                      return ExerciseFilterPage(
-                                        selectedBodyPart: selectedBodyPart,
-                                        setBodyPart: (bodyPart) =>
-                                            setSelectedBodyPart(bodyPart),
-                                        selectedCategory: selectedCategory,
-                                        addCategory: (category) =>
-                                            addSelectedCategory(category),
-                                        removeCategory: (category) =>
-                                            removeSelectedCategory(category),
-                                      );
-                                    },
-                                  ),
-                                );
-                              },
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
+                  ExercisesListFilters(
+                    filterExercises: filterExercises,
+                    selectedBodyPart: selectedBodyPart,
+                    setSelectedBodyPart: setSelectedBodyPart,
+                    selectedCategory: selectedCategory,
+                    addSelectedCategory: addSelectedCategory,
+                    removeSelectedCategory: removeSelectedCategory,
                   ),
-                  SizedBox(
-                    width: double.infinity,
+                  Container(
+                    alignment: Alignment.centerLeft,
+                    margin: const EdgeInsets.only(bottom: 20.0),
                     child: Wrap(
                       spacing: 10,
                       runSpacing: 10,
@@ -204,28 +122,42 @@ class ExerciseListScreenState extends State<ExerciseListScreen> {
                             selectedCategory.isNotEmpty)
                           if (selectedBodyPart.isEmpty &&
                               selectedCategory.isEmpty)
-                            filterLabel('All', true, () {
-                              setSelectedBodyPart('');
-                              selectedCategory.clear();
-                            }),
+                            FilterLabel(
+                                text: 'All',
+                                isFilterSelected: true,
+                                onTap: () {
+                                  setSelectedBodyPart('');
+                                  selectedCategory.clear();
+                                }),
                         if (selectedBodyPart.isNotEmpty)
-                          filterLabel(selectedBodyPart, true, () {
-                            setSelectedBodyPart('');
-                          }),
+                          FilterLabel(
+                            text: selectedBodyPart,
+                            isFilterSelected: true,
+                            onTap: () {
+                              setSelectedBodyPart('');
+                            },
+                          ),
                         for (final category in selectedCategory)
-                          filterLabel(category, true, () {
-                            removeSelectedCategory(category);
-                          }),
+                          FilterLabel(
+                            text: category,
+                            isFilterSelected: true,
+                            onTap: () {
+                              removeSelectedCategory(category);
+                            },
+                          ),
                         if (selectedBodyPart.isEmpty &&
                             selectedCategory.isEmpty)
-                          filterLabel('All', false, () {
-                            setSelectedBodyPart('');
-                            selectedCategory.clear();
-                          }),
+                          FilterLabel(
+                            text: 'All',
+                            isFilterSelected: false,
+                            onTap: () {
+                              setSelectedBodyPart('');
+                              selectedCategory.clear();
+                            },
+                          ),
                       ],
                     ),
                   ),
-                  const SizedBox(height: 10.0),
                   Expanded(
                     child: ListView.builder(
                       shrinkWrap: true,
@@ -270,9 +202,6 @@ class ExerciseListScreenState extends State<ExerciseListScreen> {
           objectBox.addExercises();
         },
         child: const Icon(Icons.add),
-      ),
-      bottomNavigationBar: CustomBottomNavigationBar(
-        currentIndex: _selectedIndex,
       ),
     );
   }
@@ -355,72 +284,7 @@ class ExerciseListItem extends StatelessWidget {
         ),
       );
     } else {
-      // Return an empty container if the exercise doesn't match the search
       return Container();
     }
   }
-}
-
-Widget filterLabel(
-  String text,
-  bool isFilterSelected,
-  Function() onTap,
-) {
-  if (isFilterSelected) {
-    return FittedBox(
-      fit: BoxFit.fitWidth,
-      child: SizedBox(
-        height: 35,
-        child: TextButton.icon(
-          icon: const Icon(
-            Icons.close,
-            color: Color(0xFF333333),
-            size: 20,
-          ),
-          style: TextButton.styleFrom(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 10,
-            ),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20.0),
-            ),
-            backgroundColor: const Color(0xFFE1F0CF),
-          ),
-          label: Text(
-            text,
-            style: const TextStyle(
-              color: Colors.black,
-              fontWeight: FontWeight.bold,
-              fontSize: 12.0,
-            ),
-          ),
-          onPressed: () {
-            onTap();
-          },
-        ),
-      ),
-    );
-  }
-  return FittedBox(
-    fit: BoxFit.fitWidth,
-    child: Container(
-      height: 35,
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20.0),
-        color: const Color(0xFFE1F0CF),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0),
-        child: Text(
-          text,
-          style: const TextStyle(
-            color: Colors.black,
-            fontWeight: FontWeight.bold,
-            fontSize: 12.0,
-          ),
-        ),
-      ),
-    ),
-  );
 }

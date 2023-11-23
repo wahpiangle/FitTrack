@@ -9,9 +9,11 @@ class TopNavBar extends StatelessWidget implements PreferredSizeWidget {
   final User? user;
   final String title;
   final bool showBackButton;
+  final int pageIndex;
 
   const TopNavBar({
-    super.key,
+    Key? key,
+    required this.pageIndex,
     required this.title,
     required this.user,
     this.showBackButton = false,
@@ -30,23 +32,24 @@ class TopNavBar extends StatelessWidget implements PreferredSizeWidget {
           title,
           style: const TextStyle(
             fontWeight: FontWeight.bold,
+            color: Colors.white,
           ),
         ),
       ),
       centerTitle: true,
       leading: showBackButton
           ? IconButton(
-              icon: const Icon(Icons.arrow_back),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-            )
+        icon: const Icon(Icons.arrow_back),
+        onPressed: () {
+          Navigator.pop(context);
+        },
+      )
           : IconButton(
-              icon: const Icon(Icons.menu),
-              onPressed: () {
-                // Will lead to Search friends page
-              },
-            ),
+        icon: const Icon(Icons.menu),
+        onPressed: () {
+          // Will lead to Search friends page
+        },
+      ),
       actions: [
         GestureDetector(
           onTap: () {

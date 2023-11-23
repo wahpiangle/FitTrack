@@ -8,6 +8,7 @@ class CurrentWorkoutSession {
   String title;
   String note;
   int startTime;
+  bool isActive;
 
   // 1 current workout session can have multiple exercises
   // each exercise can have multiple sets
@@ -20,6 +21,7 @@ class CurrentWorkoutSession {
     this.title = 'Workout',
     this.note = '',
     this.startTime = 0,
+    this.isActive = false,
   });
 
   void startTimer() {
