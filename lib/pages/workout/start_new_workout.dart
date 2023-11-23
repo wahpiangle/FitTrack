@@ -32,6 +32,7 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
   Stream<CurrentWorkoutSession>? _currentWorkoutSessionStream;
   late CurrentWorkoutSession currentWorkoutSession;
   bool _isTimerRunning = false;
+  int _restTimerDuration = 60;//default rest timer value
 
 
   List<Widget> setBorders = [];
@@ -98,7 +99,7 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
 
       if (hasCompletedSets) {
         // Only start the rest timer if there are completed sets
-        _restTimerProvider.startRestTimer(selectedExercise.restTimeInSeconds);
+        _restTimerProvider.startRestTimer(selectedExercise.restTimeInSeconds,context);
       }
     }
 
@@ -106,7 +107,7 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
   }
 
   void startRestTimer(int duration) {
-    _restTimerProvider.startRestTimer(duration);
+    _restTimerProvider.startRestTimer(duration,context);
   }
 
   void stopRestTimer() {
@@ -118,7 +119,7 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
 
   void resetRestTimer() {
 
-    _restTimerProvider.resetRestTimer(60);
+    _restTimerProvider.resetRestTimer(60,context);
     setState(() {
       _isTimerRunning = false;
     });

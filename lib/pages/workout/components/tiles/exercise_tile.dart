@@ -77,7 +77,7 @@ class _ExerciseTileState extends State<ExerciseTile> {
           widget.timerProvider.isSetCompleted = exerciseSet.isCompleted;
 
           if (exerciseSet.isCompleted) {
-            widget.restTimerProvider.resetRestTimer(exerciseSet.restTimeInSeconds);
+            widget.restTimerProvider.resetRestTimer(exerciseSet.restTimeInSeconds,context);
           }
         });
       }

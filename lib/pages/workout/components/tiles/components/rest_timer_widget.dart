@@ -92,50 +92,70 @@ class _TimerDetailsDialogState extends State<TimerDetailsDialog> {
 
   @override
   Widget build(BuildContext context) {
-    return AlertDialog(
-      title: Text("Edit Rest Timer"),
-      content: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text("Duration: ${formatDuration(widget.restTimerProvider.currentDuration)}"),
-          SizedBox(height: 16),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              IconButton(
-                onPressed: () {
-                  if (widget.restTimerProvider.isPaused) {
-                    _resumeTimer();
-                  } else {
-                    _pauseTimer();
-                  }
-                },
-                icon: Icon(
-                  widget.restTimerProvider.isPaused ? Icons.play_arrow : Icons.pause,
-                  size: 32,
+    return Dialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16.0),
+      ),
+      backgroundColor: const Color(0xFF1A1A1A), // Grey background color
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                IconButton(
+                  onPressed: () {
+                    _timer.cancel();
+                    Navigator.of(context).pop();
+                  },
+                  icon: Icon(Icons.close, size: 32, color: const Color(0xFFC1C1C1)), // Icon color
                 ),
+              ],
+            ),
+            Text(
+              "Rest Timer",
+              style: TextStyle(
+                color: const Color(0xFFE1F0CF), // White color for text
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
               ),
-            ],
-          ),
-          SizedBox(height: 16),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              IconButton(
-                onPressed: () => _showEditDialog(context),
-                icon: Icon(Icons.edit, size: 32),
+            ),
+            SizedBox(height: 16),
+            Text(
+              "${formatDuration(widget.restTimerProvider.currentDuration)}",
+              style: TextStyle(
+                color: const Color(0xFFE1F0CF), // White color for text
+                fontSize: 64, // Enlarge the font size
               ),
-              IconButton(
-                onPressed: () {
-                  _timer.cancel();
-                  Navigator.of(context).pop();
-                },
-                icon: Icon(Icons.close, size: 32),
-              ),
-            ],
-          ),
-        ],
+            ),
+            SizedBox(height: 16),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                IconButton(
+                  onPressed: () {
+                    if (widget.restTimerProvider.isPaused) {
+                      _resumeTimer();
+                    } else {
+                      _pauseTimer();
+                    }
+                  },
+                  icon: Icon(
+                    widget.restTimerProvider.isPaused ? Icons.play_arrow : Icons.pause,
+                    size: 32,
+                    color: const Color(0xFFC1C1C1), // Icon color
+                  ),
+                ),
+                IconButton(
+                  onPressed: () => _showEditDialog(context),
+                  icon: Icon(Icons.edit, size: 32, color: const Color(0xFFC1C1C1)), // Icon color
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -158,34 +178,73 @@ class _TimerDetailsDialogState extends State<TimerDetailsDialog> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text("Edit Timer"),
-          content: Column(
-            children: [
-              Text("Current Duration: ${formatDuration(widget.restTimerProvider.currentDuration)}"),
-              TextFormField(
-                controller: _editController,
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(labelText: "Enter New Duration (in seconds)"),
-              ),
-            ],
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16.0),
           ),
-          actions: [
-            ElevatedButton(
-              onPressed: () {
-                int newDuration = int.tryParse(_editController.text) ?? 0;
-                widget.restTimerProvider.resetRestTimer(newDuration);
-                Navigator.of(context).pop();
-              },
-              child: Text("Update"),
+          backgroundColor: const Color(0xFF1A1A1A),
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  "Edit Timer",
+                  style: TextStyle(
+                    color: const Color(0xFFE1F0CF),
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(height: 16),
+                Text(
+                  "Current Duration: ${formatDuration(widget.restTimerProvider.currentDuration)}",
+                  style: TextStyle(
+                    color: const Color(0xFFE1F0CF),
+                    fontSize: 16,
+                  ),
+                ),
+                TextFormField(
+                  controller: _editController,
+                  keyboardType: TextInputType.number,
+                  decoration: InputDecoration(
+                    labelText: "Enter New Duration (in seconds)",
+                    labelStyle: TextStyle(color: const Color(0xFFC1C1C1)),
+                  ),
+                  style: TextStyle(color: const Color(0xFFE1F0CF)),
+                ),
+                SizedBox(height: 16),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () {
+                        int newDuration = int.tryParse(_editController.text) ?? 0;
+                        widget.restTimerProvider.resetRestTimer(newDuration,context);
+                        Navigator.of(context).pop();
+                      },
+                      child: Text(
+                        "Update",
+                        style: TextStyle(color: const Color(0xFF1A1A1A)), // Button text color
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFFE1F0CF), // Button background color
+                      ),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Text(
+                        "Cancel",
+                        style: TextStyle(color: const Color(0xFFE1F0CF)), // Button text color
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text("Cancel"),
-            ),
-          ],
+          ),
         );
       },
     );
@@ -198,3 +257,5 @@ class _TimerDetailsDialogState extends State<TimerDetailsDialog> {
     return "$hours:$minutes:$remainingSeconds";
   }
 }
+
+
