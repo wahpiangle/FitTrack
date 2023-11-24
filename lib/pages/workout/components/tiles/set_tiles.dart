@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:group_project/main.dart';
 import 'package:group_project/models/exercise_set.dart';
 import 'package:group_project/models/exercises_sets_info.dart';
 import 'package:group_project/pages/workout/components/tiles/components/set_labels.dart';
@@ -75,7 +76,7 @@ class _SetTilesState extends State<SetTiles> {
                       color:
                           set.isCompleted ? Colors.green : Colors.transparent,
                       child: Dismissible(
-                        key: UniqueKey(),
+                        key: Key(set.id.toString()),
                         direction: DismissDirection.endToStart,
                         onDismissed: (direction) => {
                           widget.removeSet(set.id, widget.exercisesSetsInfo),
@@ -113,15 +114,13 @@ class _SetTilesState extends State<SetTiles> {
                                     color: const Color(0xFF333333),
                                     borderRadius: BorderRadius.circular(5),
                                   ),
-                                  child: TextField(
+                                  child: TextFormField(
                                     style: const TextStyle(
                                       fontSize: 18,
                                       color: Colors.white,
                                     ),
                                     textAlign: TextAlign.center,
-                                    controller: TextEditingController(
-                                      text: "${set.weight}",
-                                    ),
+                                    initialValue: "${set.weight}",
                                     decoration: const InputDecoration(
                                       contentPadding: EdgeInsets.all(0),
                                       filled: true,
@@ -130,6 +129,10 @@ class _SetTilesState extends State<SetTiles> {
                                         borderSide: BorderSide.none,
                                       ),
                                     ),
+                                    onChanged: (value) => {
+                                      set.weight = int.parse(value),
+                                      objectBox.updateExerciseSet(set),
+                                    },
                                   ),
                                 ),
                               ),
@@ -143,15 +146,13 @@ class _SetTilesState extends State<SetTiles> {
                                     color: const Color(0xFF333333),
                                     borderRadius: BorderRadius.circular(5),
                                   ),
-                                  child: TextField(
+                                  child: TextFormField(
                                     style: const TextStyle(
                                       fontSize: 18,
                                       color: Colors.white,
                                     ),
                                     textAlign: TextAlign.center,
-                                    controller: TextEditingController(
-                                      text: "${set.reps}",
-                                    ),
+                                    initialValue: "${set.reps}",
                                     decoration: const InputDecoration(
                                       contentPadding: EdgeInsets.all(0),
                                       filled: true,
@@ -160,6 +161,10 @@ class _SetTilesState extends State<SetTiles> {
                                         borderSide: BorderSide.none,
                                       ),
                                     ),
+                                    onChanged: (value) => {
+                                      set.reps = int.parse(value),
+                                      objectBox.updateExerciseSet(set),
+                                    },
                                   ),
                                 ),
                               ),
@@ -198,7 +203,7 @@ class _SetTilesState extends State<SetTiles> {
                 );
               }
               return Dismissible(
-                key: UniqueKey(),
+                key: Key(set.id.toString()),
                 onDismissed: (direction) {
                   widget.removeSet(set.id, widget.exercisesSetsInfo);
                 },
@@ -238,15 +243,13 @@ class _SetTilesState extends State<SetTiles> {
                             color: const Color(0xFF333333),
                             borderRadius: BorderRadius.circular(5),
                           ),
-                          child: TextField(
+                          child: TextFormField(
                             style: const TextStyle(
                               fontSize: 18,
                               color: Colors.white,
                             ),
                             textAlign: TextAlign.center,
-                            controller: TextEditingController(
-                              text: "${set.weight}",
-                            ),
+                            initialValue: "${set.weight}",
                             decoration: const InputDecoration(
                               contentPadding: EdgeInsets.all(0),
                               filled: true,
@@ -255,6 +258,10 @@ class _SetTilesState extends State<SetTiles> {
                                 borderSide: BorderSide.none,
                               ),
                             ),
+                            onChanged: (value) => {
+                              set.weight = int.parse(value),
+                              objectBox.updateExerciseSet(set),
+                            },
                           ),
                         ),
                       ),
@@ -267,15 +274,13 @@ class _SetTilesState extends State<SetTiles> {
                             color: const Color(0xFF333333),
                             borderRadius: BorderRadius.circular(5),
                           ),
-                          child: TextField(
+                          child: TextFormField(
                             style: const TextStyle(
                               fontSize: 18,
                               color: Colors.white,
                             ),
                             textAlign: TextAlign.center,
-                            controller: TextEditingController(
-                              text: "${set.reps}",
-                            ),
+                            initialValue: "${set.reps}",
                             decoration: const InputDecoration(
                               contentPadding: EdgeInsets.all(0),
                               filled: true,
@@ -284,6 +289,10 @@ class _SetTilesState extends State<SetTiles> {
                                 borderSide: BorderSide.none,
                               ),
                             ),
+                            onChanged: (value) => {
+                              set.reps = int.parse(value),
+                              objectBox.updateExerciseSet(set),
+                            },
                           ),
                         ),
                       ),
