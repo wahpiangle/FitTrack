@@ -161,4 +161,8 @@ class ObjectBox {
     exerciseSet.isCompleted = !exerciseSet.isCompleted;
     _exerciseSetBox.put(exerciseSet);
   }
+
+  void updateExerciseSet(ExerciseSet exerciseSet) {
+    _exerciseSetBox.put(exerciseSet);
+  }
 }
