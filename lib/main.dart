@@ -31,10 +31,8 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    final restTimerProvider = RestTimerProvider();
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) => RestTimerProvider()),
         ChangeNotifierProvider(create: (context) => TimerProvider()),
         ChangeNotifierProvider(create: (context) => UserStateProvider()),
         ChangeNotifierProvider(create: (context) => ProfileImageProvider()),

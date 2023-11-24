@@ -8,16 +8,13 @@ import 'package:group_project/pages/workout/components/tiles/set_tiles.dart';
 import 'package:group_project/pages/workout/components/workout_header.dart';
 import 'package:group_project/pages/workout/components/tiles/components/timer_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:group_project/pages/workout/components/tiles/components/rest_timer_provider.dart';
-import 'package:group_project/pages/workout/start_new_workout.dart';
-import 'package:group_project/pages/workout/components/tiles/components/rest_timer_widget.dart';
+
 
 class ExerciseTile extends StatefulWidget {
   final List<Exercise> exerciseData;
   final List<ExercisesSetsInfo> selectedExercises;
   final void Function(Exercise selectedExercise) selectExercise;
   final TimerProvider timerProvider;
-  final RestTimerProvider restTimerProvider;
 
   const ExerciseTile({
     super.key,
@@ -25,7 +22,6 @@ class ExerciseTile extends StatefulWidget {
     required this.selectedExercises,
     required this.selectExercise,
     required this.timerProvider,
-    required this.restTimerProvider,
   });
 
   @override
@@ -35,14 +31,12 @@ class ExerciseTile extends StatefulWidget {
 
 class _ExerciseTileState extends State<ExerciseTile> {
   late TimerProvider timerProvider;
-  late RestTimerProvider restTimerProvider;
   bool isSetCompleted = false;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     timerProvider = Provider.of<TimerProvider>(context);
-    restTimerProvider = Provider.of<RestTimerProvider>(context);
   }
 
   void removeSet(int exerciseSetId, ExercisesSetsInfo exercisesSetsInfo) {
@@ -75,9 +69,7 @@ class _ExerciseTileState extends State<ExerciseTile> {
           exerciseSet.isCompleted = !exerciseSet.isCompleted;
           widget.timerProvider.isSetCompleted = exerciseSet.isCompleted;
 
-          if (exerciseSet.isCompleted) {
-            widget.restTimerProvider.resetRestTimer(exerciseSet.restTimeInSeconds,context);
-          }
+
         });
       }
     });
@@ -99,7 +91,7 @@ class _ExerciseTileState extends State<ExerciseTile> {
                   selectedExercises: widget.selectedExercises,
                   selectExercise: widget.selectExercise,
                 ),
-                 CancelWorkoutButton(timerProvider: widget.timerProvider,restTimerProvider: widget.restTimerProvider,),
+                 CancelWorkoutButton(timerProvider: widget.timerProvider,),
               ],
             );
           }
@@ -143,13 +135,11 @@ class _ExerciseTileState extends State<ExerciseTile> {
                 selectedExercises: widget.selectedExercises,
                 selectExercise: widget.selectExercise,
               ),
-              CancelWorkoutButton(timerProvider: widget.timerProvider,restTimerProvider: widget.restTimerProvider, ),
+              CancelWorkoutButton(timerProvider: widget.timerProvider, ),
             ]);
           }else {
             ExercisesSetsInfo selectedExercise = widget.selectedExercises[index];
             isSetCompleted = selectedExercise.exerciseSets.any((exerciseSet) => exerciseSet.isCompleted);
-            // Display RestTimerWidget if set is completed
-            Widget restTimerWidget = isSetCompleted ? RestTimerWidget() : SizedBox.shrink();
 
             return Container(
               margin: const EdgeInsets.symmetric(vertical: 10),
@@ -169,10 +159,6 @@ class _ExerciseTileState extends State<ExerciseTile> {
                           ),
                         ),
                         const SizedBox(width: 10),
-                        const Spacer(),
-                        Expanded(
-                          child: restTimerWidget,
-                        ),
                       ],
                     ),
                   ),

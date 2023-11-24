@@ -12,11 +12,10 @@ class Exercise {
 
   final bodyPart = ToOne<BodyPart>();
   final category = ToOne<Category>();
-  final int restTimeInSeconds;
 
   final exerciseSets = ToMany<ExerciseSet>();
 
-  Exercise({this.id = 0, required this.name, this.imagePath = '',required this.restTimeInSeconds,});
+  Exercise({this.id = 0, required this.name, this.imagePath = '',});
 
   get sets => null;
 

@@ -24,7 +24,6 @@ class StartNewWorkout extends StatefulWidget {
 class _StartNewWorkoutState extends State<StartNewWorkout>
     with TickerProviderStateMixin {
 
-  late RestTimerProvider _restTimerProvider;
   late AnimationController _controller;
   late Animation<double> _animation;
   bool _isTimerRunning = false;
@@ -49,7 +48,6 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
   @override
   void initState() {
     super.initState();
-    _restTimerProvider = RestTimerProvider();
     currentWorkoutSession = CurrentWorkoutSession();
     _currentWorkoutSessionStream = objectBox.watchCurrentWorkoutSession();
     _controller = AnimationController(
@@ -96,36 +94,10 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
       setState(() {
         _isTimerRunning = true;
       });
-      final hasCompletedSets = selectedExercise.exerciseSets.any((set) => set.isCompleted);
 
-      if (hasCompletedSets) {
-        // Only start the rest timer if there are completed sets
-        _restTimerProvider.startRestTimer(selectedExercise.restTimeInSeconds,context);
-      }
     }
 
-    //startRestTimer(selectedExercise.restTimeInSeconds);
   }
-
-  void startRestTimer(int duration) {
-    _restTimerProvider.startRestTimer(duration,context);
-  }
-
-  void stopRestTimer() {
-    _restTimerProvider.stopRestTimer();
-    setState(() {
-      _isTimerRunning = false;
-    });
-  }
-
-  void resetRestTimer() {
-
-    _restTimerProvider.resetRestTimer(60,context);
-    setState(() {
-      _isTimerRunning = false;
-    });
-  }
-
 
 
   Widget createSetBorder(int weight, int reps) {
@@ -169,9 +141,7 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
   @override
   Widget build(BuildContext context) {
     final timerProvider = Provider.of<TimerProvider>(context);
-    return ChangeNotifierProvider(
-      create: (context) => _restTimerProvider,
-      child: Scaffold(
+    return Scaffold(
         appBar: AppBar(
           leading: IconButton(
             icon: const Icon(Icons.arrow_back_ios),
@@ -236,7 +206,6 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
                       snapshot.data!.exercisesSetsInfo.toList(),
                       selectExercise: selectExercise,
                       timerProvider: timerProvider,
-                      restTimerProvider: _restTimerProvider,
                     ),
                   ],
                 ),
@@ -250,8 +219,7 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
           },
           child: const Icon(Icons.add),
         ),
-      ),
-    );
+      );
   }
 
   String formatDuration(int seconds) {
