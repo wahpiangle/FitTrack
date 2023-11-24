@@ -21,7 +21,7 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
   }
 
   Future<void> _startNewWorkout(BuildContext context) async {
-    objectBox.createWorkoutSession();
+    objectBox.currentWorkoutSessionService.createCurrentWorkoutSession();
 
     await showModalBottomSheet(
       context: context,

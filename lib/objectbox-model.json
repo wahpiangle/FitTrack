@@ -188,11 +188,41 @@
           "targetId": "7:3746532471321315396"
         }
       ]
+    },
+    {
+      "id": "11:4929714596174845997",
+      "lastPropertyId": "3:2702407459373261380",
+      "name": "WorkoutSession",
+      "properties": [
+        {
+          "id": "1:5812914374676179611",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:8895517690980687532",
+          "name": "title",
+          "type": 9
+        },
+        {
+          "id": "3:2702407459373261380",
+          "name": "note",
+          "type": 9
+        }
+      ],
+      "relations": [
+        {
+          "id": "7:7783041778513810204",
+          "name": "exercisesSetsInfo",
+          "targetId": "10:1820858489364473134"
+        }
+      ]
     }
   ],
-  "lastEntityId": "10:1820858489364473134",
+  "lastEntityId": "11:4929714596174845997",
   "lastIndexId": "8:1873809727454846497",
-  "lastRelationId": "6:8676555494170821584",
+  "lastRelationId": "7:7783041778513810204",
   "lastSequenceId": "0:0",
   "modelVersion": 5,
   "modelVersionParserMinimum": 5,

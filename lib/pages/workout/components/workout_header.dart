@@ -12,7 +12,8 @@ class WorkoutHeader extends StatefulWidget {
 
 class _WorkoutHeaderState extends State<WorkoutHeader> {
   void onTextFieldChanged(String newText) {
-    objectBox.updateCurrentWorkoutSessionNote(newText);
+    objectBox.currentWorkoutSessionService
+        .updateCurrentWorkoutSessionNote(newText);
   }
 
   @override
@@ -34,7 +35,8 @@ class _WorkoutHeaderState extends State<WorkoutHeader> {
           ),
           const SizedBox(height: 20),
           TextFormField(
-            initialValue: objectBox.getCurrentWorkoutSessionNote(),
+            initialValue: objectBox.currentWorkoutSessionService
+                .getCurrentWorkoutSessionNote(),
             style: const TextStyle(
               color: Colors.white,
               fontWeight: FontWeight.bold,

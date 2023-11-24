@@ -64,7 +64,8 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
   }
 
   void selectExercise(Exercise selectedExercise) {
-    objectBox.addExerciseToCurrentWorkoutSession(selectedExercise);
+    objectBox.currentWorkoutSessionService
+        .addExerciseToCurrentWorkoutSession(selectedExercise);
   }
 
   Widget createSetBorder(int weight, int reps) {

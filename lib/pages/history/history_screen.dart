@@ -12,7 +12,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Center(
+        body: const Center(
           child: Text('History'),
         ),
         floatingActionButton: FloatingActionButton(
@@ -23,7 +23,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
               ),
             );
           },
-          child: Icon(Icons.add),
+          child: const Icon(Icons.add),
         ));
   }
 }

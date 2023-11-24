@@ -41,7 +41,8 @@ class CancelWorkoutButton extends StatelessWidget {
                   onPressed: () {
                     Navigator.of(context).pop();
                     Navigator.of(context).pop();
-                    objectBox.clearCurrentWorkoutSession();
+                    objectBox.currentWorkoutSessionService
+                        .clearCurrentWorkoutSession();
                   },
                   child: const Text(
                     'Cancel Workout',
