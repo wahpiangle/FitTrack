@@ -120,8 +120,10 @@ class _EmailPasswordLoginState extends State<EmailPasswordLogin> {
                           errorMessage= '';
                         } on FirebaseAuthException catch (error) {
                           if (error.code == "invalid-email"){
+                            Future.microtask(() => Navigator.of(context).pop());
                             errorMessage = 'The email format is invalid.';
                           } else {
+                            Future.microtask(() => Navigator.of(context).pop());
                             errorMessage = 'The email or password you\'ve entered is incorrect.';
                           }
                         }

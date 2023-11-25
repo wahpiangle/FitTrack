@@ -114,8 +114,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         errorMessage = '';
                       } on FirebaseAuthException catch (error){
                         if (error.code == "invalid-email"){
+                          Future.microtask(() => Navigator.of(context).pop());
                           errorMessage = 'The email format is invalid.';
                         } else {
+                          Future.microtask(() => Navigator.of(context).pop());
                           errorMessage = 'The email is already taken by another account.';
                         }
                       }
