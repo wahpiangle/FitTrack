@@ -91,7 +91,6 @@ class ObjectBox {
   }
 
 //workout session
-
   Stream<CurrentWorkoutSession> watchCurrentWorkoutSession() {
     return _currentWorkoutSessionBox
         .query()
@@ -120,6 +119,14 @@ class ObjectBox {
 
   // save to history
   void saveCurrentWorkoutSession() {
-    // CurrentWorkoutSession currentWorkoutSession = getCurrentWorkoutSession();
+    CurrentWorkoutSession currentWorkoutSession =
+        currentWorkoutSessionService.getCurrentWorkoutSession();
+    WorkoutSession workoutSession = WorkoutSession();
+    workoutSession.exercisesSetsInfo
+        .addAll(currentWorkoutSession.exercisesSetsInfo);
+    workoutSession.note = currentWorkoutSession.note;
+    // workoutSession.date = DateTime.now();
+    _workoutSessionBox.put(workoutSession);
+    currentWorkoutSessionService.clearCurrentWorkoutSession();
   }
 }
