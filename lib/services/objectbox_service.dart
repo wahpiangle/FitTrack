@@ -141,5 +141,6 @@ class ObjectBox {
     });
 
     // _exercisesSetsInfoBox.removeAll();
+    // _workoutSessionBox.removeAll();
   }
 }

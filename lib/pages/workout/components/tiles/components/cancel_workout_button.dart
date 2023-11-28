@@ -34,6 +34,7 @@ class CancelWorkoutButton extends StatelessWidget {
                     'Resume',
                     style: TextStyle(
                       fontSize: 18,
+                      color: Colors.red,
                     ),
                   ),
                 ),
@@ -44,13 +45,12 @@ class CancelWorkoutButton extends StatelessWidget {
                     objectBox.currentWorkoutSessionService.cancelWorkout();
                   },
                   child: const Text(
-                    'Cancel Workout',
+                    'Discard Workout',
                     style: TextStyle(
-                      color: Colors.red,
                       fontSize: 18,
                     ),
                   ),
-                )
+                ),
               ],
             );
           });

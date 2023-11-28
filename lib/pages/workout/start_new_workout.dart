@@ -111,24 +111,40 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
         context: context,
         builder: (BuildContext ctx) {
           return AlertDialog(
-            title: const Text('Please Confirm'),
-            content: const Text('Are you sure to remove the box?'),
+            backgroundColor: const Color(0xFF1A1A1A),
+            title: const Text(
+              'Finish Workout',
+              style: TextStyle(color: Colors.white),
+            ),
+            content: const Text(
+              'Are you sure that you want to finish workout?',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 18,
+              ),
+            ),
             actions: [
-              // The "Yes" button
               TextButton(
-                  onPressed: () {
-                    // Close the dialog
-                    Navigator.of(context).pop();
-                    Navigator.of(context).pop();
-                    objectBox.saveCurrentWorkoutSession();
-                  },
-                  child: const Text('Yes')),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text(
+                  'Cancel',
+                  style: TextStyle(fontSize: 18, color: Colors.red),
+                ),
+              ),
               TextButton(
-                  onPressed: () {
-                    // Close the dialog
-                    Navigator.of(context).pop();
-                  },
-                  child: const Text('No'))
+                onPressed: () {
+                  // Close the dialog
+                  Navigator.of(context).pop();
+                  Navigator.of(context).pop();
+                  objectBox.saveCurrentWorkoutSession();
+                },
+                child: const Text(
+                  'Finish Workout',
+                  style: TextStyle(fontSize: 18),
+                ),
+              ),
             ],
           );
         });
