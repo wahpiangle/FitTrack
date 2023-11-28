@@ -12,18 +12,13 @@ class _HistoryScreenState extends State<HistoryScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: const Center(
-          child: Text('History'),
+      body: Container(
+        height: double.infinity,
+        color: const Color(0xFF1A1A1A),
+        child: SingleChildScrollView(
+          child: Container(),
         ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            Navigator.of(context).pushReplacement(
-              MaterialPageRoute(
-                builder: (context) => ExerciseListScreen(),
-              ),
-            );
-          },
-          child: const Icon(Icons.add),
-        ));
+      ),
+    );
   }
 }
