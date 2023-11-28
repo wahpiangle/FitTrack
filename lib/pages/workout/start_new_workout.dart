@@ -106,6 +106,34 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
     super.dispose();
   }
 
+  void _delete(BuildContext context) {
+    showDialog(
+        context: context,
+        builder: (BuildContext ctx) {
+          return AlertDialog(
+            title: const Text('Please Confirm'),
+            content: const Text('Are you sure to remove the box?'),
+            actions: [
+              // The "Yes" button
+              TextButton(
+                  onPressed: () {
+                    // Close the dialog
+                    Navigator.of(context).pop();
+                    Navigator.of(context).pop();
+                    objectBox.saveCurrentWorkoutSession();
+                  },
+                  child: const Text('Yes')),
+              TextButton(
+                  onPressed: () {
+                    // Close the dialog
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text('No'))
+            ],
+          );
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -122,7 +150,50 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
               color: Colors.transparent,
               child: InkWell(
                 borderRadius: BorderRadius.circular(8),
-                onTap: () {},
+                onTap: () {
+                  bool everySetCompleted = objectBox
+                      .currentWorkoutSessionService
+                      .getCurrentWorkoutSession()
+                      .exercisesSetsInfo
+                      .every((exercisesSetsInfo) {
+                    return exercisesSetsInfo.exerciseSets.every((exerciseSet) {
+                      return exerciseSet.isCompleted;
+                    });
+                  });
+                  bool isNotEmpty = objectBox.currentWorkoutSessionService
+                      .getCurrentWorkoutSession()
+                      .exercisesSetsInfo
+                      .isNotEmpty;
+                  if (isNotEmpty) {
+                    if (everySetCompleted) {
+                      _delete(context);
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text(
+                            "Please complete all sets",
+                            style: TextStyle(
+                              color: Colors.white,
+                            ),
+                          ),
+                          backgroundColor: Color(0xFF1A1A1A),
+                        ),
+                      );
+                    }
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text(
+                          "Please add at least one exercise",
+                          style: TextStyle(
+                            color: Colors.white,
+                          ),
+                        ),
+                        backgroundColor: Color(0xFF1A1A1A),
+                      ),
+                    );
+                  }
+                },
                 child: const Padding(
                   padding: EdgeInsets.all(8.0),
                   child: Text(
@@ -175,7 +246,9 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
         },
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          objectBox.test();
+        },
         child: Icon(Icons.add),
       ),
     );

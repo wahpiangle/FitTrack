@@ -155,7 +155,7 @@
     },
     {
       "id": "10:1820858489364473134",
-      "lastPropertyId": "4:6840791792189351341",
+      "lastPropertyId": "5:6068465684494067862",
       "name": "ExercisesSetsInfo",
       "properties": [
         {
@@ -179,6 +179,14 @@
           "flags": 520,
           "indexId": "8:1873809727454846497",
           "relationTarget": "Exercise"
+        },
+        {
+          "id": "5:6068465684494067862",
+          "name": "workoutSessionId",
+          "type": 11,
+          "flags": 520,
+          "indexId": "9:7303140844689639292",
+          "relationTarget": "WorkoutSession"
         }
       ],
       "relations": [
@@ -221,7 +229,7 @@
     }
   ],
   "lastEntityId": "11:4929714596174845997",
-  "lastIndexId": "8:1873809727454846497",
+  "lastIndexId": "9:7303140844689639292",
   "lastRelationId": "7:7783041778513810204",
   "lastSequenceId": "0:0",
   "modelVersion": 5,

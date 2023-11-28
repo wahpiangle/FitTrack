@@ -45,7 +45,8 @@ class CurrentWorkoutSessionService {
     currentWorkoutSessionBox.put(currentWorkoutSession);
   }
 
-  void clearCurrentWorkoutSession() {
+  // for cancel workout
+  void cancelWorkout() {
     CurrentWorkoutSession currentWorkoutSession = getCurrentWorkoutSession();
 
     for (var exercisesSetsInfo in currentWorkoutSession.exercisesSetsInfo) {
@@ -71,5 +72,11 @@ class CurrentWorkoutSessionService {
   String getCurrentWorkoutSessionNote() {
     CurrentWorkoutSession currentWorkoutSession = getCurrentWorkoutSession();
     return currentWorkoutSession.note;
+  }
+
+  void clearCurrentWorkoutSession() {
+    CurrentWorkoutSession currentWorkoutSession = getCurrentWorkoutSession();
+    currentWorkoutSession.exercisesSetsInfo.clear();
+    currentWorkoutSessionBox.put(currentWorkoutSession);
   }
 }

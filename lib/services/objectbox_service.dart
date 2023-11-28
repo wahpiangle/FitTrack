@@ -125,8 +125,21 @@ class ObjectBox {
     workoutSession.exercisesSetsInfo
         .addAll(currentWorkoutSession.exercisesSetsInfo);
     workoutSession.note = currentWorkoutSession.note;
-    // workoutSession.date = DateTime.now();
     _workoutSessionBox.put(workoutSession);
     currentWorkoutSessionService.clearCurrentWorkoutSession();
+  }
+
+// check history
+  void test() {
+    print(_workoutSessionBox.getAll());
+    List<ExercisesSetsInfo> exercisesSetsInfo =
+        _workoutSessionBox.getAll().first.exercisesSetsInfo;
+    exercisesSetsInfo.forEach((element) {
+      element.exerciseSets.forEach((element) {
+        print(element.reps);
+      });
+    });
+
+    // _exercisesSetsInfoBox.removeAll();
   }
 }
