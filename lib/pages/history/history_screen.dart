@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:group_project/pages/exercise/exercise_list.dart';
 
 class HistoryScreen extends StatefulWidget {
   const HistoryScreen({super.key});
