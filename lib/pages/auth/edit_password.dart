@@ -13,7 +13,7 @@ class _EditPasswordState extends State<EditPassword> {
   final _formKey = GlobalKey<FormState>();
   var newPassword = "";
   final newPasswordController = TextEditingController();
-  String outputMessage = "";
+  String errorMessage = "";
 
 
   @override
@@ -102,11 +102,16 @@ class _EditPasswordState extends State<EditPassword> {
                         child: ElevatedButton(
                           onPressed: () {
                             if (_formKey.currentState!.validate()){
-                              setState(() {
-                                newPassword = newPasswordController.text;
-                              });
-                              changePassword();
-                              outputMessage ="You have successfully changed your password.";
+                              try {
+                                setState(() {
+                                  newPassword = newPasswordController.text;
+                                });
+                                changePassword();
+                                Navigator.pop(context);
+                              } on FirebaseAuthException catch (error) {
+                                errorMessage = error.message!;
+                              }
+                              setState(() {});
                             }
                           },
                           style: ElevatedButton.styleFrom(
@@ -127,8 +132,8 @@ class _EditPasswordState extends State<EditPassword> {
               const SizedBox(height: 20.0),
               Center(
                 child: Text(
-                  outputMessage,
-                  style: const TextStyle(color: Colors.white, fontSize: 14.0),
+                  errorMessage,
+                  style: const TextStyle(color: Colors.red, fontSize: 14.0),
                 ),
               ),
             ],
