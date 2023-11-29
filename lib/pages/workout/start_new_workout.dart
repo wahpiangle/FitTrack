@@ -113,6 +113,7 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
         builder: (BuildContext ctx) {
           return AlertDialog(
             backgroundColor: const Color(0xFF1A1A1A),
+            surfaceTintColor: Colors.transparent,
             title: const Text(
               'Finish Workout',
               style: TextStyle(color: Colors.white),
@@ -143,7 +144,10 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
                 },
                 child: const Text(
                   'Finish Workout',
-                  style: TextStyle(fontSize: 18),
+                  style: TextStyle(
+                    fontSize: 18,
+                    color: Colors.blue,
+                  ),
                 ),
               ),
             ],

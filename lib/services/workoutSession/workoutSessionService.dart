@@ -15,6 +15,17 @@ class WorkoutSessionService {
     required this.exerciseSetBox,
   });
 
+  Stream<List<WorkoutSession>> watchWorkoutSession() {
+    return workoutSessionBox
+        .query()
+        .watch(triggerImmediately: true)
+        .map((query) => query.find());
+  }
+
+  void removeWorkoutSession(int workoutSessionId) {
+    workoutSessionBox.remove(workoutSessionId);
+  }
+
   // void createCurrentWorkoutSession() {
   //   if (currentWorkoutSessionBox.isEmpty()) {
   //     currentWorkoutSessionBox.put(CurrentWorkoutSession());

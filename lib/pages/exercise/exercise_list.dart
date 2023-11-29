@@ -196,13 +196,6 @@ class ExerciseListScreenState extends State<ExerciseListScreen> {
           );
         },
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          objectBox.removeExercises();
-          objectBox.addExercises();
-        },
-        child: const Icon(Icons.add),
-      ),
     );
   }
 }
