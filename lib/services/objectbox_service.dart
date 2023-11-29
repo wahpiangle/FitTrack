@@ -9,6 +9,7 @@ import 'package:group_project/models/exercises_sets_info.dart';
 import 'package:group_project/models/workout_session.dart';
 import 'package:group_project/objectbox.g.dart';
 import 'package:group_project/services/currentWorkoutSession/currentWorkoutSession_service.dart';
+import 'package:group_project/services/workoutSession/workoutSessionService.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:group_project/constants/data/bodypart_data.dart';
@@ -65,6 +66,12 @@ class ObjectBox {
         exerciseSetBox: _exerciseSetBox,
       );
 
+  WorkoutSessionService get workoutSessionService => WorkoutSessionService(
+        workoutSessionBox: _workoutSessionBox,
+        exercisesSetsInfoBox: _exercisesSetsInfoBox,
+        exerciseSetBox: _exerciseSetBox,
+      );
+
 //exercises
   Stream<List<Exercise>> watchAllExercise() {
     return _exerciseBox
@@ -91,12 +98,6 @@ class ObjectBox {
   }
 
 //workout session
-  Stream<CurrentWorkoutSession> watchCurrentWorkoutSession() {
-    return _currentWorkoutSessionBox
-        .query()
-        .watch(triggerImmediately: true)
-        .map((query) => query.find().first);
-  }
 
   void addSetToExercise(ExercisesSetsInfo exercisesSetsInfo) {
     exercisesSetsInfo.exerciseSets.add(ExerciseSet(reps: 0, weight: 0));

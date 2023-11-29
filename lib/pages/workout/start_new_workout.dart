@@ -31,7 +31,8 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
   void initState() {
     super.initState();
     exerciseData = widget.exerciseData;
-    _currentWorkoutSessionStream = objectBox.watchCurrentWorkoutSession();
+    _currentWorkoutSessionStream =
+        objectBox.currentWorkoutSessionService.watchCurrentWorkoutSession();
     _controller = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 1),

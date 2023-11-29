@@ -15,6 +15,13 @@ class CurrentWorkoutSessionService {
     required this.exerciseSetBox,
   });
 
+  Stream<CurrentWorkoutSession> watchCurrentWorkoutSession() {
+    return currentWorkoutSessionBox
+        .query()
+        .watch(triggerImmediately: true)
+        .map((query) => query.find().first);
+  }
+
   void createCurrentWorkoutSession() {
     if (currentWorkoutSessionBox.isEmpty()) {
       currentWorkoutSessionBox.put(CurrentWorkoutSession());
