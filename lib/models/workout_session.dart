@@ -7,6 +7,7 @@ class WorkoutSession {
   int id;
   String title;
   String note;
+  DateTime date = DateTime.now();
 
   // 1 workout session can have multiple exercises
   // each exercise can have multiple sets
@@ -16,5 +17,6 @@ class WorkoutSession {
     this.id = 0,
     this.title = 'Workout',
     this.note = '',
+    required this.date,
   });
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:group_project/models/workout_session.dart';
 import 'package:group_project/pages/history/components/workout_menu_anchor.dart';
+import 'package:intl/intl.dart';
 
 class WorkoutCard extends StatelessWidget {
   final WorkoutSession workoutSession;
@@ -32,15 +33,29 @@ class WorkoutCard extends StatelessWidget {
           horizontal: 20,
         ),
         title: Padding(
-          padding: const EdgeInsets.only(
-            bottom: 20,
-          ),
-          child: Text(
-            workoutSession.title.toString(),
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 20,
-            ),
+          padding: const EdgeInsets.only(bottom: 15),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                workoutSession.title.toString(),
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 20,
+                ),
+              ),
+              const SizedBox(height: 5),
+              Text(
+                // show pm or am
+                DateFormat('yyyy-MM-dd - kk:mm a').format(
+                  workoutSession.date,
+                ),
+                style: TextStyle(
+                  color: Colors.grey[500],
+                  fontSize: 14,
+                ),
+              ),
+            ],
           ),
         ),
         subtitle: ListView.builder(

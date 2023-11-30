@@ -55,6 +55,9 @@ class WorkoutMenuAnchor extends StatelessWidget {
         backgroundColor: MaterialStateColor.resolveWith(
           (states) => const Color(0xFF333333),
         ),
+        surfaceTintColor: MaterialStateColor.resolveWith(
+          (states) => const Color(0xFF333333),
+        ),
       ),
       builder:
           (BuildContext context, MenuController controller, Widget? child) {

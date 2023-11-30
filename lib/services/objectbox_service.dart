@@ -122,10 +122,11 @@ class ObjectBox {
   void saveCurrentWorkoutSession() {
     CurrentWorkoutSession currentWorkoutSession =
         currentWorkoutSessionService.getCurrentWorkoutSession();
-    WorkoutSession workoutSession = WorkoutSession();
+    WorkoutSession workoutSession = WorkoutSession(date: DateTime.now());
     workoutSession.exercisesSetsInfo
         .addAll(currentWorkoutSession.exercisesSetsInfo);
     workoutSession.note = currentWorkoutSession.note;
+    workoutSession.title = currentWorkoutSession.title;
     _workoutSessionBox.put(workoutSession);
     currentWorkoutSessionService.clearCurrentWorkoutSession();
   }

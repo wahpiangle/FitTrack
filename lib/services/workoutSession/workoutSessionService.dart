@@ -2,7 +2,7 @@ import 'package:group_project/models/exercise.dart';
 import 'package:group_project/models/exercise_set.dart';
 import 'package:group_project/models/exercises_sets_info.dart';
 import 'package:group_project/models/workout_session.dart';
-import 'package:objectbox/objectbox.dart';
+import 'package:group_project/objectbox.g.dart';
 
 class WorkoutSessionService {
   Box<WorkoutSession> workoutSessionBox;
@@ -18,6 +18,8 @@ class WorkoutSessionService {
   Stream<List<WorkoutSession>> watchWorkoutSession() {
     return workoutSessionBox
         .query()
+        // order by date in descending order
+        .order(WorkoutSession_.date, flags: Order.descending)
         .watch(triggerImmediately: true)
         .map((query) => query.find());
   }

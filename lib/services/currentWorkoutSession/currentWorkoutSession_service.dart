@@ -83,7 +83,18 @@ class CurrentWorkoutSessionService {
 
   void clearCurrentWorkoutSession() {
     CurrentWorkoutSession currentWorkoutSession = getCurrentWorkoutSession();
+    currentWorkoutSession.title = 'Workout';
     currentWorkoutSession.exercisesSetsInfo.clear();
+    currentWorkoutSessionBox.put(currentWorkoutSession);
+  }
+
+  String getCurrentWorkoutSessionTitle() {
+    return getCurrentWorkoutSession().title;
+  }
+
+  void updateCurrentWorkoutSessionTitle(String newText) {
+    CurrentWorkoutSession currentWorkoutSession = getCurrentWorkoutSession();
+    currentWorkoutSession.title = newText;
     currentWorkoutSessionBox.put(currentWorkoutSession);
   }
 }

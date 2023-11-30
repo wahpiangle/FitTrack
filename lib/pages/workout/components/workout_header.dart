@@ -24,9 +24,17 @@ class _WorkoutHeaderState extends State<WorkoutHeader> {
         children: [
           Container(
             alignment: Alignment.topLeft,
-            child: const Text(
-              'Workout',
-              style: TextStyle(
+            child: TextFormField(
+              initialValue: objectBox.currentWorkoutSessionService
+                  .getCurrentWorkoutSessionTitle(),
+              onChanged: (String newText) {
+                objectBox.currentWorkoutSessionService
+                    .updateCurrentWorkoutSessionTitle(newText);
+              },
+              onTapOutside: (event) {
+                FocusManager.instance.primaryFocus?.unfocus();
+              },
+              style: const TextStyle(
                 color: Colors.white,
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
