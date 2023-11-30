@@ -45,7 +45,7 @@ class TopNavBar extends StatelessWidget implements PreferredSizeWidget {
               },
             )
           : IconButton(
-              icon: const Icon(Icons.menu),
+              icon: const Icon(Icons.menu, color: Colors.white),
               onPressed: () {
                 // Will lead to Search friends page
               },
