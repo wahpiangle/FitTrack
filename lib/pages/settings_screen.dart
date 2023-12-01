@@ -22,6 +22,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   late String username = '';
   late String profileImage = '';
   late bool isAnonymous = false;
+  late bool isSignInWithGoogle = false;
 
   @override
   void initState() {
@@ -31,6 +32,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   Future<void> _loadUserData() async {
     _prefs = await SharedPreferences.getInstance();
+    User? currentUser = AuthService().getCurrentUser();
     bool fetchedIsAnonymous =
         AuthService().getCurrentUser()?.isAnonymous ?? false;
 
@@ -40,6 +42,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
         _loadFirebaseUserData();
       } else {
         _loadAnonymousUserData();
+      }
+    });
+
+    setState(() {
+      isSignInWithGoogle = currentUser?.providerData.first.providerId == 'google.com';
+      if (!isSignInWithGoogle) {
+        if (currentUser == null || currentUser.isAnonymous) {
+          _loadAnonymousUserData();
+        } else {
+          _loadFirebaseUserData();
+        }
       }
     });
   }
@@ -218,28 +231,32 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         // Navigate to the Privacy Policy screen
                       },
                     ),
-                    ProfileMenuItem(
-                      title: isAnonymous ? "Sign Up / Log In" : "Edit Password",
-                      icon: Icons.key_outlined,
-                      onPressed: () {
-                        // Navigate to the corresponding screen based on login state
-                        if (isAnonymous) {
+                    if ((isAnonymous)) // User logged in anonymous
+                      ProfileMenuItem(
+                        title: "Sign Up / Log In",
+                        icon: Icons.person,
+                        onPressed: () {
                           // Navigate to sign-up or login screen
                           Navigator.of(context).push(
                             MaterialPageRoute(
                               builder: (context) => const SettingsSignup(),
                             ),
                           );
-                        } else {
+                        },
+                      )
+                    else if (!isSignInWithGoogle) // User logged in with email and password
+                      ProfileMenuItem(
+                        title: "Edit Password",
+                        icon: Icons.key_outlined,
+                        onPressed: () {
                           // Navigate to edit password screen
                           Navigator.of(context).push(
                             MaterialPageRoute(
                               builder: (context) => const EditPassword(),
                             ),
                           );
-                        }
-                      },
-                    ),
+                        },
+                      ),
                     ProfileMenuItem(
                       title: "Terms and Conditions",
                       icon: Icons.gavel,
