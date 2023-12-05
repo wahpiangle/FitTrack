@@ -60,7 +60,13 @@
           "type": 9
         }
       ],
-      "relations": []
+      "relations": [
+        {
+          "id": "8:1451413018537550514",
+          "name": "exercisesSetsInfo",
+          "targetId": "10:1820858489364473134"
+        }
+      ]
     },
     {
       "id": "5:4284795017742900900",
@@ -235,7 +241,7 @@
   ],
   "lastEntityId": "11:4929714596174845997",
   "lastIndexId": "9:7303140844689639292",
-  "lastRelationId": "7:7783041778513810204",
+  "lastRelationId": "8:1451413018537550514",
   "lastSequenceId": "0:0",
   "modelVersion": 5,
   "modelVersionParserMinimum": 5,

@@ -24,7 +24,18 @@ class WorkoutSessionService {
         .map((query) => query.find());
   }
 
+  WorkoutSession? getWorkoutSession(int workoutSessionId) {
+    return workoutSessionBox.get(workoutSessionId);
+  }
+
   void removeWorkoutSession(int workoutSessionId) {
+    WorkoutSession workoutSession = getWorkoutSession(workoutSessionId)!;
+    for (var exercisesSetsInfo in workoutSession.exercisesSetsInfo) {
+      for (var exerciseSet in exercisesSetsInfo.exerciseSets) {
+        exerciseSetBox.remove(exerciseSet.id);
+      }
+      exercisesSetsInfoBox.remove(exercisesSetsInfo.id);
+    }
     workoutSessionBox.remove(workoutSessionId);
   }
 

@@ -64,6 +64,7 @@ class ObjectBox {
         currentWorkoutSessionBox: _currentWorkoutSessionBox,
         exercisesSetsInfoBox: _exercisesSetsInfoBox,
         exerciseSetBox: _exerciseSetBox,
+        exerciseBox: _exerciseBox,
       );
 
   WorkoutSessionService get workoutSessionService => WorkoutSessionService(
@@ -133,15 +134,6 @@ class ObjectBox {
 
 // check history
   void test() {
-    print(_workoutSessionBox.getAll());
-    List<ExercisesSetsInfo> exercisesSetsInfo =
-        _workoutSessionBox.getAll().first.exercisesSetsInfo;
-    exercisesSetsInfo.forEach((element) {
-      element.exerciseSets.forEach((element) {
-        print(element.reps);
-      });
-    });
-
     // _exercisesSetsInfoBox.removeAll();
     // _workoutSessionBox.removeAll();
   }

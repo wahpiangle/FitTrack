@@ -8,11 +8,13 @@ class CurrentWorkoutSessionService {
   Box<CurrentWorkoutSession> currentWorkoutSessionBox;
   Box<ExercisesSetsInfo> exercisesSetsInfoBox;
   Box<ExerciseSet> exerciseSetBox;
+  Box<Exercise> exerciseBox;
 
   CurrentWorkoutSessionService({
     required this.currentWorkoutSessionBox,
     required this.exercisesSetsInfoBox,
     required this.exerciseSetBox,
+    required this.exerciseBox,
   });
 
   Stream<CurrentWorkoutSession> watchCurrentWorkoutSession() {
@@ -38,9 +40,11 @@ class CurrentWorkoutSessionService {
   void addExerciseToCurrentWorkoutSession(Exercise exercise) {
     CurrentWorkoutSession currentWorkoutSession = getCurrentWorkoutSession();
     final exercisesSetInfo = ExercisesSetsInfo();
+    exercise.exercisesSetsInfo.add(exercisesSetInfo);
     exercisesSetInfo.exercise.target = exercise;
     exercisesSetInfo.exerciseSets.add(ExerciseSet(reps: 0, weight: 0));
     currentWorkoutSession.exercisesSetsInfo.add(exercisesSetInfo);
+    exerciseBox.put(exercise);
     exercisesSetsInfoBox.put(exercisesSetInfo);
     currentWorkoutSessionBox.put(currentWorkoutSession);
   }
