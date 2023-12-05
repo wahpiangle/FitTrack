@@ -31,10 +31,10 @@ class ExerciseListItem extends StatelessWidget {
             );
           },
           child: ListTile(
-            horizontalTitleGap: -10,
+            horizontalTitleGap: -20,
             leading: SizedBox(
-              height: 60,
-              width: 60,
+              height: 120,
+              width: 120,
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(300.0),
                 child: exercise.imagePath == ''
