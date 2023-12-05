@@ -78,9 +78,17 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   onPressed: () async {
                     try {
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return const Center(child: CircularProgressIndicator());
+                        },
+                      );
                       await _auth.signInWithGoogle();
+                      Future.microtask(() => Navigator.of(context).pop());
                     } catch (e) {
                       if (mounted) {
+                        Future.microtask(() => Navigator.of(context).pop());
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content: Text(e.toString()),
@@ -185,7 +193,14 @@ class _LoginScreenState extends State<LoginScreen> {
               Center(
                 child: TextButton(
                   onPressed: () async {
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return const Center(child: CircularProgressIndicator());
+                      },
+                    );
                     dynamic result = await _auth.signInAnon();
+                    Future.microtask(() => Navigator.of(context).pop());
                   },
                   style: ButtonStyle(
                     shape: MaterialStateProperty.all(

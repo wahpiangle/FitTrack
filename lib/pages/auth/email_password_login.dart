@@ -108,13 +108,22 @@ class _EmailPasswordLoginState extends State<EmailPasswordLogin> {
                     onPressed: () async {
                       if (_formKey.currentState!.validate()) {
                         try {
+                          showDialog(
+                              context: context,
+                              builder: (context) {
+                                return const Center(child: CircularProgressIndicator());
+                              },
+                          );
                           await _auth.signInWithEmailAndPassword(email, password);
+                          Future.microtask(() => Navigator.of(context).pop());
                           Future.microtask(() => Navigator.pop(context));
                           errorMessage= '';
                         } on FirebaseAuthException catch (error) {
                           if (error.code == "invalid-email"){
+                            Future.microtask(() => Navigator.of(context).pop());
                             errorMessage = 'The email format is invalid.';
                           } else {
+                            Future.microtask(() => Navigator.of(context).pop());
                             errorMessage = 'The email or password you\'ve entered is incorrect.';
                           }
                         }
