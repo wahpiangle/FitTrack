@@ -6,8 +6,7 @@ import 'package:group_project/pages/workout/components/tiles/components/set_labe
 
 class SetTiles extends StatefulWidget {
   final ExercisesSetsInfo exercisesSetsInfo;
-  final void Function(int exerciseSetId, ExercisesSetsInfo exercisesSetsInfo)
-      removeSet;
+  final void Function(int exerciseSetId) removeSet;
   final void Function(ExercisesSetsInfo exercisesSetsInfo) addSet;
   final void Function(int exerciseSetId) setIsCompleted;
 
@@ -78,8 +77,12 @@ class _SetTilesState extends State<SetTiles> {
                       child: Dismissible(
                         key: Key(set.id.toString()),
                         direction: DismissDirection.endToStart,
-                        onDismissed: (direction) => {
-                          widget.removeSet(set.id, widget.exercisesSetsInfo),
+                        onDismissed: (direction) {
+                          widget.removeSet(set.id);
+                          setState(() {
+                            widget.exercisesSetsInfo.exerciseSets
+                                .removeWhere((element) => element.id == set.id);
+                          });
                         },
                         background: Container(
                           color: Colors.red,
@@ -120,7 +123,7 @@ class _SetTilesState extends State<SetTiles> {
                                       color: Colors.white,
                                     ),
                                     textAlign: TextAlign.center,
-                                    initialValue: "${set.weight}",
+                                    initialValue: "${set.weight ?? ''}",
                                     decoration: const InputDecoration(
                                       contentPadding: EdgeInsets.all(0),
                                       filled: true,
@@ -128,9 +131,13 @@ class _SetTilesState extends State<SetTiles> {
                                       border: OutlineInputBorder(
                                         borderSide: BorderSide.none,
                                       ),
+                                      hintText: "0",
+                                      hintStyle: TextStyle(
+                                        color: Colors.grey,
+                                      ),
                                     ),
                                     onChanged: (value) => {
-                                      set.weight = int.parse(value),
+                                      set.weight = int.tryParse(value),
                                       objectBox.updateExerciseSet(set),
                                     },
                                   ),
@@ -152,7 +159,7 @@ class _SetTilesState extends State<SetTiles> {
                                       color: Colors.white,
                                     ),
                                     textAlign: TextAlign.center,
-                                    initialValue: "${set.reps}",
+                                    initialValue: "${set.reps ?? ''}",
                                     decoration: const InputDecoration(
                                       contentPadding: EdgeInsets.all(0),
                                       filled: true,
@@ -160,9 +167,13 @@ class _SetTilesState extends State<SetTiles> {
                                       border: OutlineInputBorder(
                                         borderSide: BorderSide.none,
                                       ),
+                                      hintText: "0",
+                                      hintStyle: TextStyle(
+                                        color: Colors.grey,
+                                      ),
                                     ),
                                     onChanged: (value) => {
-                                      set.reps = int.parse(value),
+                                      set.reps = int.tryParse(value),
                                       objectBox.updateExerciseSet(set),
                                     },
                                   ),
@@ -205,7 +216,11 @@ class _SetTilesState extends State<SetTiles> {
               return Dismissible(
                 key: Key(set.id.toString()),
                 onDismissed: (direction) {
-                  widget.removeSet(set.id, widget.exercisesSetsInfo);
+                  widget.removeSet(set.id);
+                  setState(() {
+                    widget.exercisesSetsInfo.exerciseSets
+                        .removeWhere((element) => element.id == set.id);
+                  });
                 },
                 direction: DismissDirection.endToStart,
                 background: Container(
@@ -249,7 +264,7 @@ class _SetTilesState extends State<SetTiles> {
                               color: Colors.white,
                             ),
                             textAlign: TextAlign.center,
-                            initialValue: "${set.weight}",
+                            initialValue: "${set.weight ?? ''}",
                             decoration: const InputDecoration(
                               contentPadding: EdgeInsets.all(0),
                               filled: true,
@@ -257,9 +272,13 @@ class _SetTilesState extends State<SetTiles> {
                               border: OutlineInputBorder(
                                 borderSide: BorderSide.none,
                               ),
+                              hintText: "0",
+                              hintStyle: TextStyle(
+                                color: Colors.grey,
+                              ),
                             ),
                             onChanged: (value) => {
-                              set.weight = int.parse(value),
+                              set.weight = int.tryParse(value),
                               objectBox.updateExerciseSet(set),
                             },
                           ),
@@ -280,7 +299,7 @@ class _SetTilesState extends State<SetTiles> {
                               color: Colors.white,
                             ),
                             textAlign: TextAlign.center,
-                            initialValue: "${set.reps}",
+                            initialValue: "${set.reps ?? ''}",
                             decoration: const InputDecoration(
                               contentPadding: EdgeInsets.all(0),
                               filled: true,
@@ -288,9 +307,13 @@ class _SetTilesState extends State<SetTiles> {
                               border: OutlineInputBorder(
                                 borderSide: BorderSide.none,
                               ),
+                              hintText: "0",
+                              hintStyle: TextStyle(
+                                color: Colors.grey,
+                              ),
                             ),
                             onChanged: (value) => {
-                              set.reps = int.parse(value),
+                              set.reps = int.tryParse(value),
                               objectBox.updateExerciseSet(set),
                             },
                           ),

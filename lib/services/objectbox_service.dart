@@ -101,16 +101,26 @@ class ObjectBox {
 //workout session
 
   void addSetToExercise(ExercisesSetsInfo exercisesSetsInfo) {
-    exercisesSetsInfo.exerciseSets.add(ExerciseSet(reps: 0, weight: 0));
+    ExerciseSet exerciseSet = ExerciseSet();
+    exerciseSet.exerciseSetInfo.target = exercisesSetsInfo;
+    exercisesSetsInfo.exerciseSets.add(exerciseSet);
     _exercisesSetsInfoBox.put(exercisesSetsInfo);
   }
 
   void removeSetFromExercise(int setId) {
+    ExerciseSet exerciseSet = _exerciseSetBox.get(setId)!;
+    ExercisesSetsInfo? exerciseSetInfo = exerciseSet.exerciseSetInfo.target;
+    if (exerciseSetInfo?.exerciseSets.length == 1) {
+      _exercisesSetsInfoBox.remove(exerciseSetInfo!.id);
+    }
     _exerciseSetBox.remove(setId);
   }
 
   void completeExerciseSet(int exerciseSetId) {
     ExerciseSet exerciseSet = _exerciseSetBox.get(exerciseSetId)!;
+    if (exerciseSet.reps == null || exerciseSet.weight == null) {
+      return;
+    }
     exerciseSet.isCompleted = !exerciseSet.isCompleted;
     _exerciseSetBox.put(exerciseSet);
   }
@@ -134,7 +144,14 @@ class ObjectBox {
 
 // check history
   void test() {
+    CurrentWorkoutSession currentWorkoutSession =
+        currentWorkoutSessionService.getCurrentWorkoutSession();
+    // _exerciseSetBox.removeAll();
     // _exercisesSetsInfoBox.removeAll();
-    // _workoutSessionBox.removeAll();
+    print(
+        "exercises sets info box is: ${_exercisesSetsInfoBox.getAll().length}");
+    print("exercises sets box is: ${_exerciseSetBox.getAll().length}");
+    print(
+        "length of sets ${currentWorkoutSession.exercisesSetsInfo.first.exerciseSets.length}");
   }
 }

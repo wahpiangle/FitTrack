@@ -42,7 +42,9 @@ class CurrentWorkoutSessionService {
     final exercisesSetInfo = ExercisesSetsInfo();
     exercise.exercisesSetsInfo.add(exercisesSetInfo);
     exercisesSetInfo.exercise.target = exercise;
-    exercisesSetInfo.exerciseSets.add(ExerciseSet(reps: 0, weight: 0));
+    ExerciseSet exerciseSet = ExerciseSet();
+    exerciseSet.exerciseSetInfo.target = exercisesSetInfo;
+    exercisesSetInfo.exerciseSets.add(exerciseSet);
     currentWorkoutSession.exercisesSetsInfo.add(exercisesSetInfo);
     exerciseBox.put(exercise);
     exercisesSetsInfoBox.put(exercisesSetInfo);

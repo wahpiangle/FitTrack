@@ -23,16 +23,12 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
   late List<Exercise> exerciseData;
   TextEditingController weightsController = TextEditingController();
   TextEditingController repsController = TextEditingController();
-  Stream<CurrentWorkoutSession>? _currentWorkoutSessionStream;
-
   List<Widget> setBorders = [];
 
   @override
   void initState() {
     super.initState();
     exerciseData = widget.exerciseData;
-    _currentWorkoutSessionStream =
-        objectBox.currentWorkoutSessionService.watchCurrentWorkoutSession();
     _controller = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 1),
@@ -67,33 +63,6 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
   void selectExercise(Exercise selectedExercise) {
     objectBox.currentWorkoutSessionService
         .addExerciseToCurrentWorkoutSession(selectedExercise);
-  }
-
-  Widget createSetBorder(int weight, int reps) {
-    return Container(
-      decoration: BoxDecoration(
-        border: Border.all(
-          color: Colors.white,
-          width: 2.0,
-        ),
-        borderRadius: BorderRadius.circular(10),
-      ),
-      margin: const EdgeInsets.all(10),
-      padding: const EdgeInsets.all(10),
-      child: Row(
-        children: [
-          Text("Weight: $weight"),
-          const SizedBox(width: 10),
-          Text("Reps: $reps"),
-        ],
-      ),
-    );
-  }
-
-  Widget buildSetBordersList() {
-    return ListView(
-      children: setBorders,
-    );
   }
 
   @override
@@ -153,6 +122,12 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
             ],
           );
         });
+  }
+
+  void removeSet(int exerciseSetId) {
+    setState(() {
+      objectBox.removeSetFromExercise(exerciseSetId);
+    });
   }
 
   @override
@@ -245,7 +220,8 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
       ),
       backgroundColor: const Color(0xFF1A1A1A),
       body: StreamBuilder<CurrentWorkoutSession>(
-        stream: _currentWorkoutSessionStream,
+        stream:
+            objectBox.currentWorkoutSessionService.watchCurrentWorkoutSession(),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
             return const Center(child: CircularProgressIndicator());
@@ -256,9 +232,10 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
                 children: [
                   ExerciseTile(
                     exerciseData: exerciseData,
-                    selectedExercises:
+                    exercisesSetsInfo:
                         snapshot.data!.exercisesSetsInfo.toList(),
                     selectExercise: selectExercise,
+                    removeSet: removeSet,
                   ),
                 ],
               ),
