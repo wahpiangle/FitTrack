@@ -98,8 +98,6 @@ class ObjectBox {
     return _categoryBox.getAll();
   }
 
-//workout session
-
   void addSetToExercise(ExercisesSetsInfo exercisesSetsInfo) {
     ExerciseSet exerciseSet = ExerciseSet();
     exerciseSet.exerciseSetInfo.target = exercisesSetsInfo;

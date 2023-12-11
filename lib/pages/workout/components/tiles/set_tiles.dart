@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:group_project/constants/themes/app_colours.dart';
 import 'package:group_project/main.dart';
 import 'package:group_project/models/exercise_set.dart';
 import 'package:group_project/models/exercises_sets_info.dart';
@@ -114,7 +115,7 @@ class _SetTilesState extends State<SetTiles> {
                                 flex: 1,
                                 child: Container(
                                   decoration: BoxDecoration(
-                                    color: const Color(0xFF333333),
+                                    color: AppColours.primaryBright,
                                     borderRadius: BorderRadius.circular(5),
                                   ),
                                   child: TextFormField(
@@ -150,7 +151,7 @@ class _SetTilesState extends State<SetTiles> {
                                   margin:
                                       const EdgeInsets.symmetric(vertical: 10),
                                   decoration: BoxDecoration(
-                                    color: const Color(0xFF333333),
+                                    color: AppColours.primaryBright,
                                     borderRadius: BorderRadius.circular(5),
                                   ),
                                   child: TextFormField(
@@ -190,7 +191,7 @@ class _SetTilesState extends State<SetTiles> {
                                   ),
                                   color: set.isCompleted
                                       ? Colors.green[300]
-                                      : const Color(0xFF333333),
+                                      : AppColours.primaryBright,
                                   child: InkWell(
                                     onTap: () {
                                       widget.setIsCompleted(set.id);
@@ -255,7 +256,7 @@ class _SetTilesState extends State<SetTiles> {
                         child: Container(
                           margin: const EdgeInsets.symmetric(vertical: 10),
                           decoration: BoxDecoration(
-                            color: const Color(0xFF333333),
+                            color: AppColours.primaryBright,
                             borderRadius: BorderRadius.circular(5),
                           ),
                           child: TextFormField(
@@ -290,7 +291,7 @@ class _SetTilesState extends State<SetTiles> {
                         child: Container(
                           margin: const EdgeInsets.symmetric(vertical: 10),
                           decoration: BoxDecoration(
-                            color: const Color(0xFF333333),
+                            color: AppColours.primaryBright,
                             borderRadius: BorderRadius.circular(5),
                           ),
                           child: TextFormField(
@@ -330,7 +331,7 @@ class _SetTilesState extends State<SetTiles> {
                           ),
                           color: set.isCompleted
                               ? Colors.green[300]
-                              : const Color(0xFF333333),
+                              : AppColours.primaryBright,
                           child: InkWell(
                             onTap: () {
                               widget.setIsCompleted(set.id);
@@ -358,7 +359,7 @@ class _SetTilesState extends State<SetTiles> {
           child: ElevatedButton(
             style: ButtonStyle(
               backgroundColor:
-                  MaterialStateProperty.all<Color>(const Color(0xFF333333)),
+                  MaterialStateProperty.all<Color>(AppColours.primaryBright),
               shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                 RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(15.0),
