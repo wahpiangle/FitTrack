@@ -77,7 +77,7 @@ class WorkoutCard extends StatelessWidget {
               return Row(
                 children: [
                   Text(
-                    "${workoutSession.exercisesSetsInfo[index].exerciseSets.length} x ",
+                    "${workoutSession.exercisesSetsInfo[index].exerciseSets.length} × ",
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: 15,
