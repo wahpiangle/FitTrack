@@ -3,10 +3,12 @@ import 'package:group_project/main.dart';
 
 class WorkoutMenuAnchor extends StatelessWidget {
   final int workoutSessionId;
+  final bool isDetailPage;
 
   const WorkoutMenuAnchor({
     super.key,
     required this.workoutSessionId,
+    this.isDetailPage = false,
   });
 
   void _deleteWorkoutSessionDialog(BuildContext context) {
@@ -39,6 +41,9 @@ class WorkoutMenuAnchor extends StatelessWidget {
                 objectBox.workoutSessionService
                     .removeWorkoutSession(workoutSessionId);
                 Navigator.of(context).pop();
+                if (isDetailPage) {
+                  Navigator.of(context).pop();
+                }
               },
               child: const Text('Delete', style: TextStyle(color: Colors.red)),
             ),
@@ -75,29 +80,58 @@ class WorkoutMenuAnchor extends StatelessWidget {
           },
         );
       },
-      menuChildren: List<MenuItemButton>.generate(
-        1,
-        (index) => MenuItemButton(
-          style: ButtonStyle(
-            surfaceTintColor: MaterialStateProperty.all(
-              Colors.transparent,
-            ),
-            backgroundColor: MaterialStateProperty.all(
-              const Color(0xFF333333),
-            ),
-          ),
-          child: const Text(
-            'Delete',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 18,
-            ),
-          ),
-          onPressed: () {
-            _deleteWorkoutSessionDialog(context);
-          },
-        ),
-      ),
+      menuChildren: List<MenuItemButton>.generate(2, (index) {
+        switch (index) {
+          case 0:
+            return MenuItemButton(
+              style: ButtonStyle(
+                padding: MaterialStateProperty.all(
+                  const EdgeInsets.symmetric(
+                    horizontal: 20,
+                  ),
+                ),
+                surfaceTintColor: MaterialStateProperty.all(Colors.transparent),
+                backgroundColor:
+                    MaterialStateProperty.all(const Color(0xFF333333)),
+              ),
+              child: const Text(
+                'Edit',
+                style: TextStyle(color: Colors.white, fontSize: 18),
+              ),
+              onPressed: () {
+                // TODO edit workout session
+              },
+            );
+          case 1:
+            return MenuItemButton(
+              style: ButtonStyle(
+                surfaceTintColor: MaterialStateProperty.all(
+                  Colors.transparent,
+                ),
+                backgroundColor: MaterialStateProperty.all(
+                  const Color(0xFF333333),
+                ),
+                padding: MaterialStateProperty.all(
+                  const EdgeInsets.symmetric(
+                    horizontal: 20,
+                  ),
+                ),
+              ),
+              child: const Text(
+                'Delete',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 18,
+                ),
+              ),
+              onPressed: () {
+                _deleteWorkoutSessionDialog(context);
+              },
+            );
+          default:
+            throw Exception('Invalid menu item index');
+        }
+      }),
     );
   }
 }
