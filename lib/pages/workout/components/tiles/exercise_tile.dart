@@ -8,7 +8,7 @@ import 'package:group_project/pages/workout/components/tiles/set_tiles.dart';
 import 'package:group_project/pages/workout/components/workout_header.dart';
 import 'package:group_project/pages/workout/components/tiles/components/timer_provider.dart';
 import 'package:provider/provider.dart';
-
+import 'package:group_project/pages/workout/components/tiles/components/rest_timer_provider.dart';
 
 class ExerciseTile extends StatefulWidget {
   final List<Exercise> exerciseData;
@@ -31,12 +31,15 @@ class ExerciseTile extends StatefulWidget {
 
 class _ExerciseTileState extends State<ExerciseTile> {
   late TimerProvider timerProvider;
+  late RestTimerProvider restTimerProvider;
   bool isSetCompleted = false;
+  bool displayRestTimer = false;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     timerProvider = Provider.of<TimerProvider>(context);
+    restTimerProvider = Provider.of<RestTimerProvider>(context); // Initialize restTimerProvider
   }
 
   void removeSet(int exerciseSetId, ExercisesSetsInfo exercisesSetsInfo) {
@@ -69,7 +72,17 @@ class _ExerciseTileState extends State<ExerciseTile> {
           exerciseSet.isCompleted = !exerciseSet.isCompleted;
           widget.timerProvider.isSetCompleted = exerciseSet.isCompleted;
 
-
+          if (exerciseSet.isCompleted) {
+            // Start the rest timer when a set is completed
+            restTimerProvider.startRestTimer(timerProvider);
+            // Set the flag to display the rest timer
+            displayRestTimer = true;
+          } else {
+            // Cancel the rest timer when a set is not completed
+            restTimerProvider.stopRestTimer(timerProvider);
+            // Set the flag to hide the rest timer
+            displayRestTimer = false;
+          }
         });
       }
     });
@@ -159,6 +172,18 @@ class _ExerciseTileState extends State<ExerciseTile> {
                           ),
                         ),
                         const SizedBox(width: 10),
+                        if (displayRestTimer) // Display the rest timer conditionally
+                          Consumer<TimerProvider>(
+                            builder: (context, timerProvider, child) {
+                              return Text(
+                                  "Rest Timer: ${formatDuration(restTimerProvider.restTimerDuration)}",
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                ),
+                              );
+                            },
+                          ),
                       ],
                     ),
                   ),

@@ -88,15 +88,20 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
   void selectExercise(Exercise selectedExercise) {
     objectBox.addExerciseToCurrentWorkoutSession(selectedExercise);
     final timerProvider = Provider.of<TimerProvider>(context, listen: false);
+    final restTimerProvider = Provider.of<RestTimerProvider>(context, listen: false);
+
     if (!_isTimerRunning) {
       timerProvider.startTimer();
       timerProvider.startExerciseTimer(selectedExercise.id);
       setState(() {
         _isTimerRunning = true;
       });
-
     }
-
+    if (restTimerProvider.isRestTimerEnabled) {
+      timerProvider.startRestTimer();
+    } else {
+      timerProvider.startExerciseTimer(selectedExercise.id);
+    }
   }
 
 
@@ -141,6 +146,7 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
   @override
   Widget build(BuildContext context) {
     final timerProvider = Provider.of<TimerProvider>(context);
+    final restTimerProvider = Provider.of<RestTimerProvider>(context);
     return Scaffold(
         appBar: AppBar(
           leading: IconButton(
@@ -170,6 +176,7 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
               ),
             ),
           ],
+
           title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -207,6 +214,45 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
                       selectExercise: selectExercise,
                       timerProvider: timerProvider,
                     ),
+                    Row(
+                      children: [
+                      Text(
+                      'Rest Timer',
+                      style: TextStyle(
+                        color: Colors.white, // Set the text color to white
+                      ),
+                    ),
+                        Switch(
+                          value: restTimerProvider.isRestTimerEnabled,
+                          onChanged: (value) {
+                            if (value) {
+                              // Start rest timer
+                              timerProvider.startRestTimer();
+                            } else {
+                              // Stop rest timer
+                              timerProvider.stopRestTimer();
+                            }
+                            restTimerProvider.toggleRestTimer(value);
+                          },
+                        ),
+                      ],
+                    ),
+                    if (restTimerProvider.isRestTimerEnabled)
+                      TextFormField(
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                        decoration: InputDecoration(
+                          labelText: 'Rest Time (hh:mm:ss)',
+                          labelStyle: TextStyle(
+                            color: Colors.white,
+                          ),
+                        ),
+                        onChanged: (value) {
+                          final duration = parseDuration(value);
+                          restTimerProvider.setRestTimerDuration(duration);
+                        },
+                      ),
                   ],
                 ),
               );
@@ -229,5 +275,19 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
     return "$hours:$minutes:$remainingSeconds";
   }
 
+  int parseDuration(String input) {
+    try {
+      // Parse the input in the format of hh:mm:ss and return the total seconds
+      // Replace this with your actual parsing logic
+      List<String> parts = input.split(':');
+      int hours = int.parse(parts[0]);
+      int minutes = int.parse(parts[1]);
+      int seconds = int.parse(parts[2]);
+      return hours * 3600 + minutes * 60 + seconds;
+    } catch (e) {
+      // Handle parsing errors, return a default value
+      return 0;
+    }
+  }
 
 }

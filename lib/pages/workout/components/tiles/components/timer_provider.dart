@@ -8,7 +8,13 @@ class TimerProvider with ChangeNotifier {
   int _currentDuration = 0;
   bool _isTimerRunning = false;
   bool _isSetCompleted = false;
+  int _restTimeInSeconds = 60; // Default rest time
+  int get restTimeInSeconds => _restTimeInSeconds;
 
+  set restTimeInSeconds(int value) {
+    _restTimeInSeconds = value;
+    notifyListeners();
+  }
   TimerProvider() {
     // startTimer();
   }
@@ -19,7 +25,6 @@ class TimerProvider with ChangeNotifier {
     _isSetCompleted = value;
     notifyListeners();
   }
-
 
   void resetTimer() {
     _currentDuration = 0;
@@ -56,6 +61,31 @@ class TimerProvider with ChangeNotifier {
     _exerciseTimers[exerciseId]?.cancel();
     _exerciseTimers.remove(exerciseId);
     notifyListeners();
+  }
+
+  // New method to start the rest timer
+  void startRestTimer() {
+    if (!_isTimerRunning) {
+      _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+        if (_currentDuration >= _restTimeInSeconds) {
+          stopTimer();
+          // Handle rest timer completion, e.g., start next exercise
+        } else {
+          _currentDuration++;
+          notifyListeners();
+        }
+      });
+      _isTimerRunning = true;
+    }
+  }
+  // New method to stop the rest timer
+  void stopRestTimer() {
+    stopTimer();
+  }
+
+  void cancelRestTimer() {
+    stopTimer();
+    resetTimer();
   }
 
   @override
