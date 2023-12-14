@@ -249,6 +249,18 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
                           restTimerProvider.setRestTimerDuration(duration);
                         },
                       ),
+                    if (restTimerProvider.isRestTimerEnabled) // Display the rest timer conditionally
+                      Consumer<RestTimerProvider>(
+                        builder: (context, restTimerProvider, child) {
+                          return Text(
+                            "Rest Timer: ${formatDuration(restTimerProvider.currentRestTimerDuration)}",
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                            ),
+                          );
+                        },
+                      ),
                   ],
                 ),
               );

@@ -32,14 +32,19 @@ class RestTimerProvider with ChangeNotifier {
         if (_currentDuration <= 0) {
           stopRestTimer();
         } else {
-          _currentDuration--;
-          print('duration:$_currentDuration');
+          // Print the current duration for debugging
+          print('duration: $_currentDuration');
+
+          // Update the UI by calling notifyListeners
           notifyListeners();
+
+          // Decrement the duration
+          _currentDuration--;
         }
       });
-      notifyListeners();
     }
   }
+
 
   //method to stop the rest timer
   void stopRestTimer() {
