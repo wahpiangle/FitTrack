@@ -40,10 +40,29 @@ class _ChooseExerciseState extends State<ChooseExercise> {
     });
   }
 
+
+  //MODIFIED
   void _selectExercise(Exercise selectedExercise) {
-    Navigator.pop(context);
-    widget.selectExercise(selectedExercise);
+    // Show floating action button to add exercise
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Add Exercise ${selectedExercise.name}?'),
+        behavior: SnackBarBehavior.floating,
+        duration: const Duration(days: 365), // Make the SnackBar stay
+        action: SnackBarAction(
+          label: 'Add',
+          onPressed: () {
+            // Add exercise to the workout
+            widget.selectExercise(selectedExercise);
+            Navigator.pop(context);
+          },
+        ),
+      ),
+    );
   }
+
+
+
 
   @override
   Widget build(BuildContext context) {
