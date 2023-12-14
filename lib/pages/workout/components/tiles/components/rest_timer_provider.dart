@@ -28,6 +28,9 @@ class RestTimerProvider with ChangeNotifier {
       print('Rest Timer started!');
       _currentDuration = _restTimerDuration;
 
+      // Cancel the existing timer if it's already running
+      _timer?.cancel();
+
       _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
         if (_currentDuration <= 0) {
           stopRestTimer();
@@ -44,6 +47,7 @@ class RestTimerProvider with ChangeNotifier {
       });
     }
   }
+
 
 
   //method to stop the rest timer

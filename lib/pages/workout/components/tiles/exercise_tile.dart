@@ -174,15 +174,6 @@ class _ExerciseTileState extends State<ExerciseTile> {
                           ),
                         ),
                         const SizedBox(width: 10),
-                        if (displayRestTimer)
-                        // Display the rest timer using the currentRestTimerDuration
-                          Text(
-                            "Rest Timer: ${formatDuration(restTimerProvider.currentRestTimerDuration)}",
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
-                            ),
-                          ),
                       ],
                     ),
                   ),
