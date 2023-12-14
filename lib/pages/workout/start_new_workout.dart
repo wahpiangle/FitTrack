@@ -92,16 +92,12 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
 
     if (!_isTimerRunning) {
       timerProvider.startTimer();
-      timerProvider.startExerciseTimer(selectedExercise.id);
+     // timerProvider.startExerciseTimer(selectedExercise.id);
       setState(() {
         _isTimerRunning = true;
       });
     }
-    if (restTimerProvider.isRestTimerEnabled) {
-      timerProvider.startRestTimer();
-    } else {
-      timerProvider.startExerciseTimer(selectedExercise.id);
-    }
+
   }
 
 
@@ -227,10 +223,10 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
                           onChanged: (value) {
                             if (value) {
                               // Start rest timer
-                              timerProvider.startRestTimer();
+                              restTimerProvider.startRestTimer();
                             } else {
                               // Stop rest timer
-                              timerProvider.stopRestTimer();
+                              restTimerProvider.stopRestTimer();
                             }
                             restTimerProvider.toggleRestTimer(value);
                           },

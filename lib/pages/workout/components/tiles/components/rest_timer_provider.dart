@@ -1,13 +1,16 @@
-import 'package:flutter/material.dart';
-import 'package:group_project/pages/workout/components/tiles/components/timer_provider.dart';
+import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 
 class RestTimerProvider with ChangeNotifier {
   bool _isRestTimerEnabled = false;
-  int _restTimerDuration = 120; // default rest timer value in seconds
+  int _restTimerDuration = 120;
+  int _currentDuration = 0;
+  Timer? _timer;
 
   bool get isRestTimerEnabled => _isRestTimerEnabled;
   int get restTimerDuration => _restTimerDuration;
+  int get currentRestTimerDuration => _currentDuration;
 
   void toggleRestTimer(bool value) {
     _isRestTimerEnabled = value;
@@ -19,15 +22,36 @@ class RestTimerProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void startRestTimer(TimerProvider timerProvider) {
+  // method to start the rest timer
+  void startRestTimer() {
     if (_isRestTimerEnabled) {
-      timerProvider.startRestTimer();
+      print('Rest Timer started!');
+      _currentDuration = _restTimerDuration;
+
+      _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+        if (_currentDuration <= 0) {
+          stopRestTimer();
+        } else {
+          _currentDuration--;
+          print('duration:$_currentDuration');
+          notifyListeners();
+        }
+      });
+      notifyListeners();
     }
   }
 
-  void stopRestTimer(TimerProvider timerProvider) {
-    if (_isRestTimerEnabled) {
-      timerProvider.stopRestTimer();
-    }
+  //method to stop the rest timer
+  void stopRestTimer() {
+    _timer?.cancel();
+    _timer = null;
+    _currentDuration = 0;
+    notifyListeners();
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
   }
 }
