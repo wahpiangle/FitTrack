@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:group_project/main.dart';
 import 'package:group_project/models/workout_session.dart';
+import 'package:group_project/pages/history/components/calendar_button.dart';
 import 'package:group_project/pages/history/components/workout_card.dart';
 
 class HistoryScreen extends StatefulWidget {
@@ -40,9 +41,22 @@ class _HistoryScreenState extends State<HistoryScreen> {
                   : ListView.builder(
                       itemCount: snapshot.data!.length,
                       itemBuilder: (context, index) {
-                        return WorkoutCard(
-                          workoutSession: snapshot.data![index],
-                        );
+                        if (index == 0) {
+                          return Column(
+                            children: [
+                              CalendarButton(
+                                workoutSessions: snapshot.data!,
+                              ),
+                              WorkoutCard(
+                                workoutSession: snapshot.data![index],
+                              ),
+                            ],
+                          );
+                        } else {
+                          return WorkoutCard(
+                            workoutSession: snapshot.data![index],
+                          );
+                        }
                       },
                     );
             }

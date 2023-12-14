@@ -150,6 +150,6 @@ class ObjectBox {
         "exercises sets info box is: ${_exercisesSetsInfoBox.getAll().length}");
     print("exercises sets box is: ${_exerciseSetBox.getAll().length}");
     print(
-        "length of sets ${currentWorkoutSession.exercisesSetsInfo.first.exerciseSets.length}");
+        "length of all workout sessions: ${_workoutSessionBox.getAll().length}");
   }
 }

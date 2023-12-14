@@ -26,7 +26,7 @@ class WorkoutCard extends StatelessWidget {
       },
       child: Card(
         margin: const EdgeInsets.symmetric(
-          vertical: 15,
+          vertical: 10,
         ),
         color: Colors.transparent,
         surfaceTintColor: Colors.transparent,

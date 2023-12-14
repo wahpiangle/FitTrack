@@ -1,4 +1,3 @@
-import 'package:group_project/models/exercise.dart';
 import 'package:group_project/models/exercise_set.dart';
 import 'package:group_project/models/exercises_sets_info.dart';
 import 'package:group_project/models/workout_session.dart';
@@ -26,6 +25,10 @@ class WorkoutSessionService {
 
   WorkoutSession? getWorkoutSession(int workoutSessionId) {
     return workoutSessionBox.get(workoutSessionId);
+  }
+
+  List<WorkoutSession> getAllWorkoutSessions() {
+    return workoutSessionBox.getAll();
   }
 
   void removeWorkoutSession(int workoutSessionId) {
