@@ -22,6 +22,7 @@ class RestTimerProvider with ChangeNotifier {
     notifyListeners();
   }
 
+
   // method to start the rest timer
   void startRestTimer() {
     if (_isRestTimerEnabled) {
