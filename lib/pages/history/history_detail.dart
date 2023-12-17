@@ -29,7 +29,8 @@ class HistoryDetail extends StatelessWidget {
           },
         ),
         actions: [
-          WorkoutMenuAnchor(workoutSessionId: workoutSession.id, isDetailPage: true)
+          WorkoutMenuAnchor(
+              workoutSessionId: workoutSession.id, isDetailPage: true)
         ],
       ),
       body: Container(
@@ -103,7 +104,8 @@ class HistoryDetail extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 6.0),
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 6.0),
                               child: Text(
                                 exercisesSetInfo.exercise.target!.name,
                                 style: const TextStyle(
@@ -123,8 +125,8 @@ class HistoryDetail extends StatelessWidget {
                                       child: Row(
                                         children: [
                                           Padding(
-                                            padding:
-                                                const EdgeInsets.only(right: 20),
+                                            padding: const EdgeInsets.only(
+                                                right: 20),
                                             child: Text(
                                               (setInfo.key + 1).toString(),
                                               style: TextStyle(

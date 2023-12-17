@@ -3,15 +3,28 @@ import 'package:group_project/main.dart';
 import 'package:group_project/models/workout_session.dart';
 import 'package:group_project/pages/history/components/calendar_button.dart';
 import 'package:group_project/pages/history/components/workout_card.dart';
+import 'package:scroll_to_index/scroll_to_index.dart';
 
 class HistoryScreen extends StatefulWidget {
-  const HistoryScreen({super.key});
+  const HistoryScreen({
+    super.key,
+  });
 
   @override
   State<HistoryScreen> createState() => _HistoryScreenState();
 }
 
 class _HistoryScreenState extends State<HistoryScreen> {
+  final AutoScrollController _scrollController = AutoScrollController();
+
+  void scrollToItem(int index) async {
+    await _scrollController.scrollToIndex(
+      index,
+      preferPosition: AutoScrollPosition.begin,
+    );
+    await _scrollController.highlight(index);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,6 +37,12 @@ class _HistoryScreenState extends State<HistoryScreen> {
         child: StreamBuilder<List<WorkoutSession>>(
           stream: objectBox.workoutSessionService.watchWorkoutSession(),
           builder: (context, snapshot) {
+            void getIndexByWorkoutSession(WorkoutSession workoutSession) {
+              final index = snapshot.data!
+                  .indexWhere((element) => element.id == workoutSession.id);
+              scrollToItem(index);
+            }
+
             if (!snapshot.hasData) {
               return const Center(
                 child: CircularProgressIndicator(),
@@ -38,26 +57,30 @@ class _HistoryScreenState extends State<HistoryScreen> {
                         fontSize: 20,
                       ),
                     ))
-                  : ListView.builder(
-                      itemCount: snapshot.data!.length,
-                      itemBuilder: (context, index) {
-                        if (index == 0) {
-                          return Column(
-                            children: [
-                              CalendarButton(
-                                workoutSessions: snapshot.data!,
-                              ),
-                              WorkoutCard(
-                                workoutSession: snapshot.data![index],
-                              ),
-                            ],
-                          );
-                        } else {
-                          return WorkoutCard(
-                            workoutSession: snapshot.data![index],
-                          );
-                        }
-                      },
+                  : Column(
+                      children: [
+                        CalendarButton(
+                          workoutSessions: snapshot.data!,
+                          scrollToItem: getIndexByWorkoutSession,
+                        ),
+                        Expanded(
+                          child: ListView(
+                            controller: _scrollController,
+                            children: snapshot.data!.map((workoutSession) {
+                              return AutoScrollTag(
+                                key: ValueKey(workoutSession.id),
+                                controller: _scrollController,
+                                index: snapshot.data!.indexWhere((element) =>
+                                    element.id == workoutSession.id),
+                                child: WorkoutCard(
+                                  key: Key(workoutSession.id.toString()),
+                                  workoutSession: workoutSession,
+                                ),
+                              );
+                            }).toList(),
+                          ),
+                        ),
+                      ],
                     );
             }
           },

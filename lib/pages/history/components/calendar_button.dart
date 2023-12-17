@@ -5,9 +5,12 @@ import 'package:group_project/pages/history/components/history_calendar.dart';
 
 class CalendarButton extends StatelessWidget {
   final List<WorkoutSession> workoutSessions;
+  final void Function(WorkoutSession) scrollToItem;
+
   const CalendarButton({
     super.key,
     required this.workoutSessions,
+    required this.scrollToItem,
   });
 
   @override
@@ -26,6 +29,7 @@ class CalendarButton extends StatelessWidget {
             MaterialPageRoute(
               builder: (context) => HistoryCalendar(
                 workoutSessions: workoutSessions,
+                scrollToItem: scrollToItem,
               ),
             ),
           )

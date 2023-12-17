@@ -2,12 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:group_project/constants/themes/app_colours.dart';
 import 'package:group_project/models/workout_session.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:intl/intl.dart';
 
 class HistoryCalendar extends StatefulWidget {
   final List<WorkoutSession> workoutSessions;
+  final void Function(WorkoutSession) scrollToItem;
   const HistoryCalendar({
     super.key,
     required this.workoutSessions,
+    required this.scrollToItem,
   });
 
   @override
@@ -131,14 +134,36 @@ class _HistoryCalendarState extends State<HistoryCalendar> {
           Expanded(
             child: ListView.builder(
               itemBuilder: (context, index) {
-                return ListTile(
-                  title: Text(
-                    selectedWorkoutSessions[index].title,
-                    style: const TextStyle(color: Colors.white),
-                  ),
-                  subtitle: Text(
-                    selectedWorkoutSessions[index].date.toString(),
-                    style: const TextStyle(color: Colors.white),
+                return Container(
+                  margin: const EdgeInsets.all(10),
+                  child: InkWell(
+                    onTap: () {
+                      widget.scrollToItem(selectedWorkoutSessions[index]);
+                      Navigator.pop(
+                        context,
+                      );
+                    },
+                    child: ListTile(
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(10),
+                        ),
+                        side: BorderSide(
+                          color: AppColours.secondary,
+                          width: 1,
+                        ),
+                      ),
+                      title: Text(
+                        selectedWorkoutSessions[index].title,
+                        style: const TextStyle(color: Colors.white),
+                      ),
+                      subtitle: Text(
+                        DateFormat('dd MMMM yyyy kk:mm a').format(
+                          selectedWorkoutSessions[index].date,
+                        ),
+                        style: TextStyle(color: Colors.grey[500]),
+                      ),
+                    ),
                   ),
                 );
               },
