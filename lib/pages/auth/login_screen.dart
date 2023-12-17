@@ -199,7 +199,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         return const Center(child: CircularProgressIndicator());
                       },
                     );
-                    dynamic result = await _auth.signInAnon();
+                    await _auth.signInAnon();
                     Future.microtask(() => Navigator.of(context).pop());
                   },
                   style: ButtonStyle(

@@ -1,16 +1,14 @@
 import 'package:flutter/material.dart';
 
-
 class CustomBottomNavigationBar extends StatelessWidget {
   final int currentIndex;
   final void Function(int) onTabTapped;
 
   const CustomBottomNavigationBar({
-    Key? key,
+    super.key,
     required this.currentIndex,
     required this.onTabTapped,
-  }) : super(key: key);
-
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -37,8 +35,6 @@ class CustomBottomNavigationBar extends StatelessWidget {
         ),
         BottomNavigationBarItem(
           icon: Container(
-            // uncomment this when selected text font size is set to 0
-            // margin: EdgeInsets.fromLTRB(0, 10, 0, 10),
             margin: const EdgeInsets.only(top: 10),
             decoration: const BoxDecoration(
               shape: BoxShape.circle,
