@@ -55,6 +55,11 @@ class _ChooseExerciseState extends State<ChooseExercise> {
     });
   }
 
+  void deselectAllExercises() {
+    for (var exercise in widget.exercises) {
+      exercise.isSelected = false;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {

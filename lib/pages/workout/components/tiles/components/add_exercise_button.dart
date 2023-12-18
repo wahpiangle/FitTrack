@@ -29,6 +29,7 @@ class AddExerciseButton extends StatelessWidget {
         ),
       ),
       onPressed: () {
+
         Navigator.push(
           context,
           MaterialPageRoute(
