@@ -186,13 +186,13 @@ class _ChooseExerciseState extends State<ChooseExercise> {
           for (final exercise in widget.exercises) {
             submitSelectedExercise(exercise);
           }
-          Navigator.pop(context);
           deselectAllExercises();
+          Navigator.pop(context);
         },
         backgroundColor: AppColours.secondary,
         child: const Icon(Icons.add),
       )
-          : null, // Set FAB to null when no exercise is selected
+          : null, // Set FAB null if no exercise selected
     );
   }
 }
