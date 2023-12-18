@@ -24,7 +24,7 @@
     },
     {
       "id": "4:8999125863363426104",
-      "lastPropertyId": "5:9180347095561080921",
+      "lastPropertyId": "6:2164939442881832291",
       "name": "Exercise",
       "properties": [
         {
@@ -58,6 +58,11 @@
           "id": "5:9180347095561080921",
           "name": "imagePath",
           "type": 9
+        },
+        {
+          "id": "6:2164939442881832291",
+          "name": "isSelected",
+          "type": 1
         }
       ],
       "relations": [
