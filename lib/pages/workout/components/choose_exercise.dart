@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:group_project/constants/themes/app_colours.dart';
 import 'package:group_project/models/exercise.dart';
 import 'package:group_project/pages/components/crop_image.dart';
 
@@ -21,6 +22,7 @@ class ChooseExercise extends StatefulWidget {
 
 class _ChooseExerciseState extends State<ChooseExercise> {
   List<Exercise> filteredExercises = [];
+  bool isAnyExerciseSelected = false;
 
   @override
   void initState() {
@@ -48,10 +50,10 @@ class _ChooseExerciseState extends State<ChooseExercise> {
     }
   }
 
-
   void _selectExercise(Exercise selectedExercise) {
     setState(() {
       selectedExercise.isSelected = !selectedExercise.isSelected;
+      checkSelectionStatus();
     });
   }
 
@@ -59,6 +61,12 @@ class _ChooseExerciseState extends State<ChooseExercise> {
     for (var exercise in widget.exercises) {
       exercise.isSelected = false;
     }
+  }
+
+  void checkSelectionStatus() {
+    setState(() {
+      isAnyExerciseSelected = widget.exercises.any((exercise) => exercise.isSelected);
+    });
   }
 
   @override
@@ -172,7 +180,8 @@ class _ChooseExerciseState extends State<ChooseExercise> {
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: isAnyExerciseSelected
+          ? FloatingActionButton(
         onPressed: () {
           for (final exercise in widget.exercises) {
             submitSelectedExercise(exercise);
@@ -180,10 +189,10 @@ class _ChooseExerciseState extends State<ChooseExercise> {
           Navigator.pop(context);
           deselectAllExercises();
         },
-        backgroundColor: const Color(0xFFE1F0CF),
+        backgroundColor: AppColours.secondary,
         child: const Icon(Icons.add),
-      ),
-
+      )
+          : null, // Set FAB to null when no exercise is selected
     );
   }
 }
