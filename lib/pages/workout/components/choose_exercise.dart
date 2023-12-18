@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:group_project/constants/themes/app_colours.dart';
 import 'package:group_project/models/exercise.dart';
 import 'package:group_project/pages/components/crop_image.dart';
@@ -50,6 +49,7 @@ class _ChooseExerciseState extends State<ChooseExercise> {
     }
   }
 
+  //change bool isSelected state
   void _selectExercise(Exercise selectedExercise) {
     setState(() {
       selectedExercise.isSelected = !selectedExercise.isSelected;
@@ -57,12 +57,14 @@ class _ChooseExerciseState extends State<ChooseExercise> {
     });
   }
 
+  // called after pressing FAB
   void deselectAllExercises() {
     for (var exercise in widget.exercises) {
       exercise.isSelected = false;
     }
   }
 
+  //check if an exercise is selected
   void checkSelectionStatus() {
     setState(() {
       isAnyExerciseSelected = widget.exercises.any((exercise) => exercise.isSelected);
