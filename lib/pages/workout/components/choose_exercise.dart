@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:group_project/constants/themes/app_colours.dart';
 import 'package:group_project/models/exercise.dart';
 import 'package:group_project/pages/components/crop_image.dart';
+import 'package:group_project/pages/exercise/components/exercises_list_filters.dart';
 
 class ChooseExercise extends StatefulWidget {
   final List<Exercise> exercises;
@@ -22,6 +23,9 @@ class ChooseExercise extends StatefulWidget {
 class _ChooseExerciseState extends State<ChooseExercise> {
   List<Exercise> filteredExercises = [];
   bool isAnyExerciseSelected = false;
+  List<String> selectedCategory = [];
+  String selectedBodyPart = '';
+
 
   @override
   void initState() {
@@ -29,6 +33,7 @@ class _ChooseExerciseState extends State<ChooseExercise> {
     filteredExercises = widget.exercises;
   }
 
+  // based on search function
   void filterExercises(String query) {
     setState(() {
       if (query.isEmpty) {
@@ -39,6 +44,24 @@ class _ChooseExerciseState extends State<ChooseExercise> {
                 exercise.name.toLowerCase().contains(query.toLowerCase()))
             .toList();
       }
+    });
+  }
+
+  void setSelectedBodyPart(String bodyPart) {
+    setState(() {
+      selectedBodyPart = bodyPart;
+    });
+  }
+
+  void addSelectedCategory(String category) {
+    setState(() {
+      selectedCategory.add(category);
+    });
+  }
+
+  void removeSelectedCategory(String category) {
+    setState(() {
+      selectedCategory.remove(category);
     });
   }
 
@@ -100,6 +123,14 @@ class _ChooseExerciseState extends State<ChooseExercise> {
                 ),
               ),
             ),
+            // ExercisesListFilters(
+            //     filterExercises: filterExercises,
+            //     selectedBodyPart: selectedBodyPart,
+            //     setSelectedBodyPart: setSelectedBodyPart,
+            //     selectedCategory: selectedCategory,
+            //     addSelectedCategory: addSelectedCategory,
+            //     removeSelectedCategory: removeSelectedCategory
+            // ),
             Expanded(
               child: ListView.builder(
                 itemCount: filteredExercises.length,
