@@ -42,26 +42,6 @@ class _ChooseExerciseState extends State<ChooseExercise> {
   }
 
 
-  // //MODIFIED
-  // void _selectExercise(Exercise selectedExercise) {
-  //   // Show floating action button to add exercise
-  //   ScaffoldMessenger.of(context).showSnackBar(
-  //     SnackBar(
-  //       content: Text('Add Exercise ${selectedExercise.name}?'),
-  //       behavior: SnackBarBehavior.floating,
-  //       duration: const Duration(days: 365), // Make the SnackBar stay
-  //       action: SnackBarAction(
-  //         label: 'Add',
-  //         onPressed: () {
-  //           // Add exercise to the workout
-  //           widget.selectExercise(selectedExercise);
-  //           Navigator.pop(context);
-  //         },
-  //       ),
-  //     ),
-  //   );
-  // }
-
   void submitSelectedExercise(Exercise selectedExercise) {
     if (selectedExercise.isSelected) {
       widget.selectExercise(selectedExercise);
@@ -69,13 +49,11 @@ class _ChooseExerciseState extends State<ChooseExercise> {
   }
 
 
-
   void _selectExercise(Exercise selectedExercise) {
     setState(() {
       selectedExercise.isSelected = !selectedExercise.isSelected;
     });
   }
-
 
 
   @override
