@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:group_project/models/exercise.dart';
 import 'package:group_project/pages/components/crop_image.dart';
 
@@ -41,26 +42,39 @@ class _ChooseExerciseState extends State<ChooseExercise> {
   }
 
 
-  //MODIFIED
-  void _selectExercise(Exercise selectedExercise) {
-    // Show floating action button to add exercise
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Add Exercise ${selectedExercise.name}?'),
-        behavior: SnackBarBehavior.floating,
-        duration: const Duration(days: 365), // Make the SnackBar stay
-        action: SnackBarAction(
-          label: 'Add',
-          onPressed: () {
-            // Add exercise to the workout
-            widget.selectExercise(selectedExercise);
-            Navigator.pop(context);
-          },
-        ),
-      ),
-    );
+  // //MODIFIED
+  // void _selectExercise(Exercise selectedExercise) {
+  //   // Show floating action button to add exercise
+  //   ScaffoldMessenger.of(context).showSnackBar(
+  //     SnackBar(
+  //       content: Text('Add Exercise ${selectedExercise.name}?'),
+  //       behavior: SnackBarBehavior.floating,
+  //       duration: const Duration(days: 365), // Make the SnackBar stay
+  //       action: SnackBarAction(
+  //         label: 'Add',
+  //         onPressed: () {
+  //           // Add exercise to the workout
+  //           widget.selectExercise(selectedExercise);
+  //           Navigator.pop(context);
+  //         },
+  //       ),
+  //     ),
+  //   );
+  // }
+
+  void submitSelectedExercise(Exercise selectedExercise) {
+    if (selectedExercise.isSelected) {
+      widget.selectExercise(selectedExercise);
+    }
   }
 
+
+
+  void _selectExercise(Exercise selectedExercise) {
+    setState(() {
+      selectedExercise.isSelected = !selectedExercise.isSelected;
+    });
+  }
 
 
 
@@ -107,6 +121,7 @@ class _ChooseExerciseState extends State<ChooseExercise> {
                       child: Container(
                         margin: const EdgeInsets.symmetric(vertical: 5),
                         child: ListTile(
+                          tileColor: exercise.isSelected ? Colors.grey[800] : null,
                           horizontalTitleGap: -10,
                           leading: SizedBox(
                             height: 100,
@@ -174,6 +189,17 @@ class _ChooseExerciseState extends State<ChooseExercise> {
           ],
         ),
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          for (final exercise in widget.exercises) {
+            submitSelectedExercise(exercise);
+          }
+          Navigator.pop(context);
+        },
+        backgroundColor: const Color(0xFFE1F0CF),
+        child: const Icon(Icons.add),
+      ),
+
     );
   }
 }
