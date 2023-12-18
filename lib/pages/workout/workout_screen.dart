@@ -21,7 +21,7 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
   }
 
   Future<void> _startNewWorkout(BuildContext context) async {
-    objectBox.createWorkoutSession();
+    objectBox.currentWorkoutSessionService.createCurrentWorkoutSession();
 
     await showModalBottomSheet(
       context: context,
@@ -36,7 +36,7 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
     return Scaffold(
       body: Container(
         height: double.infinity,
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
         color: const Color(0xFF1A1A1A),
         child: SingleChildScrollView(
           child: Column(
@@ -58,7 +58,7 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
                         ),
                       ),
                       padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
-                        const EdgeInsets.symmetric(vertical: 15),
+                        const EdgeInsets.symmetric(vertical: 10),
                       ),
                     ),
                     child: const Text(

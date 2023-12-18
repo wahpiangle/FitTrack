@@ -60,7 +60,13 @@
           "type": 9
         }
       ],
-      "relations": []
+      "relations": [
+        {
+          "id": "8:1451413018537550514",
+          "name": "exercisesSetsInfo",
+          "targetId": "10:1820858489364473134"
+        }
+      ]
     },
     {
       "id": "5:4284795017742900900",
@@ -155,7 +161,7 @@
     },
     {
       "id": "10:1820858489364473134",
-      "lastPropertyId": "4:6840791792189351341",
+      "lastPropertyId": "5:6068465684494067862",
       "name": "ExercisesSetsInfo",
       "properties": [
         {
@@ -179,6 +185,14 @@
           "flags": 520,
           "indexId": "8:1873809727454846497",
           "relationTarget": "Exercise"
+        },
+        {
+          "id": "5:6068465684494067862",
+          "name": "workoutSessionId",
+          "type": 11,
+          "flags": 520,
+          "indexId": "9:7303140844689639292",
+          "relationTarget": "WorkoutSession"
         }
       ],
       "relations": [
@@ -188,11 +202,46 @@
           "targetId": "7:3746532471321315396"
         }
       ]
+    },
+    {
+      "id": "11:4929714596174845997",
+      "lastPropertyId": "4:1835537039999086129",
+      "name": "WorkoutSession",
+      "properties": [
+        {
+          "id": "1:5812914374676179611",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:8895517690980687532",
+          "name": "title",
+          "type": 9
+        },
+        {
+          "id": "3:2702407459373261380",
+          "name": "note",
+          "type": 9
+        },
+        {
+          "id": "4:1835537039999086129",
+          "name": "date",
+          "type": 10
+        }
+      ],
+      "relations": [
+        {
+          "id": "7:7783041778513810204",
+          "name": "exercisesSetsInfo",
+          "targetId": "10:1820858489364473134"
+        }
+      ]
     }
   ],
-  "lastEntityId": "10:1820858489364473134",
-  "lastIndexId": "8:1873809727454846497",
-  "lastRelationId": "6:8676555494170821584",
+  "lastEntityId": "11:4929714596174845997",
+  "lastIndexId": "9:7303140844689639292",
+  "lastRelationId": "8:1451413018537550514",
   "lastSequenceId": "0:0",
   "modelVersion": 5,
   "modelVersionParserMinimum": 5,

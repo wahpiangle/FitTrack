@@ -12,6 +12,7 @@ class CancelWorkoutButton extends StatelessWidget {
           builder: (BuildContext ctx) {
             return AlertDialog(
               backgroundColor: const Color(0xFF1A1A1A),
+              surfaceTintColor: Colors.transparent,
               title: const Text(
                 'Discard Workout?',
                 style: TextStyle(
@@ -34,6 +35,7 @@ class CancelWorkoutButton extends StatelessWidget {
                     'Resume',
                     style: TextStyle(
                       fontSize: 18,
+                      color: Colors.red,
                     ),
                   ),
                 ),
@@ -41,16 +43,16 @@ class CancelWorkoutButton extends StatelessWidget {
                   onPressed: () {
                     Navigator.of(context).pop();
                     Navigator.of(context).pop();
-                    objectBox.clearCurrentWorkoutSession();
+                    objectBox.currentWorkoutSessionService.cancelWorkout();
                   },
                   child: const Text(
-                    'Cancel Workout',
+                    'Discard Workout',
                     style: TextStyle(
-                      color: Colors.red,
                       fontSize: 18,
+                      color: Colors.blue,
                     ),
                   ),
-                )
+                ),
               ],
             );
           });
