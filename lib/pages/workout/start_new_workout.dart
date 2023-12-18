@@ -23,15 +23,12 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
   late List<Exercise> exerciseData;
   TextEditingController weightsController = TextEditingController();
   TextEditingController repsController = TextEditingController();
-  Stream<CurrentWorkoutSession>? _currentWorkoutSessionStream;
-
   List<Widget> setBorders = [];
 
   @override
   void initState() {
     super.initState();
     exerciseData = widget.exerciseData;
-    _currentWorkoutSessionStream = objectBox.watchCurrentWorkoutSession();
     _controller = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 1),
@@ -64,34 +61,8 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
   }
 
   void selectExercise(Exercise selectedExercise) {
-    objectBox.addExerciseToCurrentWorkoutSession(selectedExercise);
-  }
-
-  Widget createSetBorder(int weight, int reps) {
-    return Container(
-      decoration: BoxDecoration(
-        border: Border.all(
-          color: Colors.white,
-          width: 2.0,
-        ),
-        borderRadius: BorderRadius.circular(10),
-      ),
-      margin: const EdgeInsets.all(10),
-      padding: const EdgeInsets.all(10),
-      child: Row(
-        children: [
-          Text("Weight: $weight"),
-          const SizedBox(width: 10),
-          Text("Reps: $reps"),
-        ],
-      ),
-    );
-  }
-
-  Widget buildSetBordersList() {
-    return ListView(
-      children: setBorders,
-    );
+    objectBox.currentWorkoutSessionService
+        .addExerciseToCurrentWorkoutSession(selectedExercise);
   }
 
   @override
@@ -103,6 +74,60 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
     weightsController.dispose();
     repsController.dispose();
     super.dispose();
+  }
+
+  void _delete(BuildContext context) {
+    showDialog(
+        context: context,
+        builder: (BuildContext ctx) {
+          return AlertDialog(
+            backgroundColor: const Color(0xFF1A1A1A),
+            surfaceTintColor: Colors.transparent,
+            title: const Text(
+              'Finish Workout',
+              style: TextStyle(color: Colors.white),
+            ),
+            content: const Text(
+              'Are you sure that you want to finish workout?',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 18,
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text(
+                  'Cancel',
+                  style: TextStyle(fontSize: 18, color: Colors.red),
+                ),
+              ),
+              TextButton(
+                onPressed: () {
+                  // Close the dialog
+                  Navigator.of(context).pop();
+                  Navigator.of(context).pop();
+                  objectBox.saveCurrentWorkoutSession();
+                },
+                child: const Text(
+                  'Finish Workout',
+                  style: TextStyle(
+                    fontSize: 18,
+                    color: Colors.blue,
+                  ),
+                ),
+              ),
+            ],
+          );
+        });
+  }
+
+  void removeSet(int exerciseSetId) {
+    setState(() {
+      objectBox.removeSetFromExercise(exerciseSetId);
+    });
   }
 
   @override
@@ -121,7 +146,50 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
               color: Colors.transparent,
               child: InkWell(
                 borderRadius: BorderRadius.circular(8),
-                onTap: () {},
+                onTap: () {
+                  bool everySetCompleted = objectBox
+                      .currentWorkoutSessionService
+                      .getCurrentWorkoutSession()
+                      .exercisesSetsInfo
+                      .every((exercisesSetsInfo) {
+                    return exercisesSetsInfo.exerciseSets.every((exerciseSet) {
+                      return exerciseSet.isCompleted;
+                    });
+                  });
+                  bool isNotEmpty = objectBox.currentWorkoutSessionService
+                      .getCurrentWorkoutSession()
+                      .exercisesSetsInfo
+                      .isNotEmpty;
+                  if (isNotEmpty) {
+                    if (everySetCompleted) {
+                      _delete(context);
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text(
+                            "Please complete all sets",
+                            style: TextStyle(
+                              color: Colors.white,
+                            ),
+                          ),
+                          backgroundColor: Color(0xFF1A1A1A),
+                        ),
+                      );
+                    }
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text(
+                          "Please add at least one exercise",
+                          style: TextStyle(
+                            color: Colors.white,
+                          ),
+                        ),
+                        backgroundColor: Color(0xFF1A1A1A),
+                      ),
+                    );
+                  }
+                },
                 child: const Padding(
                   padding: EdgeInsets.all(8.0),
                   child: Text(
@@ -152,7 +220,8 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
       ),
       backgroundColor: const Color(0xFF1A1A1A),
       body: StreamBuilder<CurrentWorkoutSession>(
-        stream: _currentWorkoutSessionStream,
+        stream:
+            objectBox.currentWorkoutSessionService.watchCurrentWorkoutSession(),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
             return const Center(child: CircularProgressIndicator());
@@ -163,9 +232,10 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
                 children: [
                   ExerciseTile(
                     exerciseData: exerciseData,
-                    selectedExercises:
+                    exercisesSetsInfo:
                         snapshot.data!.exercisesSetsInfo.toList(),
                     selectExercise: selectExercise,
+                    removeSet: removeSet,
                   ),
                 ],
               ),
@@ -174,7 +244,9 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
         },
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          objectBox.test();
+        },
         child: Icon(Icons.add),
       ),
     );

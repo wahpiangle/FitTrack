@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'dart:io';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:group_project/pages/settings_screen.dart';
+import 'package:group_project/pages/settings/settings_screen.dart';
 
 class TopNavBar extends StatelessWidget implements PreferredSizeWidget {
   final User? user;
@@ -12,7 +12,7 @@ class TopNavBar extends StatelessWidget implements PreferredSizeWidget {
   final int pageIndex;
 
   const TopNavBar({
-    Key? key,
+    super.key,
     required this.pageIndex,
     required this.title,
     required this.user,
@@ -21,8 +21,8 @@ class TopNavBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-
-    String profileImage = Provider.of<ProfileImageProvider>(context).profileImage;
+    String profileImage =
+        Provider.of<ProfileImageProvider>(context).profileImage;
 
     return AppBar(
       backgroundColor: const Color(0xFF1A1A1A),
@@ -39,17 +39,17 @@ class TopNavBar extends StatelessWidget implements PreferredSizeWidget {
       centerTitle: true,
       leading: showBackButton
           ? IconButton(
-        icon: const Icon(Icons.arrow_back),
-        onPressed: () {
-          Navigator.pop(context);
-        },
-      )
+              icon: const Icon(Icons.arrow_back),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            )
           : IconButton(
-        icon: const Icon(Icons.menu),
-        onPressed: () {
-          // Will lead to Search friends page
-        },
-      ),
+              icon: const Icon(Icons.menu, color: Colors.white),
+              onPressed: () {
+                // Will lead to Search friends page
+              },
+            ),
       actions: [
         GestureDetector(
           onTap: () {
@@ -57,7 +57,6 @@ class TopNavBar extends StatelessWidget implements PreferredSizeWidget {
               context,
               MaterialPageRoute(builder: (context) => SettingsScreen()),
             );
-
           },
           child: Padding(
             padding: const EdgeInsets.all(8.0),
@@ -67,15 +66,17 @@ class TopNavBar extends StatelessWidget implements PreferredSizeWidget {
                 width: 40,
                 height: 40,
                 child: ClipOval(
-                  child:  (profileImage.isEmpty || profileImage == 'assets/icons/defaultimage.jpg')
+                  child: (profileImage.isEmpty ||
+                          profileImage == 'assets/icons/defaultimage.jpg')
                       ? const CircleAvatar(
-                    radius: 50,
-                    backgroundImage: AssetImage('assets/icons/defaultimage.jpg'),
-                  )
+                          radius: 50,
+                          backgroundImage:
+                              AssetImage('assets/icons/defaultimage.jpg'),
+                        )
                       : CircleAvatar(
-                    radius: 50,
-                    backgroundImage: FileImage(File(profileImage)),
-                  ),
+                          radius: 50,
+                          backgroundImage: FileImage(File(profileImage)),
+                        ),
                 ),
               ),
             ),
@@ -89,7 +90,6 @@ class TopNavBar extends StatelessWidget implements PreferredSizeWidget {
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }
 
-
 class ProfileImageProvider extends ChangeNotifier {
   late String _profileImage;
 
@@ -102,7 +102,8 @@ class ProfileImageProvider extends ChangeNotifier {
 
   Future<void> _loadProfileImage() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    _profileImage = prefs.getString('profile_image') ?? ''; // Load the stored image path
+    _profileImage =
+        prefs.getString('profile_image') ?? ''; // Load the stored image path
     notifyListeners();
   }
 
@@ -110,6 +111,7 @@ class ProfileImageProvider extends ChangeNotifier {
     _profileImage = newImage;
     notifyListeners();
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString('profile_image', newImage); // Save the updated image path
+    await prefs.setString(
+        'profile_image', newImage); // Save the updated image path
   }
 }

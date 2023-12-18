@@ -9,14 +9,16 @@ import 'package:group_project/pages/workout/components/workout_header.dart';
 
 class ExerciseTile extends StatefulWidget {
   final List<Exercise> exerciseData;
-  final List<ExercisesSetsInfo> selectedExercises;
+  final List<ExercisesSetsInfo> exercisesSetsInfo;
   final void Function(Exercise selectedExercise) selectExercise;
+  final void Function(int exerciseSetId) removeSet;
 
   const ExerciseTile({
     super.key,
     required this.exerciseData,
-    required this.selectedExercises,
+    required this.exercisesSetsInfo,
     required this.selectExercise,
+    required this.removeSet,
   });
 
   @override
@@ -24,19 +26,6 @@ class ExerciseTile extends StatefulWidget {
 }
 
 class _ExerciseTileState extends State<ExerciseTile> {
-  void removeSet(int exerciseSetId, ExercisesSetsInfo exercisesSetsInfo) {
-    objectBox.removeSetFromExercise(exerciseSetId);
-    if (exercisesSetsInfo.exerciseSets.length == 1) {
-      objectBox.removeExerciseFromCurrentWorkoutSession(exercisesSetsInfo.id);
-    }
-    setState(() {
-      for (ExercisesSetsInfo exercisesSetsInfo in widget.selectedExercises) {
-        exercisesSetsInfo.exerciseSets
-            .removeWhere((exerciseSet) => exerciseSet.id == exerciseSetId);
-      }
-    });
-  }
-
   void addSet(ExercisesSetsInfo exercisesSetsInfo) {
     setState(() {
       objectBox.addSetToExercise(exercisesSetsInfo);
@@ -46,12 +35,14 @@ class _ExerciseTileState extends State<ExerciseTile> {
   void setIsCompleted(int exerciseSetId) {
     objectBox.completeExerciseSet(exerciseSetId);
     setState(() {
-      for (ExercisesSetsInfo exercisesSetsInfo in widget.selectedExercises) {
+      for (ExercisesSetsInfo exercisesSetsInfo in widget.exercisesSetsInfo) {
         exercisesSetsInfo.exerciseSets
             .where((exerciseSet) => exerciseSet.id == exerciseSetId)
             .toList()
             .forEach((exerciseSet) {
-          exerciseSet.isCompleted = !exerciseSet.isCompleted;
+          if (exerciseSet.reps != null && exerciseSet.weight != null) {
+            exerciseSet.isCompleted = !exerciseSet.isCompleted;
+          }
         });
       }
     });
@@ -62,15 +53,15 @@ class _ExerciseTileState extends State<ExerciseTile> {
     return Expanded(
       child: ListView.builder(
         shrinkWrap: true,
-        itemCount: widget.selectedExercises.length + 1,
+        itemCount: widget.exercisesSetsInfo.length + 1,
         itemBuilder: (context, index) {
-          if (widget.selectedExercises.isEmpty) {
+          if (widget.exercisesSetsInfo.isEmpty) {
             return Column(
               children: [
                 const WorkoutHeader(),
                 AddExerciseButton(
                   exerciseData: widget.exerciseData,
-                  selectedExercises: widget.selectedExercises,
+                  exercisesSetsInfo: widget.exercisesSetsInfo,
                   selectExercise: widget.selectExercise,
                 ),
                 const CancelWorkoutButton(),
@@ -79,7 +70,7 @@ class _ExerciseTileState extends State<ExerciseTile> {
           }
           if (index == 0) {
             ExercisesSetsInfo selectedExercise =
-                widget.selectedExercises[index];
+                widget.exercisesSetsInfo[index];
             return Column(children: [
               const WorkoutHeader(),
               Container(
@@ -101,7 +92,7 @@ class _ExerciseTileState extends State<ExerciseTile> {
                     const SizedBox(height: 20),
                     SetTiles(
                       exercisesSetsInfo: selectedExercise,
-                      removeSet: removeSet,
+                      removeSet: widget.removeSet,
                       addSet: addSet,
                       setIsCompleted: setIsCompleted,
                     )
@@ -110,18 +101,18 @@ class _ExerciseTileState extends State<ExerciseTile> {
               ),
             ]);
           }
-          if (index == widget.selectedExercises.length) {
+          if (index == widget.exercisesSetsInfo.length) {
             return Column(children: [
               AddExerciseButton(
                 exerciseData: widget.exerciseData,
-                selectedExercises: widget.selectedExercises,
+                exercisesSetsInfo: widget.exercisesSetsInfo,
                 selectExercise: widget.selectExercise,
               ),
               const CancelWorkoutButton(),
             ]);
           } else {
             ExercisesSetsInfo selectedExercise =
-                widget.selectedExercises[index];
+                widget.exercisesSetsInfo[index];
             return Container(
               margin: const EdgeInsets.symmetric(vertical: 10),
               child: Column(
@@ -141,7 +132,7 @@ class _ExerciseTileState extends State<ExerciseTile> {
                   const SizedBox(height: 20),
                   SetTiles(
                     exercisesSetsInfo: selectedExercise,
-                    removeSet: removeSet,
+                    removeSet: widget.removeSet,
                     addSet: addSet,
                     setIsCompleted: setIsCompleted,
                   )
