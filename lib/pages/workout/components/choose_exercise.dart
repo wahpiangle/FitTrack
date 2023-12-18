@@ -178,6 +178,7 @@ class _ChooseExerciseState extends State<ChooseExercise> {
             submitSelectedExercise(exercise);
           }
           Navigator.pop(context);
+          deselectAllExercises();
         },
         backgroundColor: const Color(0xFFE1F0CF),
         child: const Icon(Icons.add),
