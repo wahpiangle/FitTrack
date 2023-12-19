@@ -33,7 +33,6 @@ class _ChooseExerciseState extends State<ChooseExercise> {
     filteredExercises = widget.exercises;
   }
 
-  // based on search function
   void filterExercises(String query) {
     setState(() {
       if (query.isEmpty) {
@@ -46,6 +45,9 @@ class _ChooseExerciseState extends State<ChooseExercise> {
       }
     });
   }
+
+
+
 
   void setSelectedBodyPart(String bodyPart) {
     setState(() {
@@ -189,7 +191,7 @@ class _ChooseExerciseState extends State<ChooseExercise> {
                                 exercise.name,
                                 style: const TextStyle(
                                   color: Colors.white,
-                                  fontSize: 18,
+                                  fontSize: 16.5,
                                 ),
                               ),
                             ),
@@ -223,7 +225,7 @@ class _ChooseExerciseState extends State<ChooseExercise> {
         backgroundColor: AppColours.secondary,
         child: const Icon(Icons.add),
       )
-          : null, // Set FAB null if no exercise selected
+          : null,
     );
   }
 }
