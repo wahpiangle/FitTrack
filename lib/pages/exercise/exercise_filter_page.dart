@@ -55,7 +55,7 @@ class ExerciseFilterPageState extends State<ExerciseFilterPage> {
         backgroundColor: const Color(0xFF1A1A1A),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(15.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -66,7 +66,7 @@ class ExerciseFilterPageState extends State<ExerciseFilterPage> {
                 'Body Parts',
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: 30,
+                  fontSize: 25,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -81,7 +81,7 @@ class ExerciseFilterPageState extends State<ExerciseFilterPage> {
                 'Categories',
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: 30,
+                  fontSize: 25,
                   fontWeight: FontWeight.bold,
                 ),
               ),
