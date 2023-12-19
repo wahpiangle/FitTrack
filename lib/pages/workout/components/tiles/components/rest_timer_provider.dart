@@ -9,9 +9,10 @@ class RestTimerProvider with ChangeNotifier {
   int _restTimerMinutes = 0;
   int _restTimerSeconds = 0;
   Timer? _timer;
+  bool _isRestTimerRunning = false;
 
 
-
+  bool get isRestTimerRunning => _isRestTimerRunning;
   bool get isRestTimerEnabled => _isRestTimerEnabled;
   int get restTimerDuration => _restTimerDuration;
   int get currentRestTimerDuration => _currentDuration;
@@ -65,6 +66,7 @@ class RestTimerProvider with ChangeNotifier {
 
           // Decrement the duration
           _currentDuration--;
+          _isRestTimerRunning = true; // Set the rest timer as running
         }
       });
     }
@@ -81,6 +83,7 @@ class RestTimerProvider with ChangeNotifier {
     _timer = null;
     _currentDuration = 0;
     notifyListeners();
+    _isRestTimerRunning = false;
   }
 
   @override

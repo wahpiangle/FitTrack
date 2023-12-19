@@ -33,6 +33,8 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
   TextEditingController weightsController = TextEditingController();
   TextEditingController repsController = TextEditingController();
   int _restTimerDuration = 60;//default rest timer value
+  bool _isSetTimeVisible = true;
+
 
 
   List<Widget> setBorders = [];
@@ -304,21 +306,42 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
                   ),
                   if (restTimerProvider.isRestTimerEnabled)
                     SizedBox(width: 10),
-                  RestTimePicker(
-                    restTimerProvider: restTimerProvider,
-                  ),
 
-                  if (restTimerProvider.isRestTimerEnabled) // Display the rest timer conditionally
-                    Consumer<RestTimerProvider>(
-                      builder: (context, restTimerProvider, child) {
-                        return Text(
+                  if (restTimerProvider.isRestTimerEnabled)
+                    GestureDetector(
+                      onTap: () async {
+                        await _showScrollTimePicker(context, restTimerProvider);
+                        setState(() {
+                          _isSetTimeVisible = !_isSetTimeVisible;
+                        });
+                      },
+                      child:AnimatedCrossFade(
+                        duration: const Duration(milliseconds: 300),
+                        crossFadeState: restTimerProvider.isRestTimerEnabled && restTimerProvider.isRestTimerRunning
+                            ? CrossFadeState.showFirst
+                            : CrossFadeState.showSecond,
+                        firstChild: Text(
                           "Rest Timer: ${formatDuration(restTimerProvider.currentRestTimerDuration)}",
                           style: const TextStyle(
                             color: Colors.white,
                             fontSize: 16,
                           ),
-                        );
-                      },
+                        ),
+                        secondChild: Container(
+                          color: Colors.transparent,
+                          child: Center(
+                            child: Text(
+                              "Set Time: ${_formatTime(restTimerProvider.restTimerMinutes, restTimerProvider.restTimerSeconds)}",
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+
+
                     ),
                 ],
               ),
@@ -335,13 +358,30 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
     );
   }
 
+
+  String _formatTime(int minutes, int seconds) {
+    return "${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}";
+  }
+
   String formatDuration(int seconds) {
     final minutes = ((seconds % 3600) ~/ 60).toString().padLeft(2, '0');
     final remainingSeconds = (seconds % 60).toString().padLeft(2, '0');
     return "$minutes:$remainingSeconds";
   }
 
-
+  Future<void> _showScrollTimePicker(BuildContext context, RestTimerProvider restTimerProvider) async {
+    return showModalBottomSheet<void>(
+      context: context,
+      backgroundColor: Colors.black, // Set the background color
+      builder: (BuildContext context) {
+        return Container(
+          height: 200, // Set the desired height of the bottom sheet
+          color: Colors.black, // Set the background color
+          child: RestTimePicker(restTimerProvider: restTimerProvider),
+        );
+      },
+    );
+  }
 }
 
 

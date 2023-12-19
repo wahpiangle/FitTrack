@@ -38,6 +38,8 @@ class _ExerciseTileState extends State<ExerciseTile> {
   bool displayRestTimer = false;
   late int restTimerDuration;
 
+
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -78,6 +80,7 @@ class _ExerciseTileState extends State<ExerciseTile> {
             // Set the flag to hide the rest timer
             displayRestTimer = false;
           }
+
         });
       }
     });

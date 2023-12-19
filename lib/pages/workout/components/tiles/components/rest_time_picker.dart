@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:group_project/pages/workout/components/tiles/components/rest_timer_provider.dart';
-import 'package:cupertino_date_textbox/cupertino_date_textbox.dart';
 
 class RestTimePicker extends StatelessWidget {
   final RestTimerProvider restTimerProvider;
