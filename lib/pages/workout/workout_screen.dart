@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:group_project/pages/workout/new_workout.dart';
 
 
+
 class WorkoutScreen extends StatefulWidget {
   const WorkoutScreen({super.key});
   @override
@@ -15,6 +16,7 @@ class WorkoutScreen extends StatefulWidget {
 
 class _WorkoutScreenState extends State<WorkoutScreen> {
   late List<Exercise> exerciseData;
+  bool isBottomSheetVisible = false;
 
   @override
   void initState() {
@@ -27,11 +29,22 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
 
     await showModalBottomSheet(
       context: context,
-      builder: (context) => StartNewWorkout(
-        exerciseData: exerciseData,
-      ),
+      isScrollControlled: true,
+      isDismissible: false, // Set this to false to prevent dismissal by dragging down
+      builder: (context) {
+        return ClipRRect(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(20.0)),
+          child: Container(
+            height: MediaQuery.of(context).size.height * 0.9,
+            child: StartNewWorkout(
+              exerciseData: exerciseData,
+            ),
+          ),
+        );
+      },
     );
   }
+
 
   @override
   Widget build(BuildContext context) {
