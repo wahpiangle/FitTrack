@@ -17,8 +17,6 @@ class WorkoutScreen extends StatefulWidget {
 class _WorkoutScreenState extends State<WorkoutScreen> {
   late List<Exercise> exerciseData;
   bool isBottomSheetVisible = false;
-  bool isBodyVisible = true; // Track the visibility of body contents in the bottom sheet
-
 
   @override
   void initState() {
@@ -29,45 +27,29 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
   Future<void> _startNewWorkout(BuildContext context) async {
     objectBox.currentWorkoutSessionService.createCurrentWorkoutSession();
 
-    PersistentBottomSheetController<dynamic>? controller;
-
-    controller = Scaffold.of(context).showBottomSheet(
-          (context) {
-        return NotificationListener<OverscrollIndicatorNotification>(
-          onNotification: (notification) {
-            // Hide the body contents when the bottom sheet is being dragged down
-            setState(() {
-              isBodyVisible = false;
-            });
-            return true;
-          },
-          child: ClipRRect(
-            borderRadius: BorderRadius.vertical(top: Radius.circular(20.0)),
-            child: Container(
-              height: MediaQuery.of(context).size.height * 0.9,
-              child: StartNewWorkout(
-                exerciseData: exerciseData,
+    await showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      isDismissible: false,
+      builder: (context) {
+        return DraggableScrollableSheet(
+          expand: false,
+          initialChildSize: 0.9,
+          maxChildSize: 1.0,
+          minChildSize: 0.2,
+          builder: (context, controller) {
+            return ClipRRect(
+              borderRadius: BorderRadius.vertical(top: Radius.circular(20.0)),
+              child: Container(
+                child: StartNewWorkout(
+                  exerciseData: exerciseData,
+                ),
               ),
-            ),
-          ),
+            );
+          },
         );
       },
-      backgroundColor: Colors.transparent,
     );
-
-    controller.closed.then((value) {
-      // Handle the sheet closed event if needed
-      // For example, set a flag to indicate that the sheet is closed
-      setState(() {
-        isBottomSheetVisible = false;
-        isBodyVisible = true; // Reset the visibility when the sheet is closed
-      });
-    });
-
-    // Set the flag to indicate that the sheet is open
-    setState(() {
-      isBottomSheetVisible = true;
-    });
   }
 
   @override
