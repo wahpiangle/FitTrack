@@ -53,23 +53,11 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
     });
   }
 
-  Future<void> _updateCurrentWorkoutSession() async {
-    final workoutSession = objectBox.getCurrentWorkoutSession();
-    setState(() {
-      currentWorkoutSession = workoutSession;
-    });
 
-    // // Start the timer if the workout session has started and exercises are added
-    // if (currentWorkoutSession.startTime != 0 &&
-    //     currentWorkoutSession.exercisesSetsInfo.isNotEmpty) {
-    //   Provider.of<TimerProvider>(context, listen: false).startTimer();
-    // }
-  }
 
   void selectExercise(Exercise selectedExercise) {
     objectBox.currentWorkoutSessionService
         .addExerciseToCurrentWorkoutSession(selectedExercise);
-    objectBox.addExerciseToCurrentWorkoutSession(selectedExercise);
     final timerProvider = Provider.of<TimerProvider>(context, listen: false);
     final restTimerProvider = Provider.of<RestTimerProvider>(context, listen: false);
 
@@ -340,7 +328,7 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          objectBox.test();
+          //objectBox.test();
         },
         child: Icon(Icons.add),
       ),
