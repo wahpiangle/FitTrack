@@ -55,6 +55,7 @@ dependencies:
   image_picker: ^1.0.4
   flutter_picker: ^2.1.0
   numberpicker: ^2.1.2
+  cupertino_date_textbox: ^1.0.3
 
   
 dev_dependencies:

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:group_project/main.dart';
 import 'package:group_project/models/exercise.dart';
@@ -7,6 +8,7 @@ import 'package:group_project/pages/workout/components/tiles/exercise_tile.dart'
 import 'package:provider/provider.dart';
 import 'package:group_project/pages/workout/components/tiles/components/timer_provider.dart';
 import 'package:group_project/pages/workout/components/tiles/components/rest_timer_provider.dart';
+import 'package:group_project/pages/workout/components/tiles/components/rest_time_picker.dart';
 
 
 
@@ -92,7 +94,7 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
 
     if (!_isTimerRunning) {
       timerProvider.startTimer();
-     // timerProvider.startExerciseTimer(selectedExercise.id);
+      // timerProvider.startExerciseTimer(selectedExercise.id);
       setState(() {
         _isTimerRunning = true;
       });
@@ -144,158 +146,135 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
     final timerProvider = Provider.of<TimerProvider>(context);
     final restTimerProvider = Provider.of<RestTimerProvider>(context);
     return Scaffold(
-        appBar: AppBar(
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back_ios),
-            onPressed: () {
-              Navigator.pop(context);
-            },
-          ),
-          actions: [
-            Center(
-              child: Material(
-                color: Colors.transparent,
-                child: InkWell(
-                  borderRadius: BorderRadius.circular(8),
-                  onTap: () {},
-                  child: const Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Text(
-                      "Finish",
-                      style: TextStyle(
-                        color: Color(0xFFE1F0CF),
-                        fontSize: 18,
-                      ),
+      appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+        actions: [
+          Center(
+            child: Material(
+              color: Colors.transparent,
+              child: InkWell(
+                borderRadius: BorderRadius.circular(8),
+                onTap: () {},
+                child: const Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Text(
+                    "Finish",
+                    style: TextStyle(
+                      color: Color(0xFFE1F0CF),
+                      fontSize: 18,
                     ),
                   ),
                 ),
               ),
             ),
-          ],
-
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Consumer<TimerProvider>(
-                builder: (context, timerProvider, child) {
-                  return Text(
-                    "Timer: ${formatDuration(timerProvider.currentDuration)}",
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 18,
-                    ),
-                  );
-                },
-              ),
-            ],
           ),
-          backgroundColor: const Color(0xFF1A1A1A),
+        ],
+
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Consumer<TimerProvider>(
+              builder: (context, timerProvider, child) {
+                return Text(
+                  "Timer: ${formatDuration(timerProvider.currentDuration)}",
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                  ),
+                );
+              },
+            ),
+          ],
         ),
         backgroundColor: const Color(0xFF1A1A1A),
-        body: StreamBuilder<CurrentWorkoutSession>(
-          stream: _currentWorkoutSessionStream,
-          builder: (context, snapshot) {
-            if (!snapshot.hasData) {
-              return const Center(child: CircularProgressIndicator());
-            } else {
-              currentWorkoutSession = snapshot.data!;
-              return Padding(
-                padding: const EdgeInsets.symmetric(vertical: 20),
-                child: Column(
-                  children: [
-                    ExerciseTile(
-                      exerciseData: widget.exerciseData,
-                      selectedExercises:
-                      snapshot.data!.exercisesSetsInfo.toList(),
-                      selectExercise: selectExercise,
-                      timerProvider: timerProvider,
-                    ),
-                    Row(
-                      children: [
+      ),
+      backgroundColor: const Color(0xFF1A1A1A),
+      body: StreamBuilder<CurrentWorkoutSession>(
+        stream: _currentWorkoutSessionStream,
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return const Center(child: CircularProgressIndicator());
+          } else {
+            currentWorkoutSession = snapshot.data!;
+            return Padding(
+              padding: const EdgeInsets.symmetric(vertical: 20),
+              child: Column(
+                children: [
+                  ExerciseTile(
+                    exerciseData: widget.exerciseData,
+                    selectedExercises:
+                    snapshot.data!.exercisesSetsInfo.toList(),
+                    selectExercise: selectExercise,
+                    timerProvider: timerProvider,
+                  ),
+                  Row(
+                    children: [
                       Text(
-                      'Rest Timer',
-                      style: TextStyle(
-                        color: Colors.white, // Set the text color to white
-                      ),
-                    ),
-                        Switch(
-                          value: restTimerProvider.isRestTimerEnabled,
-                          onChanged: (value) {
-                            if (value) {
-                              // Start rest timer
-                              restTimerProvider.startRestTimer();
-                            } else {
-                              // Stop rest timer
-                              restTimerProvider.stopRestTimer();
-                            }
-                            restTimerProvider.toggleRestTimer(value);
-                          },
-                        ),
-                      ],
-                    ),
-                    if (restTimerProvider.isRestTimerEnabled)
-                      TextFormField(
+                        'Rest Timer',
                         style: TextStyle(
-                          color: Colors.white,
+                          color: Colors.white, // Set the text color to white
                         ),
-                        decoration: InputDecoration(
-                          labelText: 'Rest Time (hh:mm:ss)',
-                          labelStyle: TextStyle(
-                            color: Colors.white,
-                          ),
-                        ),
+                      ),
+                      Switch(
+                        value: restTimerProvider.isRestTimerEnabled,
                         onChanged: (value) {
-                          final duration = parseDuration(value);
-                          restTimerProvider.setRestTimerDuration(duration);
+                          if (value) {
+                            // Start rest timer
+                            restTimerProvider.startRestTimer();
+                          } else {
+                            // Stop rest timer
+                            restTimerProvider.stopRestTimer();
+                          }
+                          restTimerProvider.toggleRestTimer(value);
                         },
                       ),
-                    if (restTimerProvider.isRestTimerEnabled) // Display the rest timer conditionally
-                      Consumer<RestTimerProvider>(
-                        builder: (context, restTimerProvider, child) {
-                          return Text(
-                            "Rest Timer: ${formatDuration(restTimerProvider.currentRestTimerDuration)}",
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
-                            ),
-                          );
-                        },
-                      ),
-                  ],
-                ),
-              );
-            }
-          },
-        ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-           // objectBox.test();
-          },
-          child: const Icon(Icons.add),
-        ),
-      );
+                    ],
+                  ),
+                  if (restTimerProvider.isRestTimerEnabled)
+                    SizedBox(width: 10),
+                  RestTimePicker(
+                    restTimerProvider: restTimerProvider,
+                  ),
+
+                  if (restTimerProvider.isRestTimerEnabled) // Display the rest timer conditionally
+                    Consumer<RestTimerProvider>(
+                      builder: (context, restTimerProvider, child) {
+                        return Text(
+                          "Rest Timer: ${formatDuration(restTimerProvider.currentRestTimerDuration)}",
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                          ),
+                        );
+                      },
+                    ),
+                ],
+              ),
+            );
+          }
+        },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          // objectBox.test();
+        },
+        child: const Icon(Icons.add),
+      ),
+    );
   }
 
   String formatDuration(int seconds) {
-    final hours = (seconds ~/ 3600).toString().padLeft(2, '0');
     final minutes = ((seconds % 3600) ~/ 60).toString().padLeft(2, '0');
     final remainingSeconds = (seconds % 60).toString().padLeft(2, '0');
-    return "$hours:$minutes:$remainingSeconds";
+    return "$minutes:$remainingSeconds";
   }
 
-  int parseDuration(String input) {
-    try {
-      // Parse the input in the format of hh:mm:ss and return the total seconds
-      // Replace this with your actual parsing logic
-      List<String> parts = input.split(':');
-      int hours = int.parse(parts[0]);
-      int minutes = int.parse(parts[1]);
-      int seconds = int.parse(parts[2]);
-      return hours * 3600 + minutes * 60 + seconds;
-    } catch (e) {
-      // Handle parsing errors, return a default value
-      return 0;
-    }
-  }
 
 }
+
+
