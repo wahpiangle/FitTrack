@@ -71,7 +71,7 @@ class _ExerciseTileState extends State<ExerciseTile> {
 
           if (exerciseSet.isCompleted) {
             // Start the rest timer when a set is completed
-            restTimerProvider.startRestTimer();
+            restTimerProvider.startRestTimer(context);
             // Set the flag to display the rest timer
             displayRestTimer = true;
           } else {

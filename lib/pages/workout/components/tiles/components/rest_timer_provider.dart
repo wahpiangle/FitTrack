@@ -1,6 +1,10 @@
 import 'dart:async';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+
+
 
 class RestTimerProvider with ChangeNotifier {
   bool _isRestTimerEnabled = false;
@@ -44,7 +48,7 @@ class RestTimerProvider with ChangeNotifier {
 
   // method to start the rest timer
   // method to start the rest timer
-  void startRestTimer() {
+  void startRestTimer(BuildContext context) {
     if (_isRestTimerEnabled) {
       print('Rest Timer started!');
       print('Rest Timer started with $_restTimerMinutes minutes and $_restTimerSeconds seconds!');
@@ -57,6 +61,11 @@ class RestTimerProvider with ChangeNotifier {
       _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
         if (_currentDuration <= 0) {
           stopRestTimer();
+          // Notify listeners that the countdown has ended
+        //  notifyListeners();
+
+          // Show the pop-up notification
+          _showRestTimeEndedNotification(context);
         } else {
           // Print the current duration for debugging
           print('duration: $_currentDuration');
@@ -73,10 +82,6 @@ class RestTimerProvider with ChangeNotifier {
   }
 
 
-
-
-
-
   //method to stop the rest timer
   void stopRestTimer() {
     _timer?.cancel();
@@ -90,5 +95,39 @@ class RestTimerProvider with ChangeNotifier {
   void dispose() {
     _timer?.cancel();
     super.dispose();
+  }
+
+  void _showRestTimeEndedNotification(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext ctx) {
+        return AlertDialog(
+          backgroundColor: const Color(0xFF1A1A1A),
+          surfaceTintColor: Colors.transparent,
+          title: const Text(
+            'Rest Time Ended',
+            style: TextStyle(color: Colors.white),
+          ),
+          content: const Text(
+            'Your rest time has ended!',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 18,
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text(
+                'OK',
+                style: TextStyle(fontSize: 18, color: Colors.blue),
+              ),
+            ),
+          ],
+        );
+      },
+    );
   }
 }

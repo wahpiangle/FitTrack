@@ -294,7 +294,7 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
                         onChanged: (value) {
                           if (value) {
                             // Start rest timer
-                            restTimerProvider.startRestTimer();
+                            restTimerProvider.startRestTimer(context);
                           } else {
                             // Stop rest timer
                             restTimerProvider.stopRestTimer();
@@ -359,6 +359,7 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
   }
 
 
+
   String _formatTime(int minutes, int seconds) {
     return "${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}";
   }
@@ -382,6 +383,10 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
       },
     );
   }
+
+
+
+
 }
 
 
