@@ -39,7 +39,6 @@ class FirebaseWorkoutsService {
     final User user = auth.currentUser!;
     final uid = user.uid;
     final collectionRef = db.collection('workouts');
-    // find the workout session with the given id
     final workoutSession = await collectionRef
         .doc(uid)
         .get()
@@ -47,7 +46,6 @@ class FirebaseWorkoutsService {
         .then((value) => value
             .where((workoutSession) => workoutSession['id'] == workoutSessionId)
             .toList());
-    // remove the workout session from the array
     await collectionRef.doc(uid).update({
       'workoutSessions': FieldValue.arrayRemove(workoutSession),
     });
