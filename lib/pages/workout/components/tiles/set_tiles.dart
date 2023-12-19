@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:group_project/constants/themes/app_colours.dart';
+import 'package:group_project/main.dart';
 import 'package:group_project/models/exercise_set.dart';
 import 'package:group_project/models/exercises_sets_info.dart';
 import 'package:group_project/pages/workout/components/tiles/components/set_labels.dart';
 
 class SetTiles extends StatefulWidget {
   final ExercisesSetsInfo exercisesSetsInfo;
-  final void Function(int exerciseSetId, ExercisesSetsInfo exercisesSetsInfo)
-      removeSet;
+  final void Function(int exerciseSetId) removeSet;
   final void Function(ExercisesSetsInfo exercisesSetsInfo) addSet;
   final void Function(int exerciseSetId) setIsCompleted;
 
@@ -75,10 +76,14 @@ class _SetTilesState extends State<SetTiles> {
                       color:
                           set.isCompleted ? Colors.green : Colors.transparent,
                       child: Dismissible(
-                        key: UniqueKey(),
+                        key: Key(set.id.toString()),
                         direction: DismissDirection.endToStart,
-                        onDismissed: (direction) => {
-                          widget.removeSet(set.id, widget.exercisesSetsInfo),
+                        onDismissed: (direction) {
+                          widget.removeSet(set.id);
+                          setState(() {
+                            widget.exercisesSetsInfo.exerciseSets
+                                .removeWhere((element) => element.id == set.id);
+                          });
                         },
                         background: Container(
                           color: Colors.red,
@@ -110,18 +115,16 @@ class _SetTilesState extends State<SetTiles> {
                                 flex: 1,
                                 child: Container(
                                   decoration: BoxDecoration(
-                                    color: const Color(0xFF333333),
+                                    color: AppColours.primaryBright,
                                     borderRadius: BorderRadius.circular(5),
                                   ),
-                                  child: TextField(
+                                  child: TextFormField(
                                     style: const TextStyle(
                                       fontSize: 18,
                                       color: Colors.white,
                                     ),
                                     textAlign: TextAlign.center,
-                                    controller: TextEditingController(
-                                      text: "${set.weight}",
-                                    ),
+                                    initialValue: "${set.weight ?? ''}",
                                     decoration: const InputDecoration(
                                       contentPadding: EdgeInsets.all(0),
                                       filled: true,
@@ -129,7 +132,15 @@ class _SetTilesState extends State<SetTiles> {
                                       border: OutlineInputBorder(
                                         borderSide: BorderSide.none,
                                       ),
+                                      hintText: "0",
+                                      hintStyle: TextStyle(
+                                        color: Colors.grey,
+                                      ),
                                     ),
+                                    onChanged: (value) => {
+                                      set.weight = int.tryParse(value),
+                                      objectBox.updateExerciseSet(set),
+                                    },
                                   ),
                                 ),
                               ),
@@ -140,18 +151,16 @@ class _SetTilesState extends State<SetTiles> {
                                   margin:
                                       const EdgeInsets.symmetric(vertical: 10),
                                   decoration: BoxDecoration(
-                                    color: const Color(0xFF333333),
+                                    color: AppColours.primaryBright,
                                     borderRadius: BorderRadius.circular(5),
                                   ),
-                                  child: TextField(
+                                  child: TextFormField(
                                     style: const TextStyle(
                                       fontSize: 18,
                                       color: Colors.white,
                                     ),
                                     textAlign: TextAlign.center,
-                                    controller: TextEditingController(
-                                      text: "${set.reps}",
-                                    ),
+                                    initialValue: "${set.reps ?? ''}",
                                     decoration: const InputDecoration(
                                       contentPadding: EdgeInsets.all(0),
                                       filled: true,
@@ -159,7 +168,15 @@ class _SetTilesState extends State<SetTiles> {
                                       border: OutlineInputBorder(
                                         borderSide: BorderSide.none,
                                       ),
+                                      hintText: "0",
+                                      hintStyle: TextStyle(
+                                        color: Colors.grey,
+                                      ),
                                     ),
+                                    onChanged: (value) => {
+                                      set.reps = int.tryParse(value),
+                                      objectBox.updateExerciseSet(set),
+                                    },
                                   ),
                                 ),
                               ),
@@ -174,7 +191,7 @@ class _SetTilesState extends State<SetTiles> {
                                   ),
                                   color: set.isCompleted
                                       ? Colors.green[300]
-                                      : const Color(0xFF333333),
+                                      : AppColours.primaryBright,
                                   child: InkWell(
                                     onTap: () {
                                       widget.setIsCompleted(set.id);
@@ -198,9 +215,13 @@ class _SetTilesState extends State<SetTiles> {
                 );
               }
               return Dismissible(
-                key: UniqueKey(),
+                key: Key(set.id.toString()),
                 onDismissed: (direction) {
-                  widget.removeSet(set.id, widget.exercisesSetsInfo);
+                  widget.removeSet(set.id);
+                  setState(() {
+                    widget.exercisesSetsInfo.exerciseSets
+                        .removeWhere((element) => element.id == set.id);
+                  });
                 },
                 direction: DismissDirection.endToStart,
                 background: Container(
@@ -235,18 +256,16 @@ class _SetTilesState extends State<SetTiles> {
                         child: Container(
                           margin: const EdgeInsets.symmetric(vertical: 10),
                           decoration: BoxDecoration(
-                            color: const Color(0xFF333333),
+                            color: AppColours.primaryBright,
                             borderRadius: BorderRadius.circular(5),
                           ),
-                          child: TextField(
+                          child: TextFormField(
                             style: const TextStyle(
                               fontSize: 18,
                               color: Colors.white,
                             ),
                             textAlign: TextAlign.center,
-                            controller: TextEditingController(
-                              text: "${set.weight}",
-                            ),
+                            initialValue: "${set.weight ?? ''}",
                             decoration: const InputDecoration(
                               contentPadding: EdgeInsets.all(0),
                               filled: true,
@@ -254,7 +273,15 @@ class _SetTilesState extends State<SetTiles> {
                               border: OutlineInputBorder(
                                 borderSide: BorderSide.none,
                               ),
+                              hintText: "0",
+                              hintStyle: TextStyle(
+                                color: Colors.grey,
+                              ),
                             ),
+                            onChanged: (value) => {
+                              set.weight = int.tryParse(value),
+                              objectBox.updateExerciseSet(set),
+                            },
                           ),
                         ),
                       ),
@@ -264,18 +291,16 @@ class _SetTilesState extends State<SetTiles> {
                         child: Container(
                           margin: const EdgeInsets.symmetric(vertical: 10),
                           decoration: BoxDecoration(
-                            color: const Color(0xFF333333),
+                            color: AppColours.primaryBright,
                             borderRadius: BorderRadius.circular(5),
                           ),
-                          child: TextField(
+                          child: TextFormField(
                             style: const TextStyle(
                               fontSize: 18,
                               color: Colors.white,
                             ),
                             textAlign: TextAlign.center,
-                            controller: TextEditingController(
-                              text: "${set.reps}",
-                            ),
+                            initialValue: "${set.reps ?? ''}",
                             decoration: const InputDecoration(
                               contentPadding: EdgeInsets.all(0),
                               filled: true,
@@ -283,7 +308,15 @@ class _SetTilesState extends State<SetTiles> {
                               border: OutlineInputBorder(
                                 borderSide: BorderSide.none,
                               ),
+                              hintText: "0",
+                              hintStyle: TextStyle(
+                                color: Colors.grey,
+                              ),
                             ),
+                            onChanged: (value) => {
+                              set.reps = int.tryParse(value),
+                              objectBox.updateExerciseSet(set),
+                            },
                           ),
                         ),
                       ),
@@ -298,7 +331,7 @@ class _SetTilesState extends State<SetTiles> {
                           ),
                           color: set.isCompleted
                               ? Colors.green[300]
-                              : const Color(0xFF333333),
+                              : AppColours.primaryBright,
                           child: InkWell(
                             onTap: () {
                               widget.setIsCompleted(set.id);
@@ -326,7 +359,7 @@ class _SetTilesState extends State<SetTiles> {
           child: ElevatedButton(
             style: ButtonStyle(
               backgroundColor:
-                  MaterialStateProperty.all<Color>(const Color(0xFF333333)),
+                  MaterialStateProperty.all<Color>(AppColours.primaryBright),
               shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                 RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(15.0),

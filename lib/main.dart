@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:group_project/pages/auth/email_password_login.dart';
 import 'package:group_project/pages/auth/register_screen.dart';
+import 'package:group_project/pages/auth/settings_login.dart';
+import 'package:group_project/pages/auth/settings_signup.dart';
 import 'package:group_project/pages/auth_wrapper.dart';
+import 'package:group_project/pages/components/app_layout.dart';
 import 'package:group_project/services/auth_service.dart';
 import 'package:group_project/services/objectbox_service.dart';
 import 'package:provider/provider.dart';
@@ -50,6 +53,9 @@ class MyApp extends StatelessWidget {
           '/auth': (context) => const Wrapper(),
           "login": (context) => const EmailPasswordLogin(),
           "register": (context) => const RegisterScreen(),
+          "settings_login": (context) => const SettingsLogin(),
+          "settings_signup": (context) => const SettingsSignup(),
+          "app_layout": (context) => const AppLayout(),
         },
         theme: ThemeData(
           bottomNavigationBarTheme: const BottomNavigationBarThemeData(

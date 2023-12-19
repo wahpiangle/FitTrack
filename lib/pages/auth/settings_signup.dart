@@ -2,14 +2,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:group_project/services/auth_service.dart';
 
-class RegisterScreen extends StatefulWidget {
-  const RegisterScreen({super.key});
+class SettingsSignup extends StatefulWidget {
+  const SettingsSignup({super.key});
 
   @override
-  State<RegisterScreen> createState() => _RegisterScreenState();
+  State<SettingsSignup> createState() => _SettingsSignupState();
 }
 
-class _RegisterScreenState extends State<RegisterScreen> {
+class _SettingsSignupState extends State<SettingsSignup> {
   final AuthService _auth = AuthService();
   final _formKey = GlobalKey<FormState>();
 
@@ -51,17 +51,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     hintStyle: const TextStyle(color: Colors.white),
                     enabledBorder: OutlineInputBorder(
                       borderSide:
-                          const BorderSide(color: Color(0xFF333333)),
+                      const BorderSide(color: Color(0xFF333333)),
                       borderRadius: BorderRadius.circular(10.0),
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderSide:
-                          const BorderSide(color: Colors.white),
+                      const BorderSide(color: Colors.white),
                       borderRadius: BorderRadius.circular(10.0),
                     ),
                   ),
                   validator: (val) =>
-                      val!.isEmpty ? 'Enter an invalid email' : null,
+                  val!.isEmpty ? 'Enter an invalid email' : null,
                   onChanged: (val) {
                     setState(() => email = val);
                   }),
@@ -91,7 +91,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                   obscureText: true,
                   validator: (val) =>
-                      val!.length < 6 ? 'Enter a password 6 characters long' : null,
+                  val!.length < 6 ? 'Enter a password 6 characters long' : null,
                   onChanged: (val) {
                     setState(() => password = val);
                   }),
@@ -111,6 +111,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         await _auth.registerWithEmailAndPassword(email, password);
                         Future.microtask(() => Navigator.of(context).pop());
                         Future.microtask(() => Navigator.pop(context));
+                        Future.microtask(() => Navigator.of(context).pushReplacementNamed("app_layout"));
                         errorMessage = '';
                       } on FirebaseAuthException catch (error){
                         if (error.code == "invalid-email"){
@@ -127,7 +128,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   style: ButtonStyle(
                     minimumSize: MaterialStateProperty.all(const Size(290, 40)),
                     backgroundColor:
-                        MaterialStateProperty.all(const Color(0xffe1f0cf)),
+                    MaterialStateProperty.all(const Color(0xffe1f0cf)),
                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                       RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(40),
@@ -152,7 +153,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       )
                   ),
                   onPressed: () {
-                    Navigator.of(context).pushReplacementNamed("login");
+                    Navigator.of(context).pushReplacementNamed("settings_login");
                   },
                 ),
               ),

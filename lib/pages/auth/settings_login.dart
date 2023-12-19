@@ -2,14 +2,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:group_project/services/auth_service.dart';
 
-class RegisterScreen extends StatefulWidget {
-  const RegisterScreen({super.key});
+class SettingsLogin extends StatefulWidget {
+  const SettingsLogin({super.key});
 
   @override
-  State<RegisterScreen> createState() => _RegisterScreenState();
+  State<SettingsLogin> createState() => _SettingsLoginState();
 }
 
-class _RegisterScreenState extends State<RegisterScreen> {
+class _SettingsLoginState extends State<SettingsLogin> {
   final AuthService _auth = AuthService();
   final _formKey = GlobalKey<FormState>();
 
@@ -23,14 +23,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFF1A1A1A),
-      // const Color(0xFF1A1A1C),
       appBar: AppBar(
         backgroundColor: const Color(0xFF1A1A1A),
-        centerTitle: true,
         elevation: 0.0,
-        title: const Text('Register'),
+        title: const Text('Login'),
+        centerTitle: true,
       ),
       body: Container(
+        constraints: const BoxConstraints.expand(),
         padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 50.0),
         child: Form(
           key: _formKey,
@@ -42,7 +42,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     color: Colors.white,
                     fontSize: 23,
                     fontWeight: FontWeight.bold,
-                  )),
+                  )
+              ),
               const SizedBox(height: 10.0),
               TextFormField(
                   style: const TextStyle(color: Colors.white),
@@ -51,17 +52,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     hintStyle: const TextStyle(color: Colors.white),
                     enabledBorder: OutlineInputBorder(
                       borderSide:
-                          const BorderSide(color: Color(0xFF333333)),
-                      borderRadius: BorderRadius.circular(10.0),
+                      const BorderSide(color: Color(0xFF333333)),
+                      borderRadius:
+                      BorderRadius.circular(10.0),
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderSide:
-                          const BorderSide(color: Colors.white),
-                      borderRadius: BorderRadius.circular(10.0),
+                      const BorderSide(color: Colors.white),
+                      borderRadius:
+                      BorderRadius.circular(10.0),
                     ),
                   ),
                   validator: (val) =>
-                      val!.isEmpty ? 'Enter an invalid email' : null,
+                  val!.isEmpty ? 'Enter an invalid email' : null,
                   onChanged: (val) {
                     setState(() => email = val);
                   }),
@@ -71,7 +74,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     color: Colors.white,
                     fontSize: 23,
                     fontWeight: FontWeight.bold,
-                  )),
+                  )
+              ),
               const SizedBox(height: 10.0),
               TextFormField(
                   style: const TextStyle(color: Colors.white),
@@ -81,17 +85,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     enabledBorder: OutlineInputBorder(
                       borderSide:
                       const BorderSide(color: Color(0xFF333333)),
-                      borderRadius: BorderRadius.circular(10.0),
+                      borderRadius:
+                      BorderRadius.circular(10.0),
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderSide:
-                      const BorderSide(color: Colors.white),
-                      borderRadius: BorderRadius.circular(10.0),
+                      const BorderSide(color: Colors.white,),
+                      borderRadius:
+                      BorderRadius.circular(10.0),
                     ),
                   ),
                   obscureText: true,
                   validator: (val) =>
-                      val!.length < 6 ? 'Enter a password 6 characters long' : null,
+                  val!.length < 6 ? 'Enter a password 6 characters long' : null,
                   onChanged: (val) {
                     setState(() => password = val);
                   }),
@@ -108,51 +114,55 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             return const Center(child: CircularProgressIndicator());
                           },
                         );
-                        await _auth.registerWithEmailAndPassword(email, password);
+                        await _auth.signInWithEmailAndPassword(email, password);
                         Future.microtask(() => Navigator.of(context).pop());
                         Future.microtask(() => Navigator.pop(context));
-                        errorMessage = '';
-                      } on FirebaseAuthException catch (error){
+                        Future.microtask(() => Navigator.of(context).pushReplacementNamed("app_layout"));
+                        errorMessage= '';
+                      } on FirebaseAuthException catch (error) {
                         if (error.code == "invalid-email"){
                           Future.microtask(() => Navigator.of(context).pop());
                           errorMessage = 'The email format is invalid.';
                         } else {
                           Future.microtask(() => Navigator.of(context).pop());
-                          errorMessage = 'The email is already taken by another account.';
+                          errorMessage = 'The email or password you\'ve entered is incorrect.';
                         }
                       }
                       setState(() {});
                     }
                   },
                   style: ButtonStyle(
-                    minimumSize: MaterialStateProperty.all(const Size(290, 40)),
-                    backgroundColor:
-                        MaterialStateProperty.all(const Color(0xffe1f0cf)),
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                    minimumSize: MaterialStateProperty.all(
+                        const Size(290, 40)),
+                    backgroundColor: MaterialStateProperty.all(
+                        const Color(0xffe1f0cf)),
+                    shape: MaterialStateProperty.all<
+                        RoundedRectangleBorder>(
                       RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(40),
                       ),
                     ),
                   ),
-                  child: const Text('Register',
+                  child: const Text('Login',
                       style: TextStyle(
                         color: Colors.black,
                         fontWeight: FontWeight.bold,
                         letterSpacing: 0.3,
                         fontSize: 16,
-                      )),
+                      )
+                  ),
                 ),
               ),
               const SizedBox(height: 20.0),
               Center(
                 child: TextButton(
-                  child: const Text('Already a member? Login',
+                  child: const Text('Don\'t have an account? Create one now',
                       style: TextStyle(
                         color: Colors.white,
                       )
                   ),
                   onPressed: () {
-                    Navigator.of(context).pushReplacementNamed("login");
+                    Navigator.of(context).pushReplacementNamed("settings_signup");
                   },
                 ),
               ),
@@ -172,3 +182,4 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
 }
+

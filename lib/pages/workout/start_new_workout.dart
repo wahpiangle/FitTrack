@@ -32,26 +32,15 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
   late List<Exercise> exerciseData;
   TextEditingController weightsController = TextEditingController();
   TextEditingController repsController = TextEditingController();
-  Stream<CurrentWorkoutSession>? _currentWorkoutSessionStream;
-  late CurrentWorkoutSession currentWorkoutSession;
   int _restTimerDuration = 60;//default rest timer value
 
 
   List<Widget> setBorders = [];
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    // Access the RestTimerProvider using Provider.of
-    //_restTimerProvider = Provider.of<RestTimerProvider>(context);
-  }
-
-  @override
-  @override
   void initState() {
     super.initState();
-    currentWorkoutSession = CurrentWorkoutSession();
-    _currentWorkoutSessionStream = objectBox.watchCurrentWorkoutSession();
+    exerciseData = widget.exerciseData;
     _controller = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 1),
@@ -62,16 +51,6 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
     _animation.addListener(() {
       setState(() {});
     });
-
-    // _restTimerProvider.restTimerStream.listen((restDuration) {
-    //   // Update UI with restDuration (e.g., display it in a Text widget)
-    //   setState(() {
-    //     // Update UI with restDuration
-    //   });
-    // });
-
-    // Retrieve the current workout session when the state is initialized
-    _updateCurrentWorkoutSession();
   }
 
   Future<void> _updateCurrentWorkoutSession() async {
@@ -88,6 +67,8 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
   }
 
   void selectExercise(Exercise selectedExercise) {
+    objectBox.currentWorkoutSessionService
+        .addExerciseToCurrentWorkoutSession(selectedExercise);
     objectBox.addExerciseToCurrentWorkoutSession(selectedExercise);
     final timerProvider = Provider.of<TimerProvider>(context, listen: false);
     final restTimerProvider = Provider.of<RestTimerProvider>(context, listen: false);
@@ -141,6 +122,60 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
 
 
 
+  void _delete(BuildContext context) {
+    showDialog(
+        context: context,
+        builder: (BuildContext ctx) {
+          return AlertDialog(
+            backgroundColor: const Color(0xFF1A1A1A),
+            surfaceTintColor: Colors.transparent,
+            title: const Text(
+              'Finish Workout',
+              style: TextStyle(color: Colors.white),
+            ),
+            content: const Text(
+              'Are you sure that you want to finish workout?',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 18,
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text(
+                  'Cancel',
+                  style: TextStyle(fontSize: 18, color: Colors.red),
+                ),
+              ),
+              TextButton(
+                onPressed: () {
+                  // Close the dialog
+                  Navigator.of(context).pop();
+                  Navigator.of(context).pop();
+                  objectBox.saveCurrentWorkoutSession();
+                },
+                child: const Text(
+                  'Finish Workout',
+                  style: TextStyle(
+                    fontSize: 18,
+                    color: Colors.blue,
+                  ),
+                ),
+              ),
+            ],
+          );
+        });
+  }
+
+  void removeSet(int exerciseSetId) {
+    setState(() {
+      objectBox.removeSetFromExercise(exerciseSetId);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final timerProvider = Provider.of<TimerProvider>(context);
@@ -159,7 +194,50 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
               color: Colors.transparent,
               child: InkWell(
                 borderRadius: BorderRadius.circular(8),
-                onTap: () {},
+                onTap: () {
+                  bool everySetCompleted = objectBox
+                      .currentWorkoutSessionService
+                      .getCurrentWorkoutSession()
+                      .exercisesSetsInfo
+                      .every((exercisesSetsInfo) {
+                    return exercisesSetsInfo.exerciseSets.every((exerciseSet) {
+                      return exerciseSet.isCompleted;
+                    });
+                  });
+                  bool isNotEmpty = objectBox.currentWorkoutSessionService
+                      .getCurrentWorkoutSession()
+                      .exercisesSetsInfo
+                      .isNotEmpty;
+                  if (isNotEmpty) {
+                    if (everySetCompleted) {
+                      _delete(context);
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text(
+                            "Please complete all sets",
+                            style: TextStyle(
+                              color: Colors.white,
+                            ),
+                          ),
+                          backgroundColor: Color(0xFF1A1A1A),
+                        ),
+                      );
+                    }
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text(
+                          "Please add at least one exercise",
+                          style: TextStyle(
+                            color: Colors.white,
+                          ),
+                        ),
+                        backgroundColor: Color(0xFF1A1A1A),
+                      ),
+                    );
+                  }
+                },
                 child: const Padding(
                   padding: EdgeInsets.all(8.0),
                   child: Text(
@@ -195,21 +273,22 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
       ),
       backgroundColor: const Color(0xFF1A1A1A),
       body: StreamBuilder<CurrentWorkoutSession>(
-        stream: _currentWorkoutSessionStream,
+        stream:
+            objectBox.currentWorkoutSessionService.watchCurrentWorkoutSession(),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
             return const Center(child: CircularProgressIndicator());
           } else {
-            currentWorkoutSession = snapshot.data!;
             return Padding(
               padding: const EdgeInsets.symmetric(vertical: 20),
               child: Column(
                 children: [
                   ExerciseTile(
-                    exerciseData: widget.exerciseData,
-                    selectedExercises:
-                    snapshot.data!.exercisesSetsInfo.toList(),
+                    exerciseData: exerciseData,
+                    exercisesSetsInfo:
+                        snapshot.data!.exercisesSetsInfo.toList(),
                     selectExercise: selectExercise,
+                    removeSet: removeSet,
                     timerProvider: timerProvider,
                   ),
                   Row(
@@ -261,9 +340,9 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          // objectBox.test();
+          objectBox.test();
         },
-        child: const Icon(Icons.add),
+        child: Icon(Icons.add),
       ),
     );
   }
