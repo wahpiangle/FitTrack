@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:group_project/main.dart';
 import 'package:group_project/models/exercise.dart';
@@ -32,7 +31,6 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
   late List<Exercise> exerciseData;
   TextEditingController weightsController = TextEditingController();
   TextEditingController repsController = TextEditingController();
-  int _restTimerDuration = 60;//default rest timer value
   bool _isSetTimeVisible = true;
 
 
@@ -61,7 +59,7 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
     objectBox.currentWorkoutSessionService
         .addExerciseToCurrentWorkoutSession(selectedExercise);
     final timerProvider = Provider.of<TimerProvider>(context, listen: false);
-    final restTimerProvider = Provider.of<RestTimerProvider>(context, listen: false);
+   // final restTimerProvider = Provider.of<RestTimerProvider>(context, listen: false);
 
     if (!_isTimerRunning) {
       timerProvider.startTimer();
@@ -283,7 +281,7 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
                   ),
                   Row(
                     children: [
-                      Text(
+                      const Text(
                         'Rest Timer',
                         style: TextStyle(
                           color: Colors.white, // Set the text color to white
@@ -305,7 +303,7 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
                     ],
                   ),
                   if (restTimerProvider.isRestTimerEnabled)
-                    SizedBox(width: 10),
+                    const SizedBox(width: 10),
 
                   if (restTimerProvider.isRestTimerEnabled)
                     GestureDetector(
@@ -353,7 +351,7 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
         onPressed: () {
           //objectBox.test();
         },
-        child: Icon(Icons.add),
+        child: const Icon(Icons.add),
       ),
     );
   }

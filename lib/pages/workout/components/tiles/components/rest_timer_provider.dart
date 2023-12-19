@@ -1,7 +1,4 @@
 import 'dart:async';
-
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 
@@ -47,13 +44,9 @@ class RestTimerProvider with ChangeNotifier {
 
 
   // method to start the rest timer
-  // method to start the rest timer
   void startRestTimer(BuildContext context) {
     if (_isRestTimerEnabled) {
-      print('Rest Timer started!');
-      print('Rest Timer started with $_restTimerMinutes minutes and $_restTimerSeconds seconds!');
-
-      _currentDuration = _restTimerMinutes * 60 + _restTimerSeconds; // Include both minutes and seconds
+      _currentDuration = _restTimerMinutes * 60 + _restTimerSeconds;
 
       // Cancel the existing timer if it's already running
       _timer?.cancel();
@@ -61,14 +54,10 @@ class RestTimerProvider with ChangeNotifier {
       _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
         if (_currentDuration <= 0) {
           stopRestTimer();
-          // Notify listeners that the countdown has ended
-        //  notifyListeners();
 
           // Show the pop-up notification
           _showRestTimeEndedNotification(context);
         } else {
-          // Print the current duration for debugging
-          print('duration: $_currentDuration');
 
           // Update the UI by calling notifyListeners
           notifyListeners();

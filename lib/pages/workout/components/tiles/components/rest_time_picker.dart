@@ -6,9 +6,9 @@ class RestTimePicker extends StatelessWidget {
   final RestTimerProvider restTimerProvider;
 
   const RestTimePicker({
-    Key? key,
+    super.key,
     required this.restTimerProvider,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +41,7 @@ class RestTimePicker extends StatelessWidget {
           return Center(
             child: Text(
               '${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}',
-              style: TextStyle(
+              style: const TextStyle(
                 color: Colors.white,
               ),
             ),
