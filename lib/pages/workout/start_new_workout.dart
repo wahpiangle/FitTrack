@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:group_project/main.dart';
 import 'package:group_project/models/exercise.dart';
 import 'package:group_project/models/current_workout_session.dart';
+import 'package:group_project/models/workout_session.dart';
 import 'package:group_project/pages/workout/components/tiles/exercise_tile.dart';
+import 'package:group_project/services/firebase/workoutSession/firebase_workouts_service.dart';
 
 class StartNewWorkout extends StatefulWidget {
   final List<Exercise> exerciseData;
@@ -109,7 +111,9 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
                   // Close the dialog
                   Navigator.of(context).pop();
                   Navigator.of(context).pop();
-                  objectBox.saveCurrentWorkoutSession();
+                  WorkoutSession savedWorkout =
+                      objectBox.saveCurrentWorkoutSession();
+                  FirebaseWorkoutsService.createWorkoutSession(savedWorkout);
                 },
                 child: const Text(
                   'Finish Workout',
