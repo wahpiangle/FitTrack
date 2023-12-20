@@ -137,12 +137,10 @@ class _ChooseExerciseState extends State<ChooseExercise> {
           stream: streamExercises,
           builder: (context, snapshot) {
             if (!snapshot.hasData) {
-              return CircularProgressIndicator();
+              return const CircularProgressIndicator();
             }
 
             final exercises = filteredExercises;
-
-            // Filter exercises based on selectedBodyPart and selectedCategory
             final filteredData = exercises.where((exercise) {
               final exerciseBodyPart = exercise.bodyPart.target!.name;
               final exerciseCategory = exercise.category.target!.name;
@@ -223,108 +221,108 @@ class _ChooseExerciseState extends State<ChooseExercise> {
                         ],
                       ),
                     ),
-            Expanded(
-             child: ListView.builder(
-               itemCount: groupedExercises.length,
-               itemBuilder: (context, index) {
-                 final firstLetter = groupedExercises.keys.toList()[index];
-                 final groupExercises = groupedExercises[firstLetter]!;
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: groupedExercises.length,
+                      itemBuilder: (context, index) {
+                        final firstLetter = groupedExercises.keys.toList()[index];
+                        final groupExercises = groupedExercises[firstLetter]!;
 
-                 return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(top: 8.0, bottom: 4.0),
-              child: Text(
-                firstLetter,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 20.0,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-            ListView.builder(
-              shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
-              itemCount: groupExercises.length,
-              itemBuilder: (context, index) {
-                final exercise = groupExercises[index];
-                return Material(
-                  color: const Color(0xFF1A1A1A),
-                  child: InkWell(
-                    onTap: () {
-                      _selectExercise(exercise);
-                    },
-                    child: Container(
-                      margin: const EdgeInsets.symmetric(vertical: 5),
-                      child: ListTile(
-                        tileColor: exercise.isSelected ? Colors.grey[800] : null,
-                        horizontalTitleGap: -10,
-                        leading: SizedBox(
-                          height: 100,
-                          width: 100,
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(300.0),
-                            child: exercise.imagePath == ''
-                                ? Container(
-                              decoration: BoxDecoration(
-                                color: const Color(0xFFE1F0CF),
-                                borderRadius: BorderRadius.circular(300.0),
-                              ),
-                              child: Center(
-                                child: Text(
-                                  exercise.name[0].toUpperCase(),
-                                  style: const TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 24.0,
-                                  ),
-                                ),
-                              ),
-                            )
-                                : ClipPath(
-                              clipper: MyClipperPath(),
-                              child: Container(
-                                height: 60,
-                                width: 80,
-                                decoration: BoxDecoration(
-                                  image: DecorationImage(
-                                    image: Image.asset(exercise.imagePath).image,
-                                    fit: BoxFit.contain,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        title: Padding(
-                          padding: const EdgeInsets.only(bottom: 10),
-                          child: Text(
-                            exercise.name,
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 16.5,
-                            ),
-                          ),
-                        ),
-                        subtitle: Text(
-                          exercise.bodyPart.target!.name,
-                          style: TextStyle(
-                            color: Colors.grey[500],
-                            fontSize: 14,
-                          ),
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                    Padding(
+                      padding: const EdgeInsets.only(top: 8.0, bottom: 4.0),
+                      child: Text(
+                        firstLetter,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                     ),
-                  ),
-                );
-              },
-            ),
-          ],
-        );
-      },
-    ),
+                            ListView.builder(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemCount: groupExercises.length,
+                              itemBuilder: (context, index) {
+                                final exercise = groupExercises[index];
+                                return Material(
+                                  color: const Color(0xFF1A1A1A),
+                                  child: InkWell(
+                                    onTap: () {
+                                      _selectExercise(exercise);
+                                    },
+                                    child: Container(
+                                      margin: const EdgeInsets.symmetric(vertical: 5),
+                                      child: ListTile(
+                                        tileColor: exercise.isSelected ? Colors.grey[800] : null,
+                                        horizontalTitleGap: -10,
+                                        leading: SizedBox(
+                                          height: 100,
+                                          width: 100,
+                                          child: ClipRRect(
+                                            borderRadius: BorderRadius.circular(300.0),
+                                            child: exercise.imagePath == ''
+                                                ? Container(
+                                              decoration: BoxDecoration(
+                                                color: const Color(0xFFE1F0CF),
+                                                borderRadius: BorderRadius.circular(300.0),
+                                              ),
+                                              child: Center(
+                                                child: Text(
+                                                  exercise.name[0].toUpperCase(),
+                                                  style: const TextStyle(
+                                                    color: Colors.black,
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 24.0,
+                                                  ),
+                                                ),
+                                              ),
+                                            )
+                                                : ClipPath(
+                                              clipper: MyClipperPath(),
+                                              child: Container(
+                                                height: 60,
+                                                width: 80,
+                                                decoration: BoxDecoration(
+                                                  image: DecorationImage(
+                                                    image: Image.asset(exercise.imagePath).image,
+                                                    fit: BoxFit.contain,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        title: Padding(
+                                          padding: const EdgeInsets.only(bottom: 10),
+                                          child: Text(
+                                            exercise.name,
+                                            style: const TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 16.5,
+                                            ),
+                                          ),
+                                        ),
+                                        subtitle: Text(
+                                          exercise.bodyPart.target!.name,
+                                          style: TextStyle(
+                                            color: Colors.grey[500],
+                                            fontSize: 14,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                          ],
+                        );
+                      },
+                    ),
                   ),
                 ]
                 ),
