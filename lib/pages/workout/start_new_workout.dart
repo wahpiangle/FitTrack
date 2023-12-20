@@ -208,6 +208,7 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
                               color: Colors.white,
                             ),
                           ),
+
                           backgroundColor: Color(0xFF1A1A1A),
                         ),
                       );
@@ -240,7 +241,56 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
             ),
           ),
         ],
-         backgroundColor: const Color(0xFF1A1A1A),
+        backgroundColor: const Color(0xFF1A1A1A),
+        title: PreferredSize(
+          preferredSize: Size.fromHeight(40),
+          child: AnimatedCrossFade(
+            duration: const Duration(milliseconds: 300),
+            crossFadeState: restTimerProvider.isRestTimerEnabled && restTimerProvider.isRestTimerRunning
+                ? CrossFadeState.showFirst
+                : CrossFadeState.showSecond,
+            firstChild: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                children: [
+                  Icon(Icons.access_time, color: Colors.white, size: 18),
+                  const SizedBox(width: 4),
+                  Text(
+                    " ${TimerProvider.formatDuration(restTimerProvider.currentRestTimerDuration)}",
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            secondChild: GestureDetector(
+              onTap: () async {
+                await _showScrollTimePicker(context, restTimerProvider);
+                setState(() {
+                  _isSetTimeVisible = !_isSetTimeVisible;
+                });
+              },
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  children: [
+                    Icon(Icons.access_time, color: Colors.white, size: 18),
+                    const SizedBox(width: 4),
+                    Text(
+                      " ${_formatTime(restTimerProvider.restTimerMinutes, restTimerProvider.restTimerSeconds)}",
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
       ),
       backgroundColor: const Color(0xFF1A1A1A),
       body: StreamBuilder<CurrentWorkoutSession>(
@@ -285,44 +335,6 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
                       ),
                     ],
                   ),
-                  if (restTimerProvider.isRestTimerEnabled)
-                    const SizedBox(width: 10),
-
-                  if (restTimerProvider.isRestTimerEnabled)
-                    GestureDetector(
-                      onTap: () async {
-                        await _showScrollTimePicker(context, restTimerProvider);
-                        setState(() {
-                          _isSetTimeVisible = !_isSetTimeVisible;
-                        });
-                      },
-                      child:AnimatedCrossFade(
-                        duration: const Duration(milliseconds: 300),
-                        crossFadeState: restTimerProvider.isRestTimerEnabled && restTimerProvider.isRestTimerRunning
-                            ? CrossFadeState.showFirst
-                            : CrossFadeState.showSecond,
-                        firstChild: Text(
-                          "Rest Timer: ${TimerProvider.formatDuration(restTimerProvider.currentRestTimerDuration)}",
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                          ),
-                        ),
-                        secondChild: Container(
-                          color: Colors.transparent,
-                          child: Center(
-                            child: Text(
-                              "Set Time: ${_formatTime(restTimerProvider.restTimerMinutes, restTimerProvider.restTimerSeconds)}",
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 16,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-
-                    ),
                 ],
               ),
             );
@@ -345,20 +357,21 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
 
 
   Future<void> _showScrollTimePicker(BuildContext context, RestTimerProvider restTimerProvider) async {
+    // Calculate the initial item based on the default duration
+    int initialItem = (restTimerProvider.restTimerMinutes * 60 + restTimerProvider.restTimerSeconds) ~/ 5 - 1;
+
     return showModalBottomSheet<void>(
       context: context,
-      backgroundColor: Colors.black, // Set the background color
+      backgroundColor: Colors.black,
       builder: (BuildContext context) {
         return Container(
-          height: 200, // Set the desired height of the bottom sheet
-          color: Colors.black, // Set the background color
+          height: 200,
+          color: Colors.black,
           child: RestTimePicker(restTimerProvider: restTimerProvider),
         );
       },
     );
   }
-
-
 
 
 }

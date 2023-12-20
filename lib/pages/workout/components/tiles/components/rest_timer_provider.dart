@@ -7,7 +7,7 @@ class RestTimerProvider with ChangeNotifier {
   bool _isRestTimerEnabled = false;
   int _restTimerDuration = 120;
   int _currentDuration = 0;
-  int _restTimerMinutes = 0;
+  int _restTimerMinutes = 2;
   int _restTimerSeconds = 0;
   Timer? _timer;
   bool _isRestTimerRunning = false;
