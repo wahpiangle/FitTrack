@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:group_project/main.dart';
+import 'package:group_project/pages/workout/components/tiles/components/timer_provider.dart';
+import 'package:provider/provider.dart';
 
 class WorkoutHeader extends StatefulWidget {
   const WorkoutHeader({
@@ -21,6 +23,7 @@ class _WorkoutHeaderState extends State<WorkoutHeader> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10.0),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
             alignment: Alignment.topLeft,
@@ -41,7 +44,20 @@ class _WorkoutHeaderState extends State<WorkoutHeader> {
               ),
             ),
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 5),
+
+          Consumer<TimerProvider>(
+            builder: (context, timerProvider, child) {
+              return Text(
+                "Timer: ${TimerProvider.formatDuration(timerProvider.currentDuration)}",
+                style: const TextStyle(
+                  color: const Color(0xFFC1C1C1),
+                  fontSize: 14,
+                ),
+              );
+            },
+          ),
+          const SizedBox(height: 16),
           TextFormField(
             initialValue: objectBox.currentWorkoutSessionService
                 .getCurrentWorkoutSessionNote(),
@@ -68,4 +84,5 @@ class _WorkoutHeaderState extends State<WorkoutHeader> {
       ),
     );
   }
+
 }

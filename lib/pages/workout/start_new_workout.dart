@@ -240,24 +240,7 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
             ),
           ),
         ],
-
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Consumer<TimerProvider>(
-              builder: (context, timerProvider, child) {
-                return Text(
-                  "Timer: ${formatDuration(timerProvider.currentDuration)}",
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 18,
-                  ),
-                );
-              },
-            ),
-          ],
-        ),
-        backgroundColor: const Color(0xFF1A1A1A),
+         backgroundColor: const Color(0xFF1A1A1A),
       ),
       backgroundColor: const Color(0xFF1A1A1A),
       body: StreamBuilder<CurrentWorkoutSession>(
@@ -319,7 +302,7 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
                             ? CrossFadeState.showFirst
                             : CrossFadeState.showSecond,
                         firstChild: Text(
-                          "Rest Timer: ${formatDuration(restTimerProvider.currentRestTimerDuration)}",
+                          "Rest Timer: ${TimerProvider.formatDuration(restTimerProvider.currentRestTimerDuration)}",
                           style: const TextStyle(
                             color: Colors.white,
                             fontSize: 16,
@@ -339,7 +322,6 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
                         ),
                       ),
 
-
                     ),
                 ],
               ),
@@ -357,16 +339,10 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
   }
 
 
-
   String _formatTime(int minutes, int seconds) {
     return "${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}";
   }
 
-  String formatDuration(int seconds) {
-    final minutes = ((seconds % 3600) ~/ 60).toString().padLeft(2, '0');
-    final remainingSeconds = (seconds % 60).toString().padLeft(2, '0');
-    return "$minutes:$remainingSeconds";
-  }
 
   Future<void> _showScrollTimePicker(BuildContext context, RestTimerProvider restTimerProvider) async {
     return showModalBottomSheet<void>(
