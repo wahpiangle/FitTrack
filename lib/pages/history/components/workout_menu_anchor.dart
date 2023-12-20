@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:group_project/main.dart';
+import 'package:group_project/services/firebase/workoutSession/firebase_workouts_service.dart';
 
 class WorkoutMenuAnchor extends StatelessWidget {
   final int workoutSessionId;
@@ -38,6 +39,7 @@ class WorkoutMenuAnchor extends StatelessWidget {
             ),
             TextButton(
               onPressed: () {
+                FirebaseWorkoutsService.deleteWorkoutSession(workoutSessionId);
                 objectBox.workoutSessionService
                     .removeWorkoutSession(workoutSessionId);
                 Navigator.of(context).pop();
