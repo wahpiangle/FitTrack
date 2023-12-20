@@ -53,43 +53,18 @@ class _ChooseExerciseState extends State<ChooseExercise> {
     return groupedExercises;
   }
 
-    // void filterExercises(String query) {
-    //   setState(() {
-    //     if (query.isEmpty) {
-    //       filteredExercises = widget.exercises;
-    //     } else {
-    //       filteredExercises = widget.exercises
-    //           .where((exercise) =>
-    //           exercise.name.toLowerCase().contains(query.toLowerCase()))
-    //           .toList();
-    //     }
-    //   });
-    // }
-
-  void filterExercises(String query) {
-    setState(() {
-      if (query.isEmpty) {
-        filteredExercises = widget.exercises
-            .where((exercise) =>
-        (selectedBodyPart.isEmpty ||
-            exercise.bodyPart.target!.name == selectedBodyPart) &&
-            (selectedCategory.isEmpty ||
-                selectedCategory.contains(exercise.category.target!.name)))
-            .toList();
-      } else {
-        filteredExercises = widget.exercises
-            .where((exercise) =>
-        exercise.name.toLowerCase().contains(query.toLowerCase()) &&
-            (selectedBodyPart.isEmpty ||
-                exercise.bodyPart.target!.name == selectedBodyPart) &&
-            (selectedCategory.isEmpty ||
-                selectedCategory.contains(exercise.category.target!.name)))
-            .toList();
-      }
-    });
-  }
-
-
+    void filterExercises(String query) {
+      setState(() {
+        if (query.isEmpty) {
+          filteredExercises = widget.exercises;
+        } else {
+          filteredExercises = widget.exercises
+              .where((exercise) =>
+              exercise.name.toLowerCase().contains(query.toLowerCase()))
+              .toList();
+        }
+      });
+    }
 
   void setSelectedBodyPart(String bodyPart) {
     setState(() {
