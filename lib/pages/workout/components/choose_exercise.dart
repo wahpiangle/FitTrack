@@ -90,6 +90,7 @@ class _ChooseExerciseState extends State<ChooseExercise> {
   }
 
 
+
   void setSelectedBodyPart(String bodyPart) {
     setState(() {
       selectedBodyPart = bodyPart;
@@ -157,30 +158,27 @@ class _ChooseExerciseState extends State<ChooseExercise> {
         ),
         backgroundColor:  AppColours.primary,
       ),
-      body: StreamBuilder(
-        stream: streamExercises,
-        builder: (context, snapshot) {
-          if (!snapshot.hasData) {
-            return Container(
-              color: const Color(0xFF1A1A1A),
-              height: double.infinity,
-              child: const Center(
-                child: CircularProgressIndicator(),
-              ),
-            );
-          }
-          final filteredData = snapshot.data!.where((exercise) {
-            final exerciseBodyPart = exercise.bodyPart.target!.name;
-            final exerciseCategory = exercise.category.target!.name;
+      body: StreamBuilder<List<Exercise>>(
+          stream: streamExercises,
+          builder: (context, snapshot) {
+            if (!snapshot.hasData) {
+              return CircularProgressIndicator();
+            }
 
-            // Check if the exercise body part or category matches the selected body part or category
-            final isBodyPartMatch = selectedBodyPart.isEmpty ||
-                exerciseBodyPart == selectedBodyPart;
-            final isCategoryMatch = selectedCategory.isEmpty ||
-                selectedCategory.contains(exerciseCategory);
+            final exercises = filteredExercises;
 
-            return isBodyPartMatch && isCategoryMatch;
-          }).toList();
+            // Filter exercises based on selectedBodyPart and selectedCategory
+            final filteredData = exercises.where((exercise) {
+              final exerciseBodyPart = exercise.bodyPart.target!.name;
+              final exerciseCategory = exercise.category.target!.name;
+
+              final isBodyPartMatch = selectedBodyPart.isEmpty ||
+                  exerciseBodyPart == selectedBodyPart;
+              final isCategoryMatch = selectedCategory.isEmpty ||
+                  selectedCategory.contains(exerciseCategory);
+
+              return isBodyPartMatch && isCategoryMatch;
+            }).toList();
           final groupedExercise = groupExercises(filteredData);
 
             return Container(
@@ -253,7 +251,7 @@ class _ChooseExerciseState extends State<ChooseExercise> {
                       child: ListView.builder(
                         itemCount: filteredData.length,
                         itemBuilder: (context, index) {
-                          final exercise = filteredExercises[index];
+                          final exercise = filteredData[index];
                           return Material(
                             color: const Color(0xFF1A1A1A),
                             child: InkWell(
