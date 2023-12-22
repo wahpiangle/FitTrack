@@ -7,7 +7,7 @@ class TimerProvider with ChangeNotifier {
   bool _isTimerRunning = false;
 
   int get currentDuration => _currentDuration;
-
+  bool get isTimerRunning => _isTimerRunning; // Add this getter
   void resetTimer() {
     _currentDuration = 0;
     notifyListeners();
