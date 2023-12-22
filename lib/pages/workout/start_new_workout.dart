@@ -1,19 +1,18 @@
-import 'dart:async';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:group_project/main.dart';
 import 'package:group_project/models/exercise.dart';
 import 'package:group_project/models/current_workout_session.dart';
+import 'package:group_project/models/workout_session.dart';
 import 'package:group_project/pages/workout/components/tiles/exercise_tile.dart';
+import 'package:group_project/services/firebase/workoutSession/firebase_workouts_service.dart';
 import 'package:provider/provider.dart';
 import 'package:group_project/pages/workout/components/tiles/components/timer_provider.dart';
 import 'package:group_project/pages/workout/components/tiles/components/rest_timer_provider.dart';
 import 'package:group_project/pages/workout/components/tiles/components/rest_time_picker.dart';
 
-
 class StartNewWorkout extends StatefulWidget {
   static final GlobalKey<_StartNewWorkoutState> startNewWorkoutKey =
-  GlobalKey<_StartNewWorkoutState>();
+      GlobalKey<_StartNewWorkoutState>();
   final List<Exercise> exerciseData;
 
   const StartNewWorkout({super.key, required this.exerciseData});
@@ -24,15 +23,13 @@ class StartNewWorkout extends StatefulWidget {
 
 class _StartNewWorkoutState extends State<StartNewWorkout>
     with TickerProviderStateMixin {
-
   late AnimationController _controller;
   late Animation<double> _animation;
   bool _isTimerRunning = false;
   late List<Exercise> exerciseData;
   TextEditingController weightsController = TextEditingController();
   TextEditingController repsController = TextEditingController();
-  int _restTimerDuration = 60;//default rest timer value
-
+  int _restTimerDuration = 60; //default rest timer value
 
   List<Widget> setBorders = [];
 
@@ -52,13 +49,12 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
     });
   }
 
-
-
   void selectExercise(Exercise selectedExercise) {
     objectBox.currentWorkoutSessionService
         .addExerciseToCurrentWorkoutSession(selectedExercise);
     final timerProvider = Provider.of<TimerProvider>(context, listen: false);
-    final restTimerProvider = Provider.of<RestTimerProvider>(context, listen: false);
+    final restTimerProvider =
+        Provider.of<RestTimerProvider>(context, listen: false);
 
     if (!_isTimerRunning) {
       timerProvider.startTimer();
@@ -67,9 +63,7 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
         _isTimerRunning = true;
       });
     }
-
   }
-
 
   Widget createSetBorder(int weight, int reps) {
     return Container(
@@ -104,10 +98,7 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
     weightsController.dispose();
     repsController.dispose();
     super.dispose();
-
   }
-
-
 
   void _delete(BuildContext context) {
     showDialog(
@@ -241,7 +232,6 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
             ),
           ),
         ],
-
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -303,13 +293,12 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
                       ),
                     ],
                   ),
-                  if (restTimerProvider.isRestTimerEnabled)
-                    SizedBox(width: 10),
+                  if (restTimerProvider.isRestTimerEnabled) SizedBox(width: 10),
                   RestTimePicker(
                     restTimerProvider: restTimerProvider,
                   ),
-
-                  if (restTimerProvider.isRestTimerEnabled) // Display the rest timer conditionally
+                  if (restTimerProvider
+                      .isRestTimerEnabled) // Display the rest timer conditionally
                     Consumer<RestTimerProvider>(
                       builder: (context, restTimerProvider, child) {
                         return Text(
@@ -341,8 +330,4 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
     final remainingSeconds = (seconds % 60).toString().padLeft(2, '0');
     return "$minutes:$remainingSeconds";
   }
-
-
 }
-
-
