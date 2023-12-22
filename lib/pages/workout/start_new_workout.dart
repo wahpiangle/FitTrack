@@ -11,7 +11,6 @@ import 'package:group_project/pages/workout/components/tiles/components/rest_tim
 import 'package:group_project/pages/workout/components/tiles/components/rest_time_picker.dart';
 
 
-
 class StartNewWorkout extends StatefulWidget {
   static final GlobalKey<_StartNewWorkoutState> startNewWorkoutKey =
   GlobalKey<_StartNewWorkoutState>();
@@ -143,7 +142,9 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
                   // Close the dialog
                   Navigator.of(context).pop();
                   Navigator.of(context).pop();
-                  objectBox.saveCurrentWorkoutSession();
+                  WorkoutSession savedWorkout =
+                      objectBox.saveCurrentWorkoutSession();
+                  FirebaseWorkoutsService.createWorkoutSession(savedWorkout);
                 },
                 child: const Text(
                   'Finish Workout',
