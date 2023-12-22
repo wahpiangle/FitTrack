@@ -338,7 +338,6 @@ class _ChooseExerciseState extends State<ChooseExercise> {
           for (final exercise in widget.exercises) {
             submitSelectedExercise(exercise);
           }
-          // deselectAllExercises(e);
           Navigator.pop(context);
         },
         backgroundColor: AppColours.secondary,
