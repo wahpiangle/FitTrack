@@ -8,6 +8,13 @@ import 'package:group_project/pages/components/crop_image.dart';
 import 'package:group_project/pages/exercise/components/exercises_list_filters.dart';
 import 'package:group_project/pages/exercise/components/filter_label.dart';
 
+// Top-Level function
+// Allows it to be called outside of this class
+void deselectAllExercises(List<Exercise> exercises) {
+  for (var exercise in exercises) {
+    exercise.isSelected = false;
+  }
+}
 
 class ChooseExercise extends StatefulWidget {
   final List<Exercise> exercises;
@@ -99,12 +106,7 @@ class _ChooseExerciseState extends State<ChooseExercise> {
     });
   }
 
-  // called after pressing FAB
-  void deselectAllExercises() {
-    for (var exercise in widget.exercises) {
-      exercise.isSelected = false;
-    }
-  }
+
 
   //check if an exercise is selected
   void checkSelectionStatus() {
@@ -336,7 +338,7 @@ class _ChooseExerciseState extends State<ChooseExercise> {
           for (final exercise in widget.exercises) {
             submitSelectedExercise(exercise);
           }
-          deselectAllExercises();
+          // deselectAllExercises(e);
           Navigator.pop(context);
         },
         backgroundColor: AppColours.secondary,
