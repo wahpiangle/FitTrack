@@ -17,7 +17,6 @@ class WorkoutSessionService {
   Stream<List<WorkoutSession>> watchWorkoutSession() {
     return workoutSessionBox
         .query()
-        // order by date in descending order
         .order(WorkoutSession_.date, flags: Order.descending)
         .watch(triggerImmediately: true)
         .map((query) => query.find());

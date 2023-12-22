@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:group_project/pages/workout/start_new_workout.dart';
 import 'package:group_project/models/exercise.dart';
 
-class NewWorkout extends StatelessWidget {
+class WorkoutTemplateWidget extends StatelessWidget {
   final String imagePath;
   final String workoutText;
   final List<Exercise> exerciseData; // Add this line
 
-  const NewWorkout({
+  const WorkoutTemplateWidget({
     super.key,
     required this.imagePath,
     required this.workoutText,
