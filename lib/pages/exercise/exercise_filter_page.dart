@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:group_project/constants/data/category_data.dart';
 import 'package:group_project/constants/data/bodypart_data.dart';
+import 'components/exercise_filter_widgets.dart';
 
 class ExerciseFilterPage extends StatefulWidget {
   final Function(dynamic bodyPart) setBodyPart;
@@ -71,7 +72,7 @@ class ExerciseFilterPageState extends State<ExerciseFilterPage> {
                 ),
               ),
             ),
-            generateItems(bodyPartData, true, false),
+            generateItems(bodyPartData, true, false, this),
             const SizedBox(height: 20.0),
 
             // Separated section for Categories
@@ -86,109 +87,13 @@ class ExerciseFilterPageState extends State<ExerciseFilterPage> {
                 ),
               ),
             ),
-            generateItems(categoryData, false, true),
+            generateItems(categoryData, false, true, this),
           ],
         ),
       ),
     );
   }
 
-  Widget generateItems(
-    List data,
-    bool isBodyPart,
-    bool isCategory,
-  ) {
-    if (isBodyPart) {
-      return Wrap(
-        spacing: 12,
-        runSpacing: 20,
-        children: data.map((bodyPart) {
-          bool isFilterSelected = selectedBodyPart == bodyPart.name;
-          return generateColoredBorderItem(
-            isFilterSelected,
-            const Color(0xFFE1F0CF), // Green border color (#E1F0CF)
-            18,
-            bodyPart.name,
-            () {
-              setState(() {
-                if (isFilterSelected) {
-                  selectedBodyPart = '';
-                  widget.setBodyPart('');
-                } else {
-                  selectedBodyPart = bodyPart.name;
-                  widget.setBodyPart(bodyPart.name);
-                }
-              });
-            },
-          );
-        }).toList(),
-      );
-    } else if (isCategory) {
-      return Wrap(
-        spacing: 12,
-        runSpacing: 20,
-        children: data.map((category) {
-          final isFilterSelected = selectedCategories.contains(category.name);
-          return generateColoredBorderItem(
-            isFilterSelected,
-            const Color(0xFFE1F0CF), // Green border color (#E1F0CF)
-            18,
-            category.name,
-            () {
-              setState(() {
-                if (isFilterSelected) {
-                  widget.removeCategory(category.name);
-                } else {
-                  widget.addCategory(category.name);
-                }
-              });
-            },
-          );
-        }).toList(),
-      );
-    } else {
-      return Container();
-    }
-  }
-
-  Widget generateColoredBorderItem(
-    bool isFilterSelected,
-    Color selectedColor,
-    double fontSize,
-    String text,
-    Function() onTap,
-  ) {
-    return FittedBox(
-      fit: BoxFit.fitWidth,
-      child: Container(
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(24.0),
-          color: isFilterSelected
-              ? selectedColor
-              : const Color.fromARGB(255, 46, 46, 46),
-        ),
-        child: Material(
-          color: Colors.transparent,
-          child: InkWell(
-            borderRadius: BorderRadius.circular(24.0),
-            onTap: onTap,
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 8.0),
-              child: Text(
-                text,
-                style: TextStyle(
-                  color: isFilterSelected ? Colors.black : Colors.white,
-                  fontSize: fontSize,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
 
   void showMaxFilterWarning() {
     // Show a warning message when more than 5 filters are selected
