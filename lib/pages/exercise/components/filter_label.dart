@@ -23,7 +23,7 @@ class FilterLabel extends StatelessWidget {
             icon: const Icon(
               Icons.close,
               color: Color(0xFF333333),
-              size: 30,
+              size: 20,
             ),
             style: TextButton.styleFrom(
               padding: const EdgeInsets.symmetric(
