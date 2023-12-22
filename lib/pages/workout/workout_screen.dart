@@ -30,20 +30,18 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
       isScrollControlled: true,
       isDismissible: false,
       builder: (context) {
-        return SafeArea(
-          child: DraggableScrollableSheet(
-            expand: false,
-            initialChildSize: 0.95,
-            maxChildSize: 1.0,
-            minChildSize: 0.2,
-            builder: (context, controller) {
-              return ClipRRect(
-                child: StartNewWorkout(
-                  exerciseData: exerciseData,
-                ),
-              );
-            },
-          ),
+        return DraggableScrollableSheet(
+          expand: false,
+          initialChildSize: 0.95,
+          maxChildSize: 1.0,
+          minChildSize: 0.2,
+          builder: (context, controller) {
+            return ClipRRect(
+              child: StartNewWorkout(
+                exerciseData: exerciseData,
+              ),
+            );
+          },
         );
       },
     );
