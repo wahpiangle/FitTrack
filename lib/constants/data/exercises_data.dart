@@ -20,7 +20,7 @@ Map<String, String> imageMap = {
 List<Exercise> generateExerciseData() {
   List<Exercise> exerciseData = [];
   exerciseMap.forEach((key, value) {
-    Exercise exercise = Exercise(name: key, imagePath: imageMap[key]!,restTimeInSeconds: 60,);
+    Exercise exercise = Exercise(name: key, imagePath: imageMap[key]!);
     exercise.bodyPart.target = bodyPartData.firstWhere((element) {
       return element.name == value.keys.first;
     });

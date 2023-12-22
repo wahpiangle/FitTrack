@@ -1,18 +1,22 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:group_project/main.dart';
 import 'package:group_project/models/exercise.dart';
 import 'package:group_project/pages/workout/start_new_workout.dart';
+import 'package:provider/provider.dart';
 import 'package:group_project/pages/workout/new_workout.dart';
+
+
 
 class WorkoutScreen extends StatefulWidget {
   const WorkoutScreen({super.key});
-
   @override
   State<WorkoutScreen> createState() => _WorkoutScreenState();
 }
 
 class _WorkoutScreenState extends State<WorkoutScreen> {
   late List<Exercise> exerciseData;
+  bool isBottomSheetVisible = false;
 
   @override
   void initState() {
@@ -25,14 +29,34 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
 
     await showModalBottomSheet(
       context: context,
-      builder: (context) => StartNewWorkout(
-        exerciseData: exerciseData,
-      ),
+      isScrollControlled: true,
+      isDismissible: false,
+      builder: (context) {
+        return DraggableScrollableSheet(
+          expand: false,
+          initialChildSize: 0.9,
+          maxChildSize: 1.0,
+          minChildSize: 0.2,
+          builder: (context, controller) {
+            return ClipRRect(
+              borderRadius: BorderRadius.vertical(top: Radius.circular(20.0)),
+              child: Container(
+                child: StartNewWorkout(
+                  exerciseData: exerciseData,
+                ),
+              ),
+            );
+          },
+        );
+      },
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    final user = Provider.of<User?>(context);
+
+
     return Scaffold(
       body: Container(
         height: double.infinity,
@@ -51,7 +75,7 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
                     },
                     style: ButtonStyle(
                       backgroundColor:
-                          MaterialStateProperty.all(const Color(0xFFC1C1C1)),
+                      MaterialStateProperty.all(const Color(0xFFC1C1C1)),
                       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                         RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(30),

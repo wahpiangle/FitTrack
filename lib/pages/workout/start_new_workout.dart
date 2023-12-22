@@ -1,13 +1,20 @@
 import 'dart:async';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:group_project/main.dart';
 import 'package:group_project/models/exercise.dart';
 import 'package:group_project/models/current_workout_session.dart';
-import 'package:group_project/models/workout_session.dart';
 import 'package:group_project/pages/workout/components/tiles/exercise_tile.dart';
-import 'package:group_project/services/firebase/workoutSession/firebase_workouts_service.dart';
+import 'package:provider/provider.dart';
+import 'package:group_project/pages/workout/components/tiles/components/timer_provider.dart';
+import 'package:group_project/pages/workout/components/tiles/components/rest_timer_provider.dart';
+import 'package:group_project/pages/workout/components/tiles/components/rest_time_picker.dart';
+
+
 
 class StartNewWorkout extends StatefulWidget {
+  static final GlobalKey<_StartNewWorkoutState> startNewWorkoutKey =
+  GlobalKey<_StartNewWorkoutState>();
   final List<Exercise> exerciseData;
 
   const StartNewWorkout({super.key, required this.exerciseData});
@@ -18,13 +25,16 @@ class StartNewWorkout extends StatefulWidget {
 
 class _StartNewWorkoutState extends State<StartNewWorkout>
     with TickerProviderStateMixin {
-  late Timer _timer;
+
   late AnimationController _controller;
   late Animation<double> _animation;
   bool _isTimerRunning = false;
   late List<Exercise> exerciseData;
   TextEditingController weightsController = TextEditingController();
   TextEditingController repsController = TextEditingController();
+  int _restTimerDuration = 60;//default rest timer value
+
+
   List<Widget> setBorders = [];
 
   @override
@@ -43,40 +53,62 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
     });
   }
 
-  void _startTimer() {
-    if (!_isTimerRunning) {
-      _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-        setState(() {
-          _controller.reset();
-          _controller.forward();
-        });
-      });
-      _isTimerRunning = true;
-    }
-  }
 
-  void _stopTimer() {
-    if (_isTimerRunning) {
-      _timer.cancel();
-      _isTimerRunning = false;
-    }
-  }
 
   void selectExercise(Exercise selectedExercise) {
     objectBox.currentWorkoutSessionService
         .addExerciseToCurrentWorkoutSession(selectedExercise);
+    final timerProvider = Provider.of<TimerProvider>(context, listen: false);
+    final restTimerProvider = Provider.of<RestTimerProvider>(context, listen: false);
+
+    if (!_isTimerRunning) {
+      timerProvider.startTimer();
+      // timerProvider.startExerciseTimer(selectedExercise.id);
+      setState(() {
+        _isTimerRunning = true;
+      });
+    }
+
+  }
+
+
+  Widget createSetBorder(int weight, int reps) {
+    return Container(
+      decoration: BoxDecoration(
+        border: Border.all(
+          color: Colors.white,
+          width: 2.0,
+        ),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      margin: const EdgeInsets.all(10),
+      padding: const EdgeInsets.all(10),
+      child: Row(
+        children: [
+          Text("Weight: $weight"),
+          const SizedBox(width: 10),
+          Text("Reps: $reps"),
+        ],
+      ),
+    );
+  }
+
+  Widget buildSetBordersList() {
+    return ListView(
+      children: setBorders,
+    );
   }
 
   @override
   void dispose() {
-    if (_isTimerRunning) {
-      _timer.cancel();
-    }
     _controller.dispose();
     weightsController.dispose();
     repsController.dispose();
     super.dispose();
+
   }
+
+
 
   void _delete(BuildContext context) {
     showDialog(
@@ -111,9 +143,7 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
                   // Close the dialog
                   Navigator.of(context).pop();
                   Navigator.of(context).pop();
-                  WorkoutSession savedWorkout =
-                      objectBox.saveCurrentWorkoutSession();
-                  FirebaseWorkoutsService.createWorkoutSession(savedWorkout);
+                  objectBox.saveCurrentWorkoutSession();
                 },
                 child: const Text(
                   'Finish Workout',
@@ -136,6 +166,8 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
 
   @override
   Widget build(BuildContext context) {
+    final timerProvider = Provider.of<TimerProvider>(context);
+    final restTimerProvider = Provider.of<RestTimerProvider>(context);
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -208,15 +240,20 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
             ),
           ),
         ],
-        title: const Row(
+
+        title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              "Timer",
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 18,
-              ),
+            Consumer<TimerProvider>(
+              builder: (context, timerProvider, child) {
+                return Text(
+                  "Timer: ${formatDuration(timerProvider.currentDuration)}",
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                  ),
+                );
+              },
             ),
           ],
         ),
@@ -240,7 +277,49 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
                         snapshot.data!.exercisesSetsInfo.toList(),
                     selectExercise: selectExercise,
                     removeSet: removeSet,
+                    timerProvider: timerProvider,
                   ),
+                  Row(
+                    children: [
+                      Text(
+                        'Rest Timer',
+                        style: TextStyle(
+                          color: Colors.white, // Set the text color to white
+                        ),
+                      ),
+                      Switch(
+                        value: restTimerProvider.isRestTimerEnabled,
+                        onChanged: (value) {
+                          if (value) {
+                            // Start rest timer
+                            restTimerProvider.startRestTimer();
+                          } else {
+                            // Stop rest timer
+                            restTimerProvider.stopRestTimer();
+                          }
+                          restTimerProvider.toggleRestTimer(value);
+                        },
+                      ),
+                    ],
+                  ),
+                  if (restTimerProvider.isRestTimerEnabled)
+                    SizedBox(width: 10),
+                  RestTimePicker(
+                    restTimerProvider: restTimerProvider,
+                  ),
+
+                  if (restTimerProvider.isRestTimerEnabled) // Display the rest timer conditionally
+                    Consumer<RestTimerProvider>(
+                      builder: (context, restTimerProvider, child) {
+                        return Text(
+                          "Rest Timer: ${formatDuration(restTimerProvider.currentRestTimerDuration)}",
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                          ),
+                        );
+                      },
+                    ),
                 ],
               ),
             );
@@ -249,17 +328,20 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          objectBox.test();
+          //objectBox.test();
         },
         child: Icon(Icons.add),
       ),
     );
   }
 
-  String _formatTime(int seconds) {
-    final hours = (seconds ~/ 3600).toString().padLeft(2, '0');
+  String formatDuration(int seconds) {
     final minutes = ((seconds % 3600) ~/ 60).toString().padLeft(2, '0');
     final remainingSeconds = (seconds % 60).toString().padLeft(2, '0');
-    return "$hours:$minutes:$remainingSeconds";
+    return "$minutes:$remainingSeconds";
   }
+
+
 }
+
+

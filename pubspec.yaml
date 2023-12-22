@@ -53,6 +53,9 @@ dependencies:
   percent_indicator: ^4.2.3
   shared_preferences: ^2.2.2
   image_picker: ^1.0.4
+  flutter_picker: ^2.1.0
+  numberpicker: ^2.1.2
+  cupertino_date_textbox: ^1.0.3
   intl: ^0.18.1
   table_calendar: ^3.0.9
   scroll_to_index: ^3.0.1

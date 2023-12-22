@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:group_project/main.dart';
+import 'package:group_project/pages/workout/workout_screen.dart';
+import 'package:group_project/pages/workout/components/tiles/components/timer_provider.dart';
+import 'package:group_project/pages/workout/components/tiles/components/rest_timer_provider.dart';
+import 'package:provider/provider.dart';
+
 
 class CancelWorkoutButton extends StatelessWidget {
-  const CancelWorkoutButton({super.key});
+  final TimerProvider timerProvider;
+
+  const CancelWorkoutButton({super.key, required this.timerProvider});
 
   @override
   Widget build(BuildContext context) {
@@ -44,6 +51,19 @@ class CancelWorkoutButton extends StatelessWidget {
                     Navigator.of(context).pop();
                     Navigator.of(context).pop();
                     objectBox.currentWorkoutSessionService.cancelWorkout();
+                    timerProvider.stopTimer(); // Stop the general workout timer
+                    timerProvider.resetTimer();//reset the general workout timer
+
+                    // Stop the rest timer
+                    Provider.of<RestTimerProvider>(context, listen: false)
+                        .stopRestTimer();
+
+                    Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(
+                        builder: (context) =>  WorkoutScreen(),
+                      ),
+                    );
+
                   },
                   child: const Text(
                     'Discard Workout',

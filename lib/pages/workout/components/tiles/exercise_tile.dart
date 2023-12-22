@@ -6,12 +6,16 @@ import 'package:group_project/pages/workout/components/tiles/components/cancel_w
 import 'package:group_project/pages/workout/components/tiles/components/add_exercise_button.dart';
 import 'package:group_project/pages/workout/components/tiles/set_tiles.dart';
 import 'package:group_project/pages/workout/components/workout_header.dart';
+import 'package:group_project/pages/workout/components/tiles/components/timer_provider.dart';
+import 'package:provider/provider.dart';
+import 'package:group_project/pages/workout/components/tiles/components/rest_timer_provider.dart';
 
 class ExerciseTile extends StatefulWidget {
   final List<Exercise> exerciseData;
   final List<ExercisesSetsInfo> exercisesSetsInfo;
   final void Function(Exercise selectedExercise) selectExercise;
   final void Function(int exerciseSetId) removeSet;
+  final TimerProvider timerProvider;
 
   const ExerciseTile({
     super.key,
@@ -19,13 +23,31 @@ class ExerciseTile extends StatefulWidget {
     required this.exercisesSetsInfo,
     required this.selectExercise,
     required this.removeSet,
+    required this.timerProvider,
   });
 
   @override
   State<ExerciseTile> createState() => _ExerciseTileState();
 }
 
+
 class _ExerciseTileState extends State<ExerciseTile> {
+  late TimerProvider timerProvider;
+  late RestTimerProvider restTimerProvider;
+  bool isSetCompleted = false;
+  bool displayRestTimer = false;
+  late int restTimerDuration;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    timerProvider = Provider.of<TimerProvider>(context);
+    restTimerProvider = Provider.of<RestTimerProvider>(context); // Initialize restTimerProvider
+    restTimerDuration = restTimerProvider.restTimerDuration;
+  }
+
+
+
   void addSet(ExercisesSetsInfo exercisesSetsInfo) {
     setState(() {
       objectBox.addSetToExercise(exercisesSetsInfo);
@@ -42,6 +64,19 @@ class _ExerciseTileState extends State<ExerciseTile> {
             .forEach((exerciseSet) {
           if (exerciseSet.reps != null && exerciseSet.weight != null) {
             exerciseSet.isCompleted = !exerciseSet.isCompleted;
+          }
+
+
+          if (exerciseSet.isCompleted) {
+            // Start the rest timer when a set is completed
+            restTimerProvider.startRestTimer();
+            // Set the flag to display the rest timer
+            displayRestTimer = true;
+          } else {
+            // Cancel the rest timer when a set is not completed
+            restTimerProvider.stopRestTimer();
+            // Set the flag to hide the rest timer
+            displayRestTimer = false;
           }
         });
       }
@@ -64,7 +99,7 @@ class _ExerciseTileState extends State<ExerciseTile> {
                   exercisesSetsInfo: widget.exercisesSetsInfo,
                   selectExercise: widget.selectExercise,
                 ),
-                const CancelWorkoutButton(),
+                 CancelWorkoutButton(timerProvider: widget.timerProvider,),
               ],
             );
           }
@@ -108,7 +143,7 @@ class _ExerciseTileState extends State<ExerciseTile> {
                 exercisesSetsInfo: widget.exercisesSetsInfo,
                 selectExercise: widget.selectExercise,
               ),
-              const CancelWorkoutButton(),
+              CancelWorkoutButton(timerProvider: widget.timerProvider, ),
             ]);
           } else {
             ExercisesSetsInfo selectedExercise =
@@ -120,13 +155,18 @@ class _ExerciseTileState extends State<ExerciseTile> {
                 children: [
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                    child: Text(
-                      selectedExercise.exercise.target!.name,
-                      style: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFFE1F0CF),
-                      ),
+                    child: Row(
+                      children: [
+                        Text(
+                          selectedExercise.exercise.target!.name,
+                          style: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFFE1F0CF),
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                      ],
                     ),
                   ),
                   const SizedBox(height: 20),
@@ -135,7 +175,7 @@ class _ExerciseTileState extends State<ExerciseTile> {
                     removeSet: widget.removeSet,
                     addSet: addSet,
                     setIsCompleted: setIsCompleted,
-                  )
+                  ),
                 ],
               ),
             );
@@ -144,4 +184,7 @@ class _ExerciseTileState extends State<ExerciseTile> {
       ),
     );
   }
+
+
+
 }

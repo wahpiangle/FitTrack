@@ -54,7 +54,7 @@ class ObjectBox {
     final docsDir = await getApplicationDocumentsDirectory();
     // Future<Store> openStore() {...} is defined in the generated objectbox.g.dart
     final store =
-        await openStore(directory: p.join(docsDir.path, "obx-example"));
+    await openStore(directory: p.join(docsDir.path, "obx-example"));
     return ObjectBox._create(store);
   }
 
@@ -68,10 +68,10 @@ class ObjectBox {
       );
 
   WorkoutSessionService get workoutSessionService => WorkoutSessionService(
-        workoutSessionBox: _workoutSessionBox,
-        exercisesSetsInfoBox: _exercisesSetsInfoBox,
-        exerciseSetBox: _exerciseSetBox,
-      );
+    workoutSessionBox: _workoutSessionBox,
+    exercisesSetsInfoBox: _exercisesSetsInfoBox,
+    exerciseSetBox: _exerciseSetBox,
+  );
 
 //exercises
   Stream<List<Exercise>> watchAllExercise() {
@@ -128,9 +128,9 @@ class ObjectBox {
   }
 
   // save to history
-  WorkoutSession saveCurrentWorkoutSession() {
+  void saveCurrentWorkoutSession() {
     CurrentWorkoutSession currentWorkoutSession =
-        currentWorkoutSessionService.getCurrentWorkoutSession();
+    currentWorkoutSessionService.getCurrentWorkoutSession();
     WorkoutSession workoutSession = WorkoutSession(date: DateTime.now());
     workoutSession.exercisesSetsInfo
         .addAll(currentWorkoutSession.exercisesSetsInfo);
@@ -138,13 +138,12 @@ class ObjectBox {
     workoutSession.title = currentWorkoutSession.title;
     _workoutSessionBox.put(workoutSession);
     currentWorkoutSessionService.clearCurrentWorkoutSession();
-    return workoutSession;
   }
 
 // check history
   void test() {
     CurrentWorkoutSession currentWorkoutSession =
-        currentWorkoutSessionService.getCurrentWorkoutSession();
+    currentWorkoutSessionService.getCurrentWorkoutSession();
     // _exerciseSetBox.removeAll();
     // _exercisesSetsInfoBox.removeAll();
     print(
