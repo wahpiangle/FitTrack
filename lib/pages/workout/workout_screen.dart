@@ -6,8 +6,6 @@ import 'package:group_project/pages/workout/start_new_workout.dart';
 import 'package:provider/provider.dart';
 import 'package:group_project/pages/workout/new_workout.dart';
 
-
-
 class WorkoutScreen extends StatefulWidget {
   const WorkoutScreen({super.key});
   @override
@@ -32,21 +30,20 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
       isScrollControlled: true,
       isDismissible: false,
       builder: (context) {
-        return DraggableScrollableSheet(
-          expand: false,
-          initialChildSize: 0.9,
-          maxChildSize: 1.0,
-          minChildSize: 0.2,
-          builder: (context, controller) {
-            return ClipRRect(
-              borderRadius: BorderRadius.vertical(top: Radius.circular(20.0)),
-              child: Container(
+        return SafeArea(
+          child: DraggableScrollableSheet(
+            expand: false,
+            initialChildSize: 0.95,
+            maxChildSize: 1.0,
+            minChildSize: 0.2,
+            builder: (context, controller) {
+              return ClipRRect(
                 child: StartNewWorkout(
                   exerciseData: exerciseData,
                 ),
-              ),
-            );
-          },
+              );
+            },
+          ),
         );
       },
     );
@@ -55,7 +52,6 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<User?>(context);
-
 
     return Scaffold(
       body: Container(
@@ -75,7 +71,7 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
                     },
                     style: ButtonStyle(
                       backgroundColor:
-                      MaterialStateProperty.all(const Color(0xFFC1C1C1)),
+                          MaterialStateProperty.all(const Color(0xFFC1C1C1)),
                       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                         RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(30),
