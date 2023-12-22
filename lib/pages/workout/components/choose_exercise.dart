@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:group_project/models/exercise.dart';
+import 'package:group_project/models/exercises_sets_info.dart';
 import 'package:group_project/pages/components/crop_image.dart';
 
 class ChooseExercise extends StatefulWidget {
   final List<Exercise> exercises;
-  final List<dynamic> selectedExercises; //TODO
+  final List<ExercisesSetsInfo> selectedExercises;
   final void Function(Exercise selectedExercise) selectExercise;
 
   const ChooseExercise({
@@ -15,10 +16,10 @@ class ChooseExercise extends StatefulWidget {
   });
 
   @override
-  _ChooseExerciseState createState() => _ChooseExerciseState();
+  ChooseExerciseState createState() => ChooseExerciseState();
 }
 
-class _ChooseExerciseState extends State<ChooseExercise> {
+class ChooseExerciseState extends State<ChooseExercise> {
   List<Exercise> filteredExercises = [];
 
   @override

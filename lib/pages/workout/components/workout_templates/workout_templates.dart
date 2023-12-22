@@ -29,9 +29,11 @@ class _WorkoutTemplatesState extends State<WorkoutTemplates> {
             ),
             TextButton.icon(
               onPressed: () {
-                showModalBottomSheet(
-                  context: context,
-                  builder: (context) => CreateTemplatePage(),
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => CreateTemplatePage(),
+                  ),
                 );
               },
               icon: const Icon(

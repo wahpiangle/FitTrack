@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:group_project/models/exercise.dart';
+import 'package:group_project/models/exercises_sets_info.dart';
 import 'package:group_project/pages/workout/components/choose_exercise.dart';
 
 class AddExerciseButton extends StatelessWidget {
   final List<Exercise> exerciseData;
-  final List<dynamic> exercisesSetsInfo; //TODO
+  final List<ExercisesSetsInfo> exercisesSetsInfo;
   final void Function(Exercise selectedExercise) selectExercise;
 
   const AddExerciseButton({
