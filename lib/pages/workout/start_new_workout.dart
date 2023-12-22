@@ -4,18 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:group_project/main.dart';
 import 'package:group_project/models/exercise.dart';
 import 'package:group_project/models/current_workout_session.dart';
-import 'package:group_project/models/workout_session.dart';
 import 'package:group_project/pages/workout/components/tiles/exercise_tile.dart';
-<<<<<<<<< Temporary merge branch 1
 import 'package:provider/provider.dart';
 import 'package:group_project/pages/workout/components/tiles/components/timer_provider.dart';
 import 'package:group_project/pages/workout/components/tiles/components/rest_timer_provider.dart';
 import 'package:group_project/pages/workout/components/tiles/components/rest_time_picker.dart';
 
 
-=========
-import 'package:group_project/services/firebase/workoutSession/firebase_workouts_service.dart';
->>>>>>>>> Temporary merge branch 2
 
 class StartNewWorkout extends StatefulWidget {
   static final GlobalKey<_StartNewWorkoutState> startNewWorkoutKey =
@@ -148,9 +143,7 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
                   // Close the dialog
                   Navigator.of(context).pop();
                   Navigator.of(context).pop();
-                  WorkoutSession savedWorkout =
-                      objectBox.saveCurrentWorkoutSession();
-                  FirebaseWorkoutsService.createWorkoutSession(savedWorkout);
+                  objectBox.saveCurrentWorkoutSession();
                 },
                 child: const Text(
                   'Finish Workout',
