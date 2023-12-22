@@ -261,42 +261,65 @@ class _ChooseExerciseState extends State<ChooseExercise> {
                                       child: ListTile(
                                         tileColor: exercise.isSelected ? Colors.grey[800] : null,
                                         horizontalTitleGap: -10,
-                                        leading: SizedBox(
-                                          height: 100,
-                                          width: 100,
-                                          child: ClipRRect(
-                                            borderRadius: BorderRadius.circular(300.0),
-                                            child: exercise.imagePath == ''
-                                                ? Container(
-                                              decoration: BoxDecoration(
-                                                color: const Color(0xFFE1F0CF),
+                                        leading: Stack(
+                                          children: [
+                                            SizedBox(
+                                              height: 100,
+                                              width: 100,
+                                              child: ClipRRect(
                                                 borderRadius: BorderRadius.circular(300.0),
-                                              ),
-                                              child: Center(
-                                                child: Text(
-                                                  exercise.name[0].toUpperCase(),
-                                                  style: const TextStyle(
-                                                    color: Colors.black,
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 24.0,
+                                                child: exercise.imagePath == ''
+                                                    ? Container(
+                                                  decoration: BoxDecoration(
+                                                    color: exercise.isSelected ? Colors.grey[800] : const Color(0xFFE1F0CF),
+                                                    borderRadius: BorderRadius.circular(300.0),
                                                   ),
-                                                ),
-                                              ),
-                                            )
-                                                : ClipPath(
-                                              clipper: MyClipperPath(),
-                                              child: Container(
-                                                height: 60,
-                                                width: 80,
-                                                decoration: BoxDecoration(
-                                                  image: DecorationImage(
-                                                    image: Image.asset(exercise.imagePath).image,
-                                                    fit: BoxFit.contain,
+                                                  child: Center(
+                                                    child: Text(
+                                                      exercise.name[0].toUpperCase(),
+                                                      style: TextStyle(
+                                                        color: exercise.isSelected ? Colors.black : Colors.white,
+                                                        fontWeight: FontWeight.bold,
+                                                        fontSize: 24.0,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                )
+                                                    : ClipPath(
+                                                  clipper: MyClipperPath(),
+                                                  child: exercise.isSelected
+                                                      ? Container() // Empty container when exercise is selected (image hidden)
+                                                      : Container(
+                                                    height: 60,
+                                                    width: 80,
+                                                    decoration: BoxDecoration(
+                                                      image: DecorationImage(
+                                                        image: Image.asset(exercise.imagePath).image,
+                                                        fit: BoxFit.contain,
+                                                      ),
+                                                    ),
                                                   ),
                                                 ),
                                               ),
                                             ),
-                                          ),
+                                            if (exercise.isSelected)
+                                              Positioned(
+                                                top: 12.5,
+                                                right: 50,
+                                                child: Container(
+                                                  padding: const EdgeInsets.all(5),
+                                                  decoration: const BoxDecoration(
+                                                    shape: BoxShape.circle,
+                                                    color:  Colors.black26,
+                                                  ),
+                                                  child: const Icon(
+                                                    Icons.check,
+                                                    color: Colors.white,
+                                                    size: 18,
+                                                  ),
+                                                ),
+                                              ),
+                                          ],
                                         ),
                                         title: Padding(
                                           padding: const EdgeInsets.only(bottom: 10),
