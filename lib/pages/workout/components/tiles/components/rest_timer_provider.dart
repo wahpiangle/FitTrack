@@ -11,7 +11,7 @@ class RestTimerProvider with ChangeNotifier {
   int _restTimerSeconds = 0;
   Timer? _timer;
   bool _isRestTimerRunning = false;
-
+  final StreamController<int> _restTimerStreamController = StreamController<int>();
 
   bool get isRestTimerRunning => _isRestTimerRunning;
   bool get isRestTimerEnabled => _isRestTimerEnabled;
@@ -19,6 +19,10 @@ class RestTimerProvider with ChangeNotifier {
   int get currentRestTimerDuration => _currentDuration;
   int get restTimerMinutes => _restTimerMinutes;
   int get restTimerSeconds => _restTimerSeconds;
+
+
+  // Getter for the rest timer stream
+  Stream<int> get restTimerStream => _restTimerStreamController.stream;
 
 
 

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:group_project/main.dart';
 import 'package:group_project/models/exercise.dart';
@@ -32,6 +33,7 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
   TextEditingController weightsController = TextEditingController();
   TextEditingController repsController = TextEditingController();
   bool _isSetTimeVisible = true;
+  late RestTimerProvider restTimerProvider;
 
 
 
@@ -59,11 +61,9 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
     objectBox.currentWorkoutSessionService
         .addExerciseToCurrentWorkoutSession(selectedExercise);
     final timerProvider = Provider.of<TimerProvider>(context, listen: false);
-   // final restTimerProvider = Provider.of<RestTimerProvider>(context, listen: false);
 
     if (!_isTimerRunning) {
       timerProvider.startTimer();
-      // timerProvider.startExerciseTimer(selectedExercise.id);
       setState(() {
         _isTimerRunning = true;
       });
@@ -167,7 +167,7 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
   @override
   Widget build(BuildContext context) {
     final timerProvider = Provider.of<TimerProvider>(context);
-    final restTimerProvider = Provider.of<RestTimerProvider>(context);
+    restTimerProvider = Provider.of<RestTimerProvider>(context);
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -249,20 +249,25 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
             crossFadeState: restTimerProvider.isRestTimerEnabled && restTimerProvider.isRestTimerRunning
                 ? CrossFadeState.showFirst
                 : CrossFadeState.showSecond,
-            firstChild: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                children: [
-                  Icon(Icons.access_time, color: Colors.white, size: 18),
-                  const SizedBox(width: 4),
-                  Text(
-                    " ${TimerProvider.formatDuration(restTimerProvider.currentRestTimerDuration)}",
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
+            firstChild: GestureDetector(
+              onTap: () {
+                _showRestTimerAdjustment(context);
+              },
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  children: [
+                    Icon(Icons.access_time, color: Colors.white, size: 18),
+                    const SizedBox(width: 4),
+                    Text(
+                      " ${TimerProvider.formatDuration(restTimerProvider.currentRestTimerDuration)}",
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
             secondChild: GestureDetector(
@@ -291,6 +296,7 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
             ),
           ),
         ),
+
       ),
       backgroundColor: const Color(0xFF1A1A1A),
       body: StreamBuilder<CurrentWorkoutSession>(
@@ -374,6 +380,259 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
   }
 
 
+
+  void _showPlusMinusSkip(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return _PlusMinusSkipDialog(
+          restTimerProvider: restTimerProvider,
+          formatTime: _formatTime,
+          initialRestTimerDuration: restTimerProvider.restTimerDuration,
+          restTimerStream: restTimerProvider.restTimerStream, // Pass this stream
+        );
+      },
+    );
+  }
+
+
+// Usage in _showRestTimerAdjustment
+  void _showRestTimerAdjustment(BuildContext context) {
+    if (restTimerProvider.isRestTimerRunning) {
+      // Show plus/minus/skip bottom sheet
+      _showPlusMinusSkip(context);
+    } else {
+      showModalBottomSheet<void>(
+        context: context,
+        builder: (BuildContext context) {
+          return Container(
+            height: 400,
+            color: Colors.black,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text(
+                  'Adjust Rest Timer',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                  ),
+                ),
+                SizedBox(height: 16),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    IconButton(
+                      onPressed: () {
+                        // Reduce rest time by 10 seconds
+                        restTimerProvider.setRestTimerDuration(
+                          restTimerProvider.restTimerDuration - 10,
+                        );
+                      },
+                      icon: Icon(Icons.remove, color: Colors.white),
+                    ),
+                    const SizedBox(width: 16),
+                    ElevatedButton(
+                      onPressed: () {
+                        // Skip rest timer
+                        restTimerProvider.stopRestTimer();
+                        Navigator.of(context).pop();
+                      },
+                      child: const Text('Skip'),
+                    ),
+                    const SizedBox(width: 16),
+                    IconButton(
+                      onPressed: () {
+                        // Add 10 seconds to rest time
+                        restTimerProvider.setRestTimerDuration(
+                          restTimerProvider.restTimerDuration + 10,
+                        );
+                      },
+                      icon: Icon(Icons.add, color: Colors.white),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 16),
+                RestTimePicker(restTimerProvider: restTimerProvider),
+                SizedBox(height: 16),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text('Done'),
+                ),
+              ],
+            ),
+          );
+        },
+      );
+    }
+  }
+
+
 }
 
 
+
+
+class _PlusMinusSkipDialog extends StatefulWidget {
+  final RestTimerProvider restTimerProvider;
+  final String Function(int minutes, int seconds) formatTime;
+  final int initialRestTimerDuration;
+  final Stream<int> restTimerStream; // Add this line
+
+  const _PlusMinusSkipDialog({
+    Key? key,
+    required this.restTimerProvider,
+    required this.formatTime,
+    required this.initialRestTimerDuration,
+    required this.restTimerStream, // Add this line
+  }) : super(key: key);
+
+  @override
+  _PlusMinusSkipDialogState createState() => _PlusMinusSkipDialogState();
+}
+
+
+class _PlusMinusSkipDialogState extends State<_PlusMinusSkipDialog> {
+  late Timer timer;
+  late int minutes;
+  late int seconds;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Use the initial rest timer duration
+    minutes = widget.initialRestTimerDuration ~/ 60;
+    seconds = widget.initialRestTimerDuration % 60;
+
+    // Set up a Timer to update the UI every second
+    timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      _updateTime(); // Call the method to update time
+    });
+
+    // Use a StreamBuilder to listen to changes in the rest timer duration
+    widget.restTimerStream.listen((restTimerDuration) {
+      setState(() {
+        minutes = restTimerDuration ~/ 60;
+        seconds = restTimerDuration % 60;
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    // Cancel the Timer when the dialog is disposed
+    timer.cancel();
+    super.dispose();
+  }
+
+  void _updateTime() {
+    setState(() {
+      if (seconds > 0) {
+        seconds--;
+      } else {
+        if (minutes > 0) {
+          minutes--;
+          seconds = 59;
+        } else {
+          // If both minutes and seconds are zero, cancel the timer
+          timer.cancel();
+        }
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      backgroundColor: Colors.transparent,
+      child: Container(
+        padding: EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Text(
+              'Rest Timer Controls',
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            SizedBox(height: 16),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                IconButton(
+                  onPressed: () {
+                    // Reduce rest time by 10 seconds
+                    setState(() {
+                      // Calculate the remaining time in seconds
+                      int remainingTimeInSeconds =
+                      max(0, widget.restTimerProvider.restTimerDuration - 10);
+
+                      // Update the rest timer duration in the provider
+                      widget.restTimerProvider
+                          .setRestTimerDuration(remainingTimeInSeconds);
+
+                      // Print the updated time
+                      _updateTime();
+                    });
+                  },
+                  icon: Icon(Icons.remove, color: Colors.black),
+                ),
+                const SizedBox(width: 16),
+                ElevatedButton(
+                  onPressed: () {
+                    // Skip rest timer
+                    widget.restTimerProvider.stopRestTimer();
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text('Skip'),
+                ),
+                const SizedBox(width: 16),
+                IconButton(
+                  onPressed: () {
+                    // Add 10 seconds to rest time
+                    setState(() {
+                      seconds += 10;
+                      if (seconds >= 60) {
+                        minutes++;
+                        seconds -= 60;
+                      }
+                      widget.restTimerProvider.setRestTimerDuration(
+                        minutes * 60 + seconds,
+                      );
+                    });
+                  },
+                  icon: Icon(Icons.add, color: Colors.black),
+                ),
+              ],
+            ),
+            SizedBox(height: 16),
+            Text(
+              " ${widget.formatTime(minutes, seconds)}", // Use widget to access the formatTime method
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 16,
+              ),
+            ),
+            SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Done'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
