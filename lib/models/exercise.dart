@@ -1,7 +1,8 @@
 import 'package:group_project/models/category.dart';
+import 'package:group_project/models/exercises_sets_info.dart';
 import 'package:objectbox/objectbox.dart';
+
 import 'body_part.dart';
-import 'exercise_set.dart';
 
 @Entity()
 class Exercise {
@@ -12,13 +13,7 @@ class Exercise {
 
   final bodyPart = ToOne<BodyPart>();
   final category = ToOne<Category>();
-  final int restTimeInSeconds;
+  final exercisesSetsInfo = ToMany<ExercisesSetsInfo>();
 
-  final exerciseSets = ToMany<ExerciseSet>();
-
-  Exercise({this.id = 0, required this.name, this.imagePath = '',required this.restTimeInSeconds,});
-
-  get sets => null;
-
-  get reps => null;
+  Exercise({this.id = 0, required this.name, this.imagePath = ''});
 }

@@ -9,8 +9,8 @@ class ExerciseFilterPage extends StatefulWidget {
   final Function(dynamic category) addCategory;
   final Function(dynamic category) removeCategory;
 
-  ExerciseFilterPage({
-    Key? key,
+  const ExerciseFilterPage({
+    super.key,
     required this.setBodyPart,
     required this.selectedBodyPart,
     required this.selectedCategory,
@@ -19,10 +19,10 @@ class ExerciseFilterPage extends StatefulWidget {
   });
 
   @override
-  _ExerciseFilterPageState createState() => _ExerciseFilterPageState();
+  ExerciseFilterPageState createState() => ExerciseFilterPageState();
 }
 
-class _ExerciseFilterPageState extends State<ExerciseFilterPage> {
+class ExerciseFilterPageState extends State<ExerciseFilterPage> {
   String selectedBodyPart = '';
   List<String> selectedCategories = [];
 
@@ -36,7 +36,7 @@ class _ExerciseFilterPageState extends State<ExerciseFilterPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: const Color(0xFF1A1A1A),
       appBar: AppBar(
         title: const Text(
           'Filter',
@@ -52,7 +52,7 @@ class _ExerciseFilterPageState extends State<ExerciseFilterPage> {
             Navigator.of(context).pop();
           },
         ),
-        backgroundColor: Colors.black,
+        backgroundColor: const Color(0xFF1A1A1A),
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -94,10 +94,10 @@ class _ExerciseFilterPageState extends State<ExerciseFilterPage> {
   }
 
   Widget generateItems(
-      List data,
-      bool isBodyPart,
-      bool isCategory,
-      ) {
+    List data,
+    bool isBodyPart,
+    bool isCategory,
+  ) {
     if (isBodyPart) {
       return Wrap(
         spacing: 12,
@@ -109,7 +109,7 @@ class _ExerciseFilterPageState extends State<ExerciseFilterPage> {
             const Color(0xFFE1F0CF), // Green border color (#E1F0CF)
             18,
             bodyPart.name,
-                () {
+            () {
               setState(() {
                 if (isFilterSelected) {
                   selectedBodyPart = '';
@@ -134,7 +134,7 @@ class _ExerciseFilterPageState extends State<ExerciseFilterPage> {
             const Color(0xFFE1F0CF), // Green border color (#E1F0CF)
             18,
             category.name,
-                () {
+            () {
               setState(() {
                 if (isFilterSelected) {
                   widget.removeCategory(category.name);
@@ -152,12 +152,12 @@ class _ExerciseFilterPageState extends State<ExerciseFilterPage> {
   }
 
   Widget generateColoredBorderItem(
-      bool isFilterSelected,
-      Color selectedColor,
-      double fontSize,
-      String text,
-      Function() onTap,
-      ) {
+    bool isFilterSelected,
+    Color selectedColor,
+    double fontSize,
+    String text,
+    Function() onTap,
+  ) {
     return FittedBox(
       fit: BoxFit.fitWidth,
       child: Container(

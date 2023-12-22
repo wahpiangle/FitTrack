@@ -4,13 +4,13 @@ import 'package:group_project/pages/workout/components/choose_exercise.dart';
 
 class AddExerciseButton extends StatelessWidget {
   final List<Exercise> exerciseData;
-  final List<dynamic> selectedExercises; //TODO
+  final List<dynamic> exercisesSetsInfo; //TODO
   final void Function(Exercise selectedExercise) selectExercise;
 
   const AddExerciseButton({
     super.key,
     required this.exerciseData,
-    required this.selectedExercises,
+    required this.exercisesSetsInfo,
     required this.selectExercise,
   });
 
@@ -34,7 +34,7 @@ class AddExerciseButton extends StatelessWidget {
           MaterialPageRoute(
             builder: (context) => ChooseExercise(
               exercises: exerciseData,
-              selectedExercises: selectedExercises,
+              selectedExercises: exercisesSetsInfo,
               selectExercise: selectExercise,
             ),
           ),

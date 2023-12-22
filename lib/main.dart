@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:group_project/pages/auth/email_password_login.dart';
 import 'package:group_project/pages/auth/register_screen.dart';
+import 'package:group_project/pages/auth/settings_login.dart';
+import 'package:group_project/pages/auth/settings_signup.dart';
 import 'package:group_project/pages/auth_wrapper.dart';
+import 'package:group_project/pages/components/app_layout.dart';
 import 'package:group_project/services/auth_service.dart';
 import 'package:group_project/services/objectbox_service.dart';
 import 'package:provider/provider.dart';
@@ -37,7 +40,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => RestTimerProvider()),
         ChangeNotifierProvider(create: (context) => TimerProvider()),
         ChangeNotifierProvider(create: (context) => UserStateProvider()),
-        ChangeNotifierProvider(create: (context) => ProfileImageProvider()), // Provide the ProfileImageProvider
+        ChangeNotifierProvider(create: (context) => ProfileImageProvider()),
         StreamProvider.value(
           value: AuthService().user,
           initialData: null,
@@ -49,16 +52,17 @@ class MyApp extends StatelessWidget {
         home: const Wrapper(),
         routes: {
           '/auth': (context) => const Wrapper(),
-          "login" : (context) => const EmailPasswordLogin(),
+          "login": (context) => const EmailPasswordLogin(),
           "register": (context) => const RegisterScreen(),
+          "settings_login": (context) => const SettingsLogin(),
+          "settings_signup": (context) => const SettingsSignup(),
+          "app_layout": (context) => const AppLayout(),
         },
         theme: ThemeData(
           bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-            backgroundColor: Color(0xFF1A1A1A), // Set the background color
-            selectedItemColor:
-                Color(0xFFE1F0CF), // Set the color of selected item
-            unselectedItemColor:
-                Colors.grey, // Set the color of unselected items
+            backgroundColor: Color(0xFF1A1A1A),
+            selectedItemColor: Color(0xFFE1F0CF),
+            unselectedItemColor: Colors.grey,
           ),
         ),
       ),

@@ -24,7 +24,7 @@
     },
     {
       "id": "4:8999125863363426104",
-      "lastPropertyId": "6:8427381781882279494",
+      "lastPropertyId": "5:9180347095561080921",
       "name": "Exercise",
       "properties": [
         {
@@ -58,14 +58,15 @@
           "id": "5:9180347095561080921",
           "name": "imagePath",
           "type": 9
-        },
-        {
-          "id": "6:8427381781882279494",
-          "name": "restTimeInSeconds",
-          "type": 6
         }
       ],
-      "relations": []
+      "relations": [
+        {
+          "id": "8:1451413018537550514",
+          "name": "exercisesSetsInfo",
+          "targetId": "10:1820858489364473134"
+        }
+      ]
     },
     {
       "id": "5:4284795017742900900",
@@ -88,7 +89,7 @@
     },
     {
       "id": "6:5203651438849109687",
-      "lastPropertyId": "6:5129109765425170449",
+      "lastPropertyId": "5:884524525454966511",
       "name": "CurrentWorkoutSession",
       "properties": [
         {
@@ -108,14 +109,9 @@
           "type": 9
         },
         {
-          "id": "5:456242171868699305",
-          "name": "startTime",
-          "type": 6
-        },
-        {
-          "id": "6:5129109765425170449",
-          "name": "duration",
-          "type": 6
+          "id": "5:884524525454966511",
+          "name": "isActive",
+          "type": 1
         }
       ],
       "relations": [
@@ -128,7 +124,7 @@
     },
     {
       "id": "7:3746532471321315396",
-      "lastPropertyId": "6:6161241240739064184",
+      "lastPropertyId": "5:9138861087088139292",
       "name": "ExerciseSet",
       "properties": [
         {
@@ -159,18 +155,13 @@
           "flags": 520,
           "indexId": "4:6650087091303056651",
           "relationTarget": "ExercisesSetsInfo"
-        },
-        {
-          "id": "6:6161241240739064184",
-          "name": "restTimeInSeconds",
-          "type": 6
         }
       ],
       "relations": []
     },
     {
       "id": "10:1820858489364473134",
-      "lastPropertyId": "4:6840791792189351341",
+      "lastPropertyId": "5:6068465684494067862",
       "name": "ExercisesSetsInfo",
       "properties": [
         {
@@ -194,6 +185,14 @@
           "flags": 520,
           "indexId": "8:1873809727454846497",
           "relationTarget": "Exercise"
+        },
+        {
+          "id": "5:6068465684494067862",
+          "name": "workoutSessionId",
+          "type": 11,
+          "flags": 520,
+          "indexId": "9:7303140844689639292",
+          "relationTarget": "WorkoutSession"
         }
       ],
       "relations": [
@@ -203,11 +202,46 @@
           "targetId": "7:3746532471321315396"
         }
       ]
+    },
+    {
+      "id": "11:4929714596174845997",
+      "lastPropertyId": "4:1835537039999086129",
+      "name": "WorkoutSession",
+      "properties": [
+        {
+          "id": "1:5812914374676179611",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:8895517690980687532",
+          "name": "title",
+          "type": 9
+        },
+        {
+          "id": "3:2702407459373261380",
+          "name": "note",
+          "type": 9
+        },
+        {
+          "id": "4:1835537039999086129",
+          "name": "date",
+          "type": 10
+        }
+      ],
+      "relations": [
+        {
+          "id": "7:7783041778513810204",
+          "name": "exercisesSetsInfo",
+          "targetId": "10:1820858489364473134"
+        }
+      ]
     }
   ],
-  "lastEntityId": "10:1820858489364473134",
-  "lastIndexId": "8:1873809727454846497",
-  "lastRelationId": "6:8676555494170821584",
+  "lastEntityId": "11:4929714596174845997",
+  "lastIndexId": "9:7303140844689639292",
+  "lastRelationId": "8:1451413018537550514",
   "lastSequenceId": "0:0",
   "modelVersion": 5,
   "modelVersionParserMinimum": 5,

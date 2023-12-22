@@ -1,22 +1,17 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:group_project/main.dart';
 import 'package:group_project/models/exercise.dart';
-import 'package:group_project/pages/components/bottom_nav_bar.dart';
-import 'package:group_project/pages/components/top_nav_bar.dart';
 import 'package:group_project/pages/workout/start_new_workout.dart';
-import 'package:provider/provider.dart';
 import 'package:group_project/pages/workout/new_workout.dart';
-
 
 class WorkoutScreen extends StatefulWidget {
   const WorkoutScreen({super.key});
+
   @override
   State<WorkoutScreen> createState() => _WorkoutScreenState();
 }
 
 class _WorkoutScreenState extends State<WorkoutScreen> {
-  final int _selectedIndex = 2;
   late List<Exercise> exerciseData;
 
   @override
@@ -26,7 +21,7 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
   }
 
   Future<void> _startNewWorkout(BuildContext context) async {
-    objectBox.createWorkoutSession();
+    objectBox.currentWorkoutSessionService.createCurrentWorkoutSession();
 
     await showModalBottomSheet(
       context: context,
@@ -38,14 +33,10 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final user = Provider.of<User?>(context);
-
-
     return Scaffold(
-      appBar: TopNavBar(title: 'Home', user: user),
       body: Container(
         height: double.infinity,
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
         color: const Color(0xFF1A1A1A),
         child: SingleChildScrollView(
           child: Column(
@@ -60,14 +51,14 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
                     },
                     style: ButtonStyle(
                       backgroundColor:
-                      MaterialStateProperty.all(const Color(0xFFC1C1C1)),
+                          MaterialStateProperty.all(const Color(0xFFC1C1C1)),
                       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                         RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(30),
                         ),
                       ),
                       padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
-                        const EdgeInsets.symmetric(vertical: 15),
+                        const EdgeInsets.symmetric(vertical: 10),
                       ),
                     ),
                     child: const Text(
@@ -187,9 +178,6 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
             ],
           ),
         ),
-      ),
-      bottomNavigationBar: CustomBottomNavigationBar(
-        currentIndex: _selectedIndex,
       ),
     );
   }
