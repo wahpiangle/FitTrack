@@ -49,7 +49,7 @@ class _SettingsLoginState extends State<SettingsLogin> {
                   style: const TextStyle(color: Colors.white),
                   decoration: InputDecoration(
                     hintText: 'you@example.com',
-                    hintStyle: const TextStyle(color: Colors.white),
+                    hintStyle: const TextStyle(color: Colors.grey),
                     enabledBorder: OutlineInputBorder(
                       borderSide:
                       const BorderSide(color: Color(0xFF333333)),
@@ -81,7 +81,7 @@ class _SettingsLoginState extends State<SettingsLogin> {
                   style: const TextStyle(color: Colors.white),
                   decoration: InputDecoration(
                     hintText: '******',
-                    hintStyle: const TextStyle(color: Colors.white),
+                    hintStyle: const TextStyle(color: Colors.grey),
                     enabledBorder: OutlineInputBorder(
                       borderSide:
                       const BorderSide(color: Color(0xFF333333)),
