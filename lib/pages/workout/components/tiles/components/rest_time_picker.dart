@@ -4,16 +4,20 @@ import 'package:group_project/pages/workout/components/tiles/components/rest_tim
 
 class RestTimePicker extends StatelessWidget {
   final RestTimerProvider restTimerProvider;
+  final int initialMinutes;
+  final int initialSeconds;
 
   const RestTimePicker({
-    super.key,
+    Key? key,
     required this.restTimerProvider,
-  });
+    required this.initialMinutes,
+    required this.initialSeconds,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    // Adjust the initial item
-    int initialItem = (restTimerProvider.restTimerMinutes * 60 + restTimerProvider.restTimerSeconds) ~/ 5 - 1;
+    // Calculate the initial item based on minutes and seconds
+    int initialItem = ((initialMinutes ?? 0) * 60 + (initialSeconds ?? 0)) ~/ 5;
 
     return Container(
       height: 300,
@@ -23,8 +27,10 @@ class RestTimePicker extends StatelessWidget {
         ),
         itemExtent: 32,
         onSelectedItemChanged: (index) {
-          // Adjust the selected item
+          // Calculate total seconds based on the 5 seconds difference
           int totalSeconds = (index + 1) * 5;
+
+          // Convert total seconds to minutes and seconds for updating the provider
           int minutes = totalSeconds ~/ 60;
           int seconds = totalSeconds % 60;
 

@@ -11,7 +11,11 @@ class RestTimerProvider with ChangeNotifier {
   int _restTimerSeconds = 0;
   Timer? _timer;
   bool _isRestTimerRunning = false;
-  final StreamController<int> _restTimerStreamController = StreamController<int>();
+  final StreamController<int> _restTimerDurationController =
+  StreamController<int>.broadcast();
+
+  Stream<int> get restTimerDurationStream =>
+      _restTimerDurationController.stream;
 
   bool get isRestTimerRunning => _isRestTimerRunning;
   bool get isRestTimerEnabled => _isRestTimerEnabled;
@@ -20,11 +24,24 @@ class RestTimerProvider with ChangeNotifier {
   int get restTimerMinutes => _restTimerMinutes;
   int get restTimerSeconds => _restTimerSeconds;
 
+  late StreamController<int> _restTimerController;
+// Constructor to initialize _restTimerController
+  RestTimerProvider() {
+    _restTimerController = StreamController<int>.broadcast();
+  }
 
-  // Getter for the rest timer stream
-  Stream<int> get restTimerStream => _restTimerStreamController.stream;
+  // Getter for restTimerStream
+  Stream<int> get restTimerStream => _restTimerController.stream;
+
+  // Getter for restTimerController
+  StreamController<int> get restTimerController => _restTimerController;
 
 
+  // Function to update the rest timer duration from the pop up
+  void updateRestTimerDuration(int newDuration) {
+    _restTimerDuration = newDuration;
+    notifyListeners();
+  }
 
   void setRestTimerMinutes(int minutes) {
     _restTimerMinutes = minutes;
