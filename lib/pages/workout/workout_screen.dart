@@ -2,10 +2,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:group_project/main.dart';
 import 'package:group_project/models/exercise.dart';
-import 'package:group_project/pages/workout/start_new_workout.dart';
+
 import 'package:provider/provider.dart';
 import 'package:group_project/pages/workout/new_workout.dart';
-
+import 'package:group_project/pages/workout/components/start_new_workout_bottom_sheet.dart';
 
 
 class WorkoutScreen extends StatefulWidget {
@@ -27,29 +27,14 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
   Future<void> _startNewWorkout(BuildContext context) async {
     objectBox.currentWorkoutSessionService.createCurrentWorkoutSession();
 
-    await showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      isDismissible: false,
-      builder: (context) {
-        return DraggableScrollableSheet(
-          expand: false,
-          initialChildSize: 0.9,
-          maxChildSize: 1.0,
-          minChildSize: 0.2,
-          builder: (context, controller) {
-            return ClipRRect(
-              borderRadius: BorderRadius.vertical(top: Radius.circular(20.0)),
-              child: Container(
-                child: StartNewWorkout(
-                  exerciseData: exerciseData,
-                ),
-              ),
-            );
-          },
-        );
-      },
-    );
+    bool isBottomSheetClosed = await NewWorkoutBottomSheet.show(context, exerciseData);
+    // If the bottom sheet is closed, show TimerActiveScreen as a bottom sheet
+    if (isBottomSheetClosed) {
+      showBottomSheet(
+        context: context,
+        builder: (context) => TimerActiveScreen(exerciseData: exerciseData),
+      );
+    }
   }
 
   @override
