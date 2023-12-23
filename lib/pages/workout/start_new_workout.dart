@@ -112,7 +112,9 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
                   // Close the dialog
                   Navigator.of(context).pop();
                   Navigator.of(context).pop();
+                  WorkoutSession savedWorkout =
                   objectBox.saveCurrentWorkoutSession();
+                  FirebaseWorkoutsService.createWorkoutSession(savedWorkout);
                   Navigator.of(context).push(
                     PageRouteBuilder(
                       pageBuilder: (context, animation, secondaryAnimation) {
@@ -132,9 +134,6 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
                       transitionDuration: const Duration(milliseconds: 500), // Set to 0.5 seconds
                     ),
                   );
-                  WorkoutSession savedWorkout =
-                      objectBox.saveCurrentWorkoutSession();
-                  FirebaseWorkoutsService.createWorkoutSession(savedWorkout);
                 },
                 child: const Text(
                   'Finish Workout',
