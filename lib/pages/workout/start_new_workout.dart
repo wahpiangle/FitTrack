@@ -11,7 +11,7 @@ import 'package:group_project/pages/workout/components/tiles/components/timer_pr
 import 'package:group_project/pages/workout/components/tiles/components/rest_timer_provider.dart';
 import 'package:group_project/pages/workout/components/tiles/components/rest_time_picker.dart';
 
-import 'components/tiles/components/resttimer_add_minus.dart';
+import 'components/tiles/components/resttimer_details_dialog.dart';
 
 
 import 'package:group_project/services/firebase/workoutSession/firebase_workouts_service.dart';
@@ -418,7 +418,7 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
     showDialog(
       context: context, // or Navigator.of(context)
       builder: (BuildContext context) {
-        return TimerDetailsDialog(
+        return RestTimerDetailsDialog(
           restTimerProvider: restTimerProvider,
         );
       },

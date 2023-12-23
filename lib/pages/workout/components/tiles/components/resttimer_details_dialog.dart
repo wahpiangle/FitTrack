@@ -4,16 +4,16 @@ import 'package:group_project/pages/workout/components/tiles/components/timer_pr
 import 'package:group_project/pages/workout/components/tiles/components/rest_timer_provider.dart';
 
 
-class TimerDetailsDialog extends StatefulWidget {
+class RestTimerDetailsDialog extends StatefulWidget {
   final RestTimerProvider restTimerProvider;
 
-  const TimerDetailsDialog({super.key, required this.restTimerProvider});
+  const RestTimerDetailsDialog({super.key, required this.restTimerProvider});
 
   @override
-  TimerDetailsDialogState createState() => TimerDetailsDialogState();
+  RestTimerDetailsDialogState createState() => RestTimerDetailsDialogState();
 }
 
-class TimerDetailsDialogState extends State<TimerDetailsDialog> {
+class RestTimerDetailsDialogState extends State<RestTimerDetailsDialog> {
   late Timer _timer;
 
   @override
