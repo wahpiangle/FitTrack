@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:group_project/main.dart';
 import 'package:group_project/models/exercise.dart';
 import 'package:group_project/models/current_workout_session.dart';
+import 'package:group_project/pages/history/congratulation_screen.dart';
+import 'package:group_project/models/workout_session.dart';
 import 'package:group_project/pages/workout/components/tiles/exercise_tile.dart';
 import 'package:group_project/services/firebase/workoutSession/firebase_workouts_service.dart';
 
@@ -110,6 +112,29 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
                   // Close the dialog
                   Navigator.of(context).pop();
                   Navigator.of(context).pop();
+                  objectBox.saveCurrentWorkoutSession();
+                  Navigator.of(context).push(
+                    PageRouteBuilder(
+                      pageBuilder: (context, animation, secondaryAnimation) {
+                        return const CongratulationScreen();
+                      },
+                      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                        const begin = 0.0;
+                        const end = 1.0;
+                        const curve = Curves.easeInOut;
+                        var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+                        var offsetAnimation = animation.drive(tween);
+                        return ScaleTransition(
+                          scale: offsetAnimation,
+                          child: child,
+                        );
+                      },
+                      transitionDuration: const Duration(milliseconds: 500), // Set to 0.5 seconds
+                    ),
+                  );
+                  WorkoutSession savedWorkout =
+                      objectBox.saveCurrentWorkoutSession();
+                  FirebaseWorkoutsService.createWorkoutSession(savedWorkout);
                 },
                 child: const Text(
                   'Finish Workout',
