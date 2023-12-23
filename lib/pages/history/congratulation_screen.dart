@@ -132,9 +132,15 @@ class _CongratulationScreenState extends State<CongratulationScreen> {
 
               _celebrate();
 
-              return const Column(
+              return Column(
                 children: [
-                  
+                  Image.asset(
+                    'assets/icons/stars1.png',
+                    width: 150,
+                    height: 100,
+                    fit: BoxFit.cover,
+                  ),
+
                 ],
               );
             }
