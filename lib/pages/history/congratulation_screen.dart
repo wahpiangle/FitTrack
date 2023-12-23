@@ -134,13 +134,29 @@ class _CongratulationScreenState extends State<CongratulationScreen> {
 
               return Column(
                 children: [
+                  Align(
+                    alignment: Alignment.topCenter,
+                    child: ConfettiWidget(
+                      confettiController: _confettiController,
+                      blastDirection: pi/2,
+                      shouldLoop: false,
+                      colors: const [
+                        Colors.green,
+                        Colors.pink,
+                        Colors.orange,
+                        Colors.purple,
+                      ],
+                      gravity: 0.1,
+                      emissionFrequency: 0.1,
+                    ),
+                  ),
                   Image.asset(
                     'assets/icons/stars1.png',
                     width: 150,
                     height: 100,
                     fit: BoxFit.cover,
                   ),
-
+                  
                 ],
               );
             }
