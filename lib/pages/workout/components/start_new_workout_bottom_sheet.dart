@@ -73,12 +73,41 @@ class TimerActiveScreen extends StatelessWidget {
     return NotificationListener<DraggableScrollableNotification>(
       onNotification: (notification) {
         if (notification.extent == notification.maxExtent) {
-          // The sheet is dragged up to the maxChildSize, reopen NewWorkoutBottomSheet
+          // The sheet is dragged up to the maxChildSize, close the current sheet and reopen NewWorkoutBottomSheet
           Navigator.pop(context);
-          NewWorkoutBottomSheet.show(context, exerciseData);
+          showModalBottomSheet(
+            context: context,
+            isScrollControlled: true,
+            isDismissible: false,
+            builder: (context) {
+              return GestureDetector(
+                onTap: () {
+                  // Do nothing on tap to prevent closing when the bottom sheet is open
+                },
+                child: DraggableScrollableSheet(
+                  expand: false,
+                  initialChildSize: 0.95,
+                  maxChildSize: 1.0,
+                  minChildSize: 0.2,
+                  builder: (context, controller) {
+                    return ClipRRect(
+                      borderRadius: BorderRadius.vertical(top: Radius.circular(20.0)),
+                      child: Container(
+                        child: StartNewWorkout(
+                          exerciseData: exerciseData,
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              );
+            },
+          );
         }
         return true;
       },
+
+
       child: DraggableScrollableSheet(
         expand: false,
         initialChildSize: 0.1,
