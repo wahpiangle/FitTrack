@@ -1,21 +1,19 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:group_project/pages/workout/components/tiles/components/timer_provider.dart';
-import 'package:provider/provider.dart';
 import 'package:group_project/pages/workout/components/tiles/components/rest_timer_provider.dart';
 
 
 class TimerDetailsDialog extends StatefulWidget {
   final RestTimerProvider restTimerProvider;
 
-  const TimerDetailsDialog({Key? key, required this.restTimerProvider})
-      : super(key: key);
+  const TimerDetailsDialog({super.key, required this.restTimerProvider});
 
   @override
-  _TimerDetailsDialogState createState() => _TimerDetailsDialogState();
+  TimerDetailsDialogState createState() => TimerDetailsDialogState();
 }
 
-class _TimerDetailsDialogState extends State<TimerDetailsDialog> {
+class TimerDetailsDialogState extends State<TimerDetailsDialog> {
   late Timer _timer;
 
   @override
@@ -69,7 +67,7 @@ class _TimerDetailsDialogState extends State<TimerDetailsDialog> {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            const SizedBox(height: 65),
+            const SizedBox(height: 55),
             // Use a Stack to overlay the circular progress bar on top of the text
             Stack(
               alignment: Alignment.center,
@@ -80,13 +78,13 @@ class _TimerDetailsDialogState extends State<TimerDetailsDialog> {
                   height: 230,
                   child: CircularProgressIndicator(
                     value: widget.restTimerProvider.currentDuration / widget.restTimerProvider.restTimerDuration,
-                    valueColor: AlwaysStoppedAnimation<Color>(Colors.greenAccent), // Customize the color
+                    valueColor: const AlwaysStoppedAnimation<Color>(Colors.lightGreen), // Customize the color
                     strokeWidth: 6,
                   ),
                 ),
                 // Rest Timer Text
                 Text(
-                  "${TimerProvider.formatDuration(widget.restTimerProvider.currentDuration)}",
+                  TimerProvider.formatDuration(widget.restTimerProvider.currentDuration),
                   style: const TextStyle(
                     color: Color(0xFFE1F0CF),
                     fontSize: 64,
@@ -94,7 +92,7 @@ class _TimerDetailsDialogState extends State<TimerDetailsDialog> {
                 ),
               ],
             ),
-            const SizedBox(height: 60),
+            const SizedBox(height: 40),
             Padding(
               padding: const EdgeInsets.only(bottom: 36.0), // Add padding only at the bottom
               child: Row(

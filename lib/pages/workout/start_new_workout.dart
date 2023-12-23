@@ -14,17 +14,17 @@ import 'components/tiles/components/resttimer_add_minus.dart';
 
 
 class StartNewWorkout extends StatefulWidget {
-  static final GlobalKey<_StartNewWorkoutState> startNewWorkoutKey =
-  GlobalKey<_StartNewWorkoutState>();
+  static final GlobalKey<StartNewWorkoutState> startNewWorkoutKey =
+  GlobalKey<StartNewWorkoutState>();
   final List<Exercise> exerciseData;
 
   const StartNewWorkout({super.key, required this.exerciseData});
 
   @override
-  State<StartNewWorkout> createState() => _StartNewWorkoutState();
+  State<StartNewWorkout> createState() => StartNewWorkoutState();
 }
 
-class _StartNewWorkoutState extends State<StartNewWorkout>
+class StartNewWorkoutState extends State<StartNewWorkout>
     with TickerProviderStateMixin {
 
   late AnimationController _controller;
@@ -113,6 +113,9 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
 
 
   void _delete(BuildContext context) {
+    final restTimerProvider = Provider.of<RestTimerProvider>(context, listen: false);
+    final timerProvider = Provider.of<TimerProvider>(context, listen: false);
+
     showDialog(
         context: context,
         builder: (BuildContext ctx) {
@@ -142,6 +145,10 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
               ),
               TextButton(
                 onPressed: () {
+                  // Stop the rest timer and general workout timer
+                  restTimerProvider.stopRestTimer();
+                  timerProvider.stopTimer();
+                  timerProvider.resetTimer();
                   // Close the dialog
                   Navigator.of(context).pop();
                   Navigator.of(context).pop();
@@ -244,7 +251,7 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
         ],
         backgroundColor: const Color(0xFF1A1A1A),
         title: PreferredSize(
-          preferredSize: Size.fromHeight(40),
+          preferredSize: const Size.fromHeight(40),
           child: GestureDetector(
             onTap: () {
               if (restTimerProvider.isRestTimerRunning) {
@@ -261,7 +268,7 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
                 padding: const EdgeInsets.all(8.0),
                 child: Row(
                   children: [
-                    Icon(Icons.access_time, color: Colors.white, size: 18),
+                    const Icon(Icons.access_time, color: Colors.white, size: 18),
                     const SizedBox(width: 4),
                     Text(
                       " ${TimerProvider.formatDuration(restTimerProvider.currentRestTimerDuration)}",
@@ -284,7 +291,7 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
                   padding: const EdgeInsets.all(8.0),
                   child: Row(
                     children: [
-                      Icon(Icons.access_time, color: Colors.white, size: 18),
+                      const Icon(Icons.access_time, color: Colors.white, size: 18),
                       const SizedBox(width: 4),
                       Text(
                         " ${_formatTime(restTimerProvider.restTimerMinutes, restTimerProvider.restTimerSeconds)}",
@@ -302,7 +309,7 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
         ),
       ),
 
-        backgroundColor: const Color(0xFF1A1A1A),
+      backgroundColor: const Color(0xFF1A1A1A),
       body: StreamBuilder<CurrentWorkoutSession>(
         stream:
         objectBox.currentWorkoutSessionService.watchCurrentWorkoutSession(),
@@ -371,9 +378,6 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
     if (restTimerProvider.isRestTimerRunning) {
       _showTimerDetailsDialog(context, restTimerProvider);
     } else {
-      // Calculate the initial item based on the default duration
-      int initialItem = (restTimerProvider.restTimerMinutes * 60 + restTimerProvider.restTimerSeconds) ~/ 5 - 1;
-
       showModalBottomSheet<void>(
         context: context,
         backgroundColor: Colors.black,
@@ -401,4 +405,3 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
 
 
 }
-

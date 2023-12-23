@@ -15,8 +15,8 @@ class RestTimePicker extends StatelessWidget {
     // Adjust the initial item
     int initialItem = (restTimerProvider.restTimerMinutes * 60 + restTimerProvider.restTimerSeconds) ~/ 5 - 1;
 
-    return Container(
-      height: double.infinity, // Set the desired height
+    return SizedBox(
+      height: double.infinity,
       child: CupertinoPicker(
         scrollController: FixedExtentScrollController(
           initialItem: initialItem,
