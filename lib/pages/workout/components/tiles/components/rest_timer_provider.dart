@@ -1,8 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 
-
-
 class RestTimerProvider with ChangeNotifier {
   bool _isRestTimerEnabled = false;
   int _restTimerDuration = 120;
@@ -11,11 +9,6 @@ class RestTimerProvider with ChangeNotifier {
   int _restTimerSeconds = 0;
   Timer? _timer;
   bool _isRestTimerRunning = false;
-  final StreamController<int> _restTimerDurationController =
-  StreamController<int>.broadcast();
-
-  Stream<int> get restTimerDurationStream =>
-      _restTimerDurationController.stream;
 
   bool get isRestTimerRunning => _isRestTimerRunning;
   bool get isRestTimerEnabled => _isRestTimerEnabled;
@@ -23,25 +16,7 @@ class RestTimerProvider with ChangeNotifier {
   int get currentRestTimerDuration => _currentDuration;
   int get restTimerMinutes => _restTimerMinutes;
   int get restTimerSeconds => _restTimerSeconds;
-
-  late StreamController<int> _restTimerController;
-// Constructor to initialize _restTimerController
-  RestTimerProvider() {
-    _restTimerController = StreamController<int>.broadcast();
-  }
-
-  // Getter for restTimerStream
-  Stream<int> get restTimerStream => _restTimerController.stream;
-
-  // Getter for restTimerController
-  StreamController<int> get restTimerController => _restTimerController;
-
-
-  // Function to update the rest timer duration from the pop up
-  void updateRestTimerDuration(int newDuration) {
-    _restTimerDuration = newDuration;
-    notifyListeners();
-  }
+  int get currentDuration => _currentDuration; // Add this getter
 
   void setRestTimerMinutes(int minutes) {
     _restTimerMinutes = minutes;
@@ -63,48 +38,30 @@ class RestTimerProvider with ChangeNotifier {
     notifyListeners();
   }
 
-
-  // method to start the rest timer
   void startRestTimer(BuildContext context) {
     if (_isRestTimerEnabled) {
       _currentDuration = _restTimerMinutes * 60 + _restTimerSeconds;
 
-      // Cancel the existing timer if it's already running
       _timer?.cancel();
-
       _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
         if (_currentDuration <= 0) {
           stopRestTimer();
-
-          // Show the pop-up notification
           _showRestTimeEndedNotification(context);
         } else {
-
-          // Update the UI by calling notifyListeners
           notifyListeners();
-
-          // Decrement the duration
           _currentDuration--;
-          _isRestTimerRunning = true; // Set the rest timer as running
+          _isRestTimerRunning = true;
         }
       });
     }
   }
 
-
-  //method to stop the rest timer
   void stopRestTimer() {
     _timer?.cancel();
     _timer = null;
     _currentDuration = 0;
     notifyListeners();
     _isRestTimerRunning = false;
-  }
-
-  @override
-  void dispose() {
-    _timer?.cancel();
-    super.dispose();
   }
 
   void _showRestTimeEndedNotification(BuildContext context) {
@@ -139,5 +96,20 @@ class RestTimerProvider with ChangeNotifier {
         );
       },
     );
+  }
+
+  void resetRestTimer(int newDuration, BuildContext context) {
+    stopRestTimer();
+    _restTimerDuration = newDuration;
+    _restTimerMinutes = newDuration ~/ 60;
+    _restTimerSeconds = newDuration % 60;
+    notifyListeners();
+    startRestTimer(context);
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
   }
 }

@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:group_project/main.dart';
 import 'package:group_project/models/exercise.dart';
@@ -9,6 +8,8 @@ import 'package:provider/provider.dart';
 import 'package:group_project/pages/workout/components/tiles/components/timer_provider.dart';
 import 'package:group_project/pages/workout/components/tiles/components/rest_timer_provider.dart';
 import 'package:group_project/pages/workout/components/tiles/components/rest_time_picker.dart';
+
+import 'components/tiles/components/resttimer_add_minus.dart';
 
 
 
@@ -33,7 +34,6 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
   TextEditingController weightsController = TextEditingController();
   TextEditingController repsController = TextEditingController();
   bool _isSetTimeVisible = true;
-  late RestTimerProvider restTimerProvider;
 
 
 
@@ -61,9 +61,11 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
     objectBox.currentWorkoutSessionService
         .addExerciseToCurrentWorkoutSession(selectedExercise);
     final timerProvider = Provider.of<TimerProvider>(context, listen: false);
+    // final restTimerProvider = Provider.of<RestTimerProvider>(context, listen: false);
 
     if (!_isTimerRunning) {
       timerProvider.startTimer();
+      // timerProvider.startExerciseTimer(selectedExercise.id);
       setState(() {
         _isTimerRunning = true;
       });
@@ -167,7 +169,7 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
   @override
   Widget build(BuildContext context) {
     final timerProvider = Provider.of<TimerProvider>(context);
-    restTimerProvider = Provider.of<RestTimerProvider>(context);
+    final restTimerProvider = Provider.of<RestTimerProvider>(context);
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -208,7 +210,6 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
                               color: Colors.white,
                             ),
                           ),
-
                           backgroundColor: Color(0xFF1A1A1A),
                         ),
                       );
@@ -244,16 +245,19 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
         backgroundColor: const Color(0xFF1A1A1A),
         title: PreferredSize(
           preferredSize: Size.fromHeight(40),
-          child: AnimatedCrossFade(
-            duration: const Duration(milliseconds: 300),
-            crossFadeState: restTimerProvider.isRestTimerEnabled && restTimerProvider.isRestTimerRunning
-                ? CrossFadeState.showFirst
-                : CrossFadeState.showSecond,
-            firstChild: GestureDetector(
-              onTap: () {
-                _showRestTimerAdjustment(context);
-              },
-              child: Padding(
+          child: GestureDetector(
+            onTap: () {
+              if (restTimerProvider.isRestTimerRunning) {
+                _showTimerDetailsDialog(context, restTimerProvider);
+              }
+            },
+            child: AnimatedCrossFade(
+              duration: const Duration(milliseconds: 300),
+              crossFadeState: restTimerProvider.isRestTimerEnabled &&
+                  restTimerProvider.isRestTimerRunning
+                  ? CrossFadeState.showFirst
+                  : CrossFadeState.showSecond,
+              firstChild: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Row(
                   children: [
@@ -269,36 +273,36 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
                   ],
                 ),
               ),
-            ),
-            secondChild: GestureDetector(
-              onTap: () async {
-                await _showScrollTimePicker(context, restTimerProvider);
-                setState(() {
-                  _isSetTimeVisible = !_isSetTimeVisible;
-                });
-              },
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  children: [
-                    Icon(Icons.access_time, color: Colors.white, size: 18),
-                    const SizedBox(width: 4),
-                    Text(
-                      " ${_formatTime(restTimerProvider.restTimerMinutes, restTimerProvider.restTimerSeconds)}",
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
+              secondChild: GestureDetector(
+                onTap: () async {
+                  await _showScrollTimePicker(context, restTimerProvider);
+                  setState(() {
+                    _isSetTimeVisible = !_isSetTimeVisible;
+                  });
+                },
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    children: [
+                      Icon(Icons.access_time, color: Colors.white, size: 18),
+                      const SizedBox(width: 4),
+                      Text(
+                        " ${_formatTime(restTimerProvider.restTimerMinutes, restTimerProvider.restTimerSeconds)}",
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
           ),
         ),
-
       ),
-      backgroundColor: const Color(0xFF1A1A1A),
+
+        backgroundColor: const Color(0xFF1A1A1A),
       body: StreamBuilder<CurrentWorkoutSession>(
         stream:
         objectBox.currentWorkoutSessionService.watchCurrentWorkoutSession(),
@@ -363,307 +367,38 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
 
 
   Future<void> _showScrollTimePicker(BuildContext context, RestTimerProvider restTimerProvider) async {
-    // Save the current rest timer values before showing the picker
-    int initialAppBarMinutes = restTimerProvider.restTimerMinutes;
-    int initialAppBarSeconds = restTimerProvider.restTimerSeconds;
-
-    await showModalBottomSheet<void>(
-      context: context,
-      backgroundColor: Colors.black,
-      builder: (BuildContext context) {
-        // Pass the current rest timer values to the picker
-        return Container(
-          height: 200,
-          color: Colors.black,
-          child: RestTimePicker(
-            restTimerProvider: restTimerProvider,
-            initialMinutes: initialAppBarMinutes,
-            initialSeconds: initialAppBarSeconds,
-          ),
-        );
-      },
-    );
-
-    // Check if the values have changed after closing the picker
-    if (initialAppBarMinutes != restTimerProvider.restTimerMinutes ||
-        initialAppBarSeconds != restTimerProvider.restTimerSeconds) {
-      // Values have changed, update the app bar rest timer
-      restTimerProvider.setRestTimerDuration(
-          restTimerProvider.restTimerMinutes * 60 + restTimerProvider.restTimerSeconds);
-    }
-  }
-
-
-
-
-  void _showPlusMinusSkip(BuildContext context, int minutes, int seconds) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return _PlusMinusSkipDialog(
-          restTimerProvider: restTimerProvider,
-          formatTime: _formatTime,
-          initialRestTimerDuration: restTimerProvider.restTimerDuration,
-          restTimerStream: restTimerProvider.restTimerStream,
-          initialMinutes: minutes, // Pass current minutes
-          initialSeconds: seconds, // Pass current seconds
-        );
-      },
-    );
-  }
-
-
-
-// Usage in _showRestTimerAdjustment
-  void _showRestTimerAdjustment(BuildContext context) {
+    // Check if the rest timer is running
     if (restTimerProvider.isRestTimerRunning) {
-      // Show plus/minus/skip bottom sheet
-      _showPlusMinusSkip(context, restTimerProvider.restTimerMinutes, restTimerProvider.restTimerSeconds);
-
+      _showTimerDetailsDialog(context, restTimerProvider);
     } else {
+      // Calculate the initial item based on the default duration
+      int initialItem = (restTimerProvider.restTimerMinutes * 60 + restTimerProvider.restTimerSeconds) ~/ 5 - 1;
+
       showModalBottomSheet<void>(
         context: context,
+        backgroundColor: Colors.black,
         builder: (BuildContext context) {
           return Container(
-            height: 400,
+            height: 200,
             color: Colors.black,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text(
-                  'Adjust Rest Timer',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 18,
-                  ),
-                ),
-                SizedBox(height: 16),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    IconButton(
-                      onPressed: () {
-                        // Reduce rest time by 10 seconds
-                        restTimerProvider.setRestTimerDuration(
-                          restTimerProvider.restTimerDuration - 10,
-                        );
-                      },
-                      icon: Icon(Icons.remove, color: Colors.white),
-                    ),
-                    const SizedBox(width: 16),
-                    ElevatedButton(
-                      onPressed: () {
-                        // Skip rest timer
-                        restTimerProvider.stopRestTimer();
-                        Navigator.of(context).pop();
-                      },
-                      child: const Text('Skip'),
-                    ),
-                    const SizedBox(width: 16),
-                    IconButton(
-                      onPressed: () {
-                        // Add 10 seconds to rest time
-                        restTimerProvider.setRestTimerDuration(
-                          restTimerProvider.restTimerDuration + 10,
-                        );
-                      },
-                      icon: Icon(Icons.add, color: Colors.white),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 16),
-                RestTimePicker(
-                  restTimerProvider: restTimerProvider,
-                  initialMinutes: restTimerProvider.restTimerMinutes,
-                  initialSeconds: restTimerProvider.restTimerSeconds,
-                ),
-                SizedBox(height: 16),
-                ElevatedButton(
-                  onPressed: () {
-                    // Start the rest timer when the adjustment is done
-                    restTimerProvider.startRestTimer(context);
-                    Navigator.of(context).pop();
-                  },
-                  child: const Text('Done'),
-                ),
-              ],
-            ),
+            child: RestTimePicker(restTimerProvider: restTimerProvider),
           );
         },
       );
     }
   }
 
-
-
-}
-
-
-
-
-class _PlusMinusSkipDialog extends StatefulWidget {
-  final RestTimerProvider restTimerProvider;
-  final String Function(int minutes, int seconds) formatTime;
-  final int initialRestTimerDuration;
-  final Stream<int> restTimerStream; // Add this line
-  final int initialMinutes;
-  final int initialSeconds;
-
-  const _PlusMinusSkipDialog({
-    Key? key,
-    required this.restTimerProvider,
-    required this.formatTime,
-    required this.initialRestTimerDuration,
-    required this.restTimerStream,
-    required this.initialMinutes,
-    required this.initialSeconds,
-
-  }) : super(key: key);
-
-  @override
-  _PlusMinusSkipDialogState createState() => _PlusMinusSkipDialogState();
-}
-
-
-class _PlusMinusSkipDialogState extends State<_PlusMinusSkipDialog> {
-  late Timer timer;
-  late int minutes;
-  late int seconds;
-
-  @override
-  void initState() {
-    super.initState();
-
-    // Use the initial rest timer duration
-    minutes = widget.initialMinutes;
-    seconds = widget.initialSeconds;
-
-    // Set up a Timer to update the UI every second
-    timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      _updateTime(); // Call the method to update time
-    });
-
-    // Use a StreamBuilder to listen to changes in the rest timer duration
-    widget.restTimerStream.listen((restTimerDuration) {
-      setState(() {
-        minutes = restTimerDuration ~/ 60;
-        seconds = restTimerDuration % 60;
-      });
-    });
-  }
-
-  @override
-  void dispose() {
-    // Cancel the Timer when the dialog is disposed
-    timer.cancel();
-    super.dispose();
-  }
-
-  void _updateTime() {
-    setState(() {
-      if (seconds > 0) {
-        seconds--;
-      } else {
-        if (minutes > 0) {
-          minutes--;
-          seconds = 59;
-        } else {
-          // If both minutes and seconds are zero, cancel the timer
-          timer.cancel();
-        }
-      }
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Dialog(
-      backgroundColor: Colors.transparent,
-      child: Container(
-        padding: EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Text(
-              'Rest Timer Controls',
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            SizedBox(height: 16),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                IconButton(
-                  onPressed: () {
-                    // Reduce rest time by 10 seconds
-                    setState(() {
-                      // Calculate the remaining time in seconds
-                      int remainingTimeInSeconds =
-                      max(0, widget.restTimerProvider.restTimerDuration - 10);
-
-                      // Update the rest timer duration in the provider
-                      widget.restTimerProvider
-                          .setRestTimerDuration(remainingTimeInSeconds);
-
-                      // Print the updated time
-                      _updateTime();
-                    });
-                  },
-                  icon: Icon(Icons.remove, color: Colors.black),
-                ),
-                const SizedBox(width: 16),
-                ElevatedButton(
-                  onPressed: () {
-                    // Skip rest timer
-                    widget.restTimerProvider.stopRestTimer();
-                    Navigator.of(context).pop();
-                  },
-                  child: const Text('Skip'),
-                ),
-                const SizedBox(width: 16),
-                IconButton(
-                  onPressed: () {
-                    // Add 10 seconds to rest time
-                    setState(() {
-                      seconds += 10;
-                      if (seconds >= 60) {
-                        minutes++;
-                        seconds -= 60;
-                      }
-                      widget.restTimerProvider.setRestTimerDuration(
-                        minutes * 60 + seconds,
-                      );
-                    });
-                  },
-                  icon: Icon(Icons.add, color: Colors.black),
-                ),
-              ],
-            ),
-            SizedBox(height: 16),
-            Text(
-              " ${widget.formatTime(minutes, seconds)}", // Use widget to access the formatTime method
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 16,
-              ),
-            ),
-            SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('Done'),
-            ),
-          ],
-        ),
-      ),
+  void _showTimerDetailsDialog(BuildContext context, RestTimerProvider restTimerProvider) {
+    showDialog(
+      context: context, // or Navigator.of(context)
+      builder: (BuildContext context) {
+        return TimerDetailsDialog(
+          restTimerProvider: restTimerProvider,
+        );
+      },
     );
   }
+
+
 }
+
