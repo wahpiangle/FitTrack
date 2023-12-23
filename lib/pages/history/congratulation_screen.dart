@@ -1,15 +1,15 @@
 import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:group_project/constants/themes/app_colours.dart';
 import 'package:group_project/main.dart';
 import 'package:group_project/models/workout_session.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
 import 'package:confetti/confetti.dart';
 import 'components/complete_workout_card.dart';
 
-
 class CongratulationScreen extends StatefulWidget {
-  const CongratulationScreen({Key? key});
+  const CongratulationScreen({super.key});
 
   @override
   State<CongratulationScreen> createState() => _CongratulationScreenState();
@@ -32,7 +32,6 @@ class _CongratulationScreenState extends State<CongratulationScreen> {
     });
   }
 
-
   void scrollToItem(int index) async {
     await _scrollController.scrollToIndex(
       index,
@@ -46,41 +45,92 @@ class _CongratulationScreenState extends State<CongratulationScreen> {
       context: context,
       builder: (BuildContext ctx) {
         return AlertDialog(
-          backgroundColor: const Color(0xFF1A1A1A),
+          backgroundColor: AppColours.primary,
           surfaceTintColor: Colors.transparent,
-          title: const Text(
-            'Save as Workout Template?',
-            style: TextStyle(color: Colors.white),
-          ),
-          content: const Text(
-            'FitTrack can save this workout as a workout template so you can perform it again easily in the future.',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 18,
+          title: const Center(
+            child: Text(
+              'Save as Workout Template?',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
             ),
+          ),
+          content: Text(
+            'Save this workout as a template for future use?',
+            style: TextStyle(
+              color: Colors.grey[500],
+              fontSize: 16,
+            ),
+            textAlign: TextAlign.center,
           ),
           actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-                Navigator.of(context).pop();
-              },
-              child: const Text(
-                'Cancel',
-                style: TextStyle(fontSize: 18, color: Colors.red),
-              ),
-            ),
-            TextButton(
-              onPressed: () {
-                // direct to save template
-              },
-              child: const Text(
-                'Save as Workout Template',
-                style: TextStyle(
-                  fontSize: 18,
-                  color: Colors.blue,
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Center(
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: TextButton(
+                      style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.all<Color>(Colors.black38),
+                        shape:
+                            MaterialStateProperty.all<RoundedRectangleBorder>(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(5),
+                          ),
+                        ),
+                        overlayColor: MaterialStateProperty.all<Color>(
+                          Colors.grey.withOpacity(0.2),
+                        ),
+                      ),
+                      onPressed: () {
+                        //TODO: direct to save template
+                      },
+                      child: const Text(
+                        'Save Template',
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.blue,
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
-              ),
+                Center(
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: TextButton(
+                      style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.all<Color>(Colors.black38),
+                        overlayColor: MaterialStateProperty.all<Color>(
+                          Colors.grey.withOpacity(0.2),
+                        ),
+                        shape:
+                            MaterialStateProperty.all<RoundedRectangleBorder>(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(5),
+                          ),
+                        ),
+                      ),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                        Navigator.of(context).pop();
+                      },
+                      child: const Text(
+                        'No Thanks',
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.red,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ],
         );
@@ -98,19 +148,19 @@ class _CongratulationScreenState extends State<CongratulationScreen> {
           IconButton(
             icon: const Icon(Icons.share),
             onPressed: () {
-              //Navigate to share feature
+              //TODO: Share workout feature
             },
           )
         ],
-          leading: IconButton(
+        leading: IconButton(
           onPressed: () {},
-            icon: IconButton(
-              icon:const Icon(Icons.close_sharp),
-              onPressed:  () {
-                _delete(context);
-              },
-            ),
+          icon: IconButton(
+            icon: const Icon(Icons.close_sharp, color: Colors.white),
+            onPressed: () {
+              _delete(context);
+            },
           ),
+        ),
       ),
       body: Container(
         constraints: const BoxConstraints.expand(),
@@ -123,9 +173,9 @@ class _CongratulationScreenState extends State<CongratulationScreen> {
                 child: CircularProgressIndicator(),
               );
             } else if (snapshot.data!.isEmpty) {
-              return const Center(); // Adjust this part if needed
+              return const Center();
             } else {
-              int workoutNumber = snapshot.data!.length; // Assuming workout number is based on the length of the list
+              int workoutNumber = snapshot.data!.length;
               _celebrate();
 
               return Column(
@@ -134,7 +184,7 @@ class _CongratulationScreenState extends State<CongratulationScreen> {
                     alignment: Alignment.topCenter,
                     child: ConfettiWidget(
                       confettiController: _confettiController,
-                      blastDirection: pi/2,
+                      blastDirection: pi / 2,
                       shouldLoop: false,
                       colors: const [
                         Colors.green,
