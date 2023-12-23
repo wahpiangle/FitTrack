@@ -128,7 +128,7 @@ class ObjectBox {
   }
 
   // save to history
-  void saveCurrentWorkoutSession() {
+  WorkoutSession saveCurrentWorkoutSession() {
     CurrentWorkoutSession currentWorkoutSession =
     currentWorkoutSessionService.getCurrentWorkoutSession();
     WorkoutSession workoutSession = WorkoutSession(date: DateTime.now());
@@ -138,6 +138,7 @@ class ObjectBox {
     workoutSession.title = currentWorkoutSession.title;
     _workoutSessionBox.put(workoutSession);
     currentWorkoutSessionService.clearCurrentWorkoutSession();
+    return workoutSession;
   }
 
 // check history
