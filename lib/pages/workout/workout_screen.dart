@@ -28,7 +28,6 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
     objectBox.currentWorkoutSessionService.createCurrentWorkoutSession();
 
     bool isBottomSheetClosed = await NewWorkoutBottomSheet.show(context, exerciseData);
-
     // If the bottom sheet is closed, show TimerActiveScreen as a bottom sheet
     if (isBottomSheetClosed) {
       showBottomSheet(

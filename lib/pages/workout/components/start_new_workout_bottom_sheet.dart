@@ -33,7 +33,7 @@ class NewWorkoutBottomSheet {
             },
             child: DraggableScrollableSheet(
               expand: false,
-              initialChildSize: 0.9,
+              initialChildSize: 0.95,
               maxChildSize: 1.0,
               minChildSize: 0.2,
               builder: (context, controller) {
@@ -68,18 +68,21 @@ class TimerActiveScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final timerProvider = Provider.of<TimerProvider>(context);
+
     return NotificationListener<DraggableScrollableNotification>(
       onNotification: (notification) {
-        if (notification.extent == notification.minExtent) {
-          // The sheet is dragged down to the minChildSize, close the TimerActiveScreen
+        if (notification.extent == notification.maxExtent) {
+          // The sheet is dragged up to the maxChildSize, reopen NewWorkoutBottomSheet
           Navigator.pop(context);
+          NewWorkoutBottomSheet.show(context, exerciseData);
         }
         return true;
       },
       child: DraggableScrollableSheet(
         expand: false,
         initialChildSize: 0.1,
-        maxChildSize: 1.0,
+        maxChildSize: 0.15, // Change maxChildSize to 1.0
         minChildSize: 0.01,
         builder: (context, controller) {
           return ClipRRect(
@@ -94,13 +97,39 @@ class TimerActiveScreen extends StatelessWidget {
                     child: Scaffold(
                       appBar: AppBar(
                         backgroundColor: const Color(0xFF1A1A1A),
-                        title: Text(
-                          'Timer Active',
-                          style: TextStyle(color: Colors.white),
+                        elevation: 0.0, // Remove the default shadow
+                        title: Container(
+                          padding: EdgeInsets.symmetric(horizontal: 8.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                margin: EdgeInsets.only(left: 90.0),
+                                width: 50.0,
+                                height: 5.0,
+                                decoration: BoxDecoration(
+                                  color: Colors.grey,
+                                  borderRadius: BorderRadius.circular(10.0),
+                                ),
+                              ),
+                              Container(
+                                margin: EdgeInsets.only(left: 70.0),
+                                padding: EdgeInsets.only(bottom: 20.0),
+                                child: Text(
+                                  'Timer: ${formatDuration(timerProvider.currentDuration)}',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 18,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                       body: Container(
                         color: const Color(0xFF1A1A1A),
+                        // The rest of your body content
                       ),
                     ),
                   ),
@@ -120,5 +149,11 @@ class TimerActiveScreen extends StatelessWidget {
         return TimerActiveScreen(exerciseData: exerciseData);
       },
     );
+  }
+
+  String formatDuration(int seconds) {
+    final minutes = ((seconds % 3600) ~/ 60).toString().padLeft(2, '0');
+    final remainingSeconds = (seconds % 60).toString().padLeft(2, '0');
+    return "$minutes:$remainingSeconds";
   }
 }
