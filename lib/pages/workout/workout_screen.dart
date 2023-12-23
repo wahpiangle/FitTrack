@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:group_project/main.dart';
 import 'package:group_project/models/exercise.dart';
-
+import 'package:group_project/pages/workout/components/tiles/components/timer_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:group_project/pages/workout/new_workout.dart';
 import 'package:group_project/pages/workout/components/start_new_workout_bottom_sheet.dart';
@@ -28,14 +28,16 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
     objectBox.currentWorkoutSessionService.createCurrentWorkoutSession();
 
     bool isBottomSheetClosed = await NewWorkoutBottomSheet.show(context, exerciseData);
-    // If the bottom sheet is closed, show TimerActiveScreen as a bottom sheet
-    if (isBottomSheetClosed) {
+
+    // If the bottom sheet is closed and the timer is active, show TimerActiveScreen as a bottom sheet
+    if (isBottomSheetClosed && Provider.of<TimerProvider>(context, listen: false).isTimerRunning) {
       showBottomSheet(
         context: context,
         builder: (context) => TimerActiveScreen(exerciseData: exerciseData),
       );
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
