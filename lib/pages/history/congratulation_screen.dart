@@ -1,12 +1,10 @@
 import 'dart:async';
 import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:group_project/main.dart';
 import 'package:group_project/models/workout_session.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
 import 'package:confetti/confetti.dart';
-
 import 'components/complete_workout_card.dart';
 
 
@@ -113,7 +111,6 @@ class _CongratulationScreenState extends State<CongratulationScreen> {
               },
             ),
           ),
-
       ),
       body: Container(
         constraints: const BoxConstraints.expand(),
@@ -129,7 +126,6 @@ class _CongratulationScreenState extends State<CongratulationScreen> {
               return const Center(); // Adjust this part if needed
             } else {
               int workoutNumber = snapshot.data!.length; // Assuming workout number is based on the length of the list
-
               _celebrate();
 
               return Column(

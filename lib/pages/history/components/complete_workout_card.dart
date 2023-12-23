@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:group_project/models/workout_session.dart';
 import 'package:intl/intl.dart';
-
 import '../complete_history_detail.dart';
 
 class CompleteWorkoutCard extends StatelessWidget {
