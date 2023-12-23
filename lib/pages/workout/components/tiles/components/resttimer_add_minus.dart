@@ -69,15 +69,32 @@ class _TimerDetailsDialogState extends State<TimerDetailsDialog> {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            const SizedBox(height: 76),
-            Text(
-              "${TimerProvider.formatDuration(widget.restTimerProvider.currentDuration)}",
-              style: const TextStyle(
-                color: Color(0xFFE1F0CF),
-                fontSize: 64,
-              ),
+            const SizedBox(height: 65),
+            // Use a Stack to overlay the circular progress bar on top of the text
+            Stack(
+              alignment: Alignment.center,
+              children: [
+                // Circular Progress Indicator with increased strokeWidth
+                SizedBox(
+                  width: 230, // Set the desired size for the circular progress bar
+                  height: 230,
+                  child: CircularProgressIndicator(
+                    value: widget.restTimerProvider.currentDuration / widget.restTimerProvider.restTimerDuration,
+                    valueColor: AlwaysStoppedAnimation<Color>(Colors.greenAccent), // Customize the color
+                    strokeWidth: 6,
+                  ),
+                ),
+                // Rest Timer Text
+                Text(
+                  "${TimerProvider.formatDuration(widget.restTimerProvider.currentDuration)}",
+                  style: const TextStyle(
+                    color: Color(0xFFE1F0CF),
+                    fontSize: 64,
+                  ),
+                ),
+              ],
             ),
-            const SizedBox(height: 76),
+            const SizedBox(height: 60),
             Padding(
               padding: const EdgeInsets.only(bottom: 36.0), // Add padding only at the bottom
               child: Row(
@@ -88,14 +105,11 @@ class _TimerDetailsDialogState extends State<TimerDetailsDialog> {
                       // Reduce the rest time by 10 seconds
                       widget.restTimerProvider.adjustRestTime(-10);
                     },
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.black,
+                      backgroundColor: const Color(0xFFE1F0CF),
+                    ),
                     child: const Text('-10s'),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      // Increase the rest time by 10 seconds
-                      widget.restTimerProvider.adjustRestTime(10);
-                    },
-                    child: const Text('+10s'),
                   ),
                   ElevatedButton(
                     onPressed: () {
@@ -103,7 +117,22 @@ class _TimerDetailsDialogState extends State<TimerDetailsDialog> {
                       widget.restTimerProvider.stopRestTimer();
                       Navigator.of(context).pop();
                     },
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.black,
+                      backgroundColor: const Color(0xFFC1C1C1),
+                    ),
                     child: const Text('Skip'),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      // Increase the rest time by 10 seconds
+                      widget.restTimerProvider.adjustRestTime(10);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.black,
+                      backgroundColor: const Color(0xFFE1F0CF),
+                    ),
+                    child: const Text('+10s'),
                   ),
                 ],
               ),
@@ -113,5 +142,6 @@ class _TimerDetailsDialogState extends State<TimerDetailsDialog> {
       ),
     );
   }
+
 
 }
