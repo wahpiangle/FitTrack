@@ -107,6 +107,14 @@ class RestTimerProvider with ChangeNotifier {
     startRestTimer(context);
   }
 
+  void adjustRestTime(int seconds) {
+    _currentDuration += seconds;
+    if (_currentDuration < 0) {
+      _currentDuration = 0;
+    }
+    notifyListeners();
+  }
+
   @override
   void dispose() {
     _timer?.cancel();

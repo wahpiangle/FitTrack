@@ -17,40 +17,33 @@ class TimerDetailsDialog extends StatefulWidget {
 
 class _TimerDetailsDialogState extends State<TimerDetailsDialog> {
   late Timer _timer;
-  late TextEditingController _editController;
-  late int _currentDuration;
-  bool _isPaused = false;
 
   @override
   void initState() {
     super.initState();
-    _editController = TextEditingController();
-    _currentDuration = widget.restTimerProvider.currentDuration;
     _startUpdatingTimer();
   }
 
   void _startUpdatingTimer() {
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      setState(() {
-        _currentDuration = widget.restTimerProvider.currentDuration;
-      });
+      setState(() {});
     });
   }
 
   @override
   void dispose() {
     _timer.cancel();
-    _editController.dispose();
     super.dispose();
   }
 
+  @override
   @override
   Widget build(BuildContext context) {
     return Dialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16.0),
       ),
-      backgroundColor: const Color(0xFF1A1A1A), // Grey background color
+      backgroundColor: const Color(0xFF1A1A1A),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -64,56 +57,61 @@ class _TimerDetailsDialogState extends State<TimerDetailsDialog> {
                     _timer.cancel();
                     Navigator.of(context).pop();
                   },
-                  icon: const Icon(Icons.close,
-                      size: 32, color: Color(0xFFC1C1C1)), // Icon color
+                  icon: const Icon(Icons.close, size: 32, color: Color(0xFFC1C1C1)),
                 ),
               ],
             ),
             const Text(
               "Rest Timer",
               style: TextStyle(
-                color: Color(0xFFE1F0CF), // White color for text
+                color: Color(0xFFE1F0CF),
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 76),
             Text(
               "${TimerProvider.formatDuration(widget.restTimerProvider.currentDuration)}",
               style: const TextStyle(
-                color: Color(0xFFE1F0CF), // White color for text
-                fontSize: 64, // Enlarge the font size
+                color: Color(0xFFE1F0CF),
+                fontSize: 64,
               ),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 76),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 36.0), // Add padding only at the bottom
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      // Reduce the rest time by 10 seconds
+                      widget.restTimerProvider.adjustRestTime(-10);
+                    },
+                    child: const Text('-10s'),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      // Increase the rest time by 10 seconds
+                      widget.restTimerProvider.adjustRestTime(10);
+                    },
+                    child: const Text('+10s'),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      // End the whole rest timer
+                      widget.restTimerProvider.stopRestTimer();
+                      Navigator.of(context).pop();
+                    },
+                    child: const Text('Skip'),
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
       ),
     );
   }
 
-  void _showEditDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return EditTimerDialog(
-          restTimerProvider: widget.restTimerProvider,
-        );
-      },
-    );
-  }
-}
-
-class EditTimerDialog extends StatelessWidget {
-  final RestTimerProvider restTimerProvider;
-
-  const EditTimerDialog({Key? key, required this.restTimerProvider})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    // Implement the edit timer dialog here
-    // Use the restTimerProvider to access the rest timer details
-    return Container();
-  }
 }
