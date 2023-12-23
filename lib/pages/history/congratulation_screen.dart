@@ -156,7 +156,36 @@ class _CongratulationScreenState extends State<CongratulationScreen> {
                     height: 100,
                     fit: BoxFit.cover,
                   ),
-                  
+                  const Center(
+                    child: Text(
+                      'Congratulations!',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 20.0),
+                  Center(
+                    child: Text(
+                      'That\'s your workout number $workoutNumber!',
+                      style: const TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 15.0),
+                  AutoScrollTag(
+                    key: ValueKey(snapshot.data!.first.id),
+                    controller: _scrollController,
+                    index: 0,
+                    child: CompleteWorkoutCard(
+                      key: Key(snapshot.data!.first.id.toString()),
+                      workoutSession: snapshot.data!.first,
+                    ),
+                  ),
+                  const SizedBox(height: 30.0),
                 ],
               );
             }
