@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:group_project/main.dart';
 import 'package:group_project/models/exercise.dart';
-import 'package:group_project/pages/workout/components/workout_templates/workout_templates.dart';
+import 'package:group_project/pages/workout/workout_templates/workout_templates.dart';
 import 'package:group_project/pages/workout/start_new_workout.dart';
 
 class WorkoutScreen extends StatefulWidget {

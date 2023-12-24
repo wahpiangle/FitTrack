@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:group_project/constants/themes/app_colours.dart';
 import 'package:group_project/main.dart';
 import 'package:group_project/models/workout_template.dart';
-import 'package:group_project/pages/workout/components/workout_templates/create_template_page.dart';
+import 'package:group_project/pages/workout/workout_templates/create_template_page.dart';
 
 class WorkoutTemplates extends StatefulWidget {
   const WorkoutTemplates({super.key});

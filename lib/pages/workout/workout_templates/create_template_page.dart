@@ -3,7 +3,7 @@ import 'package:group_project/constants/themes/app_colours.dart';
 import 'package:group_project/main.dart';
 import 'package:group_project/models/exercise.dart';
 import 'package:group_project/models/workout_template.dart';
-import 'package:group_project/pages/workout/components/workout_templates/components/templates_exercise_tile.dart';
+import 'package:group_project/pages/workout/workout_templates/components/templates_exercise_tile.dart';
 
 class CreateTemplatePage extends StatefulWidget {
   const CreateTemplatePage({
