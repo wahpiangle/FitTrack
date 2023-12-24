@@ -71,25 +71,36 @@ class RestTimerProvider with ChangeNotifier {
         return AlertDialog(
           backgroundColor: const Color(0xFF1A1A1A),
           surfaceTintColor: Colors.transparent,
-          title: const Text(
-            'Rest Time Ended',
-            style: TextStyle(color: Colors.white),
-          ),
-          content: const Text(
-            'Your rest time has ended!',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 18,
+          title: const Center(
+            child: Text(
+              'Rest Time Ended',
+              style: TextStyle(color: Colors.white),
             ),
           ),
+          content: Text(
+            'Your rest time has ended!',
+            style: TextStyle(
+              color: Colors.grey[500],
+              fontSize: 16,
+            ),
+            textAlign: TextAlign.center,
+          ),
           actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text(
-                'OK',
-                style: TextStyle(fontSize: 18, color: Colors.blue),
+            SizedBox(
+              width: double.infinity,
+              child: TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all(
+                    const Color(0xFF333333),
+                  ),
+                ),
+                child: const Text(
+                  'OK',
+                  style: TextStyle(fontSize: 18, color: Colors.blue),
+                ),
               ),
             ),
           ],

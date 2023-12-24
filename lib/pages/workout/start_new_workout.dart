@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:group_project/constants/themes/app_colours.dart';
 import 'package:group_project/main.dart';
 import 'package:group_project/models/exercise.dart';
 import 'package:group_project/models/current_workout_session.dart';
@@ -7,17 +8,15 @@ import 'package:group_project/pages/history/congratulation_screen.dart';
 import 'package:group_project/models/workout_session.dart';
 import 'package:group_project/pages/workout/components/tiles/exercise_tile.dart';
 import 'package:provider/provider.dart';
-import 'package:group_project/pages/workout/components/tiles/components/timer_provider.dart';
-import 'package:group_project/pages/workout/components/tiles/components/rest_timer_provider.dart';
-import 'package:group_project/pages/workout/components/tiles/components/rest_time_picker.dart';
+import 'package:group_project/pages/workout/components/timer/timer_provider.dart';
+import 'package:group_project/pages/workout/components/timer/rest_timer_provider.dart';
+import 'package:group_project/pages/workout/components/timer/rest_time_picker.dart';
 
-import 'components/tiles/components/resttimer_details_dialog.dart';
-
+import 'components/timer/resttimer_details_dialog.dart';
 
 import 'package:group_project/services/firebase/workoutSession/firebase_workouts_service.dart';
 
 class StartNewWorkout extends StatefulWidget {
-
   final List<Exercise> exerciseData;
 
   const StartNewWorkout({super.key, required this.exerciseData});
@@ -28,16 +27,9 @@ class StartNewWorkout extends StatefulWidget {
 
 class _StartNewWorkoutState extends State<StartNewWorkout>
     with TickerProviderStateMixin {
-
-  late AnimationController _controller;
-  late Animation<double> _animation;
   bool _isTimerRunning = false;
   late List<Exercise> exerciseData;
-  TextEditingController weightsController = TextEditingController();
-  TextEditingController repsController = TextEditingController();
   bool _isSetTimeVisible = true;
-
-
 
   List<Widget> setBorders = [];
 
@@ -45,76 +37,24 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
   void initState() {
     super.initState();
     exerciseData = widget.exerciseData;
-    _controller = AnimationController(
-      vsync: this,
-      duration: const Duration(seconds: 1),
-    );
-
-    _animation = Tween<double>(begin: 1, end: 0).animate(_controller);
-
-    _animation.addListener(() {
-      setState(() {});
-    });
   }
-
 
   void selectExercise(Exercise selectedExercise) {
     objectBox.currentWorkoutSessionService
         .addExerciseToCurrentWorkoutSession(selectedExercise);
     final timerProvider = Provider.of<TimerProvider>(context, listen: false);
-    // final restTimerProvider = Provider.of<RestTimerProvider>(context, listen: false);
 
     if (!_isTimerRunning) {
       timerProvider.startTimer();
-      // timerProvider.startExerciseTimer(selectedExercise.id);
       setState(() {
         _isTimerRunning = true;
       });
     }
-
   }
-
-
-  Widget createSetBorder(int weight, int reps) {
-    return Container(
-      decoration: BoxDecoration(
-        border: Border.all(
-          color: Colors.white,
-          width: 2.0,
-        ),
-        borderRadius: BorderRadius.circular(10),
-      ),
-      margin: const EdgeInsets.all(10),
-      padding: const EdgeInsets.all(10),
-      child: Row(
-        children: [
-          Text("Weight: $weight"),
-          const SizedBox(width: 10),
-          Text("Reps: $reps"),
-        ],
-      ),
-    );
-  }
-
-  Widget buildSetBordersList() {
-    return ListView(
-      children: setBorders,
-    );
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    weightsController.dispose();
-    repsController.dispose();
-    super.dispose();
-
-  }
-
-
 
   void _delete(BuildContext context) {
-    final restTimerProvider = Provider.of<RestTimerProvider>(context, listen: false);
+    final restTimerProvider =
+        Provider.of<RestTimerProvider>(context, listen: false);
     final timerProvider = Provider.of<TimerProvider>(context, listen: false);
 
     showDialog(
@@ -154,25 +94,28 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
                   Navigator.of(context).pop();
                   Navigator.of(context).pop();
                   WorkoutSession savedWorkout =
-                  objectBox.saveCurrentWorkoutSession();
+                      objectBox.saveCurrentWorkoutSession();
                   FirebaseWorkoutsService.createWorkoutSession(savedWorkout);
                   Navigator.of(context).push(
                     PageRouteBuilder(
                       pageBuilder: (context, animation, secondaryAnimation) {
                         return const CongratulationScreen();
                       },
-                      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                      transitionsBuilder:
+                          (context, animation, secondaryAnimation, child) {
                         const begin = 0.0;
                         const end = 1.0;
                         const curve = Curves.easeInOut;
-                        var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+                        var tween = Tween(begin: begin, end: end)
+                            .chain(CurveTween(curve: curve));
                         var offsetAnimation = animation.drive(tween);
                         return ScaleTransition(
                           scale: offsetAnimation,
                           child: child,
                         );
                       },
-                      transitionDuration: const Duration(milliseconds: 500), // Set to 0.5 seconds
+                      transitionDuration: const Duration(
+                          milliseconds: 500), // Set to 0.5 seconds
                     ),
                   );
                 },
@@ -201,40 +144,61 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
     final restTimerProvider = Provider.of<RestTimerProvider>(context);
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: AppColours.primary,
+        surfaceTintColor: Colors.transparent,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios),
+          icon: const Icon(
+            Icons.arrow_back_ios,
+            color: Colors.white,
+          ),
           onPressed: () {
             Navigator.pop(context);
           },
         ),
         actions: [
           Center(
-            child: Material(
-              color: Colors.transparent,
-              child: InkWell(
-                borderRadius: BorderRadius.circular(8),
-                onTap: () {
-                  bool everySetCompleted = objectBox
-                      .currentWorkoutSessionService
-                      .getCurrentWorkoutSession()
-                      .exercisesSetsInfo
-                      .every((exercisesSetsInfo) {
-                    return exercisesSetsInfo.exerciseSets.every((exerciseSet) {
-                      return exerciseSet.isCompleted;
+            child: Container(
+              margin: const EdgeInsets.only(right: 10),
+              child: Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(8),
+                  onTap: () {
+                    bool everySetCompleted = objectBox
+                        .currentWorkoutSessionService
+                        .getCurrentWorkoutSession()
+                        .exercisesSetsInfo
+                        .every((exercisesSetsInfo) {
+                      return exercisesSetsInfo.exerciseSets
+                          .every((exerciseSet) {
+                        return exerciseSet.isCompleted;
+                      });
                     });
-                  });
-                  bool isNotEmpty = objectBox.currentWorkoutSessionService
-                      .getCurrentWorkoutSession()
-                      .exercisesSetsInfo
-                      .isNotEmpty;
-                  if (isNotEmpty) {
-                    if (everySetCompleted) {
-                      _delete(context);
+                    bool isNotEmpty = objectBox.currentWorkoutSessionService
+                        .getCurrentWorkoutSession()
+                        .exercisesSetsInfo
+                        .isNotEmpty;
+                    if (isNotEmpty) {
+                      if (everySetCompleted) {
+                        _delete(context);
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text(
+                              "Please complete all sets",
+                              style: TextStyle(
+                                color: Colors.white,
+                              ),
+                            ),
+                            backgroundColor: Color(0xFF1A1A1A),
+                          ),
+                        );
+                      }
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
                           content: Text(
-                            "Please complete all sets",
+                            "Please add at least one exercise",
                             style: TextStyle(
                               color: Colors.white,
                             ),
@@ -243,27 +207,15 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
                         ),
                       );
                     }
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text(
-                          "Please add at least one exercise",
-                          style: TextStyle(
-                            color: Colors.white,
-                          ),
-                        ),
-                        backgroundColor: Color(0xFF1A1A1A),
+                  },
+                  child: const Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Text(
+                      "Finish",
+                      style: TextStyle(
+                        color: Color(0xFFE1F0CF),
+                        fontSize: 18,
                       ),
-                    );
-                  }
-                },
-                child: const Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: Text(
-                    "Finish",
-                    style: TextStyle(
-                      color: Color(0xFFE1F0CF),
-                      fontSize: 18,
                     ),
                   ),
                 ),
@@ -271,7 +223,6 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
             ),
           ),
         ],
-        backgroundColor: const Color(0xFF1A1A1A),
         title: PreferredSize(
           preferredSize: const Size.fromHeight(40),
           child: GestureDetector(
@@ -283,14 +234,15 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
             child: AnimatedCrossFade(
               duration: const Duration(milliseconds: 300),
               crossFadeState: restTimerProvider.isRestTimerEnabled &&
-                  restTimerProvider.isRestTimerRunning
+                      restTimerProvider.isRestTimerRunning
                   ? CrossFadeState.showFirst
                   : CrossFadeState.showSecond,
               firstChild: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Row(
                   children: [
-                    const Icon(Icons.access_time, color: Colors.white, size: 18),
+                    const Icon(Icons.access_time,
+                        color: Colors.white, size: 18),
                     const SizedBox(width: 4),
                     Text(
                       " ${TimerProvider.formatDuration(restTimerProvider.currentRestTimerDuration)}",
@@ -313,7 +265,8 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
                   padding: const EdgeInsets.all(8.0),
                   child: Row(
                     children: [
-                      const Icon(Icons.access_time, color: Colors.white, size: 18),
+                      const Icon(Icons.access_time,
+                          color: Colors.white, size: 18),
                       const SizedBox(width: 4),
                       Text(
                         " ${_formatTime(restTimerProvider.restTimerMinutes, restTimerProvider.restTimerSeconds)}",
@@ -330,11 +283,10 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
           ),
         ),
       ),
-
-      backgroundColor: const Color(0xFF1A1A1A),
+      backgroundColor: AppColours.primary,
       body: StreamBuilder<CurrentWorkoutSession>(
         stream:
-        objectBox.currentWorkoutSessionService.watchCurrentWorkoutSession(),
+            objectBox.currentWorkoutSessionService.watchCurrentWorkoutSession(),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
             return const Center(child: CircularProgressIndicator());
@@ -346,7 +298,7 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
                   ExerciseTile(
                     exerciseData: exerciseData,
                     exercisesSetsInfo:
-                    snapshot.data!.exercisesSetsInfo.toList(),
+                        snapshot.data!.exercisesSetsInfo.toList(),
                     selectExercise: selectExercise,
                     removeSet: removeSet,
                     timerProvider: timerProvider,
@@ -356,17 +308,15 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
                       const Text(
                         'Rest Timer',
                         style: TextStyle(
-                          color: Colors.white, // Set the text color to white
+                          color: Colors.white,
                         ),
                       ),
                       Switch(
                         value: restTimerProvider.isRestTimerEnabled,
                         onChanged: (value) {
                           if (value) {
-                            // Start rest timer
                             restTimerProvider.startRestTimer(context);
                           } else {
-                            // Stop rest timer
                             restTimerProvider.stopRestTimer();
                           }
                           restTimerProvider.toggleRestTimer(value);
@@ -380,23 +330,15 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
           }
         },
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          //objectBox.test();
-        },
-        child: const Icon(Icons.add),
-      ),
     );
   }
-
 
   String _formatTime(int minutes, int seconds) {
     return "${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}";
   }
 
-
-  Future<void> _showScrollTimePicker(BuildContext context, RestTimerProvider restTimerProvider) async {
-    // Check if the rest timer is running
+  Future<void> _showScrollTimePicker(
+      BuildContext context, RestTimerProvider restTimerProvider) async {
     if (restTimerProvider.isRestTimerRunning) {
       _showTimerDetailsDialog(context, restTimerProvider);
     } else {
@@ -414,9 +356,10 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
     }
   }
 
-  void _showTimerDetailsDialog(BuildContext context, RestTimerProvider restTimerProvider) {
+  void _showTimerDetailsDialog(
+      BuildContext context, RestTimerProvider restTimerProvider) {
     showDialog(
-      context: context, // or Navigator.of(context)
+      context: context,
       builder: (BuildContext context) {
         return RestTimerDetailsDialog(
           restTimerProvider: restTimerProvider,
@@ -424,6 +367,4 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
       },
     );
   }
-
-
 }

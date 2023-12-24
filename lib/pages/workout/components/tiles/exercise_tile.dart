@@ -6,9 +6,9 @@ import 'package:group_project/pages/workout/components/tiles/components/cancel_w
 import 'package:group_project/pages/workout/components/tiles/components/add_exercise_button.dart';
 import 'package:group_project/pages/workout/components/tiles/set_tiles.dart';
 import 'package:group_project/pages/workout/components/workout_header.dart';
-import 'package:group_project/pages/workout/components/tiles/components/timer_provider.dart';
+import 'package:group_project/pages/workout/components/timer/timer_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:group_project/pages/workout/components/tiles/components/rest_timer_provider.dart';
+import 'package:group_project/pages/workout/components/timer/rest_timer_provider.dart';
 
 class ExerciseTile extends StatefulWidget {
   final List<Exercise> exerciseData;
@@ -30,7 +30,6 @@ class ExerciseTile extends StatefulWidget {
   State<ExerciseTile> createState() => _ExerciseTileState();
 }
 
-
 class _ExerciseTileState extends State<ExerciseTile> {
   late TimerProvider timerProvider;
   late RestTimerProvider restTimerProvider;
@@ -38,17 +37,14 @@ class _ExerciseTileState extends State<ExerciseTile> {
   bool displayRestTimer = false;
   late int restTimerDuration;
 
-
-
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     timerProvider = Provider.of<TimerProvider>(context);
-    restTimerProvider = Provider.of<RestTimerProvider>(context); // Initialize restTimerProvider
+    restTimerProvider =
+        Provider.of<RestTimerProvider>(context); // Initialize restTimerProvider
     restTimerDuration = restTimerProvider.restTimerDuration;
   }
-
-
 
   void addSet(ExercisesSetsInfo exercisesSetsInfo) {
     setState(() {
@@ -68,7 +64,6 @@ class _ExerciseTileState extends State<ExerciseTile> {
             exerciseSet.isCompleted = !exerciseSet.isCompleted;
           }
 
-
           if (exerciseSet.isCompleted) {
             // Start the rest timer when a set is completed
             restTimerProvider.startRestTimer(context);
@@ -80,7 +75,6 @@ class _ExerciseTileState extends State<ExerciseTile> {
             // Set the flag to hide the rest timer
             displayRestTimer = false;
           }
-
         });
       }
     });
@@ -102,7 +96,9 @@ class _ExerciseTileState extends State<ExerciseTile> {
                   exercisesSetsInfo: widget.exercisesSetsInfo,
                   selectExercise: widget.selectExercise,
                 ),
-                 CancelWorkoutButton(timerProvider: widget.timerProvider,),
+                CancelWorkoutButton(
+                  timerProvider: widget.timerProvider,
+                ),
               ],
             );
           }
@@ -146,7 +142,9 @@ class _ExerciseTileState extends State<ExerciseTile> {
                 exercisesSetsInfo: widget.exercisesSetsInfo,
                 selectExercise: widget.selectExercise,
               ),
-              CancelWorkoutButton(timerProvider: widget.timerProvider, ),
+              CancelWorkoutButton(
+                timerProvider: widget.timerProvider,
+              ),
             ]);
           } else {
             ExercisesSetsInfo selectedExercise =
@@ -187,7 +185,4 @@ class _ExerciseTileState extends State<ExerciseTile> {
       ),
     );
   }
-
-
-
 }
