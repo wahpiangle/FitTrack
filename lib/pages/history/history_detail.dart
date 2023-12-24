@@ -136,7 +136,7 @@ class HistoryDetail extends StatelessWidget {
                                             ),
                                           ),
                                           Text(
-                                            ('${setInfo.value.reps} kg'),
+                                            ('${setInfo.value.weight} kg'),
                                             style: TextStyle(
                                               color: Colors.grey[300],
                                               fontSize: 16,
@@ -153,7 +153,7 @@ class HistoryDetail extends StatelessWidget {
                                             ),
                                           ),
                                           Text(
-                                            setInfo.value.weight.toString(),
+                                            setInfo.value.reps.toString(),
                                             style: TextStyle(
                                               color: Colors.grey[300],
                                               fontSize: 16,

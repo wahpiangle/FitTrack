@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:group_project/pages/history/congratulation_screen.dart';
+import 'package:group_project/pages/history/complete_workout/congratulation_screen.dart';
 import 'package:group_project/pages/auth/email_password_login.dart';
 import 'package:group_project/pages/auth/register_screen.dart';
 import 'package:group_project/pages/auth/settings_login.dart';
@@ -52,8 +52,8 @@ class MyApp extends StatelessWidget {
           "settings_login": (context) => const SettingsLogin(),
           "settings_signup": (context) => const SettingsSignup(),
           "app_layout": (context) => const AppLayout(),
-          "congratulation_screen" : (context) => const CongratulationScreen(),
-          "history_screen" : (context) => const HistoryScreen(),
+          "congratulation_screen": (context) => const CongratulationScreen(),
+          "history_screen": (context) => const HistoryScreen(),
         },
         theme: ThemeData(
           bottomNavigationBarTheme: const BottomNavigationBarThemeData(
