@@ -47,13 +47,7 @@ class ExerciseFilterWidgets extends StatelessWidget {
             18,
             category.name,
                 () {
-              state.setState(() {
-                if (isFilterSelected) {
-                  state.widget.removeCategory(category.name);
-                } else {
-                  state.widget.addCategory(category.name);
-                }
-              });
+                  state.changeCategoryState(category.name);
             },
           );
         }).toList(),

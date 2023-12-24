@@ -39,6 +39,16 @@ class ExerciseFilterPageState extends State<ExerciseFilterPage> {
     });
   }
 
+  void changeCategoryState(String categoryName) {
+    setState(() {
+      if (selectedCategories.contains(categoryName)) {
+        widget.removeCategory(categoryName);
+      } else {
+        widget.addCategory(categoryName);
+      }
+    });
+  }
+
   @override
   void initState() {
     super.initState();
