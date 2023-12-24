@@ -30,15 +30,7 @@ class ExerciseFilterWidgets extends StatelessWidget {
             18,
             bodyPart.name,
                 () {
-              state.setState(() {
-                if (isFilterSelected) {
-                  state.selectedBodyPart = ''; // Update local state
-                  state.widget.setBodyPart('');
-                } else {
-                  state.selectedBodyPart = bodyPart.name; // Update local state
-                  state.widget.setBodyPart(bodyPart.name);
-                }
-              });
+                  state.changeExerciseState(bodyPart.name);
             },
           );
         }).toList(),

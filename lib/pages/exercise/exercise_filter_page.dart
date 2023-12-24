@@ -27,6 +27,18 @@ class ExerciseFilterPageState extends State<ExerciseFilterPage> {
   String selectedBodyPart = '';
   List<String> selectedCategories = [];
 
+  void changeExerciseState(String bodyPart) {
+    setState(() {
+      if (selectedBodyPart == bodyPart) {
+        selectedBodyPart = '';
+        widget.setBodyPart('');
+      } else {
+        selectedBodyPart = bodyPart;
+        widget.setBodyPart(bodyPart);
+      }
+    });
+  }
+
   @override
   void initState() {
     super.initState();
