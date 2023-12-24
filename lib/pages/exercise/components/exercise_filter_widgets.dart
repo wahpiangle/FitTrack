@@ -1,57 +1,74 @@
 import 'package:flutter/material.dart';
 import 'package:group_project/pages/exercise/exercise_filter_page.dart';
 
-Widget generateItems(List data, bool isBodyPart, bool isCategory, ExerciseFilterPageState state) {
-  if (isBodyPart) {
-    return Wrap(
-      spacing: 12,
-      runSpacing: 20,
-      children: data.map((bodyPart) {
-        final isFilterSelected = state.selectedBodyPart == bodyPart.name;
-        return generateColoredBorderItem(
-          isFilterSelected,
-          const Color(0xFFE1F0CF), // Green border color (#E1F0CF)
-          18,
-          bodyPart.name,
-              () {
-            state.setState(() {
-              if (isFilterSelected) {
-                state.selectedBodyPart = ''; // Update local state
-                state.widget.setBodyPart('');
-              } else {
-                state.selectedBodyPart = bodyPart.name; // Update local state
-                state.widget.setBodyPart(bodyPart.name);
-              }
-            });
-          },
-        );
-      }).toList(),
-    );
-  } else if (isCategory) {
-    return Wrap(
-      spacing: 12,
-      runSpacing: 20,
-      children: data.map((category) {
-        final isFilterSelected = state.selectedCategories.contains(category.name);
-        return generateColoredBorderItem(
-          isFilterSelected,
-          const Color(0xFFE1F0CF), // Green border color (#E1F0CF)
-          18,
-          category.name,
-              () {
-            state.setState(() {
-              if (isFilterSelected) {
-                state.widget.removeCategory(category.name);
-              } else {
-                state.widget.addCategory(category.name);
-              }
-            });
-          },
-        );
-      }).toList(),
-    );
-  } else {
-    return Container();
+class ExerciseFilterWidgets extends StatelessWidget {
+
+  final List data;
+  final bool isBodyPart;
+  final bool isCategory;
+  final ExerciseFilterPageState state;
+
+  const ExerciseFilterWidgets({
+    super.key,
+    required this.data,
+    required this.isBodyPart,
+    required this.isCategory,
+    required this.state
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    if (isBodyPart) {
+      return Wrap(
+        spacing: 12,
+        runSpacing: 20,
+        children: data.map((bodyPart) {
+          final isFilterSelected = state.selectedBodyPart == bodyPart.name;
+          return generateColoredBorderItem(
+            isFilterSelected,
+            const Color(0xFFE1F0CF), // Green border color (#E1F0CF)
+            18,
+            bodyPart.name,
+                () {
+              state.setState(() {
+                if (isFilterSelected) {
+                  state.selectedBodyPart = ''; // Update local state
+                  state.widget.setBodyPart('');
+                } else {
+                  state.selectedBodyPart = bodyPart.name; // Update local state
+                  state.widget.setBodyPart(bodyPart.name);
+                }
+              });
+            },
+          );
+        }).toList(),
+      );
+    } else if (isCategory) {
+      return Wrap(
+        spacing: 12,
+        runSpacing: 20,
+        children: data.map((category) {
+          final isFilterSelected = state.selectedCategories.contains(category.name);
+          return generateColoredBorderItem(
+            isFilterSelected,
+            const Color(0xFFE1F0CF), // Green border color (#E1F0CF)
+            18,
+            category.name,
+                () {
+              state.setState(() {
+                if (isFilterSelected) {
+                  state.widget.removeCategory(category.name);
+                } else {
+                  state.widget.addCategory(category.name);
+                }
+              });
+            },
+          );
+        }).toList(),
+      );
+    } else {
+      return Container();
+    }
   }
 }
 
