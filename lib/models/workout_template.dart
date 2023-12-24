@@ -9,6 +9,7 @@ class WorkoutTemplate {
   String note;
   DateTime createdAt;
   DateTime? lastPerformedAt;
+  bool isCurrentEditing;
 
   final exercisesSetsInfo = ToMany<ExercisesSetsInfo>();
 
@@ -18,5 +19,6 @@ class WorkoutTemplate {
     this.note = '',
     required this.createdAt,
     this.lastPerformedAt,
+    this.isCurrentEditing = false,
   });
 }

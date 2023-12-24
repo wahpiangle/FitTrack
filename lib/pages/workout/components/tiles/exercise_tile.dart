@@ -61,7 +61,6 @@ class _ExerciseTileState extends State<ExerciseTile> {
                 const WorkoutHeader(),
                 AddExerciseButton(
                   exerciseData: widget.exerciseData,
-                  exercisesSetsInfo: widget.exercisesSetsInfo,
                   selectExercise: widget.selectExercise,
                 ),
                 const CancelWorkoutButton(),
@@ -105,7 +104,6 @@ class _ExerciseTileState extends State<ExerciseTile> {
             return Column(children: [
               AddExerciseButton(
                 exerciseData: widget.exerciseData,
-                exercisesSetsInfo: widget.exercisesSetsInfo,
                 selectExercise: widget.selectExercise,
               ),
               const CancelWorkoutButton(),

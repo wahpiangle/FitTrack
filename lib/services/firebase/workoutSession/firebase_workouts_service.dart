@@ -8,31 +8,33 @@ class FirebaseWorkoutsService {
 
   static void createWorkoutSession(WorkoutSession workoutSession) async {
     final User user = auth.currentUser!;
-    final uid = user.uid;
-    final collectionRef = db.collection('workouts');
-    await collectionRef.doc(uid).set({
-      'workoutSessions': FieldValue.arrayUnion(
-        [
-          {
-            'id': workoutSession.id,
-            'date': DateTime.now(),
-            'title': workoutSession.title,
-            'note': workoutSession.note,
-            'exercisesSetsInfo': workoutSession.exercisesSetsInfo
-                .map((exercisesSetsInfo) => {
-                      'exercise': exercisesSetsInfo.exercise.targetId,
-                      'exerciseSets': exercisesSetsInfo.exerciseSets
-                          .map((exerciseSet) => {
-                                'reps': exerciseSet.reps,
-                                'weight': exerciseSet.weight,
-                              })
-                          .toList(),
-                    })
-                .toList(),
-          }
-        ],
-      )
-    }, SetOptions(merge: true));
+    if (!user.isAnonymous) {
+      final uid = user.uid;
+      final collectionRef = db.collection('workouts');
+      await collectionRef.doc(uid).set({
+        'workoutSessions': FieldValue.arrayUnion(
+          [
+            {
+              'id': workoutSession.id,
+              'date': DateTime.now(),
+              'title': workoutSession.title,
+              'note': workoutSession.note,
+              'exercisesSetsInfo': workoutSession.exercisesSetsInfo
+                  .map((exercisesSetsInfo) => {
+                        'exercise': exercisesSetsInfo.exercise.targetId,
+                        'exerciseSets': exercisesSetsInfo.exerciseSets
+                            .map((exerciseSet) => {
+                                  'reps': exerciseSet.reps,
+                                  'weight': exerciseSet.weight,
+                                })
+                            .toList(),
+                      })
+                  .toList(),
+            }
+          ],
+        )
+      }, SetOptions(merge: true));
+    }
   }
 
   static Future<void> deleteWorkoutSession(int workoutSessionId) async {

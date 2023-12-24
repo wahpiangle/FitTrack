@@ -1,14 +1,41 @@
 import 'package:flutter/material.dart';
 import 'package:group_project/constants/themes/app_colours.dart';
+import 'package:group_project/main.dart';
+import 'package:group_project/models/exercise.dart';
+import 'package:group_project/models/workout_template.dart';
+import 'package:group_project/pages/workout/components/workout_templates/components/templates_exercise_tile.dart';
 
 class CreateTemplatePage extends StatefulWidget {
-  const CreateTemplatePage({super.key});
+  const CreateTemplatePage({
+    super.key,
+  });
 
   @override
   State<CreateTemplatePage> createState() => _CreateTemplatePageState();
 }
 
 class _CreateTemplatePageState extends State<CreateTemplatePage> {
+  WorkoutTemplate editingWorkoutTemplate =
+      objectBox.workoutTemplateService.getEditingWorkoutTemplate();
+  List<Exercise> exerciseData = objectBox.getAllExercises();
+
+  void selectExercise(Exercise selectedExercise) {
+    objectBox.workoutTemplateService
+        .addExerciseToEditingWorkoutTemplate(selectedExercise);
+    setState(() {
+      editingWorkoutTemplate =
+          objectBox.workoutTemplateService.getEditingWorkoutTemplate();
+    });
+  }
+
+  void removeSet(int exerciseSetId) {
+    objectBox.removeSetFromExercise(exerciseSetId);
+    setState(() {
+      editingWorkoutTemplate =
+          objectBox.workoutTemplateService.getEditingWorkoutTemplate();
+    });
+  }
+
   void _askToDiscard() {
     showDialog(
       context: context,
@@ -31,7 +58,6 @@ class _CreateTemplatePageState extends State<CreateTemplatePage> {
             style: TextStyle(
               color: Colors.grey[500],
               fontSize: 16,
-              // align center
             ),
             textAlign: TextAlign.center,
           ),
@@ -76,7 +102,8 @@ class _CreateTemplatePageState extends State<CreateTemplatePage> {
                     width: double.infinity,
                     child: TextButton(
                       onPressed: () {
-                        // TODO: discard template from objectbox
+                        objectBox.workoutTemplateService
+                            .deleteEditingWorkoutTemplate();
                         Navigator.pop(context);
                         Navigator.pop(context);
                       },
@@ -268,44 +295,69 @@ class _CreateTemplatePageState extends State<CreateTemplatePage> {
       ),
       body: Container(
         padding: const EdgeInsets.all(20),
-        child: Column(
-          children: [
-            TextFormField(
-              decoration: InputDecoration(
-                contentPadding: const EdgeInsets.only(bottom: 5),
-                isDense: true,
-                hintText: 'Template Title',
-                hintStyle: TextStyle(
-                  color: Colors.grey[600],
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              TextFormField(
+                initialValue: editingWorkoutTemplate.title,
+                decoration: InputDecoration(
+                  contentPadding: const EdgeInsets.only(bottom: 10),
+                  isDense: true,
+                  hintText: 'Template Title',
+                  hintStyle: TextStyle(
+                    color: Colors.grey[600],
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  border: InputBorder.none,
+                ),
+                style: const TextStyle(
+                  color: Colors.white,
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
                 ),
-                border: InputBorder.none,
               ),
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            TextFormField(
-              decoration: InputDecoration(
-                contentPadding: const EdgeInsets.symmetric(vertical: 0),
-                isDense: true,
-                hintText: 'Note',
-                hintStyle: TextStyle(
-                  color: Colors.grey[600],
+              TextFormField(
+                initialValue: editingWorkoutTemplate.note,
+                decoration: InputDecoration(
+                  hintText: 'Add a workout note',
+                  hintStyle: const TextStyle(
+                    color: Colors.grey,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  contentPadding: const EdgeInsets.all(10),
+                  fillColor: const Color(0xFF333333),
+                  filled: true,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(15.0),
+                  ),
+                ),
+                style: const TextStyle(
+                  color: Colors.white,
                   fontSize: 20,
                 ),
-                border: InputBorder.none,
               ),
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 20,
+              const SizedBox(
+                height: 20,
               ),
-            ),
-            //  TODO use stephanie's code
-          ],
+              TemplatesExerciseTile(
+                exerciseData: exerciseData,
+                selectExercise: selectExercise,
+                removeSet: removeSet,
+                exercisesSetsInfoList: editingWorkoutTemplate.exercisesSetsInfo,
+              )
+            ],
+          ),
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          objectBox.workoutTemplateService.test();
+        },
+        backgroundColor: AppColours.secondary,
+        child: const Icon(
+          Icons.add,
+          color: Colors.black,
         ),
       ),
     );

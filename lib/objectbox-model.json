@@ -248,7 +248,7 @@
     },
     {
       "id": "12:5427692584665969682",
-      "lastPropertyId": "5:9144212673625377786",
+      "lastPropertyId": "6:6700377643315536829",
       "name": "WorkoutTemplate",
       "properties": [
         {
@@ -276,6 +276,11 @@
           "id": "5:9144212673625377786",
           "name": "lastPerformedAt",
           "type": 10
+        },
+        {
+          "id": "6:6700377643315536829",
+          "name": "isCurrentEditing",
+          "type": 1
         }
       ],
       "relations": [
