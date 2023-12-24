@@ -72,7 +72,7 @@ class ExerciseFilterPageState extends State<ExerciseFilterPage> {
                 ),
               ),
             ),
-            generateItems(bodyPartData, true, false, this),
+            ExerciseFilterWidgets(data: bodyPartData, isBodyPart: true, isCategory: false, state: this),
             const SizedBox(height: 20.0),
 
             // Separated section for Categories
@@ -87,7 +87,7 @@ class ExerciseFilterPageState extends State<ExerciseFilterPage> {
                 ),
               ),
             ),
-            generateItems(categoryData, false, true, this),
+            ExerciseFilterWidgets(data: categoryData, isBodyPart: false, isCategory: true, state: this),
           ],
         ),
       ),
