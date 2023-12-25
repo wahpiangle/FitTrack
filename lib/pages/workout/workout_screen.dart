@@ -25,18 +25,80 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
   }
 
   Future<void> _startNewWorkout(BuildContext context) async {
+    TimerProvider timerProvider = Provider.of<TimerProvider>(context, listen: false);
+
+    // Check if the timer is active
+    if (timerProvider.isTimerRunning) {
+      // Show a dialog with options to resume, stop, or close the dialog
+      showDialog(
+        context: context,
+        builder: (BuildContext ctx) {
+          return AlertDialog(
+            title: Text('Existing Workout'),
+            content: Text('Finish or pause the current workout before starting a new one.'),
+            actions: [
+              TextButton(
+                onPressed: () async {
+                  // Add code to handle resuming the workout
+                  Navigator.of(ctx).pop(); // Close the dialog
+
+                  // Open the NewWorkoutBottomSheet
+                  bool isBottomSheetClosed = await NewWorkoutBottomSheet.show(context, exerciseData);
+
+                  if (isBottomSheetClosed) {
+                    // Always check if the timer is active after the bottom sheet is closed
+                    _handleTimerActive(context);
+                  }
+                },
+                child: Text('Resume Workout'),
+              ),
+              TextButton(
+                onPressed: () {
+                  // Add code to handle stopping and resetting the workout
+                  Navigator.of(ctx).pop(); // Close the dialog
+
+                },
+
+                child: Text('Stop Workout'),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.of(ctx).pop(); // Close the dialog without taking any action
+                },
+                child: Text('Close'),
+              ),
+            ],
+          );
+        },
+      );
+      return; // Exit the function without starting a new workout
+    }
+
+    // Create a new workout session
     objectBox.currentWorkoutSessionService.createCurrentWorkoutSession();
 
+    // Show the NewWorkoutBottomSheet
     bool isBottomSheetClosed = await NewWorkoutBottomSheet.show(context, exerciseData);
 
-    // If the bottom sheet is closed and the timer is active, show TimerActiveScreen as a bottom sheet
-    if (isBottomSheetClosed && Provider.of<TimerProvider>(context, listen: false).isTimerRunning) {
+    if (isBottomSheetClosed) {
+      // Always check if the timer is active after the bottom sheet is closed
+      _handleTimerActive(context);
+    }
+  }
+
+  void _handleTimerActive(BuildContext context) {
+    TimerProvider timerProvider = Provider.of<TimerProvider>(context, listen: false);
+
+    // If the timer is active, show TimerActiveScreen as a bottom sheet
+    if (timerProvider.isTimerRunning) {
       showBottomSheet(
         context: context,
         builder: (context) => TimerActiveScreen(exerciseData: exerciseData),
       );
     }
   }
+
+
 
 
   @override

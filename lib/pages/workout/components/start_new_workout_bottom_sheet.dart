@@ -2,22 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:group_project/pages/workout/start_new_workout.dart';
 import 'package:group_project/models/exercise.dart';
 import 'package:provider/provider.dart';
-import 'package:group_project/pages/workout/components/tiles/components/timer_provider.dart';// Adjust the import based on your project structure
-import 'dart:async'; // Import the async package
+import 'package:group_project/pages/workout/components/tiles/components/timer_provider.dart';
+import 'dart:async';
 
 class NewWorkoutBottomSheet {
   static Future<bool> show(BuildContext context, List<Exercise> exerciseData) async {
     bool isTimerActive = Provider.of<TimerProvider>(context, listen: false).isTimerRunning;
 
-    if (isTimerActive) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => TimerActiveScreen(exerciseData: exerciseData),
-          fullscreenDialog: true,
-        ),
-      );
-      return false;
+    // Check if the timer is active and the bottom sheet is not open
+    if (isTimerActive && !_isBottomSheetOpen(context)) {
+      // Close the active timer sheet
+      _closeTimerScreen(context);
+      // Wait for a short duration to allow the timer sheet to close
+      await Future.delayed(Duration(milliseconds: 10));
+      // Show the new workout bottom sheet
+      return _showNewWorkoutBottomSheet(context, exerciseData);
     } else {
       Completer<bool> bottomSheetCompleter = Completer<bool>();
 
@@ -58,8 +57,64 @@ class NewWorkoutBottomSheet {
       return bottomSheetCompleter.future;
     }
   }
-}
 
+  // Helper function to close the TimerActiveScreen
+  static void _closeTimerScreen(BuildContext context) {
+    Navigator.popUntil(
+      context,
+          (route) => route.isFirst, // Pop until the first route (main screen)
+    );
+  }
+
+  // Helper function to show the NewWorkoutBottomSheet
+  static Future<bool> _showNewWorkoutBottomSheet(BuildContext context, List<Exercise> exerciseData) async {
+    Completer<bool> bottomSheetCompleter = Completer<bool>();
+
+    await showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      isDismissible: false,
+      builder: (context) {
+        return GestureDetector(
+          onTap: () {
+            // Do nothing on tap to prevent closing when the bottom sheet is open
+            bottomSheetCompleter.complete(false);
+          },
+          child: DraggableScrollableSheet(
+            expand: false,
+            initialChildSize: 0.95,
+            maxChildSize: 1.0,
+            minChildSize: 0.2,
+            builder: (context, controller) {
+              return ClipRRect(
+                borderRadius: BorderRadius.vertical(top: Radius.circular(20.0)),
+                child: Container(
+                  child: StartNewWorkout(
+                    exerciseData: exerciseData,
+                  ),
+                ),
+              );
+            },
+          ),
+        );
+      },
+    );
+
+    // If the bottom sheet is closed, complete the Completer with true
+    bottomSheetCompleter.complete(true);
+
+    // Return the Future<bool> from the Completer
+    return bottomSheetCompleter.future;
+  }
+
+  // Helper function to check if the bottom sheet is open
+  static bool _isBottomSheetOpen(BuildContext context) {
+    return Scaffold.of(context).isDrawerOpen ||
+        Scaffold.of(context).isEndDrawerOpen ||
+        Navigator.of(context).canPop();
+  }
+
+}
 
 class TimerActiveScreen extends StatelessWidget {
   final List<Exercise> exerciseData;
@@ -70,44 +125,55 @@ class TimerActiveScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final timerProvider = Provider.of<TimerProvider>(context);
 
+    bool isSheetOpen = false; // Track if the new workout sheet is open
+
     return NotificationListener<DraggableScrollableNotification>(
       onNotification: (notification) {
         if (notification.extent == notification.maxExtent) {
-          // The sheet is dragged up to the maxChildSize, close the current sheet and reopen NewWorkoutBottomSheet
-          Navigator.pop(context);
-          showModalBottomSheet(
-            context: context,
-            isScrollControlled: true,
-            isDismissible: false,
-            builder: (context) {
-              return GestureDetector(
-                onTap: () {
-                  // Do nothing on tap to prevent closing when the bottom sheet is open
-                },
-                child: DraggableScrollableSheet(
-                  expand: false,
-                  initialChildSize: 0.95,
-                  maxChildSize: 1.0,
-                  minChildSize: 0.2,
-                  builder: (context, controller) {
-                    return ClipRRect(
-                      borderRadius: BorderRadius.vertical(top: Radius.circular(20.0)),
-                      child: Container(
-                        child: StartNewWorkout(
-                          exerciseData: exerciseData,
-                        ),
-                      ),
-                    );
+          // Check if the new workout sheet is already open
+          if (!isSheetOpen) {
+            // The sheet is dragged up to the maxChildSize, close the current sheet and reopen NewWorkoutBottomSheet
+            Navigator.pop(context);
+            showModalBottomSheet(
+              context: context,
+              isScrollControlled: true,
+              isDismissible: false,
+              builder: (context) {
+                isSheetOpen = true; // Set the flag to indicate that the new workout sheet is open
+                return GestureDetector(
+                  onTap: () {
+                    // Do nothing on tap to prevent closing when the bottom sheet is open
                   },
-                ),
-              );
-            },
-          );
+                  child: DraggableScrollableSheet(
+                    expand: false,
+                    initialChildSize: 0.95,
+                    maxChildSize: 1.0,
+                    minChildSize: 0.2,
+                    builder: (context, controller) {
+                      return ClipRRect(
+                        borderRadius: BorderRadius.vertical(top: Radius.circular(20.0)),
+                        child: Container(
+                          child: StartNewWorkout(
+                            exerciseData: exerciseData,
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                );
+              },
+            );
+          }
+
+          // Prevent the sheet from being dragged down when reaching the maximum extent
+          return false;
         }
+
+        // If the sheet is closed, reset the flag
+        isSheetOpen = false;
+
         return true;
       },
-
-
       child: DraggableScrollableSheet(
         expand: false,
         initialChildSize: 0.1,
