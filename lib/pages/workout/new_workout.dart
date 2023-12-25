@@ -5,13 +5,13 @@ import 'package:group_project/models/exercise.dart';
 class WorkoutTemplateWidget extends StatelessWidget {
   final String imagePath;
   final String workoutText;
-  final List<Exercise> exerciseData; // Add this line
+  final List<Exercise> exerciseData;
 
   const WorkoutTemplateWidget({
     super.key,
     required this.imagePath,
     required this.workoutText,
-    required this.exerciseData, // Add this line
+    required this.exerciseData,
   });
 
   @override
