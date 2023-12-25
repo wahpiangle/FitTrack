@@ -10,10 +10,11 @@ class Exercise {
   int id;
   String name;
   String imagePath = '';
+  bool isSelected;
 
   final bodyPart = ToOne<BodyPart>();
   final category = ToOne<Category>();
   final exercisesSetsInfo = ToMany<ExercisesSetsInfo>();
 
-  Exercise({this.id = 0, required this.name, this.imagePath = ''});
+  Exercise({this.id = 0, required this.name, this.imagePath = '', this.isSelected = false});
 }

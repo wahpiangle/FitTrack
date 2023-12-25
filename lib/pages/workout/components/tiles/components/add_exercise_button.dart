@@ -29,6 +29,8 @@ class AddExerciseButton extends StatelessWidget {
         ),
       ),
       onPressed: () {
+        deselectAllExercises(exerciseData);
+
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -40,6 +42,7 @@ class AddExerciseButton extends StatelessWidget {
           ),
         );
       },
+
       child: const Center(
         child: Text(
           "ADD EXERCISE",

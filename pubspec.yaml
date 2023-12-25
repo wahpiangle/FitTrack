@@ -59,6 +59,7 @@ dependencies:
   intl: ^0.18.1
   table_calendar: ^3.0.9
   scroll_to_index: ^3.0.1
+  confetti: ^0.7.0
 
   
 dev_dependencies:
