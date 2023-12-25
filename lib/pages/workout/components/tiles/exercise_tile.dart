@@ -10,6 +10,8 @@ import 'package:group_project/pages/workout/components/timer/timer_provider.dart
 import 'package:provider/provider.dart';
 import 'package:group_project/pages/workout/components/timer/rest_timer_provider.dart';
 
+import '../timer/resttimer_details_dialog.dart';
+
 class ExerciseTile extends StatefulWidget {
   final List<Exercise> exerciseData;
   final List<ExercisesSetsInfo> exercisesSetsInfo;
@@ -64,11 +66,13 @@ class _ExerciseTileState extends State<ExerciseTile> {
             exerciseSet.isCompleted = !exerciseSet.isCompleted;
           }
 
-          if (exerciseSet.isCompleted) {
+          if (exerciseSet.isCompleted && restTimerProvider.isRestTimerEnabled) {
             // Start the rest timer when a set is completed
             restTimerProvider.startRestTimer(context);
             // Set the flag to display the rest timer
             displayRestTimer = true;
+            //show the rest timer details dialog
+            showRestTimerDetailsDialog(context);
           } else {
             // Cancel the rest timer when a set is not completed
             restTimerProvider.stopRestTimer();
@@ -79,6 +83,20 @@ class _ExerciseTileState extends State<ExerciseTile> {
       }
     });
   }
+
+  //To show the RestTimerDetailsDialog
+  void showRestTimerDetailsDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return RestTimerDetailsDialog(
+          restTimerProvider: restTimerProvider,
+        );
+      },
+    );
+  }
+
+
 
   @override
   Widget build(BuildContext context) {

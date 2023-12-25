@@ -1,14 +1,16 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:group_project/pages/workout/components/timer/resttimer_details_dialog.dart';
 
 class RestTimerProvider with ChangeNotifier {
   bool _isRestTimerEnabled = false;
   int _restTimerDuration = 120;
   int _currentDuration = 0;
-  int _restTimerMinutes = 2;
+  int _restTimerMinutes = 0;
   int _restTimerSeconds = 0;
   Timer? _timer;
   bool _isRestTimerRunning = false;
+  bool _isDialogShown = false;
 
   bool get isRestTimerRunning => _isRestTimerRunning;
   bool get isRestTimerEnabled => _isRestTimerEnabled;
@@ -16,7 +18,7 @@ class RestTimerProvider with ChangeNotifier {
   int get currentRestTimerDuration => _currentDuration;
   int get restTimerMinutes => _restTimerMinutes;
   int get restTimerSeconds => _restTimerSeconds;
-  int get currentDuration => _currentDuration; // Add this getter
+  int get currentDuration => _currentDuration;
 
   void setRestTimerMinutes(int minutes) {
     _restTimerMinutes = minutes;
@@ -40,17 +42,27 @@ class RestTimerProvider with ChangeNotifier {
 
   void startRestTimer(BuildContext context) {
     if (_isRestTimerEnabled) {
+      // Check if the user has chosen a time
+      if (_restTimerMinutes == 0 && _restTimerSeconds == 0) {
+        // Use the default time of 2 minutes
+        _restTimerMinutes = 2;
+        _restTimerSeconds = 0;
+      }
+
       _currentDuration = _restTimerMinutes * 60 + _restTimerSeconds;
 
       _timer?.cancel();
       _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
         if (_currentDuration <= 0) {
           stopRestTimer();
+          _isDialogShown = false;
+          Navigator.of(context).pop();//close the rest timer details dialog when timer ends
           _showRestTimeEndedNotification(context);
         } else {
           notifyListeners();
           _currentDuration--;
           _isRestTimerRunning = true;
+
         }
       });
     }
@@ -125,6 +137,7 @@ class RestTimerProvider with ChangeNotifier {
     }
     notifyListeners();
   }
+
 
   @override
   void dispose() {

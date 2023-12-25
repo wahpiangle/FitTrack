@@ -267,14 +267,6 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
                     children: [
                       const Icon(Icons.access_time,
                           color: Colors.white, size: 18),
-                      const SizedBox(width: 4),
-                      Text(
-                        " ${_formatTime(restTimerProvider.restTimerMinutes, restTimerProvider.restTimerSeconds)}",
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                        ),
-                      ),
                     ],
                   ),
                 ),
@@ -363,6 +355,7 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
       builder: (BuildContext context) {
         return RestTimerDetailsDialog(
           restTimerProvider: restTimerProvider,
+
         );
       },
     );
