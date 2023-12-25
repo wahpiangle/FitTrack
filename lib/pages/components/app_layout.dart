@@ -16,7 +16,7 @@ class AppLayout extends StatefulWidget {
 }
 
 class _AppLayoutState extends State<AppLayout> {
-  int _currentIndex = 2; // Initial index, can be changed based on your needs
+  int _currentIndex = 2;
   User? user;
 
   @override
