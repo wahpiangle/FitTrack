@@ -28,12 +28,18 @@ class RestTimerDetailsDialogState extends State<RestTimerDetailsDialog>
       vsync: this,
       duration: Duration(milliseconds: 400),
     );
-    _animation = Tween<double>(begin: 0.0, end: 1.0).animate(//expand in original size
+    _animation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(
         parent: _animationController,
-        curve: Curves.easeIn
+        curve: Curves.easeIn,
       ),
     );
+
+    // Delay the notification to the end of the build phase
+    Future.delayed(Duration.zero, () {
+      widget.restTimerProvider.showRestDialog();
+    });
+
     _animationController.forward();
   }
 
@@ -46,6 +52,9 @@ class RestTimerDetailsDialogState extends State<RestTimerDetailsDialog>
   @override
   void dispose() {
     _timer.cancel();
+    Future.delayed(Duration.zero, () {
+      widget.restTimerProvider.closeRestDialog();
+    });
     _animationController.dispose();
     super.dispose();
   }

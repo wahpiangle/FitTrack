@@ -10,6 +10,7 @@ class RestTimerProvider with ChangeNotifier {
   Timer? _timer;
   bool _isRestTimerRunning = false;
   bool _isDialogShown = false;
+  bool _isDialogOpen = false;
 
   bool get isRestTimerRunning => _isRestTimerRunning;
   bool get isRestTimerEnabled => _isRestTimerEnabled;
@@ -18,6 +19,19 @@ class RestTimerProvider with ChangeNotifier {
   int get restTimerMinutes => _restTimerMinutes;
   int get restTimerSeconds => _restTimerSeconds;
   int get currentDuration => _currentDuration;
+  bool get isDialogShown => _isDialogShown;
+  bool get isDialogOpen => _isDialogOpen;
+
+
+  void showRestDialog() {//check if the user is opening the rest timer details dialog
+    _isDialogOpen = true;
+    notifyListeners();
+  }
+
+  void closeRestDialog() {
+    _isDialogOpen = false;
+    notifyListeners();
+  }
 
   void setRestTimerMinutes(int minutes) {
     _restTimerMinutes = minutes;
@@ -40,7 +54,7 @@ class RestTimerProvider with ChangeNotifier {
   }
 
   void startRestTimer(BuildContext context) {
-    if (_isRestTimerEnabled) {
+    if (_isRestTimerEnabled && !_isDialogShown) {
       // Check if the user has chosen a time
       if (_restTimerMinutes == 0 && _restTimerSeconds == 0) {
         // Use the default time of 2 minutes
@@ -55,7 +69,9 @@ class RestTimerProvider with ChangeNotifier {
         if (_currentDuration <= 0) {
           stopRestTimer();
           _isDialogShown = false;
-          Navigator.of(context).pop();//close the rest timer details dialog when timer ends
+          if(isDialogOpen== true) {//if user is opening the dialog
+            Navigator.of(context).pop(); //close the rest timer details dialog when timer ends
+          }
           _showRestTimeEndedNotification(context);
         } else {
           notifyListeners();
