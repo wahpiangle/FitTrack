@@ -89,7 +89,7 @@ class RestTimerDetailsDialogState extends State<RestTimerDetailsDialog>
                     const Text(
                       "Rest Timer",
                       style: TextStyle(
-                        color: Color(0xFFE1F0CF),
+                        color: Colors.white,
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
                       ),
@@ -105,7 +105,7 @@ class RestTimerDetailsDialogState extends State<RestTimerDetailsDialog>
                             value: widget.restTimerProvider.currentDuration /
                                 widget.restTimerProvider.restTimerDuration,
                             valueColor: const AlwaysStoppedAnimation<Color>(
-                                Colors.lightGreen),
+                              Color(0xFFB9D499),),
                             strokeWidth: 6,
                           ),
                         ),

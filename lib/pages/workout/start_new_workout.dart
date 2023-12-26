@@ -21,6 +21,18 @@ class StartNewWorkout extends StatefulWidget {
 
   const StartNewWorkout({super.key, required this.exerciseData});
 
+  void showTimerDetailsDialog(
+      BuildContext context, RestTimerProvider restTimerProvider) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return RestTimerDetailsDialog(
+          restTimerProvider: restTimerProvider,
+        );
+      },
+    );
+  }
+
   @override
   State<StartNewWorkout> createState() => _StartNewWorkoutState();
 }
@@ -228,7 +240,7 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
           child: GestureDetector(
             onTap: () {
               if (restTimerProvider.isRestTimerRunning) {
-                _showTimerDetailsDialog(context, restTimerProvider);
+                showTimerDetailsDialog(restTimerProvider);
               }
             },
             child: AnimatedCrossFade(
@@ -256,7 +268,7 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
               ),
               secondChild: GestureDetector(
                 onTap: () async {
-                  await _showScrollTimePicker(context, restTimerProvider);
+                 // await _showScrollTimePicker(context, restTimerProvider);
                   setState(() {
                     _isSetTimeVisible = !_isSetTimeVisible;
                   });
@@ -295,27 +307,6 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
                     removeSet: removeSet,
                     timerProvider: timerProvider,
                   ),
-                  // Row(
-                  //   children: [
-                  //     const Text(
-                  //       'Rest Timer',
-                  //       style: TextStyle(
-                  //         color: Colors.white,
-                  //       ),
-                  //     ),
-                  //     Switch(
-                  //       value: restTimerProvider.isRestTimerEnabled,
-                  //       onChanged: (value) {
-                  //         if (value) {
-                  //           restTimerProvider.startRestTimer(context);
-                  //         } else {
-                  //           restTimerProvider.stopRestTimer();
-                  //         }
-                  //         restTimerProvider.toggleRestTimer(value);
-                  //       },
-                  //     ),
-                  //   ],
-                  // ),
                 ],
               ),
             );
@@ -325,39 +316,16 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
     );
   }
 
-  String _formatTime(int minutes, int seconds) {
-    return "${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}";
-  }
 
-  Future<void> _showScrollTimePicker(
-      BuildContext context, RestTimerProvider restTimerProvider) async {
-    if (restTimerProvider.isRestTimerRunning) {
-      _showTimerDetailsDialog(context, restTimerProvider);
-    } else {
-      showModalBottomSheet<void>(
-        context: context,
-        backgroundColor: Colors.black,
-        builder: (BuildContext context) {
-          return Container(
-            height: 200,
-            color: Colors.black,
-            child: RestTimePicker(restTimerProvider: restTimerProvider),
-          );
-        },
-      );
-    }
-  }
-
-  void _showTimerDetailsDialog(
-      BuildContext context, RestTimerProvider restTimerProvider) {
+  Future<void> showTimerDetailsDialog(RestTimerProvider restTimerProvider) async {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return RestTimerDetailsDialog(
           restTimerProvider: restTimerProvider,
-
         );
       },
     );
   }
+
 }
