@@ -56,7 +56,7 @@ class RestTimerDetailsDialogState extends State<RestTimerDetailsDialog>
       animation: _animation,
       builder: (context, child) {
         return Transform.scale(
-          alignment: Alignment.topLeft,
+          alignment: Alignment.center,
           scale: _animation.value,
           child: Dialog(
             shape: RoundedRectangleBorder(

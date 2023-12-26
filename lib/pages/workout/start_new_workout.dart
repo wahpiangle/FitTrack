@@ -295,27 +295,27 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
                     removeSet: removeSet,
                     timerProvider: timerProvider,
                   ),
-                  Row(
-                    children: [
-                      const Text(
-                        'Rest Timer',
-                        style: TextStyle(
-                          color: Colors.white,
-                        ),
-                      ),
-                      Switch(
-                        value: restTimerProvider.isRestTimerEnabled,
-                        onChanged: (value) {
-                          if (value) {
-                            restTimerProvider.startRestTimer(context);
-                          } else {
-                            restTimerProvider.stopRestTimer();
-                          }
-                          restTimerProvider.toggleRestTimer(value);
-                        },
-                      ),
-                    ],
-                  ),
+                  // Row(
+                  //   children: [
+                  //     const Text(
+                  //       'Rest Timer',
+                  //       style: TextStyle(
+                  //         color: Colors.white,
+                  //       ),
+                  //     ),
+                  //     Switch(
+                  //       value: restTimerProvider.isRestTimerEnabled,
+                  //       onChanged: (value) {
+                  //         if (value) {
+                  //           restTimerProvider.startRestTimer(context);
+                  //         } else {
+                  //           restTimerProvider.stopRestTimer();
+                  //         }
+                  //         restTimerProvider.toggleRestTimer(value);
+                  //       },
+                  //     ),
+                  //   ],
+                  // ),
                 ],
               ),
             );

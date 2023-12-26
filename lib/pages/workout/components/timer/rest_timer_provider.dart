@@ -1,9 +1,8 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:group_project/pages/workout/components/timer/resttimer_details_dialog.dart';
 
 class RestTimerProvider with ChangeNotifier {
-  bool _isRestTimerEnabled = false;
+  bool _isRestTimerEnabled = true; //rest timer toggle button default value is true
   int _restTimerDuration = 120;
   int _currentDuration = 0;
   int _restTimerMinutes = 0;

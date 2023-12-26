@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:group_project/pages/auth/edit_password.dart';
 import 'package:group_project/pages/auth/settings_signup.dart';
 import 'package:group_project/pages/components/top_nav_bar.dart';
+import 'package:group_project/pages/settings/timer_details_settings.dart';
 import 'package:provider/provider.dart';
 import 'package:group_project/services/auth_service.dart';
 import 'package:group_project/services/user_state.dart';
@@ -34,11 +35,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
     _prefs = await SharedPreferences.getInstance();
     User? currentUser = AuthService().getCurrentUser();
     bool fetchedIsAnonymous =
-        AuthService().getCurrentUser()?.isAnonymous ?? false;
+        currentUser?.isAnonymous ?? false;
 
     setState(() {
       isAnonymous = fetchedIsAnonymous;
-      if (!isAnonymous) {
+      if (!isAnonymous && currentUser != null) {
         _loadFirebaseUserData();
       } else {
         _loadAnonymousUserData();
@@ -46,9 +47,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
     });
 
     setState(() {
-      isSignInWithGoogle = currentUser?.providerData.first.providerId == 'google.com';
-      if (!isSignInWithGoogle) {
-        if (currentUser == null || currentUser.isAnonymous) {
+      isSignInWithGoogle = currentUser?.providerData.isNotEmpty ?? false &&
+          currentUser?.providerData.first.providerId == 'google.com';
+      if (!isSignInWithGoogle && currentUser != null) {
+        if (currentUser.isAnonymous) {
           _loadAnonymousUserData();
         } else {
           _loadFirebaseUserData();
@@ -56,6 +58,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       }
     });
   }
+
 
   _loadFirebaseUserData() async {
     User? currentUser = AuthService().getCurrentUser();
@@ -117,7 +120,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
     final UserStateProvider userStateProvider =
-        Provider.of<UserStateProvider>(context);
+    Provider.of<UserStateProvider>(context);
 
     bool isLoggedIn = userStateProvider.userState.isLoggedIn;
 
@@ -158,18 +161,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           height: 100,
                           child: ClipOval(
                             child: (profileImage.isEmpty ||
-                                    profileImage ==
-                                        'assets/icons/defaultimage.jpg')
+                                profileImage ==
+                                    'assets/icons/defaultimage.jpg')
                                 ? const CircleAvatar(
-                                    radius: 50,
-                                    backgroundImage: AssetImage(
-                                        'assets/icons/defaultimage.jpg'),
-                                  )
+                              radius: 50,
+                              backgroundImage: AssetImage(
+                                  'assets/icons/defaultimage.jpg'),
+                            )
                                 : CircleAvatar(
-                                    radius: 50,
-                                    backgroundImage:
-                                        FileImage(File(profileImage)),
-                                  ),
+                              radius: 50,
+                              backgroundImage:
+                              FileImage(File(profileImage)),
+                            ),
                           ),
                         ),
                         const SizedBox(width: 20),
@@ -222,6 +225,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       icon: Icons.notifications,
                       onPressed: () {
                         // Navigate to the Notifications screen
+                      },
+                    ),
+                    ProfileMenuItem(
+                      title: "Timer",
+                      icon: Icons.timer,
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => TimerDetailsSettings(),
+                          ),
+                        );
                       },
                     ),
                     ProfileMenuItem(
@@ -394,7 +409,7 @@ class LogoutButton extends StatelessWidget {
         onPressed: () {
           authService.signOut();
           Future.microtask(
-              () => Navigator.of(context).popAndPushNamed('/auth'));
+                  () => Navigator.of(context).popAndPushNamed('/auth'));
         },
         style: TextButton.styleFrom(
           foregroundColor: Colors.red,
