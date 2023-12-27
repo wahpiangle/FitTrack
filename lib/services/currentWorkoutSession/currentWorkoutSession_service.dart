@@ -2,16 +2,20 @@ import 'package:group_project/models/current_workout_session.dart';
 import 'package:group_project/models/exercise.dart';
 import 'package:group_project/models/exercise_set.dart';
 import 'package:group_project/models/exercises_sets_info.dart';
+import 'package:group_project/models/workout_session.dart';
+import 'package:group_project/models/workout_template.dart';
 import 'package:objectbox/objectbox.dart';
 
 class CurrentWorkoutSessionService {
   Box<CurrentWorkoutSession> currentWorkoutSessionBox;
+  Box<WorkoutSession> workoutSessionBox;
   Box<ExercisesSetsInfo> exercisesSetsInfoBox;
   Box<ExerciseSet> exerciseSetBox;
   Box<Exercise> exerciseBox;
 
   CurrentWorkoutSessionService({
     required this.currentWorkoutSessionBox,
+    required this.workoutSessionBox,
     required this.exercisesSetsInfoBox,
     required this.exerciseSetBox,
     required this.exerciseBox,
@@ -102,6 +106,28 @@ class CurrentWorkoutSessionService {
   void updateCurrentWorkoutSessionTitle(String newText) {
     CurrentWorkoutSession currentWorkoutSession = getCurrentWorkoutSession();
     currentWorkoutSession.title = newText;
+    currentWorkoutSessionBox.put(currentWorkoutSession);
+  }
+
+  // save to history
+  WorkoutSession saveCurrentWorkoutSession() {
+    CurrentWorkoutSession currentWorkoutSession = getCurrentWorkoutSession();
+    WorkoutSession workoutSession = WorkoutSession(date: DateTime.now());
+    workoutSession.exercisesSetsInfo
+        .addAll(currentWorkoutSession.exercisesSetsInfo);
+    workoutSession.note = currentWorkoutSession.note;
+    workoutSession.title = currentWorkoutSession.title;
+    workoutSessionBox.put(workoutSession);
+    clearCurrentWorkoutSession();
+    return workoutSession;
+  }
+
+  void startCurrentWorkoutFromTemplate(WorkoutTemplate workoutTemplate) {
+    CurrentWorkoutSession currentWorkoutSession = getCurrentWorkoutSession();
+    currentWorkoutSession.title = workoutTemplate.title;
+    currentWorkoutSession.note = workoutTemplate.note;
+    currentWorkoutSession.exercisesSetsInfo
+        .addAll(workoutTemplate.exercisesSetsInfo);
     currentWorkoutSessionBox.put(currentWorkoutSession);
   }
 }

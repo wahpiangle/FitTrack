@@ -8,7 +8,7 @@ import 'package:group_project/pages/auth/settings_signup.dart';
 import 'package:group_project/pages/auth_wrapper.dart';
 import 'package:group_project/pages/components/app_layout.dart';
 import 'package:group_project/pages/history/history_screen.dart';
-import 'package:group_project/services/auth_service.dart';
+import 'package:group_project/services/firebase/auth_service.dart';
 import 'package:group_project/services/objectbox_service.dart';
 import 'package:provider/provider.dart';
 import 'firebase_options.dart';

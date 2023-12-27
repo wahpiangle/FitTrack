@@ -6,7 +6,7 @@ import 'package:group_project/models/current_workout_session.dart';
 import 'package:group_project/pages/history/complete_workout/congratulation_screen.dart';
 import 'package:group_project/models/workout_session.dart';
 import 'package:group_project/pages/workout/components/tiles/exercise_tile.dart';
-import 'package:group_project/services/firebase/workoutSession/firebase_workouts_service.dart';
+import 'package:group_project/services/firebase/firebase_workouts_service.dart';
 
 class StartNewWorkout extends StatefulWidget {
   final List<Exercise> exerciseData;
@@ -79,7 +79,7 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
     super.dispose();
   }
 
-  void _delete(BuildContext context) {
+  void _finishWorkout(BuildContext context) {
     showDialog(
         context: context,
         builder: (BuildContext ctx) {
@@ -112,8 +112,9 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
                   // Close the dialog
                   Navigator.of(context).pop();
                   Navigator.of(context).pop();
-                  WorkoutSession savedWorkout =
-                      objectBox.saveCurrentWorkoutSession();
+                  WorkoutSession savedWorkout = objectBox
+                      .currentWorkoutSessionService
+                      .saveCurrentWorkoutSession();
                   FirebaseWorkoutsService.createWorkoutSession(savedWorkout);
                   Navigator.of(context).push(
                     PageRouteBuilder(
@@ -189,7 +190,7 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
                       .isNotEmpty;
                   if (isNotEmpty) {
                     if (everySetCompleted) {
-                      _delete(context);
+                      _finishWorkout(context);
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
@@ -269,12 +270,6 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
             );
           }
         },
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          objectBox.test();
-        },
-        child: Icon(Icons.add),
       ),
     );
   }

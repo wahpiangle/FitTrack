@@ -77,6 +77,13 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
           ),
         ),
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          objectBox.test();
+        },
+        child: const Icon(Icons.add),
+        backgroundColor: const Color(0xFFC1C1C1),
+      ),
     );
   }
 }

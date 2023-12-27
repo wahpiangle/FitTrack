@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:group_project/services/auth_service.dart';
+import 'package:group_project/services/firebase/auth_service.dart';
 
 class SettingsLogin extends StatefulWidget {
   const SettingsLogin({super.key});
@@ -42,8 +42,7 @@ class _SettingsLoginState extends State<SettingsLogin> {
                     color: Colors.white,
                     fontSize: 23,
                     fontWeight: FontWeight.bold,
-                  )
-              ),
+                  )),
               const SizedBox(height: 10.0),
               TextFormField(
                   style: const TextStyle(color: Colors.white),
@@ -51,20 +50,16 @@ class _SettingsLoginState extends State<SettingsLogin> {
                     hintText: 'you@example.com',
                     hintStyle: const TextStyle(color: Colors.grey),
                     enabledBorder: OutlineInputBorder(
-                      borderSide:
-                      const BorderSide(color: Color(0xFF333333)),
-                      borderRadius:
-                      BorderRadius.circular(10.0),
+                      borderSide: const BorderSide(color: Color(0xFF333333)),
+                      borderRadius: BorderRadius.circular(10.0),
                     ),
                     focusedBorder: OutlineInputBorder(
-                      borderSide:
-                      const BorderSide(color: Colors.white),
-                      borderRadius:
-                      BorderRadius.circular(10.0),
+                      borderSide: const BorderSide(color: Colors.white),
+                      borderRadius: BorderRadius.circular(10.0),
                     ),
                   ),
                   validator: (val) =>
-                  val!.isEmpty ? 'Enter an invalid email' : null,
+                      val!.isEmpty ? 'Enter an invalid email' : null,
                   onChanged: (val) {
                     setState(() => email = val);
                   }),
@@ -74,8 +69,7 @@ class _SettingsLoginState extends State<SettingsLogin> {
                     color: Colors.white,
                     fontSize: 23,
                     fontWeight: FontWeight.bold,
-                  )
-              ),
+                  )),
               const SizedBox(height: 10.0),
               TextFormField(
                   style: const TextStyle(color: Colors.white),
@@ -83,21 +77,20 @@ class _SettingsLoginState extends State<SettingsLogin> {
                     hintText: '******',
                     hintStyle: const TextStyle(color: Colors.grey),
                     enabledBorder: OutlineInputBorder(
-                      borderSide:
-                      const BorderSide(color: Color(0xFF333333)),
-                      borderRadius:
-                      BorderRadius.circular(10.0),
+                      borderSide: const BorderSide(color: Color(0xFF333333)),
+                      borderRadius: BorderRadius.circular(10.0),
                     ),
                     focusedBorder: OutlineInputBorder(
-                      borderSide:
-                      const BorderSide(color: Colors.white,),
-                      borderRadius:
-                      BorderRadius.circular(10.0),
+                      borderSide: const BorderSide(
+                        color: Colors.white,
+                      ),
+                      borderRadius: BorderRadius.circular(10.0),
                     ),
                   ),
                   obscureText: true,
-                  validator: (val) =>
-                  val!.length < 6 ? 'Enter a password 6 characters long' : null,
+                  validator: (val) => val!.length < 6
+                      ? 'Enter a password 6 characters long'
+                      : null,
                   onChanged: (val) {
                     setState(() => password = val);
                   }),
@@ -111,33 +104,34 @@ class _SettingsLoginState extends State<SettingsLogin> {
                         showDialog(
                           context: context,
                           builder: (context) {
-                            return const Center(child: CircularProgressIndicator());
+                            return const Center(
+                                child: CircularProgressIndicator());
                           },
                         );
                         await _auth.signInWithEmailAndPassword(email, password);
                         Future.microtask(() => Navigator.of(context).pop());
                         Future.microtask(() => Navigator.pop(context));
-                        Future.microtask(() => Navigator.of(context).pushReplacementNamed("app_layout"));
-                        errorMessage= '';
+                        Future.microtask(() => Navigator.of(context)
+                            .pushReplacementNamed("app_layout"));
+                        errorMessage = '';
                       } on FirebaseAuthException catch (error) {
-                        if (error.code == "invalid-email"){
+                        if (error.code == "invalid-email") {
                           Future.microtask(() => Navigator.of(context).pop());
                           errorMessage = 'The email format is invalid.';
                         } else {
                           Future.microtask(() => Navigator.of(context).pop());
-                          errorMessage = 'The email or password you\'ve entered is incorrect.';
+                          errorMessage =
+                              'The email or password you\'ve entered is incorrect.';
                         }
                       }
                       setState(() {});
                     }
                   },
                   style: ButtonStyle(
-                    minimumSize: MaterialStateProperty.all(
-                        const Size(290, 40)),
-                    backgroundColor: MaterialStateProperty.all(
-                        const Color(0xffe1f0cf)),
-                    shape: MaterialStateProperty.all<
-                        RoundedRectangleBorder>(
+                    minimumSize: MaterialStateProperty.all(const Size(290, 40)),
+                    backgroundColor:
+                        MaterialStateProperty.all(const Color(0xffe1f0cf)),
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                       RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(40),
                       ),
@@ -149,8 +143,7 @@ class _SettingsLoginState extends State<SettingsLogin> {
                         fontWeight: FontWeight.bold,
                         letterSpacing: 0.3,
                         fontSize: 16,
-                      )
-                  ),
+                      )),
                 ),
               ),
               const SizedBox(height: 20.0),
@@ -159,21 +152,19 @@ class _SettingsLoginState extends State<SettingsLogin> {
                   child: const Text('Don\'t have an account? Create one now',
                       style: TextStyle(
                         color: Colors.white,
-                      )
-                  ),
+                      )),
                   onPressed: () {
-                    Navigator.of(context).pushReplacementNamed("settings_signup");
+                    Navigator.of(context)
+                        .pushReplacementNamed("settings_signup");
                   },
                 ),
               ),
               const SizedBox(height: 12.0),
               Center(
-                child: Text(
-                    errorMessage,
+                child: Text(errorMessage,
                     style: const TextStyle(
-                      color:Colors.red,
-                    )
-                ),
+                      color: Colors.red,
+                    )),
               ),
             ],
           ),
@@ -182,4 +173,3 @@ class _SettingsLoginState extends State<SettingsLogin> {
     );
   }
 }
-

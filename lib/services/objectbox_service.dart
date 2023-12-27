@@ -65,6 +65,7 @@ class ObjectBox {
   CurrentWorkoutSessionService get currentWorkoutSessionService =>
       CurrentWorkoutSessionService(
         currentWorkoutSessionBox: _currentWorkoutSessionBox,
+        workoutSessionBox: _workoutSessionBox,
         exercisesSetsInfoBox: _exercisesSetsInfoBox,
         exerciseSetBox: _exerciseSetBox,
         exerciseBox: _exerciseBox,
@@ -137,30 +138,9 @@ class ObjectBox {
     _exerciseSetBox.put(exerciseSet);
   }
 
-  // save to history
-  WorkoutSession saveCurrentWorkoutSession() {
-    CurrentWorkoutSession currentWorkoutSession =
-        currentWorkoutSessionService.getCurrentWorkoutSession();
-    WorkoutSession workoutSession = WorkoutSession(date: DateTime.now());
-    workoutSession.exercisesSetsInfo
-        .addAll(currentWorkoutSession.exercisesSetsInfo);
-    workoutSession.note = currentWorkoutSession.note;
-    workoutSession.title = currentWorkoutSession.title;
-    _workoutSessionBox.put(workoutSession);
-    currentWorkoutSessionService.clearCurrentWorkoutSession();
-    return workoutSession;
-  }
-
 // check history
   void test() {
-    CurrentWorkoutSession currentWorkoutSession =
-        currentWorkoutSessionService.getCurrentWorkoutSession();
-    // _exerciseSetBox.removeAll();
-    // _exercisesSetsInfoBox.removeAll();
-    print(
-        "exercises sets info box is: ${_exercisesSetsInfoBox.getAll().length}");
-    print("exercises sets box is: ${_exerciseSetBox.getAll().length}");
-    print(
-        "length of all workout sessions: ${_workoutSessionBox.getAll().length}");
+    print(_workoutTemplateBox.getAll().length);
+    // print(_workoutTemplateBox.removeAll());
   }
 }

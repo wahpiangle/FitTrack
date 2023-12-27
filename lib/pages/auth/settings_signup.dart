@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:group_project/services/auth_service.dart';
+import 'package:group_project/services/firebase/auth_service.dart';
 
 class SettingsSignup extends StatefulWidget {
   const SettingsSignup({super.key});
@@ -50,18 +50,16 @@ class _SettingsSignupState extends State<SettingsSignup> {
                     hintText: 'you@example.com',
                     hintStyle: const TextStyle(color: Colors.grey),
                     enabledBorder: OutlineInputBorder(
-                      borderSide:
-                      const BorderSide(color: Color(0xFF333333)),
+                      borderSide: const BorderSide(color: Color(0xFF333333)),
                       borderRadius: BorderRadius.circular(10.0),
                     ),
                     focusedBorder: OutlineInputBorder(
-                      borderSide:
-                      const BorderSide(color: Colors.white),
+                      borderSide: const BorderSide(color: Colors.white),
                       borderRadius: BorderRadius.circular(10.0),
                     ),
                   ),
                   validator: (val) =>
-                  val!.isEmpty ? 'Enter an invalid email' : null,
+                      val!.isEmpty ? 'Enter an invalid email' : null,
                   onChanged: (val) {
                     setState(() => email = val);
                   }),
@@ -79,19 +77,18 @@ class _SettingsSignupState extends State<SettingsSignup> {
                     hintText: '******',
                     hintStyle: const TextStyle(color: Colors.grey),
                     enabledBorder: OutlineInputBorder(
-                      borderSide:
-                      const BorderSide(color: Color(0xFF333333)),
+                      borderSide: const BorderSide(color: Color(0xFF333333)),
                       borderRadius: BorderRadius.circular(10.0),
                     ),
                     focusedBorder: OutlineInputBorder(
-                      borderSide:
-                      const BorderSide(color: Colors.white),
+                      borderSide: const BorderSide(color: Colors.white),
                       borderRadius: BorderRadius.circular(10.0),
                     ),
                   ),
                   obscureText: true,
-                  validator: (val) =>
-                  val!.length < 6 ? 'Enter a password 6 characters long' : null,
+                  validator: (val) => val!.length < 6
+                      ? 'Enter a password 6 characters long'
+                      : null,
                   onChanged: (val) {
                     setState(() => password = val);
                   }),
@@ -105,21 +102,25 @@ class _SettingsSignupState extends State<SettingsSignup> {
                         showDialog(
                           context: context,
                           builder: (context) {
-                            return const Center(child: CircularProgressIndicator());
+                            return const Center(
+                                child: CircularProgressIndicator());
                           },
                         );
-                        await _auth.registerWithEmailAndPassword(email, password);
+                        await _auth.registerWithEmailAndPassword(
+                            email, password);
                         Future.microtask(() => Navigator.of(context).pop());
                         Future.microtask(() => Navigator.pop(context));
-                        Future.microtask(() => Navigator.of(context).pushReplacementNamed("app_layout"));
+                        Future.microtask(() => Navigator.of(context)
+                            .pushReplacementNamed("app_layout"));
                         errorMessage = '';
-                      } on FirebaseAuthException catch (error){
-                        if (error.code == "invalid-email"){
+                      } on FirebaseAuthException catch (error) {
+                        if (error.code == "invalid-email") {
                           Future.microtask(() => Navigator.of(context).pop());
                           errorMessage = 'The email format is invalid.';
                         } else {
                           Future.microtask(() => Navigator.of(context).pop());
-                          errorMessage = 'The email is already taken by another account.';
+                          errorMessage =
+                              'The email is already taken by another account.';
                         }
                       }
                       setState(() {});
@@ -128,7 +129,7 @@ class _SettingsSignupState extends State<SettingsSignup> {
                   style: ButtonStyle(
                     minimumSize: MaterialStateProperty.all(const Size(290, 40)),
                     backgroundColor:
-                    MaterialStateProperty.all(const Color(0xffe1f0cf)),
+                        MaterialStateProperty.all(const Color(0xffe1f0cf)),
                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                       RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(40),
@@ -150,21 +151,19 @@ class _SettingsSignupState extends State<SettingsSignup> {
                   child: const Text('Already a member? Login',
                       style: TextStyle(
                         color: Colors.white,
-                      )
-                  ),
+                      )),
                   onPressed: () {
-                    Navigator.of(context).pushReplacementNamed("settings_login");
+                    Navigator.of(context)
+                        .pushReplacementNamed("settings_login");
                   },
                 ),
               ),
               const SizedBox(height: 12.0),
               Center(
-                child: Text(
-                    errorMessage,
+                child: Text(errorMessage,
                     style: const TextStyle(
-                      color:Colors.red,
-                    )
-                ),
+                      color: Colors.red,
+                    )),
               ),
             ],
           ),
