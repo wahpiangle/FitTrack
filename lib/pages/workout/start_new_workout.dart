@@ -66,7 +66,7 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
 
   void _delete(BuildContext context) {
     final restTimerProvider =
-        Provider.of<RestTimerProvider>(context, listen: false);
+    Provider.of<RestTimerProvider>(context, listen: false);
     final timerProvider = Provider.of<TimerProvider>(context, listen: false);
 
     showDialog(
@@ -106,7 +106,7 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
                   Navigator.of(context).pop();
                   Navigator.of(context).pop();
                   WorkoutSession savedWorkout =
-                      objectBox.saveCurrentWorkoutSession();
+                  objectBox.saveCurrentWorkoutSession();
                   FirebaseWorkoutsService.createWorkoutSession(savedWorkout);
                   Navigator.of(context).push(
                     PageRouteBuilder(
@@ -246,7 +246,7 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
             child: AnimatedCrossFade(
               duration: const Duration(milliseconds: 300),
               crossFadeState: restTimerProvider.isRestTimerEnabled &&
-                      restTimerProvider.isRestTimerRunning
+                  restTimerProvider.isRestTimerRunning
                   ? CrossFadeState.showFirst
                   : CrossFadeState.showSecond,
               firstChild: Padding(
@@ -268,7 +268,7 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
               ),
               secondChild: GestureDetector(
                 onTap: () async {
-                 // await _showScrollTimePicker(context, restTimerProvider);
+                  // await _showScrollTimePicker(context, restTimerProvider);
                   setState(() {
                     _isSetTimeVisible = !_isSetTimeVisible;
                   });
@@ -290,7 +290,7 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
       backgroundColor: AppColours.primary,
       body: StreamBuilder<CurrentWorkoutSession>(
         stream:
-            objectBox.currentWorkoutSessionService.watchCurrentWorkoutSession(),
+        objectBox.currentWorkoutSessionService.watchCurrentWorkoutSession(),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
             return const Center(child: CircularProgressIndicator());
@@ -302,7 +302,7 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
                   ExerciseTile(
                     exerciseData: exerciseData,
                     exercisesSetsInfo:
-                        snapshot.data!.exercisesSetsInfo.toList(),
+                    snapshot.data!.exercisesSetsInfo.toList(),
                     selectExercise: selectExercise,
                     removeSet: removeSet,
                     timerProvider: timerProvider,

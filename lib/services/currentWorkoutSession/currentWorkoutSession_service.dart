@@ -54,7 +54,7 @@ class CurrentWorkoutSessionService {
   void removeExerciseFromCurrentWorkoutSession(int exercisesSetsInfoId) {
     CurrentWorkoutSession currentWorkoutSession = getCurrentWorkoutSession();
     currentWorkoutSession.exercisesSetsInfo.removeWhere(
-        (exercisesSetsInfo) => exercisesSetsInfo.id == exercisesSetsInfoId);
+            (exercisesSetsInfo) => exercisesSetsInfo.id == exercisesSetsInfoId);
     currentWorkoutSessionBox.put(currentWorkoutSession);
   }
 

@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/foundation.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class TimerProvider with ChangeNotifier {
   Timer? _timer;
@@ -8,8 +9,13 @@ class TimerProvider with ChangeNotifier {
 
   int get currentDuration => _currentDuration;
 
+  TimerProvider() {
+    _loadTimerValue();
+  }
+
   void resetTimer() {
     _currentDuration = 0;
+    _saveTimerValue();
     notifyListeners();
   }
 
@@ -17,6 +23,7 @@ class TimerProvider with ChangeNotifier {
     if (!_isTimerRunning) {
       _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
         _currentDuration++;
+        _saveTimerValue();
         notifyListeners();
       });
       _isTimerRunning = true;
@@ -26,6 +33,17 @@ class TimerProvider with ChangeNotifier {
   void stopTimer() {
     _timer?.cancel();
     _isTimerRunning = false;
+  }
+
+  Future<void> _loadTimerValue() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    _currentDuration = prefs.getInt('timerValue') ?? 0;
+    startTimer(); // Start the timer again after loading the value
+  }
+
+  Future<void> _saveTimerValue() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setInt('timerValue', _currentDuration);
   }
 
   static String formatDuration(int seconds) {

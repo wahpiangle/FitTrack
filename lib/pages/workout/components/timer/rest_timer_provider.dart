@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 
 class RestTimerProvider with ChangeNotifier {
   bool _isRestTimerEnabled = true; //rest timer toggle button default value is true
@@ -22,6 +24,35 @@ class RestTimerProvider with ChangeNotifier {
   bool get isDialogShown => _isDialogShown;
   bool get isDialogOpen => _isDialogOpen;
 
+
+  RestTimerProvider(BuildContext context) {
+    _loadRestTimerState(context);
+  }
+
+
+  Future<void> _loadRestTimerState(BuildContext context) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    _isRestTimerRunning = prefs.getBool('isRestTimerRunning') ?? false;
+    _currentDuration = prefs.getInt('restTimerCurrentDuration') ?? 0;
+    _isDialogShown = prefs.getBool('isDialogShown') ?? false;
+    _restTimerMinutes = prefs.getInt('restTimerMinutes') ?? 0;
+    _restTimerSeconds = prefs.getInt('restTimerSeconds') ?? 0;
+
+    if (_isRestTimerRunning && _currentDuration > 0) {
+      startRestTimer(context);
+    }
+  }
+
+
+
+  Future<void> _saveRestTimerState() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setBool('isRestTimerRunning', _isRestTimerRunning);
+    prefs.setInt('restTimerCurrentDuration', _currentDuration);
+    prefs.setBool('isDialogShown', _isDialogShown);
+    prefs.setInt('restTimerMinutes', _restTimerMinutes);
+    prefs.setInt('restTimerSeconds', _restTimerSeconds);
+  }
 
   void showRestDialog() {//check if the user is opening the rest timer details dialog
     _isDialogOpen = true;
@@ -55,31 +86,51 @@ class RestTimerProvider with ChangeNotifier {
 
   void startRestTimer(BuildContext context) {
     if (_isRestTimerEnabled && !_isDialogShown) {
-      // Check if the user has chosen a time
-      if (_restTimerMinutes == 0 && _restTimerSeconds == 0) {
-        // Use the default time of 2 minutes
-        _restTimerMinutes = 2;
-        _restTimerSeconds = 0;
-      }
-
-      _currentDuration = _restTimerMinutes * 60 + _restTimerSeconds;
-
-      _timer?.cancel();
-      _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-        if (_currentDuration <= 0) {
-          stopRestTimer();
-          _isDialogShown = false;
-          if(isDialogOpen== true) {//if user is opening the dialog
-            Navigator.of(context).pop(); //close the rest timer details dialog when timer ends
+      if (_isRestTimerRunning && _currentDuration > 0) {
+        // Continue from the remaining time
+        _timer?.cancel();
+        _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+          if (_currentDuration <= 0) {
+            stopRestTimer();
+            _isDialogShown = false;
+            if (isDialogOpen == true) {
+              Navigator.of(context).pop();
+            }
+            _showRestTimeEndedNotification(context);
+          } else {
+            notifyListeners();
+            _currentDuration--;
+            _isRestTimerRunning = true;
           }
-          _showRestTimeEndedNotification(context);
-        } else {
-          notifyListeners();
-          _currentDuration--;
-          _isRestTimerRunning = true;
-
+          _saveRestTimerState();
+        });
+      } else {
+        // Check if the user has chosen a time
+        if (_restTimerMinutes == 0 && _restTimerSeconds == 0) {
+          // Use the default time of 2 minutes
+          _restTimerMinutes = 2;
+          _restTimerSeconds = 0;
         }
-      });
+
+        _currentDuration = _restTimerMinutes * 60 + _restTimerSeconds;
+
+        _timer?.cancel();
+        _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+          if (_currentDuration <= 0) {
+            stopRestTimer();
+            _isDialogShown = false;
+            if (isDialogOpen == true) {
+              Navigator.of(context).pop();
+            }
+            _showRestTimeEndedNotification(context);
+          } else {
+            notifyListeners();
+            _currentDuration--;
+            _isRestTimerRunning = true;
+          }
+          _saveRestTimerState();
+        });
+      }
     }
   }
 
@@ -89,6 +140,8 @@ class RestTimerProvider with ChangeNotifier {
     _currentDuration = 0;
     notifyListeners();
     _isRestTimerRunning = false;
+    // Save the rest timer state when it's stopped
+    _saveRestTimerState();
   }
 
   void _showRestTimeEndedNotification(BuildContext context) {
@@ -142,6 +195,8 @@ class RestTimerProvider with ChangeNotifier {
     _restTimerMinutes = newDuration ~/ 60;
     _restTimerSeconds = newDuration % 60;
     notifyListeners();
+    // Save the rest timer state when it's reset
+    _saveRestTimerState();
     startRestTimer(context);
   }
 
