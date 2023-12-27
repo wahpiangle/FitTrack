@@ -31,6 +31,8 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
 
   List<Widget> setBorders = [];
 
+
+
   @override
   void initState() {
     super.initState();
@@ -46,6 +48,8 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
       setState(() {});
     });
   }
+
+
 
   void selectExercise(Exercise selectedExercise) {
     objectBox.currentWorkoutSessionService
@@ -171,6 +175,8 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
       objectBox.removeSetFromExercise(exerciseSetId);
     });
   }
+
+
 
   @override
   Widget build(BuildContext context) {
