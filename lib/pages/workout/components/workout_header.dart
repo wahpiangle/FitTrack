@@ -56,7 +56,7 @@ class _WorkoutHeaderState extends State<WorkoutHeader> {
           Consumer<TimerProvider>(
             builder: (context, timerProvider, child) {
               return Text(
-                "Timer: ${TimerProvider.formatDuration(timerProvider.currentDuration)}",
+                "Timer: ${TimerProvider.formatTimerDuration(timerProvider.currentDuration)}",
                 style: const TextStyle(
                   color: Color(0xFFC1C1C1),
                   fontSize: 15,

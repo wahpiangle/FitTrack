@@ -1,14 +1,12 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:group_project/constants/themes/app_colours.dart';
-import 'package:group_project/pages/workout/components/timer/timer_provider.dart';
 import 'package:group_project/pages/workout/components/timer/rest_timer_provider.dart';
 
 class RestTimerDetailsDialog extends StatefulWidget {
   final RestTimerProvider restTimerProvider;
 
-  const RestTimerDetailsDialog({Key? key, required this.restTimerProvider})
-      : super(key: key);
+  const RestTimerDetailsDialog({super.key, required this.restTimerProvider});
 
   @override
   RestTimerDetailsDialogState createState() => RestTimerDetailsDialogState();
@@ -26,7 +24,7 @@ class RestTimerDetailsDialogState extends State<RestTimerDetailsDialog>
     _startUpdatingTimer();
     _animationController = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 400),
+      duration: const Duration(milliseconds: 400),
     );
     _animation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(
@@ -119,7 +117,7 @@ class RestTimerDetailsDialogState extends State<RestTimerDetailsDialog>
                           ),
                         ),
                         Text(
-                          TimerProvider.formatDuration(
+                          RestTimerProvider.formatDuration(
                               widget.restTimerProvider.currentDuration),
                           style: const TextStyle(
                             color: Color(0xFFE1F0CF),

@@ -10,11 +10,9 @@ import 'package:group_project/pages/workout/components/tiles/exercise_tile.dart'
 import 'package:provider/provider.dart';
 import 'package:group_project/pages/workout/components/timer/timer_provider.dart';
 import 'package:group_project/pages/workout/components/timer/rest_timer_provider.dart';
-import 'package:group_project/pages/workout/components/timer/rest_time_picker.dart';
-
 import 'components/timer/resttimer_details_dialog.dart';
-
 import 'package:group_project/services/firebase/workoutSession/firebase_workouts_service.dart';
+
 
 class StartNewWorkout extends StatefulWidget {
   final List<Exercise> exerciseData;
@@ -243,46 +241,86 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
                 showTimerDetailsDialog(restTimerProvider);
               }
             },
-            child: AnimatedCrossFade(
-              duration: const Duration(milliseconds: 300),
-              crossFadeState: restTimerProvider.isRestTimerEnabled &&
-                  restTimerProvider.isRestTimerRunning
-                  ? CrossFadeState.showFirst
-                  : CrossFadeState.showSecond,
-              firstChild: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  children: [
-                    const Icon(Icons.access_time,
-                        color: Colors.white, size: 18),
-                    const SizedBox(width: 4),
-                    Text(
-                      " ${TimerProvider.formatDuration(restTimerProvider.currentRestTimerDuration)}",
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                      ),
+            child: Stack(
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(8.0),
+                  child: SizedBox(
+                    width: 40,
+                    child: LinearProgressIndicator(
+                      value: restTimerProvider.currentRestTimerDuration > 0
+                          ? restTimerProvider.currentRestTimerDuration /
+                          restTimerProvider.restTimerDuration
+                          : 0.0,
+                      valueColor: AlwaysStoppedAnimation<Color>(
+                        Color(0xFF678642),),
+                      backgroundColor: Colors.grey[700],
+                      minHeight: 40, // thickness of the progress bar
+                      semanticsLabel: 'Linear progress indicator',
                     ),
-                  ],
-                ),
-              ),
-              secondChild: GestureDetector(
-                onTap: () async {
-                  // await _showScrollTimePicker(context, restTimerProvider);
-                  setState(() {
-                    _isSetTimeVisible = !_isSetTimeVisible;
-                  });
-                },
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    children: [
-                      const Icon(Icons.access_time,
-                          color: Colors.white, size: 18),
-                    ],
                   ),
                 ),
-              ),
+                if (restTimerProvider.isRestTimerEnabled &&
+                    restTimerProvider.isRestTimerRunning)
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(8.0),
+                    child: Container(
+                      width: 90,//length longer as is icon + text
+                      child: LinearProgressIndicator(
+                        value: restTimerProvider.currentRestTimerDuration > 0
+                            ? restTimerProvider.currentRestTimerDuration /
+                            restTimerProvider.restTimerDuration
+                            : 0.0,
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                          Color(0xFF678642),),
+                        backgroundColor: Colors.grey[600],
+                        minHeight: 40, // thickness of the progress bar
+                        semanticsLabel: 'Linear progress indicator',
+                      ),
+                    ),
+                  ),
+                AnimatedCrossFade(
+                  duration: const Duration(milliseconds: 300),
+                  crossFadeState: restTimerProvider.isRestTimerEnabled &&
+                      restTimerProvider.isRestTimerRunning
+                      ? CrossFadeState.showFirst
+                      : CrossFadeState.showSecond,
+                  firstChild: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      children: [
+                        const Icon(Icons.access_time,
+                            color: Colors.white, size: 24),
+                        const SizedBox(width: 4),
+                        Text(
+                          " ${RestTimerProvider.formatDuration(restTimerProvider.currentRestTimerDuration)}",
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  secondChild: GestureDetector(
+                    onTap: () async {
+                      // await _showScrollTimePicker(context, restTimerProvider);
+                      setState(() {
+                        _isSetTimeVisible = !_isSetTimeVisible;
+                      });
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        children: [
+                          const Icon(Icons.access_time,
+                              color: Colors.white, size: 24),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         ),

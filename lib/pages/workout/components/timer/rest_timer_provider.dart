@@ -211,6 +211,13 @@ class RestTimerProvider with ChangeNotifier {
   }
 
 
+  static String formatDuration(int seconds) {
+    final minutes = ((seconds % 3600) ~/ 60).toString().padLeft(2, '0');
+    final remainingSeconds = (seconds % 60).toString().padLeft(2, '0');
+    return "$minutes:$remainingSeconds";
+  }
+
+
   @override
   void dispose() {
     _timer?.cancel();
