@@ -40,6 +40,8 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
                 onPressed: () async {
                   // Add code to handle resuming the workout
                   Navigator.of(ctx).pop(); // Close the dialog
+                  // Open the NewWorkoutBottomSheet
+                  bool isBottomSheetClosed = await NewWorkoutBottomSheet.show(context, exerciseData);
 
                 },
                 child: Text('Resume Workout'),
