@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:group_project/main.dart';
 import 'package:group_project/models/exercise.dart';
 import 'package:group_project/models/exercises_sets_info.dart';
 import 'package:group_project/pages/workout/components/tiles/components/add_exercise_button.dart';
@@ -22,9 +23,11 @@ class TemplatesExerciseTile extends StatefulWidget {
 }
 
 class _TemplatesExerciseTileState extends State<TemplatesExerciseTile> {
-  void addSet(ExercisesSetsInfo exercisesSetsInfo) {}
-
-  void setIsCompleted(int exerciseSetId) {}
+  void addSet(ExercisesSetsInfo exercisesSetsInfo) {
+    setState(() {
+      objectBox.addSetToExercise(exercisesSetsInfo);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -60,17 +63,10 @@ class _TemplatesExerciseTileState extends State<TemplatesExerciseTile> {
                           textAlign: TextAlign.left,
                         ),
                       ),
-                      ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: exercisesSetsInfo.exerciseSets.length,
-                        itemBuilder: (context, index) {
-                          return SetTiles(
-                            exercisesSetsInfo: exercisesSetsInfo,
-                            removeSet: widget.removeSet,
-                            addSet: addSet,
-                            setIsCompleted: setIsCompleted,
-                          );
-                        },
+                      SetTiles(
+                        exercisesSetsInfo: exercisesSetsInfo,
+                        removeSet: widget.removeSet,
+                        addSet: addSet,
                       ),
                     ],
                   ),

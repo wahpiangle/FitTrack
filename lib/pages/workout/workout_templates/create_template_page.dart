@@ -157,7 +157,6 @@ class _CreateTemplatePageState extends State<CreateTemplatePage> {
             style: TextStyle(
               color: Colors.grey[500],
               fontSize: 16,
-              // align center
             ),
             textAlign: TextAlign.center,
           ),
@@ -201,7 +200,28 @@ class _CreateTemplatePageState extends State<CreateTemplatePage> {
                   child: SizedBox(
                     width: double.infinity,
                     child: TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        try {
+                          objectBox.workoutTemplateService
+                              .saveEditingWorkoutTemplate();
+                          Navigator.pop(context);
+                          Navigator.pop(context);
+                        } catch (error) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                error.toString(),
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              backgroundColor: AppColours.primary,
+                            ),
+                          );
+                          Navigator.pop(context);
+                        }
+                      },
                       style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.all(
                           AppColours.secondary,

@@ -69,7 +69,7 @@ class WorkoutTemplateService {
 
   void test() {
     WorkoutTemplate editingTemplate = getEditingWorkoutTemplate();
-    print(editingTemplate.exercisesSetsInfo.first.exercise.target!.name);
+    print(editingTemplate.exercisesSetsInfo[0].exerciseSets[0].reps);
   }
 
   void addExerciseToEditingWorkoutTemplate(Exercise selectedExercise) {
@@ -83,5 +83,22 @@ class WorkoutTemplateService {
     exerciseBox.put(selectedExercise);
     exercisesSetsInfoBox.put(exercisesSetsInfo);
     workoutTemplateBox.put(editingTemplate);
+  }
+
+  void saveEditingWorkoutTemplate() {
+    WorkoutTemplate editingTemplate = getEditingWorkoutTemplate();
+    editingTemplate.isCurrentEditing = false;
+    if (editingTemplate.exercisesSetsInfo.isEmpty) {
+      throw Exception("Please add at least one exercise");
+    }
+    editingTemplate.exercisesSetsInfo.forEach((exerciseSetsInfoElement) {
+      exerciseSetsInfoElement.exerciseSets.forEach((exerciseSet) {
+        if (exerciseSet.reps == null || exerciseSet.weight == null) {
+          throw Exception("Please fill in all the reps and weight");
+        } else {
+          workoutTemplateBox.put(editingTemplate);
+        }
+      });
+    });
   }
 }

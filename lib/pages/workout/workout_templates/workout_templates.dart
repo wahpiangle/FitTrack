@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:group_project/constants/themes/app_colours.dart';
 import 'package:group_project/main.dart';
 import 'package:group_project/models/workout_template.dart';
+import 'package:group_project/pages/workout/workout_template_card.dart';
 import 'package:group_project/pages/workout/workout_templates/create_template_page.dart';
 
 class WorkoutTemplates extends StatefulWidget {
@@ -32,7 +33,7 @@ class _WorkoutTemplatesState extends State<WorkoutTemplates> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => CreateTemplatePage(),
+                    builder: (context) => const CreateTemplatePage(),
                   ),
                 );
               },
@@ -58,25 +59,28 @@ class _WorkoutTemplatesState extends State<WorkoutTemplates> {
             ),
           ],
         ),
-        StreamBuilder<List<WorkoutTemplate>>(
-          stream: objectBox.workoutTemplateService.watchWorkoutTemplates(),
-          builder: (context, snapshot) {
-            if (!snapshot.hasData) {
-              return Container();
-            } else {
-              return ListView.builder(
-                itemCount: snapshot.data!.length,
-                shrinkWrap: true,
-                itemBuilder: (context, index) {
-                  final workoutTemplate = snapshot.data![index];
-                  // TODO
-                  return ListTile(
-                    title: Text(workoutTemplate.title),
-                  );
-                },
-              );
-            }
-          },
+        Container(
+          margin: const EdgeInsets.only(top: 10),
+          child: StreamBuilder<List<WorkoutTemplate>>(
+            stream: objectBox.workoutTemplateService.watchWorkoutTemplates(),
+            builder: (context, snapshot) {
+              if (!snapshot.hasData) {
+                return Container();
+              } else {
+                return ListView.builder(
+                  itemCount: snapshot.data!.length,
+                  shrinkWrap: true,
+                  itemBuilder: (context, index) {
+                    final workoutTemplate = snapshot.data![index];
+                    return WorkoutTemplateCard(
+                      workoutText: workoutTemplate.title,
+                      exerciseData: objectBox.getAllExercises(),
+                    );
+                  },
+                );
+              }
+            },
+          ),
         ),
       ],
     );
