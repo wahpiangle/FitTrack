@@ -234,7 +234,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => TimerDetailsSettings(),
+                            builder: (context) => const TimerDetailsSettings(),
                           ),
                         );
                       },

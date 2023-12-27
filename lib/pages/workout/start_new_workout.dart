@@ -252,8 +252,8 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
                           ? restTimerProvider.currentRestTimerDuration /
                           restTimerProvider.restTimerDuration
                           : 0.0,
-                      valueColor: AlwaysStoppedAnimation<Color>(
-                        Color(0xFF678642),),
+                      valueColor: const AlwaysStoppedAnimation<Color>(
+                        Color(0xFF678F37),),
                       backgroundColor: Colors.grey[700],
                       minHeight: 40, // thickness of the progress bar
                       semanticsLabel: 'Linear progress indicator',
@@ -264,15 +264,15 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
                     restTimerProvider.isRestTimerRunning)
                   ClipRRect(
                     borderRadius: BorderRadius.circular(8.0),
-                    child: Container(
+                    child: SizedBox(
                       width: 90,//length longer as is icon + text
                       child: LinearProgressIndicator(
                         value: restTimerProvider.currentRestTimerDuration > 0
                             ? restTimerProvider.currentRestTimerDuration /
                             restTimerProvider.restTimerDuration
                             : 0.0,
-                        valueColor: AlwaysStoppedAnimation<Color>(
-                          Color(0xFF678642),),
+                        valueColor: const AlwaysStoppedAnimation<Color>(
+                          Color(0xFF678F37),),
                         backgroundColor: Colors.grey[600],
                         minHeight: 40, // thickness of the progress bar
                         semanticsLabel: 'Linear progress indicator',
@@ -309,11 +309,11 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
                         _isSetTimeVisible = !_isSetTimeVisible;
                       });
                     },
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
+                    child: const Padding(
+                      padding: EdgeInsets.all(8.0),
                       child: Row(
                         children: [
-                          const Icon(Icons.access_time,
+                          Icon(Icons.access_time,
                               color: Colors.white, size: 24),
                         ],
                       ),

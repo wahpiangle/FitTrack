@@ -71,7 +71,7 @@ class TimerDetailsSettings extends StatelessWidget {
                         ),
                       ),
                     ),
-                    SizedBox(height: 16),
+                    const SizedBox(height: 16),
                     Container(
                       decoration: BoxDecoration(
                         color: Colors.grey[850], // box background color
@@ -123,7 +123,7 @@ class TimerDetailsSettings extends StatelessWidget {
     showModalBottomSheet<void>(
       context: context,
       builder: (BuildContext context) {
-        return Container(
+        return SizedBox(
           height: 800,
           child: RestTimePicker(restTimerProvider: restTimerProvider),
         );

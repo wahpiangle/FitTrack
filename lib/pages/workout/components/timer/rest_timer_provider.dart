@@ -31,7 +31,6 @@ class RestTimerProvider with ChangeNotifier {
   }
 
 
-
   Future<void> _loadRestTimerState(BuildContext context) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     _isRestTimerRunning = prefs.getBool('isRestTimerRunning') ?? false;
