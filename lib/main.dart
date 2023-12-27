@@ -37,7 +37,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => TimerProvider()),
-        ChangeNotifierProvider(create: (_) => RestTimerProvider(context)),
+        ChangeNotifierProvider(create: (_) => RestTimerProvider()),
         ChangeNotifierProvider(create: (context) => UserStateProvider()),
         ChangeNotifierProvider(create: (context) => ProfileImageProvider()),
         StreamProvider.value(

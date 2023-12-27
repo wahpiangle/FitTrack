@@ -25,9 +25,11 @@ class RestTimerProvider with ChangeNotifier {
   bool get isDialogOpen => _isDialogOpen;
 
 
-  RestTimerProvider(BuildContext context) {
-    _loadRestTimerState(context);
+  Future<void> init(BuildContext context) async {
+    // Call _loadRestTimerState when needed, such as in the init method
+    await _loadRestTimerState(context);
   }
+
 
 
   Future<void> _loadRestTimerState(BuildContext context) async {
