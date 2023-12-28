@@ -46,19 +46,21 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
   void initState() {
     super.initState();
     exerciseData = widget.exerciseData;
-  }
 
-  void selectExercise(Exercise selectedExercise) {
-    objectBox.currentWorkoutSessionService
-        .addExerciseToCurrentWorkoutSession(selectedExercise);
     final timerProvider = Provider.of<TimerProvider>(context, listen: false);
-
+    //starts the timer when user first enter the start new workout screen
     if (!_isTimerRunning) {
       timerProvider.startTimer();
       setState(() {
         _isTimerRunning = true;
       });
     }
+  }
+
+  void selectExercise(Exercise selectedExercise) {
+    objectBox.currentWorkoutSessionService
+        .addExerciseToCurrentWorkoutSession(selectedExercise);
+
   }
 
   void _delete(BuildContext context) {
