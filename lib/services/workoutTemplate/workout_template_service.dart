@@ -55,7 +55,6 @@ class WorkoutTemplateService {
 
   void deleteEditingWorkoutTemplate() {
     WorkoutTemplate editingTemplate = getEditingWorkoutTemplate();
-    // remove the exercisesSetsInfo
     exerciseSetsBox.removeMany(editingTemplate.exercisesSetsInfo
         .expand((element) => element.exerciseSets)
         .map((e) {
@@ -68,6 +67,8 @@ class WorkoutTemplateService {
   }
 
   void test() {
+    print(exerciseSetsBox.getAll());
+    print(exercisesSetsInfoBox.getAll());
     WorkoutTemplate editingTemplate = getEditingWorkoutTemplate();
     print(editingTemplate.exercisesSetsInfo[0].exerciseSets[0].reps);
   }
@@ -100,5 +101,22 @@ class WorkoutTemplateService {
         }
       });
     });
+  }
+
+  WorkoutTemplate? getWorkoutTemplate(int workoutTemplateId) {
+    return workoutTemplateBox.get(workoutTemplateId);
+  }
+
+  void deleteWorkoutTemplate(int workoutTemplateId) {
+    WorkoutTemplate workoutTemplate = getWorkoutTemplate(workoutTemplateId)!;
+    exerciseSetsBox.removeMany(workoutTemplate.exercisesSetsInfo
+        .expand((element) => element.exerciseSets)
+        .map((e) {
+      return e.id;
+    }).toList());
+    exercisesSetsInfoBox.removeMany(workoutTemplate.exercisesSetsInfo.map((e) {
+      return e.id;
+    }).toList());
+    workoutTemplateBox.remove(workoutTemplateId);
   }
 }
