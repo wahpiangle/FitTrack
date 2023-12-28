@@ -13,7 +13,6 @@ import 'package:group_project/pages/workout/components/timer/rest_timer_provider
 import 'components/timer/resttimer_details_dialog.dart';
 import 'package:group_project/services/firebase/workoutSession/firebase_workouts_service.dart';
 
-
 class StartNewWorkout extends StatefulWidget {
   final List<Exercise> exerciseData;
 
@@ -64,7 +63,7 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
 
   void _delete(BuildContext context) {
     final restTimerProvider =
-    Provider.of<RestTimerProvider>(context, listen: false);
+        Provider.of<RestTimerProvider>(context, listen: false);
     final timerProvider = Provider.of<TimerProvider>(context, listen: false);
 
     showDialog(
@@ -104,7 +103,7 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
                   Navigator.of(context).pop();
                   Navigator.of(context).pop();
                   WorkoutSession savedWorkout =
-                  objectBox.saveCurrentWorkoutSession();
+                      objectBox.saveCurrentWorkoutSession();
                   FirebaseWorkoutsService.createWorkoutSession(savedWorkout);
                   Navigator.of(context).push(
                     PageRouteBuilder(
@@ -223,7 +222,7 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
                     child: Text(
                       "Finish",
                       style: TextStyle(
-                        color: Color(0xFFE1F0CF),
+                        color: AppColours.secondary,
                         fontSize: 18,
                       ),
                     ),
@@ -250,11 +249,12 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
                     child: LinearProgressIndicator(
                       value: restTimerProvider.currentRestTimerDuration > 0
                           ? restTimerProvider.currentRestTimerDuration /
-                          restTimerProvider.restTimerDuration
+                              restTimerProvider.restTimerDuration
                           : 0.0,
                       valueColor: const AlwaysStoppedAnimation<Color>(
-                        Color(0xFF678F37),),
-                      backgroundColor: Colors.grey[700],
+                        AppColours.secondaryDark,
+                      ),
+                      backgroundColor: Colors.grey[800],
                       minHeight: 40, // thickness of the progress bar
                       semanticsLabel: 'Linear progress indicator',
                     ),
@@ -265,15 +265,16 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
                   ClipRRect(
                     borderRadius: BorderRadius.circular(8.0),
                     child: SizedBox(
-                      width: 90,//length longer as is icon + text
+                      width: 90, //length longer as is icon + text
                       child: LinearProgressIndicator(
                         value: restTimerProvider.currentRestTimerDuration > 0
                             ? restTimerProvider.currentRestTimerDuration /
-                            restTimerProvider.restTimerDuration
+                                restTimerProvider.restTimerDuration
                             : 0.0,
                         valueColor: const AlwaysStoppedAnimation<Color>(
-                          Color(0xFF678F37),),
-                        backgroundColor: Colors.grey[600],
+                          AppColours.secondaryDark,
+                        ),
+                        backgroundColor: Colors.grey[800],
                         minHeight: 40, // thickness of the progress bar
                         semanticsLabel: 'Linear progress indicator',
                       ),
@@ -282,7 +283,7 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
                 AnimatedCrossFade(
                   duration: const Duration(milliseconds: 300),
                   crossFadeState: restTimerProvider.isRestTimerEnabled &&
-                      restTimerProvider.isRestTimerRunning
+                          restTimerProvider.isRestTimerRunning
                       ? CrossFadeState.showFirst
                       : CrossFadeState.showSecond,
                   firstChild: Padding(
@@ -295,8 +296,8 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
                         Text(
                           " ${RestTimerProvider.formatDuration(restTimerProvider.currentRestTimerDuration)}",
                           style: const TextStyle(
-                            color: Colors.white,
                             fontSize: 16,
+                            color: Colors.white,
                           ),
                         ),
                       ],
@@ -328,7 +329,7 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
       backgroundColor: AppColours.primary,
       body: StreamBuilder<CurrentWorkoutSession>(
         stream:
-        objectBox.currentWorkoutSessionService.watchCurrentWorkoutSession(),
+            objectBox.currentWorkoutSessionService.watchCurrentWorkoutSession(),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
             return const Center(child: CircularProgressIndicator());
@@ -340,7 +341,7 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
                   ExerciseTile(
                     exerciseData: exerciseData,
                     exercisesSetsInfo:
-                    snapshot.data!.exercisesSetsInfo.toList(),
+                        snapshot.data!.exercisesSetsInfo.toList(),
                     selectExercise: selectExercise,
                     removeSet: removeSet,
                     timerProvider: timerProvider,
@@ -354,8 +355,8 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
     );
   }
 
-
-  Future<void> showTimerDetailsDialog(RestTimerProvider restTimerProvider) async {
+  Future<void> showTimerDetailsDialog(
+      RestTimerProvider restTimerProvider) async {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -365,5 +366,4 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
       },
     );
   }
-
 }
