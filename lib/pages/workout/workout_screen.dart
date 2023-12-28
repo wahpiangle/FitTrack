@@ -2,10 +2,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:group_project/main.dart';
 import 'package:group_project/models/exercise.dart';
-import 'package:group_project/pages/workout/components/tiles/components/timer_provider.dart';
+import 'package:group_project/pages/workout/components/timer/timer_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:group_project/pages/workout/new_workout.dart';
 import 'package:group_project/pages/workout/components/start_new_workout_bottom_sheet.dart';
+
 
 class WorkoutScreen extends StatefulWidget {
   const WorkoutScreen({super.key});
@@ -59,7 +60,7 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
                   // Call _resetWorkout
                   _resetWorkout();
                   // Show the NewWorkoutBottomSheet
-                NewWorkoutBottomSheet.show(context, exerciseData);
+                  NewWorkoutBottomSheet.show(context, exerciseData);
                 },
 
                 child: Text('Start a New Workout'),
@@ -163,7 +164,7 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
                     },
                     style: ButtonStyle(
                       backgroundColor:
-                          MaterialStateProperty.all(const Color(0xFFC1C1C1)),
+                      MaterialStateProperty.all(const Color(0xFFC1C1C1)),
                       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                         RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(30),

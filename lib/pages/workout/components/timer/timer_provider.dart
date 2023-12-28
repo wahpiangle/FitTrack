@@ -7,11 +7,15 @@ class TimerProvider with ChangeNotifier {
   int _currentDuration = 0;
   bool _isTimerRunning = false;
 
+
   int get currentDuration => _currentDuration;
+  bool get isTimerRunning => _isTimerRunning;
 
   TimerProvider() {
     _loadTimerValue();
   }
+
+
 
   void resetTimer() {
     _currentDuration = 0;
