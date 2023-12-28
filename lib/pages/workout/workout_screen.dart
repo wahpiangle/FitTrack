@@ -17,6 +17,7 @@ class WorkoutScreen extends StatefulWidget {
 class _WorkoutScreenState extends State<WorkoutScreen> {
   late List<Exercise> exerciseData;
   bool isBottomSheetVisible = false;
+  bool isTimerActiveScreenOpen = false;
 
   @override
   void initState() {
@@ -92,12 +93,37 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
   void _handleTimerActive(BuildContext context) {
     TimerProvider timerProvider = Provider.of<TimerProvider>(context, listen: false);
 
-    // If the timer is active, show TimerActiveScreen as a bottom sheet
-    if (timerProvider.isTimerRunning) {
+    // Check if TimerActiveScreen is already open
+    if (isTimerActiveScreenOpen) {
+      return;
+    }
+
+    // Listen for changes in the timer status
+    timerProvider.addListener(() {
+      if (timerProvider.isTimerRunning && !isTimerActiveScreenOpen) {
+        // If the timer is active and TimerActiveScreen is not open, show TimerActiveScreen as a bottom sheet
+        isTimerActiveScreenOpen = true;
+        showBottomSheet(
+          context: context,
+          builder: (context) => TimerActiveScreen(exerciseData: exerciseData),
+        ).closed.then((value) {
+          // Reset the flag when TimerActiveScreen is closed
+          isTimerActiveScreenOpen = false;
+        });
+      }
+    });
+
+    // Check the timer status immediately after adding the listener
+    if (timerProvider.isTimerRunning && !isTimerActiveScreenOpen) {
+      // If the timer is active and TimerActiveScreen is not open, show TimerActiveScreen as a bottom sheet
+      isTimerActiveScreenOpen = true;
       showBottomSheet(
         context: context,
         builder: (context) => TimerActiveScreen(exerciseData: exerciseData),
-      );
+      ).closed.then((value) {
+        // Reset the flag when TimerActiveScreen is closed
+        isTimerActiveScreenOpen = false;
+      });
     }
   }
 
