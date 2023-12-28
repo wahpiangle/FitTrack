@@ -7,7 +7,9 @@ import 'package:group_project/models/current_workout_session.dart';
 import 'package:group_project/pages/history/congratulation_screen.dart';
 import 'package:group_project/models/workout_session.dart';
 import 'package:group_project/pages/workout/components/tiles/exercise_tile.dart';
+import 'package:group_project/services/firebase/workoutSession/firebase_workouts_service.dart';
 import 'package:provider/provider.dart';
+import 'package:group_project/pages/workout/components/tiles/components/timer_provider.dart';
 import 'package:group_project/pages/workout/components/timer/timer_provider.dart';
 import 'package:group_project/pages/workout/components/timer/rest_timer_provider.dart';
 import 'components/timer/resttimer_details_dialog.dart';
@@ -16,7 +18,7 @@ import 'package:group_project/services/firebase/workoutSession/firebase_workouts
 class StartNewWorkout extends StatefulWidget {
   final List<Exercise> exerciseData;
 
-  const StartNewWorkout({super.key, required this.exerciseData});
+  const StartNewWorkout({Key? key, required this.exerciseData}) : super(key: key);
 
   void showTimerDetailsDialog(
       BuildContext context, RestTimerProvider restTimerProvider) {
@@ -36,11 +38,17 @@ class StartNewWorkout extends StatefulWidget {
 
 class _StartNewWorkoutState extends State<StartNewWorkout>
     with TickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _animation;
   bool _isTimerRunning = false;
   late List<Exercise> exerciseData;
   bool _isSetTimeVisible = true;
+  TextEditingController weightsController = TextEditingController();
+  TextEditingController repsController = TextEditingController();
 
   List<Widget> setBorders = [];
+
+
 
   @override
   void initState() {
@@ -49,6 +57,7 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
 
     final timerProvider = Provider.of<TimerProvider>(context, listen: false);
     //starts the timer when user first enter the start new workout screen
+
     if (!_isTimerRunning) {
       timerProvider.startTimer();
       setState(() {
@@ -57,10 +66,43 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
     }
   }
 
+  Widget createSetBorder(int weight, int reps) {
+    return Container(
+      decoration: BoxDecoration(
+        border: Border.all(
+          color: Colors.white,
+          width: 2.0,
+        ),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      margin: const EdgeInsets.all(10),
+      padding: const EdgeInsets.all(10),
+      child: Row(
+        children: [
+          Text("Weight: $weight"),
+          const SizedBox(width: 10),
+          Text("Reps: $reps"),
+        ],
+      ),
+    );
+  }
+
+  Widget buildSetBordersList() {
+    return ListView(
+      children: setBorders,
+    );
+  }
+
   void selectExercise(Exercise selectedExercise) {
     objectBox.currentWorkoutSessionService
         .addExerciseToCurrentWorkoutSession(selectedExercise);
 
+  @override
+  void dispose() {
+    _controller.dispose();
+    weightsController.dispose();
+    repsController.dispose();
+    super.dispose();
   }
 
   void _delete(BuildContext context) {
@@ -148,6 +190,8 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
       objectBox.removeSetFromExercise(exerciseSetId);
     });
   }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -330,8 +374,8 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
       ),
       backgroundColor: AppColours.primary,
       body: StreamBuilder<CurrentWorkoutSession>(
-        stream:
-            objectBox.currentWorkoutSessionService.watchCurrentWorkoutSession(),
+        stream: objectBox.currentWorkoutSessionService
+            .watchCurrentWorkoutSession(),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
             return const Center(child: CircularProgressIndicator());
@@ -343,7 +387,7 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
                   ExerciseTile(
                     exerciseData: exerciseData,
                     exercisesSetsInfo:
-                        snapshot.data!.exercisesSetsInfo.toList(),
+                    snapshot.data!.exercisesSetsInfo.toList(),
                     selectExercise: selectExercise,
                     removeSet: removeSet,
                     timerProvider: timerProvider,
