@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:group_project/main.dart';
-import 'package:group_project/pages/workout/workout_screen.dart';
 import 'package:group_project/pages/workout/components/timer/timer_provider.dart';
 import 'package:group_project/pages/workout/components/timer/rest_timer_provider.dart';
 import 'package:provider/provider.dart';
@@ -57,12 +56,6 @@ class CancelWorkoutButton extends StatelessWidget {
                     // Stop the rest timer
                     Provider.of<RestTimerProvider>(context, listen: false)
                         .stopRestTimer();
-
-                    Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(
-                        builder: (context) => WorkoutScreen(),
-                      ),
-                    );
                   },
                   child: const Text(
                     'Discard Workout',
