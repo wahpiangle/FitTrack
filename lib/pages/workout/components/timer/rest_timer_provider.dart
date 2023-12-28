@@ -25,9 +25,10 @@ class RestTimerProvider with ChangeNotifier {
   bool get isDialogOpen => _isDialogOpen;
 
 
-  Future<void> init(BuildContext context) async {
-    // Call _loadRestTimerState when needed, such as in the init method
-    await _loadRestTimerState(context);
+
+
+  RestTimerProvider(BuildContext context) {
+    _loadRestTimerState(context);
   }
 
 
@@ -204,8 +205,9 @@ class RestTimerProvider with ChangeNotifier {
   void adjustRestTime(int seconds) {
     _currentDuration += seconds;
     if (_currentDuration < 0) {
-      _currentDuration = 0;
+      _currentDuration = 1;
     }
+   _restTimerDuration = _currentDuration; // update the rest timer duration after pressing 10s buttons
     notifyListeners();
   }
 
