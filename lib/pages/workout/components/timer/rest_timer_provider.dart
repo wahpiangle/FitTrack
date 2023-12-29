@@ -24,11 +24,27 @@ class RestTimerProvider with ChangeNotifier {
   bool get isDialogShown => _isDialogShown;
   bool get isDialogOpen => _isDialogOpen;
 
+  int _customRestTimerMinutes = 0;
+  int _customRestTimerSeconds = 0;
 
+
+  int get customRestTimerMinutes => _customRestTimerMinutes;
+  int get customRestTimerSeconds => _customRestTimerSeconds;
 
 
   RestTimerProvider(BuildContext context) {
     _loadRestTimerState(context);
+  }
+
+
+  void setCustomRestTimerMinutes(int minutes) {
+    _customRestTimerMinutes = minutes;
+    notifyListeners();
+  }
+
+  void setCustomRestTimerSeconds(int seconds) {
+    _customRestTimerSeconds = seconds;
+    notifyListeners();
   }
 
 

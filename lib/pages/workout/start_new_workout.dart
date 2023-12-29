@@ -11,6 +11,7 @@ import 'package:group_project/services/firebase/workoutSession/firebase_workouts
 import 'package:provider/provider.dart';
 import 'package:group_project/pages/workout/components/timer/timer_provider.dart';
 import 'package:group_project/pages/workout/components/timer/rest_timer_provider.dart';
+import 'components/timer/rest_time_picker.dart';
 import 'components/timer/resttimer_details_dialog.dart';
 
 
@@ -352,7 +353,7 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
                     ),
                     secondChild: GestureDetector(
                       onTap: () async {
-                        // await _showScrollTimePicker(context, restTimerProvider);
+                         await _showScrollTimePicker(context, restTimerProvider);
                         setState(() {
                           _isSetTimeVisible = !_isSetTimeVisible;
                         });
@@ -413,5 +414,89 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
         },
       );
     }
+
+
+  Future<void> _showScrollTimePicker(
+      BuildContext context, RestTimerProvider restTimerProvider) async {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: AppColours.primaryBright,
+          content: SizedBox(
+            height: 500,
+            width:500,
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.close, color: Colors.white),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                    const Spacer(), // Add spacer to center the title
+                    Text(
+                      'Rest Timer',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const Spacer(), // Add spacer to center the title
+                    IconButton(
+                      icon: const Icon(Icons.help, color: Colors.white),
+                      onPressed: () {
+                        // Handle question mark icon press
+                        // You can show a tooltip or navigate to a help screen
+                      },
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 30), // Adjust spacing
+                Container(
+                  height: 295,
+                  width: 300,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(150), // Half of height or width for a perfect circle
+                    border: Border.all(color: AppColours.secondary, width: 5),
+                  ),
+                  child: ClipOval(
+                    child: Container(
+                      color: AppColours.secondary,
+                      child: RestTimerCustom(restTimerProvider: restTimerProvider),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 50), // Adjust spacing
+                Container(
+                  height: 50, // Set a specific height for the ElevatedButton
+                  width: 300,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(50), // Rounded corners
+                  ),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      restTimerProvider.resetRestTimer(
+                        restTimerProvider.restTimerMinutes * 60 +
+                            restTimerProvider.restTimerSeconds,
+                        context,
+                      );
+                      Navigator.of(context).pop();
+                    },
+                    child: const Text('Start Rest Timer'),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
 
 }
