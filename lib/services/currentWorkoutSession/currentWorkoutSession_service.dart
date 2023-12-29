@@ -126,8 +126,22 @@ class CurrentWorkoutSessionService {
     CurrentWorkoutSession currentWorkoutSession = getCurrentWorkoutSession();
     currentWorkoutSession.title = workoutTemplate.title;
     currentWorkoutSession.note = workoutTemplate.note;
-    currentWorkoutSession.exercisesSetsInfo
-        .addAll(workoutTemplate.exercisesSetsInfo);
+    // create copy of exercisesSetsInfo from workoutTemplate and add to workoutTemplate
+    workoutTemplate.exercisesSetsInfo.forEach((exercisesSetsInfo) {
+      final exercisesSetsInfoCopy = ExercisesSetsInfo();
+      exercisesSetsInfo.exerciseSets.forEach((exerciseSet) {
+        final exerciseSetCopy = ExerciseSet();
+        exercisesSetsInfoCopy.exerciseSets.add(exerciseSetCopy);
+        exerciseSetCopy.exerciseSetInfo.target = exercisesSetsInfoCopy;
+        exerciseSetCopy.reps = exerciseSet.reps;
+        exerciseSetCopy.weight = exerciseSet.weight;
+        exerciseSetBox.put(exerciseSetCopy);
+      });
+      exercisesSetsInfoCopy.exercise.target = exercisesSetsInfo.exercise.target;
+      currentWorkoutSession.exercisesSetsInfo.add(exercisesSetsInfoCopy);
+      exercisesSetsInfoBox.put(exercisesSetsInfoCopy);
+    });
+
     currentWorkoutSessionBox.put(currentWorkoutSession);
   }
 }
