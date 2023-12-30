@@ -21,7 +21,6 @@ class _EditTemplatePageState extends State<EditTemplatePage> {
   WorkoutTemplate editingWorkoutTemplate =
       objectBox.workoutTemplateService.getEditingWorkoutTemplate();
   List<Exercise> exerciseData = objectBox.getAllExercises();
-  bool changes = false;
 
   void _askToRevert() {
     showDialog(
@@ -243,8 +242,6 @@ class _EditTemplatePageState extends State<EditTemplatePage> {
     setState(() {
       editingWorkoutTemplate =
           objectBox.workoutTemplateService.getEditingWorkoutTemplate();
-      changes = objectBox.workoutTemplateService
-          .editingWorkoutTemplateHasChanges(widget.workoutTemplateId);
     });
   }
 
@@ -253,16 +250,12 @@ class _EditTemplatePageState extends State<EditTemplatePage> {
     setState(() {
       editingWorkoutTemplate =
           objectBox.workoutTemplateService.getEditingWorkoutTemplate();
-      changes = objectBox.workoutTemplateService
-          .editingWorkoutTemplateHasChanges(widget.workoutTemplateId);
     });
   }
 
   void addSet(ExercisesSetsInfo exercisesSetsInfo) {
     setState(() {
       objectBox.addSetToExercise(exercisesSetsInfo);
-      changes = objectBox.workoutTemplateService
-          .editingWorkoutTemplateHasChanges(widget.workoutTemplateId);
     });
   }
 
@@ -304,6 +297,8 @@ class _EditTemplatePageState extends State<EditTemplatePage> {
           'New Template',
           style: TextStyle(
             color: Colors.white,
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
           ),
         ),
         actions: [
@@ -311,14 +306,27 @@ class _EditTemplatePageState extends State<EditTemplatePage> {
             margin: const EdgeInsets.all(5),
             child: TextButton(
               onPressed: () {
-                changes == true ? _askToSave() : null;
+                // check if there are changes
+                objectBox.workoutTemplateService
+                        .editingWorkoutTemplateHasChanges(
+                            widget.workoutTemplateId)
+                    ? _askToSave()
+                    : ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text(
+                            'There are no changes!',
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.white,
+                            ),
+                          ),
+                          backgroundColor: AppColours.primary,
+                        ),
+                      );
               },
               style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all(
-                  changes
-                      ? AppColours.secondary
-                      : AppColours.secondary.withOpacity(0.5),
-                ),
+                backgroundColor:
+                    MaterialStateProperty.all(AppColours.secondary),
                 shape: MaterialStateProperty.all(
                   RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
@@ -328,8 +336,9 @@ class _EditTemplatePageState extends State<EditTemplatePage> {
               child: const Text(
                 'Save',
                 style: TextStyle(
-                  fontSize: 16,
+                  fontSize: 14,
                   color: Colors.black,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
             ),
@@ -344,25 +353,33 @@ class _EditTemplatePageState extends State<EditTemplatePage> {
             children: [
               TextFormField(
                 initialValue: editingWorkoutTemplate.title,
+                onChanged: (value) {
+                  objectBox.workoutTemplateService
+                      .updateEditingWorkoutTemplateTitle(value);
+                },
                 decoration: InputDecoration(
                   contentPadding: const EdgeInsets.only(bottom: 10),
                   isDense: true,
                   hintText: 'Template Title',
                   hintStyle: TextStyle(
                     color: Colors.grey[600],
-                    fontSize: 24,
+                    fontSize: 20,
                     fontWeight: FontWeight.bold,
                   ),
                   border: InputBorder.none,
                 ),
                 style: const TextStyle(
                   color: Colors.white,
-                  fontSize: 24,
+                  fontSize: 20,
                   fontWeight: FontWeight.bold,
                 ),
               ),
               TextFormField(
                 initialValue: editingWorkoutTemplate.note,
+                onChanged: (value) {
+                  objectBox.workoutTemplateService
+                      .updateEditingWorkoutTemplateNote(value);
+                },
                 decoration: InputDecoration(
                   hintText: 'Add a workout note',
                   hintStyle: const TextStyle(
@@ -378,7 +395,7 @@ class _EditTemplatePageState extends State<EditTemplatePage> {
                 ),
                 style: const TextStyle(
                   color: Colors.white,
-                  fontSize: 20,
+                  fontSize: 14,
                 ),
               ),
               const SizedBox(

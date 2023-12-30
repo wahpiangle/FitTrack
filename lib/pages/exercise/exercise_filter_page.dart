@@ -65,7 +65,7 @@ class ExerciseFilterPageState extends State<ExerciseFilterPage> {
           'Filter',
           style: TextStyle(
             color: Colors.white,
-            fontSize: 27,
+            fontSize: 24,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -89,12 +89,16 @@ class ExerciseFilterPageState extends State<ExerciseFilterPage> {
                 'Body Parts',
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: 25,
+                  fontSize: 20,
                   fontWeight: FontWeight.bold,
                 ),
               ),
             ),
-            ExerciseFilterWidgets(data: bodyPartData, isBodyPart: true, isCategory: false, state: this),
+            ExerciseFilterWidgets(
+                data: bodyPartData,
+                isBodyPart: true,
+                isCategory: false,
+                state: this),
             const SizedBox(height: 20.0),
 
             // Separated section for Categories
@@ -104,18 +108,21 @@ class ExerciseFilterPageState extends State<ExerciseFilterPage> {
                 'Categories',
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: 25,
+                  fontSize: 20,
                   fontWeight: FontWeight.bold,
                 ),
               ),
             ),
-            ExerciseFilterWidgets(data: categoryData, isBodyPart: false, isCategory: true, state: this),
+            ExerciseFilterWidgets(
+                data: categoryData,
+                isBodyPart: false,
+                isCategory: true,
+                state: this),
           ],
         ),
       ),
     );
   }
-
 
   void showMaxFilterWarning() {
     // Show a warning message when more than 5 filters are selected

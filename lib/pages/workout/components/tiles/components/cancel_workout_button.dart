@@ -23,7 +23,7 @@ class CancelWorkoutButton extends StatelessWidget {
                 'Are you sure you want to discard the current workout?',
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: 18,
+                  fontSize: 16,
                 ),
               ),
               actions: [
@@ -34,7 +34,7 @@ class CancelWorkoutButton extends StatelessWidget {
                   child: const Text(
                     'Resume',
                     style: TextStyle(
-                      fontSize: 18,
+                      fontSize: 14,
                       color: Colors.red,
                     ),
                   ),
@@ -48,7 +48,7 @@ class CancelWorkoutButton extends StatelessWidget {
                   child: const Text(
                     'Discard Workout',
                     style: TextStyle(
-                      fontSize: 18,
+                      fontSize: 14,
                       color: Colors.blue,
                     ),
                   ),
@@ -77,7 +77,7 @@ class CancelWorkoutButton extends StatelessWidget {
         child: Text(
           "CANCEL WORKOUT",
           style: TextStyle(
-            fontSize: 18,
+            fontSize: 14,
             color: Colors.red,
             letterSpacing: 2,
           ),

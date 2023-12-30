@@ -24,7 +24,7 @@ class _WorkoutTemplatesState extends State<WorkoutTemplates> {
               'Workout Templates',
               style: TextStyle(
                 color: Colors.white,
-                fontSize: 22,
+                fontSize: 18,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -40,20 +40,22 @@ class _WorkoutTemplatesState extends State<WorkoutTemplates> {
               icon: const Icon(
                 Icons.add,
                 color: Colors.black,
+                size: 18,
               ),
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all(
                   AppColours.secondary,
                 ),
                 padding: MaterialStateProperty.all(const EdgeInsets.symmetric(
-                  horizontal: 10,
+                  horizontal: 8,
                 )),
               ),
               label: const Text(
                 'Template',
                 style: TextStyle(
                   color: Colors.black,
-                  fontSize: 16,
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
             ),

@@ -51,7 +51,7 @@ class _TemplatesExerciseTileState extends State<TemplatesExerciseTile> {
                         child: Text(
                           exercisesSetsInfo.exercise.target!.name,
                           style: const TextStyle(
-                            fontSize: 18,
+                            fontSize: 14,
                             fontWeight: FontWeight.bold,
                             color: Color(0xFFE1F0CF),
                           ),

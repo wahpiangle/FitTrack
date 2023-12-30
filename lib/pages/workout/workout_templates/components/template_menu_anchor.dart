@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:group_project/constants/themes/app_colours.dart';
 import 'package:group_project/main.dart';
 import 'package:group_project/pages/workout/workout_templates/edit_template_page.dart';
 
@@ -19,13 +20,17 @@ class TemplateMenuAnchor extends StatelessWidget {
           surfaceTintColor: Colors.transparent,
           title: const Text(
             'Delete workout template?',
-            style: TextStyle(color: Color(0xFFE1F0CF)),
+            style: TextStyle(
+              color: AppColours.secondary,
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
           ),
           content: const Text(
             'This action cannot be undone.',
             style: TextStyle(
               color: Colors.white,
-              fontSize: 18,
+              fontSize: 14,
             ),
           ),
           actions: [
@@ -49,7 +54,10 @@ class TemplateMenuAnchor extends StatelessWidget {
                     ),
                     child: const Text(
                       'Cancel',
-                      style: TextStyle(color: Colors.white),
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ),
@@ -73,7 +81,10 @@ class TemplateMenuAnchor extends StatelessWidget {
                     },
                     child: const Text(
                       'Delete',
-                      style: TextStyle(color: Colors.white),
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ),
@@ -128,7 +139,7 @@ class TemplateMenuAnchor extends StatelessWidget {
               ),
               child: const Text(
                 'Edit',
-                style: TextStyle(color: Colors.white, fontSize: 18),
+                style: TextStyle(color: Colors.white, fontSize: 16),
               ),
               onPressed: () {
                 objectBox.workoutTemplateService
@@ -164,7 +175,7 @@ class TemplateMenuAnchor extends StatelessWidget {
                 'Delete',
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: 18,
+                  fontSize: 16,
                 ),
               ),
               onPressed: () {

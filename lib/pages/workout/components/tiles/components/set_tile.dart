@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:group_project/constants/themes/app_colours.dart';
 import 'package:group_project/main.dart';
 import 'package:group_project/models/exercise_set.dart';
@@ -60,7 +61,7 @@ class _SetTileState extends State<SetTile> {
                 textAlign: TextAlign.center,
                 "${widget.setIndex + 1}",
                 style: const TextStyle(
-                  fontSize: 18,
+                  fontSize: 12,
                   color: Colors.white,
                 ),
               ),
@@ -75,11 +76,12 @@ class _SetTileState extends State<SetTile> {
                 ),
                 child: TextFormField(
                   style: const TextStyle(
-                    fontSize: 18,
+                    fontSize: 14,
                     color: Colors.white,
                   ),
                   textAlign: TextAlign.center,
                   initialValue: "${widget.set.weight ?? ''}",
+                  keyboardType: TextInputType.number,
                   decoration: const InputDecoration(
                     contentPadding: EdgeInsets.all(0),
                     filled: true,
@@ -109,10 +111,11 @@ class _SetTileState extends State<SetTile> {
                 ),
                 child: TextFormField(
                   style: const TextStyle(
-                    fontSize: 18,
+                    fontSize: 14,
                     color: Colors.white,
                   ),
                   textAlign: TextAlign.center,
+                  keyboardType: TextInputType.number,
                   initialValue: "${widget.set.reps ?? ''}",
                   decoration: const InputDecoration(
                     contentPadding: EdgeInsets.all(0),

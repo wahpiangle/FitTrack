@@ -56,7 +56,7 @@ class WorkoutTemplateCard extends StatelessWidget {
                         style: const TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
-                          fontSize: 20,
+                          fontSize: 18,
                         ),
                       ),
                       TemplateMenuAnchor(
@@ -77,7 +77,7 @@ class WorkoutTemplateCard extends StatelessWidget {
                           '${exercise.exerciseSets.length} × ${exercise.exercise.target!.name}',
                           style: const TextStyle(
                             color: Colors.white,
-                            fontSize: 16,
+                            fontSize: 14,
                           ),
                         ),
                       );

@@ -141,7 +141,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         ),
                         child: const Padding(
-                          padding: EdgeInsets.fromLTRB(30, 12, 30, 12),
+                          padding: EdgeInsets.fromLTRB(20, 12, 20, 12),
                           child: Text(
                             'Register',
                             style: TextStyle(
@@ -175,7 +175,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         ),
                         child: const Padding(
-                          padding: EdgeInsets.fromLTRB(30, 12, 30, 12),
+                          padding: EdgeInsets.fromLTRB(20, 12, 20, 12),
                           child: Text(
                             'Login',
                             style: TextStyle(

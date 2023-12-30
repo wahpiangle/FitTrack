@@ -39,9 +39,8 @@ class _SetTilesState extends State<SetTiles> {
               if (index == 0) {
                 return Column(
                   children: [
-                    const Padding(
-                      padding: EdgeInsets.all(10),
-                      child: SetLabels(),
+                    SetLabels(
+                      setIsCompleted: widget.setIsCompleted,
                     ),
                     SetTile(
                       set: set,
@@ -85,7 +84,7 @@ class _SetTilesState extends State<SetTiles> {
               child: Text(
                 "Add Set",
                 style: TextStyle(
-                  fontSize: 18,
+                  fontSize: 14,
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
                 ),

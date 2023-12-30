@@ -66,7 +66,7 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         color: Colors.black,
-                        fontSize: 18,
+                        fontSize: 16,
                       ),
                     ),
                   ),

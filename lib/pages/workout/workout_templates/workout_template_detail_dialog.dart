@@ -32,6 +32,7 @@ class WorkoutTemplateDetails extends StatelessWidget {
                 style: const TextStyle(
                   color: Colors.white,
                   fontSize: 20,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
               leading: IconButton(
@@ -69,11 +70,14 @@ class WorkoutTemplateDetails extends StatelessWidget {
                   icon: const Icon(
                     Icons.edit,
                     color: AppColours.secondary,
+                    size: 16,
                   ),
                   label: const Text(
                     'Edit',
                     style: TextStyle(
                       color: AppColours.secondary,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
                     ),
                   ),
                 )
@@ -97,7 +101,10 @@ class WorkoutTemplateDetails extends StatelessWidget {
               ),
               child: const Text(
                 'Start workout',
-                style: TextStyle(color: Colors.black),
+                style: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
             body: Padding(
@@ -160,8 +167,8 @@ class WorkoutTemplateDetails extends StatelessWidget {
                                           child: Image.asset(
                                             exercisesSetInfo
                                                 .exercise.target!.halfImagePath,
-                                            width: 80,
-                                            height: 80,
+                                            width: 60,
+                                            height: 60,
                                           ),
                                         ),
                                 ),
@@ -169,16 +176,15 @@ class WorkoutTemplateDetails extends StatelessWidget {
                                   child: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
                                     children: [
                                       Text(
                                         '${exercisesSetInfo.exerciseSets.length} × ${exercisesSetInfo.exercise.target!.name}',
                                         style: const TextStyle(
                                           color: Colors.white,
-                                          fontSize: 16,
+                                          fontSize: 14,
                                         ),
-                                      ),
-                                      const SizedBox(
-                                        height: 10,
                                       ),
                                       Text(
                                         exercisesSetInfo.exercise.target!

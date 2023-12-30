@@ -295,6 +295,8 @@ class _CreateTemplatePageState extends State<CreateTemplatePage> {
           'New Template',
           style: TextStyle(
             color: Colors.white,
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
           ),
         ),
         actions: [
@@ -317,8 +319,9 @@ class _CreateTemplatePageState extends State<CreateTemplatePage> {
               child: const Text(
                 'Save',
                 style: TextStyle(
-                  fontSize: 16,
+                  fontSize: 14,
                   color: Colors.black,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
             ),
@@ -357,6 +360,9 @@ class _CreateTemplatePageState extends State<CreateTemplatePage> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
+              const SizedBox(
+                height: 10,
+              ),
               TextFormField(
                 onChanged: (value) {
                   editingWorkoutTemplate.note = value;
@@ -381,7 +387,7 @@ class _CreateTemplatePageState extends State<CreateTemplatePage> {
                 ),
                 style: const TextStyle(
                   color: Colors.white,
-                  fontSize: 20,
+                  fontSize: 14,
                 ),
               ),
               const SizedBox(

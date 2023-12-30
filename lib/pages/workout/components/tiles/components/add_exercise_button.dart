@@ -39,12 +39,11 @@ class AddExerciseButton extends StatelessWidget {
           ),
         );
       },
-
       child: const Center(
         child: Text(
           "ADD EXERCISE",
           style: TextStyle(
-            fontSize: 18,
+            fontSize: 14,
             color: Color(0xFFE1F0CF),
             letterSpacing: 2,
           ),
