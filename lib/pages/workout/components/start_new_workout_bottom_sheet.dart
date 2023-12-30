@@ -36,17 +36,19 @@ class NewWorkoutBottomSheet {
               maxChildSize: 1.0,
               minChildSize: 0.2,
               builder: (context, controller) {
-                return Container(
+                return ClipRRect(
+                  borderRadius: BorderRadius.vertical(top: Radius.circular(20.0)),
+                  child: Container(
                     child: StartNewWorkout(
                       exerciseData: exerciseData,
                     ),
+                  ),
                 );
               },
             ),
           );
         },
       );
-
       // If the bottom sheet is closed, complete the Completer with true
       bottomSheetCompleter.complete(true);
 
@@ -63,7 +65,6 @@ class NewWorkoutBottomSheet {
     );
   }
 
-  // Helper function to show the NewWorkoutBottomSheet
   static Future<bool> _showNewWorkoutBottomSheet(BuildContext context, List<Exercise> exerciseData) async {
     Completer<bool> bottomSheetCompleter = Completer<bool>();
 
@@ -83,10 +84,13 @@ class NewWorkoutBottomSheet {
             maxChildSize: 1.0,
             minChildSize: 0.2,
             builder: (context, controller) {
-              return Container(
-                  child: StartNewWorkout(
-                    exerciseData: exerciseData,
-                  ),
+              return ClipRRect(
+                  borderRadius: BorderRadius.vertical(top: Radius.circular(20.0)),
+              child: Container(
+              child: StartNewWorkout(
+              exerciseData: exerciseData,
+              ),
+              ),
               );
             },
           ),
@@ -173,7 +177,9 @@ class TimerActiveScreen extends StatelessWidget {
         maxChildSize: 0.15, // Change maxChildSize to 1.0
         minChildSize: 0.01,
         builder: (context, controller) {
-          return Container(
+          return ClipRRect(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(20.0)),
+            child: Container(
               color: const Color(0xFF1A1A1A), // Background color
               child: ListView(
                 controller: controller,
@@ -184,15 +190,13 @@ class TimerActiveScreen extends StatelessWidget {
                       appBar: AppBar(
                         backgroundColor: const Color(0xFF1A1A1A),
                         elevation: 0.0, // Remove the default shadow
-                        automaticallyImplyLeading: false, // Disable the back button
                         title: Container(
                           padding: EdgeInsets.symmetric(horizontal: 8.0),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              SizedBox(height:15),
                               Container(
-                                margin: EdgeInsets.only(left: 150.0),
+                                margin: EdgeInsets.only(left: 90.0),
                                 width: 50.0,
                                 height: 5.0,
                                 decoration: BoxDecoration(
@@ -200,9 +204,8 @@ class TimerActiveScreen extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(10.0),
                                 ),
                               ),
-                              SizedBox(height:10),
                               Container(
-                                margin: EdgeInsets.only(left: 110.0),
+                                margin: EdgeInsets.only(left: 70.0),
                                 padding: EdgeInsets.only(bottom: 20.0),
                                 child: Text(
                                   'Timer: ${TimerProvider.formatTimerDuration(timerProvider.currentDuration)}',
@@ -223,6 +226,7 @@ class TimerActiveScreen extends StatelessWidget {
                     ),
                   ),
                 ],
+              ),
             ),
           );
         },
