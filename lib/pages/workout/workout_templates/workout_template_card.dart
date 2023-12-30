@@ -84,38 +84,15 @@ class WorkoutTemplateCard extends StatelessWidget {
                     },
                   ).toList(),
                 ),
-                // FractionallySizedBox(
-                //   widthFactor: 1,
-                //   child: ElevatedButton(
-                //     onPressed: () async {
-                //       await showModalBottomSheet(
-                //         context: context,
-                //         builder: (context) => StartNewWorkout(
-                //           exerciseData: exerciseData,
-                //         ),
-                //       );
-                //     },
-                //     style: ButtonStyle(
-                //       backgroundColor: MaterialStateProperty.all<Color>(
-                //         AppColours.secondary,
-                //       ),
-                //       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                //         RoundedRectangleBorder(
-                //           side: const BorderSide(
-                //               color: Color(0xFFE1F0CF), width: 1.0),
-                //           borderRadius: BorderRadius.circular(8),
-                //         ),
-                //       ),
-                //     ),
-                //     child: const Text(
-                //       'Start Workout',
-                //       style: TextStyle(
-                //         color: Colors.black,
-                //         fontSize: 16,
-                //       ),
-                //     ),
-                //   ),
-                // ),
+                workoutTemplateData.note == ''
+                    ? Container()
+                    : Text(
+                        workoutTemplateData.note,
+                        style: const TextStyle(
+                          color: Colors.grey,
+                          fontSize: 16,
+                        ),
+                      ),
               ],
             ),
           ),

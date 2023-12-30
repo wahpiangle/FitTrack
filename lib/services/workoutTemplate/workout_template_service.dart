@@ -27,8 +27,30 @@ class WorkoutTemplateService {
         .map((query) => query.find());
   }
 
-  void createWorkoutTemplate(WorkoutTemplate workoutTemplate) {
-    workoutTemplateBox.put(workoutTemplate);
+  void createEditingWorkoutTemplateCopy(WorkoutTemplate workoutTemplate) {
+    workoutTemplateBox
+        .query(WorkoutTemplate_.isCurrentEditing.equals(true))
+        .build()
+        .remove();
+    final newWorkoutTemplate = WorkoutTemplate(
+      title: workoutTemplate.title,
+      note: workoutTemplate.note,
+      createdAt: DateTime.now(),
+      isCurrentEditing: true,
+    );
+    workoutTemplate.exercisesSetsInfo.forEach((exercisesSetsInfo) {
+      final newExercisesSetsInfo = ExercisesSetsInfo();
+      newExercisesSetsInfo.exercise.target = exercisesSetsInfo.exercise.target;
+      exercisesSetsInfo.exerciseSets.forEach((exerciseSet) {
+        final newExerciseSet = ExerciseSet();
+        newExerciseSet.reps = exerciseSet.reps;
+        newExerciseSet.weight = exerciseSet.weight;
+        newExerciseSet.exerciseSetInfo.target = newExercisesSetsInfo;
+        newExercisesSetsInfo.exerciseSets.add(newExerciseSet);
+      });
+      newWorkoutTemplate.exercisesSetsInfo.add(newExercisesSetsInfo);
+    });
+    workoutTemplateBox.put(newWorkoutTemplate);
   }
 
   // for editing workout template
@@ -53,6 +75,18 @@ class WorkoutTemplateService {
     }
   }
 
+  void updateEditingWorkoutTemplateTitle(String title) {
+    WorkoutTemplate editingTemplate = getEditingWorkoutTemplate();
+    editingTemplate.title = title;
+    workoutTemplateBox.put(editingTemplate);
+  }
+
+  void updateEditingWorkoutTemplateNote(String note) {
+    WorkoutTemplate editingTemplate = getEditingWorkoutTemplate();
+    editingTemplate.note = note;
+    workoutTemplateBox.put(editingTemplate);
+  }
+
   void deleteEditingWorkoutTemplate() {
     WorkoutTemplate editingTemplate = getEditingWorkoutTemplate();
     exerciseSetsBox.removeMany(editingTemplate.exercisesSetsInfo
@@ -64,13 +98,6 @@ class WorkoutTemplateService {
       return e.id;
     }).toList());
     workoutTemplateBox.remove(editingTemplate.id);
-  }
-
-  void test() {
-    print(exerciseSetsBox.getAll());
-    print(exercisesSetsInfoBox.getAll());
-    WorkoutTemplate editingTemplate = getEditingWorkoutTemplate();
-    print(editingTemplate.exercisesSetsInfo[0].exerciseSets[0].reps);
   }
 
   void addExerciseToEditingWorkoutTemplate(Exercise selectedExercise) {
@@ -92,15 +119,7 @@ class WorkoutTemplateService {
     if (editingTemplate.exercisesSetsInfo.isEmpty) {
       throw Exception("Please add at least one exercise");
     }
-    editingTemplate.exercisesSetsInfo.forEach((exerciseSetsInfoElement) {
-      exerciseSetsInfoElement.exerciseSets.forEach((exerciseSet) {
-        if (exerciseSet.reps == null || exerciseSet.weight == null) {
-          throw Exception("Please fill in all the reps and weight");
-        } else {
-          workoutTemplateBox.put(editingTemplate);
-        }
-      });
-    });
+    workoutTemplateBox.put(editingTemplate);
   }
 
   WorkoutTemplate? getWorkoutTemplate(int workoutTemplateId) {
@@ -118,5 +137,87 @@ class WorkoutTemplateService {
       return e.id;
     }).toList());
     workoutTemplateBox.remove(workoutTemplateId);
+  }
+
+  void updateTemplate(int workoutTemplateId) {
+    WorkoutTemplate editingTemplate = getEditingWorkoutTemplate();
+    WorkoutTemplate workoutTemplate = getWorkoutTemplate(workoutTemplateId)!;
+    workoutTemplate.title = editingTemplate.title;
+    workoutTemplate.note = editingTemplate.note;
+    workoutTemplate.exercisesSetsInfo.forEach((exerciseSetsInfo) {
+      exerciseSetsBox.removeMany(exerciseSetsInfo.exerciseSets.map((e) {
+        return e.id;
+      }).toList());
+      exerciseSetsInfo.exerciseSets.clear();
+    });
+    workoutTemplate.exercisesSetsInfo.clear();
+    exercisesSetsInfoBox.removeMany(workoutTemplate.exercisesSetsInfo.map((e) {
+      return e.id;
+    }).toList());
+    editingTemplate.exercisesSetsInfo.forEach((exercisesSetsInfo) {
+      final newExercisesSetsInfo = ExercisesSetsInfo();
+      newExercisesSetsInfo.exercise.target = exercisesSetsInfo.exercise.target;
+      exercisesSetsInfo.exerciseSets.forEach((exerciseSet) {
+        final newExerciseSet = ExerciseSet();
+        newExerciseSet.reps = exerciseSet.reps;
+        newExerciseSet.weight = exerciseSet.weight;
+        newExerciseSet.exerciseSetInfo.target = newExercisesSetsInfo;
+        newExercisesSetsInfo.exerciseSets.add(newExerciseSet);
+      });
+      workoutTemplate.exercisesSetsInfo.add(newExercisesSetsInfo);
+    });
+    workoutTemplateBox.put(workoutTemplate);
+    deleteEditingWorkoutTemplate();
+  }
+
+  bool editingWorkoutTemplateHasChanges(int workoutTemplateId) {
+    WorkoutTemplate editingTemplate = getEditingWorkoutTemplate();
+    WorkoutTemplate workoutTemplate = getWorkoutTemplate(workoutTemplateId)!;
+    if (editingTemplate.title != workoutTemplate.title) {
+      return true;
+    }
+    if (editingTemplate.note != workoutTemplate.note) {
+      return true;
+    }
+    if (editingTemplate.exercisesSetsInfo.length !=
+        workoutTemplate.exercisesSetsInfo.length) {
+      return true;
+    }
+    for (int i = 0; i < editingTemplate.exercisesSetsInfo.length; i++) {
+      if (editingTemplate.exercisesSetsInfo[i].exercise.target!.id !=
+          workoutTemplate.exercisesSetsInfo[i].exercise.target!.id) {
+        return true;
+      }
+      if (editingTemplate.exercisesSetsInfo[i].exerciseSets.length !=
+          workoutTemplate.exercisesSetsInfo[i].exerciseSets.length) {
+        return true;
+      }
+      for (int j = 0;
+          j < editingTemplate.exercisesSetsInfo[i].exerciseSets.length;
+          j++) {
+        if (editingTemplate.exercisesSetsInfo[i].exerciseSets[j].reps !=
+            workoutTemplate.exercisesSetsInfo[i].exerciseSets[j].reps) {
+          return true;
+        }
+        if (editingTemplate.exercisesSetsInfo[i].exerciseSets[j].weight !=
+            workoutTemplate.exercisesSetsInfo[i].exerciseSets[j].weight) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  void test() {
+    print(workoutTemplateBox.count());
+    print(exerciseSetsBox.count());
+  }
+
+  void testEdit() {
+    print(workoutTemplateBox
+        .query(WorkoutTemplate_.isCurrentEditing.equals(true))
+        .build()
+        .count());
+    print(getEditingWorkoutTemplate().exercisesSetsInfo.length);
   }
 }

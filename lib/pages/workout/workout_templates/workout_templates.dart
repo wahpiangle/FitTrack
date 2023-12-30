@@ -60,6 +60,7 @@ class _WorkoutTemplatesState extends State<WorkoutTemplates> {
           ],
         ),
         Container(
+          height: MediaQuery.of(context).size.height * 0.6,
           margin: const EdgeInsets.only(top: 10),
           child: StreamBuilder<List<WorkoutTemplate>>(
             stream: objectBox.workoutTemplateService.watchWorkoutTemplates(),
@@ -69,12 +70,14 @@ class _WorkoutTemplatesState extends State<WorkoutTemplates> {
               } else {
                 return ListView.builder(
                   itemCount: snapshot.data!.length,
-                  shrinkWrap: true,
                   itemBuilder: (context, index) {
                     final workoutTemplate = snapshot.data![index];
-                    return WorkoutTemplateCard(
-                      workoutTemplateData: workoutTemplate,
-                      exerciseData: objectBox.getAllExercises(),
+                    return Container(
+                      margin: const EdgeInsets.symmetric(vertical: 10),
+                      child: WorkoutTemplateCard(
+                        workoutTemplateData: workoutTemplate,
+                        exerciseData: objectBox.getAllExercises(),
+                      ),
                     );
                   },
                 );

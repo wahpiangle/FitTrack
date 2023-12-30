@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:group_project/main.dart';
+import 'package:group_project/pages/workout/workout_templates/edit_template_page.dart';
 
 class TemplateMenuAnchor extends StatelessWidget {
   final int workoutTemplateId;
@@ -130,7 +131,18 @@ class TemplateMenuAnchor extends StatelessWidget {
                 style: TextStyle(color: Colors.white, fontSize: 18),
               ),
               onPressed: () {
-                // TODO edit workout template
+                objectBox.workoutTemplateService
+                    .createEditingWorkoutTemplateCopy(
+                  objectBox.workoutTemplateService
+                      .getWorkoutTemplate(workoutTemplateId)!,
+                );
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => EditTemplatePage(
+                      workoutTemplateId: workoutTemplateId,
+                    ),
+                  ),
+                );
               },
             );
           case 1:

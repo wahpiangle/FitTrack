@@ -3,6 +3,7 @@ import 'package:group_project/constants/themes/app_colours.dart';
 import 'package:group_project/main.dart';
 import 'package:group_project/models/workout_template.dart';
 import 'package:group_project/pages/workout/start_new_workout.dart';
+import 'package:group_project/pages/workout/workout_templates/edit_template_page.dart';
 
 class WorkoutTemplateDetails extends StatelessWidget {
   final WorkoutTemplate workoutTemplateData;
@@ -53,7 +54,18 @@ class WorkoutTemplateDetails extends StatelessWidget {
               centerTitle: true,
               actions: [
                 TextButton.icon(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    objectBox.workoutTemplateService
+                        .createEditingWorkoutTemplateCopy(workoutTemplateData);
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => EditTemplatePage(
+                          workoutTemplateId: workoutTemplateData.id,
+                        ),
+                      ),
+                    );
+                  },
                   icon: const Icon(
                     Icons.edit,
                     color: AppColours.secondary,
@@ -83,9 +95,9 @@ class WorkoutTemplateDetails extends StatelessWidget {
                 backgroundColor:
                     MaterialStateProperty.all(AppColours.secondary),
               ),
-              child: Text(
+              child: const Text(
                 'Start workout',
-                style: const TextStyle(color: Colors.black),
+                style: TextStyle(color: Colors.black),
               ),
             ),
             body: Padding(
