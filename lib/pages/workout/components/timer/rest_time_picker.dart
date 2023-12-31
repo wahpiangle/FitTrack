@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:group_project/constants/themes/app_colours.dart';
 import 'package:group_project/pages/workout/components/timer/rest_timer_provider.dart';
 
+import 'custom_timer_provider.dart';
+
 class RestTimePicker extends StatelessWidget {
   final RestTimerProvider restTimerProvider;
 
@@ -15,8 +17,8 @@ class RestTimePicker extends StatelessWidget {
   Widget build(BuildContext context) {
     // Adjust the initial item
     int initialItem = (restTimerProvider.restTimerMinutes * 60 +
-                restTimerProvider.restTimerSeconds) ~/
-            5 -
+        restTimerProvider.restTimerSeconds) ~/
+        5 -
         1;
 
     return Container(
@@ -57,19 +59,19 @@ class RestTimePicker extends StatelessWidget {
 }
 
 
-class RestTimerCustom extends StatelessWidget {
-  final RestTimerProvider restTimerProvider;
+class CustomTimerPicker extends StatelessWidget {
+  final CustomTimerProvider customTimerProvider;
 
-  const RestTimerCustom({
+  const CustomTimerPicker({
     super.key,
-    required this.restTimerProvider,
+    required this.customTimerProvider,
   });
 
   @override
   Widget build(BuildContext context) {
     // Adjust the initial item
-    int initialItem = (restTimerProvider.restTimerMinutes * 60 +
-        restTimerProvider.restTimerSeconds) ~/
+    int initialItem = (customTimerProvider.customTimerMinutes * 60 +
+        customTimerProvider.customTimerSeconds) ~/
         5 -
         1;
 
@@ -87,10 +89,8 @@ class RestTimerCustom extends StatelessWidget {
           int minutes = totalSeconds ~/ 60;
           int seconds = totalSeconds % 60;
 
-          Future.delayed(Duration.zero, () {
-            restTimerProvider.setCustomRestTimerMinutes(minutes);
-            restTimerProvider.setCustomRestTimerSeconds(seconds);
-          });
+          customTimerProvider.setCustomTimerMinutes(minutes);
+          customTimerProvider.setCustomTimerSeconds(seconds);
         },
         children: List.generate(15 * 60 ~/ 5, (index) {
           int totalSeconds = (index + 1) * 5;

@@ -8,6 +8,7 @@ import 'package:group_project/pages/auth/settings_signup.dart';
 import 'package:group_project/pages/auth/auth_wrapper.dart';
 import 'package:group_project/pages/components/app_layout.dart';
 import 'package:group_project/pages/history/history_screen.dart';
+import 'package:group_project/pages/workout/components/timer/custom_timer_provider.dart';
 import 'package:group_project/services/auth_service.dart';
 import 'package:group_project/services/objectbox_service.dart';
 import 'package:provider/provider.dart';
@@ -40,6 +41,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => RestTimerProvider(context)),
         ChangeNotifierProvider(create: (context) => UserStateProvider()),
         ChangeNotifierProvider(create: (context) => ProfileImageProvider()),
+        ChangeNotifierProvider(create: (context) => CustomTimerProvider(context)),
         StreamProvider.value(
           value: AuthService().user,
           initialData: null,

@@ -3,57 +3,54 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 
-
-class RestTimerProvider with ChangeNotifier {
-  bool _isRestTimerEnabled = true; //rest timer toggle button default value is true
-  int _restTimerDuration = 120;
-  int _currentDuration = 0;
-  int _restTimerMinutes = 0;
-  int _restTimerSeconds = 0;
+class CustomTimerProvider with ChangeNotifier {
+  int _customTimerDuration = 120;
+  int _customCurrentDuration = 0;
+  int _customTimerMinutes = 0;
+  int _customTimerSeconds = 0;
   Timer? _timer;
   bool _isRestTimerRunning = false;
   bool _isDialogShown = false;
   bool _isDialogOpen = false;
 
   bool get isRestTimerRunning => _isRestTimerRunning;
-  bool get isRestTimerEnabled => _isRestTimerEnabled;
-  int get restTimerDuration => _restTimerDuration;
-  int get currentRestTimerDuration => _currentDuration;
-  int get restTimerMinutes => _restTimerMinutes;
-  int get restTimerSeconds => _restTimerSeconds;
-  int get currentDuration => _currentDuration;
+  int get customTimerDuration => _customTimerDuration;
+  int get customCurrentTimerDuration => _customCurrentDuration;
+  int get customTimerMinutes => _customTimerMinutes;
+  int get customTimerSeconds => _customTimerSeconds;
+  int get customCurrentDuration => _customCurrentDuration;
   bool get isDialogShown => _isDialogShown;
   bool get isDialogOpen => _isDialogOpen;
 
 
-  RestTimerProvider(BuildContext context) {
-    _loadRestTimerState(context);
+  CustomTimerProvider(BuildContext context) {
+    _loadCustomTimerState(context);
   }
 
 
 
-  Future<void> _loadRestTimerState(BuildContext context) async {
+  Future<void> _loadCustomTimerState(BuildContext context) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     _isRestTimerRunning = prefs.getBool('isRestTimerRunning') ?? false;
-    _currentDuration = prefs.getInt('restTimerCurrentDuration') ?? 0;
+    _customCurrentDuration = prefs.getInt('restTimerCurrentDuration') ?? 0;
     _isDialogShown = prefs.getBool('isDialogShown') ?? false;
-    _restTimerMinutes = prefs.getInt('restTimerMinutes') ?? 0;
-    _restTimerSeconds = prefs.getInt('restTimerSeconds') ?? 0;
+    _customTimerMinutes = prefs.getInt('customTimerMinutes') ?? 0;
+    _customTimerSeconds = prefs.getInt('customTimerSeconds') ?? 0;
 
-    if (_isRestTimerRunning && _currentDuration > 0) {
-      startRestTimer(context);
+    if (_isRestTimerRunning && _customCurrentDuration > 0) {
+      startCustomTimer(context);
     }
   }
 
 
 
-  Future<void> _saveRestTimerState() async {
+  Future<void> _saveCustomTimerState() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setBool('isRestTimerRunning', _isRestTimerRunning);
-    prefs.setInt('restTimerCurrentDuration', _currentDuration);
+    prefs.setInt('restTimerCurrentDuration', _customCurrentDuration);
     prefs.setBool('isDialogShown', _isDialogShown);
-    prefs.setInt('restTimerMinutes', _restTimerMinutes);
-    prefs.setInt('restTimerSeconds', _restTimerSeconds);
+    prefs.setInt('customTimerMinutes', _customTimerMinutes);
+    prefs.setInt('customTimerSeconds', _customTimerSeconds);
   }
 
   void showRestDialog() {//check if the user is opening the rest timer details dialog
@@ -66,87 +63,83 @@ class RestTimerProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void setRestTimerMinutes(int minutes) {
-    _restTimerMinutes = minutes;
+  void setCustomTimerMinutes(int minutes) {
+    _customTimerMinutes = minutes;
     notifyListeners();
   }
 
-  void setRestTimerSeconds(int seconds) {
-    _restTimerSeconds = seconds;
+  void setCustomTimerSeconds(int seconds) {
+    _customTimerSeconds = seconds;
     notifyListeners();
   }
 
-  void toggleRestTimer(bool value) {
-    _isRestTimerEnabled = value;
+
+  void setCustomTimerDuration(int duration) {
+    _customTimerDuration = duration;
     notifyListeners();
   }
 
-  void setRestTimerDuration(int duration) {
-    _restTimerDuration = duration;
-    notifyListeners();
-  }
-
-  void startRestTimer(BuildContext context) {
-    if (_isRestTimerEnabled && !_isDialogShown) {
-      if (_isRestTimerRunning && _currentDuration > 0) {
+  void startCustomTimer(BuildContext context) {
+    if (!_isDialogShown) {
+      if (_isRestTimerRunning && _customCurrentDuration > 0) {
         // Continue from the remaining time
         _timer?.cancel();
         _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-          if (_currentDuration <= 0) {
-            stopRestTimer();
+          if (_customCurrentDuration <= 0) {
+            stopCustomTimer();
             _isDialogShown = false;
             if (isDialogOpen == true) {
               Navigator.of(context).pop();
             }
-            _showRestTimeEndedNotification(context);
+            _showCustomTimeEndedNotification(context);
           } else {
             notifyListeners();
-            _currentDuration--;
+            _customCurrentDuration--;
             _isRestTimerRunning = true;
           }
-          _saveRestTimerState();
+          _saveCustomTimerState();
         });
       } else {
         // Check if the user has chosen a time
-        if (_restTimerMinutes == 0 && _restTimerSeconds == 0) {
+        if (_customTimerMinutes == 0 && _customTimerSeconds == 0) {
           // Use the default time of 2 minutes
-          _restTimerMinutes = 2;
-          _restTimerSeconds = 0;
+          _customTimerMinutes = 2;
+          _customTimerSeconds = 0;
         }
 
-        _currentDuration = _restTimerMinutes * 60 + _restTimerSeconds;
+        _customCurrentDuration = _customTimerMinutes * 60 + _customTimerSeconds;
 
         _timer?.cancel();
         _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-          if (_currentDuration <= 0) {
-            stopRestTimer();
+          if (_customCurrentDuration <= 0) {
+            stopCustomTimer();
             _isDialogShown = false;
             if (isDialogOpen == true) {
               Navigator.of(context).pop();
             }
-            _showRestTimeEndedNotification(context);
+            _showCustomTimeEndedNotification(context);
           } else {
             notifyListeners();
-            _currentDuration--;
+            _customCurrentDuration--;
             _isRestTimerRunning = true;
           }
-          _saveRestTimerState();
+          _saveCustomTimerState();
         });
       }
     }
   }
 
-  void stopRestTimer() {
+  void stopCustomTimer() {
     _timer?.cancel();
     _timer = null;
-    _currentDuration = 0;
+    _customCurrentDuration = 0;
     notifyListeners();
     _isRestTimerRunning = false;
     // Save the rest timer state when it's stopped
-    _saveRestTimerState();
+    _saveCustomTimerState();
   }
 
-  void _showRestTimeEndedNotification(BuildContext context) {
+  void _showCustomTimeEndedNotification(BuildContext context) {
     showDialog(
       context: context,
       builder: (BuildContext ctx) {
@@ -155,7 +148,7 @@ class RestTimerProvider with ChangeNotifier {
           surfaceTintColor: Colors.transparent,
           title: const Center(
             child: Text(
-              'Rest Time Ended',
+              'Custom Rest Time Ended',
               style: TextStyle(color: Colors.white),
             ),
           ),
@@ -191,31 +184,24 @@ class RestTimerProvider with ChangeNotifier {
     );
   }
 
-  void resetRestTimer(int newDuration, BuildContext context) {
-    stopRestTimer();
-    _restTimerDuration = newDuration;
-    _restTimerMinutes = newDuration ~/ 60;
-    _restTimerSeconds = newDuration % 60;
+  void resetCustomTimer(int newDuration, BuildContext context) {
+    stopCustomTimer();
+    _customTimerDuration = newDuration;
+    _customTimerMinutes = newDuration ~/ 60;
+    _customTimerSeconds = newDuration % 60;
     notifyListeners();
     // Save the rest timer state when it's reset
-    _saveRestTimerState();
-    startRestTimer(context);
+    _saveCustomTimerState();
+    startCustomTimer(context);
   }
 
-  void adjustRestTime(int seconds) {
-    _currentDuration += seconds;
-    if (_currentDuration < 0) {
-      _currentDuration = 1;
+  void adjustCustomTime(int seconds) {
+    _customCurrentDuration += seconds;
+    if (_customCurrentDuration < 0) {
+      _customCurrentDuration = 1;
     }
-    _restTimerDuration = _currentDuration; // update the rest timer duration after pressing 10s buttons
+    _customTimerDuration = _customCurrentDuration; // update the rest timer duration after pressing 10s buttons
     notifyListeners();
-  }
-
-
-  static String formatDuration(int seconds) {
-    final minutes = ((seconds % 3600) ~/ 60).toString().padLeft(2, '0');
-    final remainingSeconds = (seconds % 60).toString().padLeft(2, '0');
-    return "$minutes:$remainingSeconds";
   }
 
 

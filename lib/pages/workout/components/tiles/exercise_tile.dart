@@ -10,6 +10,7 @@ import 'package:group_project/pages/workout/components/timer/timer_provider.dart
 import 'package:provider/provider.dart';
 import 'package:group_project/pages/workout/components/timer/rest_timer_provider.dart';
 
+import '../timer/custom_timer_provider.dart';
 import '../timer/resttimer_details_dialog.dart';
 
 class ExerciseTile extends StatefulWidget {
@@ -35,6 +36,7 @@ class ExerciseTile extends StatefulWidget {
 class _ExerciseTileState extends State<ExerciseTile> {
   late TimerProvider timerProvider;
   late RestTimerProvider restTimerProvider;
+  late CustomTimerProvider customTimerProvider;
   bool isSetCompleted = false;
   bool displayRestTimer = false;
   late int restTimerDuration;
@@ -46,6 +48,8 @@ class _ExerciseTileState extends State<ExerciseTile> {
     restTimerProvider =
         Provider.of<RestTimerProvider>(context); // Initialize restTimerProvider
     restTimerDuration = restTimerProvider.restTimerDuration;
+    customTimerProvider =
+        Provider.of<CustomTimerProvider>(context); // Initialize restTimerProvider
   }
 
   void addSet(ExercisesSetsInfo exercisesSetsInfo) {
@@ -67,6 +71,11 @@ class _ExerciseTileState extends State<ExerciseTile> {
           }
 
           if (exerciseSet.isCompleted && restTimerProvider.isRestTimerEnabled) {
+            //check if the custom timer is running, if yes, stop the custom timer first
+            //to prevent 2 timers run at same time
+            if (customTimerProvider.isRestTimerRunning) {
+              customTimerProvider.stopCustomTimer();
+            }
             // Start the rest timer when a set is completed
             restTimerProvider.startRestTimer(context);
             // Set the flag to display the rest timer
