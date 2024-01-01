@@ -90,6 +90,7 @@ flutter:
     - assets/
     - assets/icons/
     - assets/exercises/
+    - assets/exercises/half/
   fonts:
     - family: Digital
       fonts:

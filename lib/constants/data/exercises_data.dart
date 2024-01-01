@@ -17,10 +17,21 @@ Map<String, String> imageMap = {
   'Deadlift (Barbell)': 'assets/exercises/barbell-deadlift.png',
 };
 
+Map<String, String> halfImageMap = {
+  'Bench Press (Barbell)': 'assets/exercises/half/barbell-bench-half.png',
+  'Incline Bench Press (Barbell)':
+      'assets/exercises/half/incline-barbell-bench-half.png',
+  'Bench Press (Dumbbell)': 'assets/exercises/half/dumbbell-bench-half.png',
+  'Deadlift (Barbell)': 'assets/exercises/half/barbell-deadlift-half.png',
+};
+
 List<Exercise> generateExerciseData() {
   List<Exercise> exerciseData = [];
   exerciseMap.forEach((key, value) {
-    Exercise exercise = Exercise(name: key, imagePath: imageMap[key]!);
+    Exercise exercise = Exercise(
+        name: key,
+        imagePath: imageMap[key]!,
+        halfImagePath: halfImageMap[key]!);
     exercise.bodyPart.target = bodyPartData.firstWhere((element) {
       return element.name == value.keys.first;
     });

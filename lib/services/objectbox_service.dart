@@ -7,9 +7,11 @@ import 'package:group_project/models/exercise.dart';
 import 'package:group_project/models/exercise_set.dart';
 import 'package:group_project/models/exercises_sets_info.dart';
 import 'package:group_project/models/workout_session.dart';
+import 'package:group_project/models/workout_template.dart';
 import 'package:group_project/objectbox.g.dart';
 import 'package:group_project/services/currentWorkoutSession/currentWorkoutSession_service.dart';
 import 'package:group_project/services/workoutSession/workoutSessionService.dart';
+import 'package:group_project/services/workoutTemplate/workout_template_service.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:group_project/constants/data/bodypart_data.dart';
@@ -24,6 +26,7 @@ class ObjectBox {
   late final Box<ExerciseSet> _exerciseSetBox;
   late final Box<ExercisesSetsInfo> _exercisesSetsInfoBox;
   late final Box<WorkoutSession> _workoutSessionBox;
+  late final Box<WorkoutTemplate> _workoutTemplateBox;
 
   ObjectBox._create(this.store) {
     _bodyPartBox = Box<BodyPart>(store);
@@ -33,6 +36,7 @@ class ObjectBox {
     _exerciseSetBox = Box<ExerciseSet>(store);
     _exercisesSetsInfoBox = Box<ExercisesSetsInfo>(store);
     _workoutSessionBox = Box<WorkoutSession>(store);
+    _workoutTemplateBox = Box<WorkoutTemplate>(store);
 
     //initialization of data into the device
     if (_bodyPartBox.isEmpty()) {
@@ -58,10 +62,10 @@ class ObjectBox {
     return ObjectBox._create(store);
   }
 
-  //current workout session service
   CurrentWorkoutSessionService get currentWorkoutSessionService =>
       CurrentWorkoutSessionService(
         currentWorkoutSessionBox: _currentWorkoutSessionBox,
+        workoutSessionBox: _workoutSessionBox,
         exercisesSetsInfoBox: _exercisesSetsInfoBox,
         exerciseSetBox: _exerciseSetBox,
         exerciseBox: _exerciseBox,
@@ -71,6 +75,13 @@ class ObjectBox {
         workoutSessionBox: _workoutSessionBox,
         exercisesSetsInfoBox: _exercisesSetsInfoBox,
         exerciseSetBox: _exerciseSetBox,
+      );
+
+  WorkoutTemplateService get workoutTemplateService => WorkoutTemplateService(
+        workoutTemplateBox: _workoutTemplateBox,
+        exerciseBox: _exerciseBox,
+        exerciseSetsBox: _exerciseSetBox,
+        exercisesSetsInfoBox: _exercisesSetsInfoBox,
       );
 
 //exercises
@@ -127,30 +138,9 @@ class ObjectBox {
     _exerciseSetBox.put(exerciseSet);
   }
 
-  // save to history
-  WorkoutSession saveCurrentWorkoutSession() {
-    CurrentWorkoutSession currentWorkoutSession =
-        currentWorkoutSessionService.getCurrentWorkoutSession();
-    WorkoutSession workoutSession = WorkoutSession(date: DateTime.now());
-    workoutSession.exercisesSetsInfo
-        .addAll(currentWorkoutSession.exercisesSetsInfo);
-    workoutSession.note = currentWorkoutSession.note;
-    workoutSession.title = currentWorkoutSession.title;
-    _workoutSessionBox.put(workoutSession);
-    currentWorkoutSessionService.clearCurrentWorkoutSession();
-    return workoutSession;
-  }
-
 // check history
   void test() {
-    CurrentWorkoutSession currentWorkoutSession =
-        currentWorkoutSessionService.getCurrentWorkoutSession();
-    // _exerciseSetBox.removeAll();
-    // _exercisesSetsInfoBox.removeAll();
-    print(
-        "exercises sets info box is: ${_exercisesSetsInfoBox.getAll().length}");
-    print("exercises sets box is: ${_exerciseSetBox.getAll().length}");
-    print(
-        "length of all workout sessions: ${_workoutSessionBox.getAll().length}");
+    print(_workoutTemplateBox.getAll().length);
+    // print(_workoutTemplateBox.removeAll());
   }
 }
