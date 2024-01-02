@@ -294,7 +294,7 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
           ),
         ),
         title: const Text(
-          'New Template',
+          'Edit Workout',
           style: TextStyle(
             color: Colors.white,
             fontSize: 18,
