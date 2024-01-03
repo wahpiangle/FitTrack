@@ -207,17 +207,4 @@ class WorkoutTemplateService {
     }
     return false;
   }
-
-  void test() {
-    print(workoutTemplateBox.count());
-    print(exerciseSetsBox.count());
-  }
-
-  void testEdit() {
-    print(workoutTemplateBox
-        .query(WorkoutTemplate_.isCurrentEditing.equals(true))
-        .build()
-        .count());
-    print(getEditingWorkoutTemplate().exercisesSetsInfo.length);
-  }
 }
