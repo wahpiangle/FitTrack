@@ -102,6 +102,9 @@ class WorkoutMenuAnchor extends StatelessWidget {
                 style: TextStyle(color: Colors.white, fontSize: 18),
               ),
               onPressed: () {
+                objectBox.workoutSessionService.setEditingWorkoutSession(
+                  workoutSessionId,
+                );
                 Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (context) => EditWorkoutScreen(
