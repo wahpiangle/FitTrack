@@ -4,7 +4,7 @@ import 'package:group_project/main.dart';
 import 'package:group_project/models/exercise.dart';
 import 'package:group_project/models/exercises_sets_info.dart';
 import 'package:group_project/models/workout_template.dart';
-import 'package:group_project/pages/workout/workout_templates/components/templates_exercise_tile.dart';
+import 'package:group_project/pages/workout/components/tiles/components/edit_exercise_tile.dart';
 
 class EditTemplatePage extends StatefulWidget {
   final int workoutTemplateId;
@@ -401,7 +401,7 @@ class _EditTemplatePageState extends State<EditTemplatePage> {
               const SizedBox(
                 height: 20,
               ),
-              TemplatesExerciseTile(
+              EditExerciseTile(
                 exerciseData: objectBox.getAllExercises(),
                 selectExercise: selectExercise,
                 removeSet: removeSet,
@@ -410,16 +410,6 @@ class _EditTemplatePageState extends State<EditTemplatePage> {
               )
             ],
           ),
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          objectBox.workoutTemplateService.testEdit();
-        },
-        backgroundColor: AppColours.secondary,
-        child: const Icon(
-          Icons.add,
-          color: Colors.black,
         ),
       ),
     );

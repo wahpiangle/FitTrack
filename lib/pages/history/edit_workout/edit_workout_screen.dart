@@ -3,7 +3,7 @@ import 'package:group_project/constants/themes/app_colours.dart';
 import 'package:group_project/main.dart';
 import 'package:group_project/models/exercise.dart';
 import 'package:group_project/models/exercises_sets_info.dart';
-import 'package:group_project/pages/workout/workout_templates/components/templates_exercise_tile.dart';
+import 'package:group_project/pages/workout/components/tiles/components/edit_exercise_tile.dart';
 import 'package:group_project/models/workout_session.dart';
 
 class EditWorkoutScreen extends StatefulWidget {
@@ -401,7 +401,7 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
               const SizedBox(
                 height: 20,
               ),
-              TemplatesExerciseTile(
+              EditExerciseTile(
                 exerciseData: objectBox.getAllExercises(),
                 selectExercise: selectExercise,
                 removeSet: removeSet,
@@ -414,13 +414,9 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          objectBox.workoutTemplateService.testEdit();
+          objectBox.workoutSessionService.test();
         },
-        backgroundColor: AppColours.secondary,
-        child: const Icon(
-          Icons.add,
-          color: Colors.black,
-        ),
+        child: const Icon(Icons.add),
       ),
     );
   }
