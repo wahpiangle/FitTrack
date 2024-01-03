@@ -34,27 +34,30 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
   bool _isSetTimeVisible = true;
   TextEditingController weightsController = TextEditingController();
   TextEditingController repsController = TextEditingController();
-  late CustomTimerProvider _customTimerProvider;
+  //late CustomTimerProvider customTimerProvider;
 
   List<Widget> setBorders = [];
 
 
   @override
+  @override
   void initState() {
     super.initState();
     exerciseData = widget.exerciseData;
+    _initTimers();
+  }
 
+
+  void _initTimers() {
     final timerProvider = Provider.of<TimerProvider>(context, listen: false);
-    //starts the timer when user first enter the start new workout screen
-
     if (!_isTimerRunning) {
       timerProvider.startTimer();
       setState(() {
         _isTimerRunning = true;
       });
     }
-    _customTimerProvider = Provider.of<CustomTimerProvider>(context, listen: false);
   }
+
 
   Widget createSetBorder(int weight, int reps) {
     return Container(
@@ -278,7 +281,7 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
               if (customTimerProvider.isRestTimerRunning) {
                 showCustomTimerDetailsDialog(customTimerProvider);
               } else if (restTimerProvider.isRestTimerRunning) {
-                showTimerDetailsDialog(restTimerProvider);
+                showRestTimerDetailsDialog(restTimerProvider);
               }
             },
             child: Stack(
@@ -373,7 +376,7 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
 
                   secondChild: GestureDetector(
                     onTap: () async {
-                      await _showScrollTimePicker(context, customTimerProvider);
+                      await _showScrollCustomPicker(context, customTimerProvider);
                       setState(() {
                         _isSetTimeVisible = !_isSetTimeVisible;
                       });
@@ -423,7 +426,7 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
     );
   }
 
-  Future<void> showTimerDetailsDialog(
+  Future<void> showRestTimerDetailsDialog(
       RestTimerProvider restTimerProvider) async {
     showDialog(
       context: context,
@@ -451,7 +454,7 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
 
 
 
-  Future<void> _showScrollTimePicker(
+  Future<void> _showScrollCustomPicker(
       BuildContext context, CustomTimerProvider customTimerProvider) async {
     return showDialog(
       context: context,
@@ -473,7 +476,7 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
                       },
                     ),
                     const Spacer(), // Add spacer to center the title
-                    Text(
+                    const Text(
                       'Rest Timer',
                       style: TextStyle(
                         color: Colors.white,
@@ -502,7 +505,7 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
                   child: ClipOval(
                     child: Container(
                       color: AppColours.secondary,
-                      child: CustomTimerPicker(customTimerProvider: _customTimerProvider),
+                      child: CustomTimerPicker(customTimerProvider: customTimerProvider),
                     ),
                   ),
                 ),
@@ -521,6 +524,8 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
                         context,
                       );
                       Navigator.of(context).pop();
+                      //show the rest timer details dialog
+                      showCustomTimerDetailsDialog(customTimerProvider);
                     },
                     child: const Text('Start Rest Timer'),
                   ),
@@ -532,6 +537,5 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
       },
     );
   }
-
 
 }

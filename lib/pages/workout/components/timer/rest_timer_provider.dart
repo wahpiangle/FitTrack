@@ -21,7 +21,6 @@ class RestTimerProvider with ChangeNotifier {
   int get currentRestTimerDuration => _currentDuration;
   int get restTimerMinutes => _restTimerMinutes;
   int get restTimerSeconds => _restTimerSeconds;
-  int get currentDuration => _currentDuration;
   bool get isDialogShown => _isDialogShown;
   bool get isDialogOpen => _isDialogOpen;
 
@@ -30,21 +29,20 @@ class RestTimerProvider with ChangeNotifier {
     _loadRestTimerState(context);
   }
 
+  void _loadRestTimerState(BuildContext context) {
+    SharedPreferences.getInstance().then((prefs) {
+      _isRestTimerRunning = prefs.getBool('isRestTimerRunning') ?? false;
+      _currentDuration = prefs.getInt('restTimerCurrentDuration') ?? 0;
+      _isDialogShown = prefs.getBool('isDialogShown') ?? false;
+      _isDialogOpen = prefs.getBool('isDialogOpen') ?? false;
+      _restTimerMinutes = prefs.getInt('restTimerMinutes') ?? 0;
+      _restTimerSeconds = prefs.getInt('restTimerSeconds') ?? 0;
 
-
-  Future<void> _loadRestTimerState(BuildContext context) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    _isRestTimerRunning = prefs.getBool('isRestTimerRunning') ?? false;
-    _currentDuration = prefs.getInt('restTimerCurrentDuration') ?? 0;
-    _isDialogShown = prefs.getBool('isDialogShown') ?? false;
-    _restTimerMinutes = prefs.getInt('restTimerMinutes') ?? 0;
-    _restTimerSeconds = prefs.getInt('restTimerSeconds') ?? 0;
-
-    if (_isRestTimerRunning && _currentDuration > 0) {
-      startRestTimer(context);
-    }
+      if (_isRestTimerRunning && _currentDuration > 0) {
+        startRestTimer(context);
+      }
+    });
   }
-
 
 
   Future<void> _saveRestTimerState() async {
@@ -52,6 +50,7 @@ class RestTimerProvider with ChangeNotifier {
     prefs.setBool('isRestTimerRunning', _isRestTimerRunning);
     prefs.setInt('restTimerCurrentDuration', _currentDuration);
     prefs.setBool('isDialogShown', _isDialogShown);
+    prefs.setBool('isDialogOpen', _isDialogOpen);
     prefs.setInt('restTimerMinutes', _restTimerMinutes);
     prefs.setInt('restTimerSeconds', _restTimerSeconds);
   }
@@ -98,7 +97,6 @@ class RestTimerProvider with ChangeNotifier {
             if (isDialogOpen == true) {
               Navigator.of(context).pop();
             }
-            _showRestTimeEndedNotification(context);
           } else {
             notifyListeners();
             _currentDuration--;
@@ -150,46 +148,51 @@ class RestTimerProvider with ChangeNotifier {
     showDialog(
       context: context,
       builder: (BuildContext ctx) {
-        return AlertDialog(
-          backgroundColor: const Color(0xFF1A1A1A),
-          surfaceTintColor: Colors.transparent,
-          title: const Center(
-            child: Text(
-              'Rest Time Ended',
-              style: TextStyle(color: Colors.white),
-            ),
-          ),
-          content: Text(
-            'Your rest time has ended!',
-            style: TextStyle(
-              color: Colors.grey[500],
-              fontSize: 16,
-            ),
-            textAlign: TextAlign.center,
-          ),
-          actions: [
-            SizedBox(
-              width: double.infinity,
-              child: TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all(
-                    const Color(0xFF333333),
-                  ),
-                ),
-                child: const Text(
-                  'OK',
-                  style: TextStyle(fontSize: 18, color: Colors.blue),
-                ),
+        return MaterialApp( // Wrap with MaterialApp
+          theme: ThemeData.dark(), // You can customize the theme accordingly
+          home: AlertDialog(
+            backgroundColor: const Color(0xFF1A1A1A),
+            surfaceTintColor: Colors.transparent,
+            title: const Center(
+              child: Text(
+                'Rest Time Ended',
+                style: TextStyle(color: Colors.white),
               ),
             ),
-          ],
+            content: Text(
+              'Your rest time has ended!',
+              style: TextStyle(
+                color: Colors.grey[500],
+                fontSize: 16,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            actions: [
+              SizedBox(
+                width: double.infinity,
+                child: TextButton(
+                  onPressed: () {
+                    Navigator.of(ctx).pop(); // Use ctx instead of context here
+                  },
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(
+                      const Color(0xFF333333),
+                    ),
+                  ),
+                  child: const Text(
+                    'OK',
+                    style: TextStyle(fontSize: 18, color: Colors.blue),
+                  ),
+                ),
+              ),
+            ],
+          ),
         );
       },
     );
   }
+
+
 
   void resetRestTimer(int newDuration, BuildContext context) {
     stopRestTimer();

@@ -94,7 +94,7 @@ class TimerDetailsSettings extends StatelessWidget {
                                 ),
                                 GestureDetector(
                                   onTap: () async {
-                                    await _showScrollTimePicker(context, restTimerProvider);
+                                    await _showScrollRestPicker(context, restTimerProvider);
                                   },
                                   child: const Icon(
                                     Icons.access_time,
@@ -118,7 +118,7 @@ class TimerDetailsSettings extends StatelessWidget {
     );
   }
 
-  Future<void> _showScrollTimePicker(
+  Future<void> _showScrollRestPicker(
       BuildContext context, RestTimerProvider restTimerProvider) async {
     showModalBottomSheet<void>(
       context: context,

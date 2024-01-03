@@ -114,7 +114,7 @@ class RestTimerDetailsDialogState extends State<RestTimerDetailsDialog>
                           width: 230,
                           height: 230,
                           child: CircularProgressIndicator(
-                            value: widget.restTimerProvider.currentDuration /
+                            value: widget.restTimerProvider.currentRestTimerDuration /
                                 widget.restTimerProvider.restTimerDuration,
                             valueColor: const AlwaysStoppedAnimation<Color>(
                               Color(0xFFB9D499),),
@@ -123,7 +123,7 @@ class RestTimerDetailsDialogState extends State<RestTimerDetailsDialog>
                         ),
                         Text(
                           RestTimerProvider.formatDuration(
-                              widget.restTimerProvider.currentDuration),
+                              widget.restTimerProvider.currentRestTimerDuration),
                           style: const TextStyle(
                             color: Color(0xFFE1F0CF),
                             fontSize: 64,
@@ -183,6 +183,8 @@ class RestTimerDetailsDialogState extends State<RestTimerDetailsDialog>
     );
   }
 }
+
+
 
 
 class CustomTimerDetailsDialog extends StatefulWidget {
@@ -293,7 +295,7 @@ class CustomTimerDetailsDialogState extends State<CustomTimerDetailsDialog>
                           width: 230,
                           height: 230,
                           child: CircularProgressIndicator(
-                            value: widget.customTimerProvider.customCurrentDuration /
+                            value: widget.customTimerProvider.customCurrentTimerDuration /
                                 widget.customTimerProvider.customTimerDuration,
                             valueColor: const AlwaysStoppedAnimation<Color>(
                               Color(0xFFB9D499),),
@@ -302,7 +304,7 @@ class CustomTimerDetailsDialogState extends State<CustomTimerDetailsDialog>
                         ),
                         Text(
                           RestTimerProvider.formatDuration(
-                              widget.customTimerProvider.customCurrentDuration),
+                              widget.customTimerProvider.customCurrentTimerDuration),
                           style: const TextStyle(
                             color: Color(0xFFE1F0CF),
                             fontSize: 64,
