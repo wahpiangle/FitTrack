@@ -54,7 +54,14 @@ class SetLabels extends StatelessWidget {
           ),
         ),
         const SizedBox(width: 10),
-        setIsCompleted != null ? const SizedBox(width: 40) : Container(),
+        SizedBox(
+          width: 40,
+          child: Icon(
+            setIsCompleted != null ? Icons.check : Icons.lock_outline,
+            size: 20,
+            color: Colors.white,
+          ),
+        )
       ],
     );
   }

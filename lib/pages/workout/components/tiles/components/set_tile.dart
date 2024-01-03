@@ -137,11 +137,10 @@ class _SetTileState extends State<SetTile> {
               ),
             ),
             const SizedBox(width: 10),
-            widget.setIsCompleted == null
-                ? const SizedBox()
-                : SizedBox(
-                    width: 40,
-                    child: Material(
+            SizedBox(
+              width: 40,
+              child: widget.setIsCompleted != null
+                  ? Material(
                       shape: const RoundedRectangleBorder(
                         borderRadius: BorderRadius.all(
                           Radius.circular(8),
@@ -162,8 +161,17 @@ class _SetTileState extends State<SetTile> {
                           ),
                         ),
                       ),
+                    )
+                  : GestureDetector(
+                      onTap: () {
+                        HapticFeedback.lightImpact();
+                      },
+                      child: const Icon(
+                        Icons.horizontal_rule_rounded,
+                        color: Colors.white,
+                      ),
                     ),
-                  )
+            )
           ],
         ),
       ),
