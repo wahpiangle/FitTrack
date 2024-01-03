@@ -41,6 +41,27 @@ class WorkoutSessionService {
     workoutSessionBox.remove(workoutSessionId);
   }
 
+  WorkoutSession getEditingWorkoutSession() {
+    return workoutSessionBox
+        .query(
+          WorkoutSession_.isCurrentEditing.equals(true),
+        )
+        .build()
+        .findFirst()!;
+  }
+
+  void cancelEditingWorkoutSession() {
+    WorkoutSession workoutSession = getEditingWorkoutSession();
+    workoutSession.isCurrentEditing = false;
+    workoutSessionBox.put(workoutSession);
+  }
+
+  void setEditingWorkoutSession(int workoutSessionId) {
+    WorkoutSession workoutSession = getWorkoutSession(workoutSessionId)!;
+    workoutSession.isCurrentEditing = true;
+    workoutSessionBox.put(workoutSession);
+  }
+
   // void createCurrentWorkoutSession() {
   //   if (currentWorkoutSessionBox.isEmpty()) {
   //     currentWorkoutSessionBox.put(CurrentWorkoutSession());

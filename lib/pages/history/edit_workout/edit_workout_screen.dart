@@ -3,8 +3,8 @@ import 'package:group_project/constants/themes/app_colours.dart';
 import 'package:group_project/main.dart';
 import 'package:group_project/models/exercise.dart';
 import 'package:group_project/models/exercises_sets_info.dart';
-import 'package:group_project/models/workout_template.dart';
 import 'package:group_project/pages/workout/workout_templates/components/templates_exercise_tile.dart';
+import 'package:group_project/models/workout_session.dart';
 
 class EditWorkoutScreen extends StatefulWidget {
   final int workoutSessionId;
@@ -18,8 +18,8 @@ class EditWorkoutScreen extends StatefulWidget {
 }
 
 class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
-  WorkoutTemplate editingWorkoutTemplate =
-      objectBox.workoutTemplateService.getEditingWorkoutTemplate();
+  WorkoutSession editingWorkoutSession =
+      objectBox.workoutSessionService.getEditingWorkoutSession();
   List<Exercise> exerciseData = objectBox.getAllExercises();
 
   void _askToRevert() {
@@ -237,19 +237,19 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
   }
 
   void selectExercise(Exercise selectedExercise) {
-    objectBox.workoutTemplateService
-        .addExerciseToEditingWorkoutTemplate(selectedExercise);
+    // objectBox.workoutTemplateService
+    //     .addExerciseToEditingWorkoutTemplate(selectedExercise);
     setState(() {
-      editingWorkoutTemplate =
-          objectBox.workoutTemplateService.getEditingWorkoutTemplate();
+      editingWorkoutSession =
+          objectBox.workoutSessionService.getEditingWorkoutSession();
     });
   }
 
   void removeSet(int exerciseSetId) {
     objectBox.removeSetFromExercise(exerciseSetId);
     setState(() {
-      editingWorkoutTemplate =
-          objectBox.workoutTemplateService.getEditingWorkoutTemplate();
+      editingWorkoutSession =
+          objectBox.workoutSessionService.getEditingWorkoutSession();
     });
   }
 
@@ -261,7 +261,7 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
 
   @override
   void dispose() {
-    objectBox.workoutTemplateService.deleteEditingWorkoutTemplate();
+    objectBox.workoutSessionService.cancelEditingWorkoutSession();
     super.dispose();
   }
 
@@ -352,7 +352,7 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
           child: Column(
             children: [
               TextFormField(
-                initialValue: editingWorkoutTemplate.title,
+                initialValue: editingWorkoutSession.title,
                 onChanged: (value) {
                   objectBox.workoutTemplateService
                       .updateEditingWorkoutTemplateTitle(value);
@@ -375,7 +375,7 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
                 ),
               ),
               TextFormField(
-                initialValue: editingWorkoutTemplate.note,
+                initialValue: editingWorkoutSession.note,
                 onChanged: (value) {
                   objectBox.workoutTemplateService
                       .updateEditingWorkoutTemplateNote(value);
@@ -406,7 +406,7 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
                 selectExercise: selectExercise,
                 removeSet: removeSet,
                 addSet: addSet,
-                exercisesSetsInfoList: editingWorkoutTemplate.exercisesSetsInfo,
+                exercisesSetsInfoList: editingWorkoutSession.exercisesSetsInfo,
               )
             ],
           ),
