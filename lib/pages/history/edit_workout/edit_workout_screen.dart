@@ -412,12 +412,6 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
           ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          objectBox.workoutSessionService.test();
-        },
-        child: const Icon(Icons.add),
-      ),
     );
   }
 }
