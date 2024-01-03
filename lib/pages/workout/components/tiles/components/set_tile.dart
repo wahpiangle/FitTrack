@@ -50,7 +50,11 @@ class _SetTileState extends State<SetTile> {
         ),
       ),
       child: Container(
-        color: widget.set.isCompleted ? Colors.green : Colors.transparent,
+        color: widget.setIsCompleted != null
+            ? widget.set.isCompleted
+                ? Colors.green[300]
+                : Colors.transparent
+            : Colors.transparent,
         padding: const EdgeInsets.symmetric(vertical: 10),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
