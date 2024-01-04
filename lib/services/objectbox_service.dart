@@ -75,6 +75,7 @@ class ObjectBox {
         workoutSessionBox: _workoutSessionBox,
         exercisesSetsInfoBox: _exercisesSetsInfoBox,
         exerciseSetBox: _exerciseSetBox,
+        exerciseBox: _exerciseBox,
       );
 
   WorkoutTemplateService get workoutTemplateService => WorkoutTemplateService(

@@ -1,3 +1,4 @@
+import 'package:group_project/models/exercise.dart';
 import 'package:group_project/models/exercise_set.dart';
 import 'package:group_project/models/exercises_sets_info.dart';
 import 'package:group_project/models/workout_session.dart';
@@ -7,11 +8,13 @@ class WorkoutSessionService {
   Box<WorkoutSession> workoutSessionBox;
   Box<ExercisesSetsInfo> exercisesSetsInfoBox;
   Box<ExerciseSet> exerciseSetBox;
+  Box<Exercise> exerciseBox;
 
   WorkoutSessionService({
     required this.workoutSessionBox,
     required this.exercisesSetsInfoBox,
     required this.exerciseSetBox,
+    required this.exerciseBox,
   });
 
   Stream<List<WorkoutSession>> watchWorkoutSession() {
@@ -60,6 +63,19 @@ class WorkoutSessionService {
     WorkoutSession workoutSession = getWorkoutSession(workoutSessionId)!;
     workoutSession.isCurrentEditing = true;
     workoutSessionBox.put(workoutSession);
+  }
+
+  void addExerciseToEditingWorkoutSession(Exercise selectedExercise) {
+    WorkoutSession editingWorkoutSession = getEditingWorkoutSession();
+    ExercisesSetsInfo exercisesSetsInfo = ExercisesSetsInfo();
+    editingWorkoutSession.exercisesSetsInfo.add(exercisesSetsInfo);
+    exercisesSetsInfo.exercise.target = selectedExercise;
+    ExerciseSet exerciseSet = ExerciseSet();
+    exerciseSet.exerciseSetInfo.target = exercisesSetsInfo;
+    exercisesSetsInfo.exerciseSets.add(exerciseSet);
+    exerciseBox.put(selectedExercise);
+    exercisesSetsInfoBox.put(exercisesSetsInfo);
+    workoutSessionBox.put(editingWorkoutSession);
   }
 
   // void createCurrentWorkoutSession() {
