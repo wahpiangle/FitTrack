@@ -39,7 +39,6 @@ class _ExerciseTileState extends State<ExerciseTile> {
   late CustomTimerProvider customTimerProvider;
   bool isSetCompleted = false;
   bool displayRestTimer = false;
-  late int restTimerDuration;
 
   @override
   void didChangeDependencies() {
@@ -47,7 +46,6 @@ class _ExerciseTileState extends State<ExerciseTile> {
     timerProvider = Provider.of<TimerProvider>(context);
     restTimerProvider =
         Provider.of<RestTimerProvider>(context); // Initialize restTimerProvider
-    restTimerDuration = restTimerProvider.restTimerDuration;
     customTimerProvider =
         Provider.of<CustomTimerProvider>(context); // Initialize restTimerProvider
   }
@@ -75,6 +73,10 @@ class _ExerciseTileState extends State<ExerciseTile> {
             //to prevent 2 timers run at same time
             if (customTimerProvider.isRestTimerRunning) {
               customTimerProvider.stopCustomTimer();
+            }
+            if (restTimerProvider.isRestTimerRunning) {
+              // Stop the existing rest timer if second set is completed
+              restTimerProvider.stopRestTimer();
             }
             // Start the rest timer when a set is completed
             restTimerProvider.startRestTimer(context);

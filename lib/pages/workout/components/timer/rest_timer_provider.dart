@@ -84,13 +84,8 @@ class RestTimerProvider with ChangeNotifier {
 
   void startRestTimer(BuildContext context) {
     if (_isRestTimerEnabled && !_isDialogShown) {
-      if (_restTimerMinutes == 0 && _restTimerSeconds == 0) {
-        // Use the default time of 2 minutes
-        _restTimerMinutes = 2;
-        _restTimerSeconds = 0;
-      }
       if (_isRestTimerRunning && _currentDuration > 0) {
-        // Continue from the remaining time
+        // Continue from the remaining time after hot restart
         _timer?.cancel();
         _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
           if (_currentDuration <= 0) {
@@ -104,11 +99,10 @@ class RestTimerProvider with ChangeNotifier {
             notifyListeners();
             _currentDuration--;
             _isRestTimerRunning = true;
-            print("restTimerProvider.isRestTimerRunning ohoho: ${isRestTimerRunning}");
+            print("restTimerProvider.isRestTimerRunning ee: ${isRestTimerRunning}");
+
           }
           _saveRestTimerState();
-          print("restTimerProvider.isRestTimerRunning oho: ${isRestTimerRunning}");
-
         });
       } else {
         // Check if the user has chosen a time
@@ -119,7 +113,6 @@ class RestTimerProvider with ChangeNotifier {
         }
 
         _currentDuration = _restTimerMinutes * 60 + _restTimerSeconds;
-
         _timer?.cancel();
         _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
           if (_currentDuration <= 0) {
@@ -129,18 +122,15 @@ class RestTimerProvider with ChangeNotifier {
               Navigator.of(context).pop();
             }
             _showRestTimeEndedNotification(context);
-            print("restTimerProvider.isRestTimerRunning ha: ${isRestTimerRunning}");
-
           } else {
             notifyListeners();
             _currentDuration--;
             _isRestTimerRunning = true;
-            print("restTimerProvider.isRestTimerRunning ble: ${isRestTimerRunning}");
+            print("restTimerProvider.isRestTimerRunning: ${isRestTimerRunning}");
+
 
           }
           _saveRestTimerState();
-          print("restTimerProvider.isRestTimerRunning haha: ${isRestTimerRunning}");
-
         });
       }
     }
