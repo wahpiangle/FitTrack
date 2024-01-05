@@ -22,20 +22,14 @@ class CustomTimerProvider with ChangeNotifier {
   bool get isDialogOpen => _isDialogOpen;
 
 
-  CustomTimerProvider(BuildContext context) {
-    _loadCustomTimerState(context);
-  }
-
-
-  void _loadCustomTimerState(BuildContext context) {
+  void loadCustomTimerState(BuildContext context) {
     SharedPreferences.getInstance().then((prefs) {
-      _isRestTimerRunning = prefs.getBool('isRestTimerRunning') ?? false;
-      _customCurrentDuration = prefs.getInt('restTimerCurrentDuration') ?? 0;
-      _isDialogShown = prefs.getBool('isDialogShown') ?? false;
-      _customTimerMinutes = prefs.getInt('restTimerMinutes') ?? 0;
-      _customTimerSeconds = prefs.getInt('restTimerSeconds') ?? 0;
-
-      if (_isRestTimerRunning && _customCurrentDuration > 0) {
+      _isRestTimerRunning = prefs.getBool('isCustomTimerRunning') ?? false;
+      _customCurrentDuration = prefs.getInt('customCurrentDuration') ?? 0;
+      _isDialogShown = prefs.getBool('isCustomDialogShown') ?? false;
+      _customTimerMinutes = prefs.getInt('customTimerMinutes') ?? 0;
+      _customTimerSeconds = prefs.getInt('customTimerSeconds') ?? 0;
+      if(_customCurrentDuration>0) {
         startCustomTimer(context);
       }
     });
@@ -45,9 +39,9 @@ class CustomTimerProvider with ChangeNotifier {
 
   Future<void> _saveCustomTimerState() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setBool('isRestTimerRunning', _isRestTimerRunning);
-    prefs.setInt('restTimerCurrentDuration', _customCurrentDuration);
-    prefs.setBool('isDialogShown', _isDialogShown);
+    prefs.setBool('isCustomTimerRunning', _isRestTimerRunning);
+    prefs.setInt('customCurrentDuration', _customCurrentDuration);
+    prefs.setBool('isCustomDialogShown', _isDialogShown);
     prefs.setInt('customTimerMinutes', _customTimerMinutes);
     prefs.setInt('customTimerSeconds', _customTimerSeconds);
   }
@@ -90,10 +84,12 @@ class CustomTimerProvider with ChangeNotifier {
             if (isDialogOpen == true) {
               Navigator.of(context).pop();
             }
-          } else {
+            _showCustomTimeEndedNotification(context);
+          }  else {
             notifyListeners();
             _customCurrentDuration--;
             _isRestTimerRunning = true;
+
           }
           _saveCustomTimerState();
         });
@@ -133,7 +129,6 @@ class CustomTimerProvider with ChangeNotifier {
     _customCurrentDuration = 0;
     notifyListeners();
     _isRestTimerRunning = false;
-    // Save the rest timer state when it's stopped
     _saveCustomTimerState();
   }
 
@@ -146,7 +141,7 @@ class CustomTimerProvider with ChangeNotifier {
           surfaceTintColor: Colors.transparent,
           title: const Center(
             child: Text(
-              'Rest Time Ended',
+              'Custom Time Ended',
               style: TextStyle(color: Colors.white),
             ),
           ),

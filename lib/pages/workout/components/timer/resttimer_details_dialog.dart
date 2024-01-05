@@ -280,7 +280,7 @@ class CustomTimerDetailsDialogState extends State<CustomTimerDetailsDialog>
                       ],
                     ),
                     const Text(
-                      "Rest Timer",
+                      "Custom Timer",
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 20,

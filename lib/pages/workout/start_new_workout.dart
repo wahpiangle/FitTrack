@@ -45,17 +45,31 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
     super.initState();
     exerciseData = widget.exerciseData;
     _initTimers();
+
   }
 
 
-  void _initTimers() {
+  void _initTimers() {//load the saved time after hot restart
     final timerProvider = Provider.of<TimerProvider>(context, listen: false);
+    final restTimerProvider = Provider.of<RestTimerProvider>(context, listen: false);
+    final customTimerProvider = Provider.of<CustomTimerProvider>(context, listen: false);
+
+
     if (!_isTimerRunning) {
       timerProvider.startTimer();
       setState(() {
         _isTimerRunning = true;
       });
     }
+
+    if (!restTimerProvider.isRestTimerRunning) {
+      restTimerProvider.loadRestTimerState(context);
+    }
+
+    if (!customTimerProvider.isRestTimerRunning) {
+      customTimerProvider.loadCustomTimerState(context);
+    }
+
   }
 
 
@@ -278,10 +292,11 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
           preferredSize: const Size.fromHeight(40),
           child: GestureDetector(
             onTap: () {
+              if (restTimerProvider.isRestTimerRunning) {
+                showRestTimerDetailsDialog(restTimerProvider);
+              }
               if (customTimerProvider.isRestTimerRunning) {
                 showCustomTimerDetailsDialog(customTimerProvider);
-              } else if (restTimerProvider.isRestTimerRunning) {
-                showRestTimerDetailsDialog(restTimerProvider);
               }
             },
             child: Stack(
@@ -306,7 +321,7 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
                   ),
                 ),
                 if (restTimerProvider.isRestTimerEnabled &&
-                    restTimerProvider.isRestTimerRunning )
+                    restTimerProvider.isRestTimerRunning)
                   ClipRRect(
                     borderRadius: BorderRadius.circular(8.0),
                     child: SizedBox(
@@ -326,7 +341,7 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
                       ),
                     ),
                   ),
-                if (customTimerProvider.isRestTimerRunning )
+                if (customTimerProvider.isRestTimerRunning)
                   ClipRRect(
                     borderRadius: BorderRadius.circular(8.0),
                     child: SizedBox(
@@ -346,25 +361,22 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
                       ),
                     ),
                   ),
-
                 AnimatedCrossFade(
                   duration: const Duration(milliseconds: 300),
                   crossFadeState: restTimerProvider.isRestTimerEnabled &&
-                      restTimerProvider.isRestTimerRunning || customTimerProvider.isRestTimerRunning
+                      restTimerProvider.isRestTimerRunning
                       ? CrossFadeState.showFirst
                       : CrossFadeState.showSecond,
                   firstChild: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Row(
                       children: [
-                        const Icon(Icons.access_time, color: Colors.white, size: 24),
+                        const Icon(Icons.access_time,
+                            color: Colors.white, size: 24),
                         const SizedBox(width: 4),
                         Text(
-                          restTimerProvider.isRestTimerEnabled && restTimerProvider.isRestTimerRunning
-                              ? " ${RestTimerProvider.formatDuration(restTimerProvider.currentRestTimerDuration)}"
-                              : customTimerProvider.isRestTimerRunning
-                              ? " ${RestTimerProvider.formatDuration(customTimerProvider.customCurrentTimerDuration)}"
-                              : "", //Just leave blank
+                          " ${RestTimerProvider.formatDuration(
+                              restTimerProvider.currentRestTimerDuration)}",
                           style: const TextStyle(
                             fontSize: 16,
                             color: Colors.white,
@@ -373,7 +385,47 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
                       ],
                     ),
                   ),
-
+                  secondChild: GestureDetector(
+                    onTap: () async {
+                      await _showScrollCustomPicker(context, customTimerProvider);
+                      setState(() {
+                        _isSetTimeVisible = !_isSetTimeVisible;
+                      });
+                    },
+                    child: const Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Row(
+                        children: [
+                          Icon(Icons.access_time,
+                              color: Colors.white, size: 24),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                AnimatedCrossFade(
+                  duration: const Duration(milliseconds: 300),
+                  crossFadeState: customTimerProvider.isRestTimerRunning
+                      ? CrossFadeState.showFirst
+                      : CrossFadeState.showSecond,
+                  firstChild: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      children: [
+                        const Icon(Icons.access_time,
+                            color: Colors.white, size: 24),
+                        const SizedBox(width: 4),
+                        Text(
+                          " ${RestTimerProvider.formatDuration(
+                              customTimerProvider.customCurrentTimerDuration)}",
+                          style: const TextStyle(
+                            fontSize: 16,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                   secondChild: GestureDetector(
                     onTap: () async {
                       await _showScrollCustomPicker(context, customTimerProvider);
