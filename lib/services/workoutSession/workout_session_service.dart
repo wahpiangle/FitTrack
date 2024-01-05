@@ -19,7 +19,9 @@ class WorkoutSessionService {
 
   Stream<List<WorkoutSession>> watchWorkoutSession() {
     return workoutSessionBox
-        .query()
+        .query(
+          WorkoutSession_.isCurrentEditing.equals(false),
+        )
         .order(WorkoutSession_.date, flags: Order.descending)
         .watch(triggerImmediately: true)
         .map((query) => query.find());
@@ -44,29 +46,39 @@ class WorkoutSessionService {
     workoutSessionBox.remove(workoutSessionId);
   }
 
-  WorkoutSession getEditingWorkoutSession() {
+  WorkoutSession? getEditingWorkoutSession() {
     return workoutSessionBox
         .query(
           WorkoutSession_.isCurrentEditing.equals(true),
         )
         .build()
-        .findFirst()!;
+        .findFirst();
   }
 
-  void cancelEditingWorkoutSession() {
-    WorkoutSession workoutSession = getEditingWorkoutSession();
-    workoutSession.isCurrentEditing = false;
-    workoutSessionBox.put(workoutSession);
-  }
-
-  void setEditingWorkoutSession(int workoutSessionId) {
-    WorkoutSession workoutSession = getWorkoutSession(workoutSessionId)!;
-    workoutSession.isCurrentEditing = true;
-    workoutSessionBox.put(workoutSession);
+  void createEditingWorkoutSessionCopy(WorkoutSession workoutSession) {
+    final newWorkoutSession = WorkoutSession(
+      date: workoutSession.date,
+      note: workoutSession.note,
+      title: workoutSession.title,
+      isCurrentEditing: true,
+    );
+    for (var exercisesSetsInfo in workoutSession.exercisesSetsInfo) {
+      final newExercisesSetsInfo = ExercisesSetsInfo();
+      newExercisesSetsInfo.exercise.target = exercisesSetsInfo.exercise.target;
+      for (var exerciseSet in exercisesSetsInfo.exerciseSets) {
+        final newExerciseSet = ExerciseSet();
+        newExerciseSet.reps = exerciseSet.reps;
+        newExerciseSet.weight = exerciseSet.weight;
+        newExerciseSet.exerciseSetInfo.target = newExercisesSetsInfo;
+        newExercisesSetsInfo.exerciseSets.add(newExerciseSet);
+      }
+      newWorkoutSession.exercisesSetsInfo.add(newExercisesSetsInfo);
+    }
+    workoutSessionBox.put(newWorkoutSession);
   }
 
   void addExerciseToEditingWorkoutSession(Exercise selectedExercise) {
-    WorkoutSession editingWorkoutSession = getEditingWorkoutSession();
+    WorkoutSession editingWorkoutSession = getEditingWorkoutSession()!;
     ExercisesSetsInfo exercisesSetsInfo = ExercisesSetsInfo();
     editingWorkoutSession.exercisesSetsInfo.add(exercisesSetsInfo);
     exercisesSetsInfo.exercise.target = selectedExercise;
@@ -78,68 +90,97 @@ class WorkoutSessionService {
     workoutSessionBox.put(editingWorkoutSession);
   }
 
-  // void createCurrentWorkoutSession() {
-  //   if (currentWorkoutSessionBox.isEmpty()) {
-  //     currentWorkoutSessionBox.put(CurrentWorkoutSession());
-  //   }
-  //   CurrentWorkoutSession currentWorkoutSession = getCurrentWorkoutSession();
-  //   currentWorkoutSession.isActive = true;
-  //   currentWorkoutSessionBox.put(currentWorkoutSession);
-  // }
+  void deleteEditingWorkoutSession() {
+    WorkoutSession editingWorkoutSession = getEditingWorkoutSession()!;
+    exerciseSetBox.removeMany(editingWorkoutSession.exercisesSetsInfo
+        .expand((element) => element.exerciseSets)
+        .map((e) {
+      return e.id;
+    }).toList());
+    exercisesSetsInfoBox
+        .removeMany(editingWorkoutSession.exercisesSetsInfo.map((e) {
+      return e.id;
+    }).toList());
+    workoutSessionBox.remove(editingWorkoutSession.id);
+  }
 
-  // CurrentWorkoutSession getCurrentWorkoutSession() {
-  //   return currentWorkoutSessionBox.getAll().first;
-  // }
+  bool editingWorkoutSessionHasChanges(int workoutSessionId) {
+    WorkoutSession editingWorkoutSession = getEditingWorkoutSession()!;
+    WorkoutSession workoutSession = getWorkoutSession(workoutSessionId)!;
+    if (editingWorkoutSession.date != workoutSession.date) {
+      return true;
+    }
+    if (editingWorkoutSession.note != workoutSession.note) {
+      return true;
+    }
+    if (editingWorkoutSession.exercisesSetsInfo.length !=
+        workoutSession.exercisesSetsInfo.length) {
+      return true;
+    }
+    for (int i = 0; i < editingWorkoutSession.exercisesSetsInfo.length; i++) {
+      if (editingWorkoutSession.exercisesSetsInfo[i].exercise.target!.id !=
+          workoutSession.exercisesSetsInfo[i].exercise.target!.id) {
+        return true;
+      }
+      if (editingWorkoutSession.exercisesSetsInfo[i].exerciseSets.length !=
+          workoutSession.exercisesSetsInfo[i].exerciseSets.length) {
+        return true;
+      }
+      for (int j = 0;
+          j < editingWorkoutSession.exercisesSetsInfo[i].exerciseSets.length;
+          j++) {
+        if (editingWorkoutSession.exercisesSetsInfo[i].exerciseSets[j].reps !=
+            workoutSession.exercisesSetsInfo[i].exerciseSets[j].reps) {
+          return true;
+        }
+        if (editingWorkoutSession.exercisesSetsInfo[i].exerciseSets[j].weight !=
+            workoutSession.exercisesSetsInfo[i].exerciseSets[j].weight) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
 
-  // void addExerciseToCurrentWorkoutSession(Exercise exercise) {
-  //   CurrentWorkoutSession currentWorkoutSession = getCurrentWorkoutSession();
-  //   final exercisesSetInfo = ExercisesSetsInfo();
-  //   exercisesSetInfo.exercise.target = exercise;
-  //   exercisesSetInfo.exerciseSets.add(ExerciseSet(reps: 0, weight: 0));
-  //   currentWorkoutSession.exercisesSetsInfo.add(exercisesSetInfo);
-  //   exercisesSetsInfoBox.put(exercisesSetInfo);
-  //   currentWorkoutSessionBox.put(currentWorkoutSession);
-  // }
+  void updateSession(int workoutSessionId) {
+    WorkoutSession editingWorkoutSession = getEditingWorkoutSession()!;
+    WorkoutSession workoutSession = getWorkoutSession(workoutSessionId)!;
+    workoutSession.date = editingWorkoutSession.date;
+    workoutSession.note = editingWorkoutSession.note;
+    for (var exercisesSetsInfo in workoutSession.exercisesSetsInfo) {
+      exerciseSetBox.removeMany(exercisesSetsInfo.exerciseSets.map((e) {
+        return e.id;
+      }).toList());
+      exercisesSetsInfo.exerciseSets.clear();
+    }
+    exercisesSetsInfoBox.removeMany(workoutSession.exercisesSetsInfo.map((e) {
+      return e.id;
+    }).toList());
+    for (var exercisesSetsInfo in editingWorkoutSession.exercisesSetsInfo) {
+      final newExercisesSetsInfo = ExercisesSetsInfo();
+      newExercisesSetsInfo.exercise.target = exercisesSetsInfo.exercise.target;
+      for (var exerciseSet in exercisesSetsInfo.exerciseSets) {
+        final newExerciseSet = ExerciseSet();
+        newExerciseSet.reps = exerciseSet.reps;
+        newExerciseSet.weight = exerciseSet.weight;
+        newExerciseSet.exerciseSetInfo.target = newExercisesSetsInfo;
+        newExercisesSetsInfo.exerciseSets.add(newExerciseSet);
+      }
+      workoutSession.exercisesSetsInfo.add(newExercisesSetsInfo);
+    }
+    workoutSessionBox.put(workoutSession);
+    deleteEditingWorkoutSession();
+  }
 
-  // void removeExerciseFromCurrentWorkoutSession(int exercisesSetsInfoId) {
-  //   CurrentWorkoutSession currentWorkoutSession = getCurrentWorkoutSession();
-  //   currentWorkoutSession.exercisesSetsInfo.removeWhere(
-  //       (exercisesSetsInfo) => exercisesSetsInfo.id == exercisesSetsInfoId);
-  //   currentWorkoutSessionBox.put(currentWorkoutSession);
-  // }
+  void updateEditingWorkoutSessionTitle(int workoutSessionId, String value) {
+    WorkoutSession editingWorkoutSession = getEditingWorkoutSession()!;
+    editingWorkoutSession.title = value;
+    workoutSessionBox.put(editingWorkoutSession);
+  }
 
-  // // for cancel workout
-  // void cancelWorkout() {
-  //   CurrentWorkoutSession currentWorkoutSession = getCurrentWorkoutSession();
-
-  //   for (var exercisesSetsInfo in currentWorkoutSession.exercisesSetsInfo) {
-  //     exercisesSetsInfo.exerciseSets.toList().forEach((exerciseSet) {
-  //       exerciseSetBox.remove(exerciseSet.id);
-  //     });
-  //   }
-
-  //   currentWorkoutSession.exercisesSetsInfo
-  //       .toList()
-  //       .forEach((exercisesSetsInfo) {
-  //     exercisesSetsInfoBox.remove(exercisesSetsInfo.id);
-  //   });
-  //   currentWorkoutSessionBox.put(currentWorkoutSession);
-  // }
-
-  // void updateCurrentWorkoutSessionNote(String newText) {
-  //   CurrentWorkoutSession currentWorkoutSession = getCurrentWorkoutSession();
-  //   currentWorkoutSession.note = newText;
-  //   currentWorkoutSessionBox.put(currentWorkoutSession);
-  // }
-
-  // String getCurrentWorkoutSessionNote() {
-  //   CurrentWorkoutSession currentWorkoutSession = getCurrentWorkoutSession();
-  //   return currentWorkoutSession.note;
-  // }
-
-  // void clearCurrentWorkoutSession() {
-  //   CurrentWorkoutSession currentWorkoutSession = getCurrentWorkoutSession();
-  //   currentWorkoutSession.exercisesSetsInfo.clear();
-  //   currentWorkoutSessionBox.put(currentWorkoutSession);
-  // }
+  void updateEditingWorkoutSessionNote(int workoutSessionId, String value) {
+    WorkoutSession editingWorkoutSession = getEditingWorkoutSession()!;
+    editingWorkoutSession.note = value;
+    workoutSessionBox.put(editingWorkoutSession);
+  }
 }

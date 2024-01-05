@@ -8,9 +8,11 @@ import 'package:group_project/models/workout_session.dart';
 
 class EditWorkoutScreen extends StatefulWidget {
   final int workoutSessionId;
+  final bool fromDetailPage;
   const EditWorkoutScreen({
     super.key,
     required this.workoutSessionId,
+    required this.fromDetailPage,
   });
 
   @override
@@ -18,7 +20,7 @@ class EditWorkoutScreen extends StatefulWidget {
 }
 
 class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
-  WorkoutSession editingWorkoutSession =
+  WorkoutSession? editingWorkoutSession =
       objectBox.workoutSessionService.getEditingWorkoutSession();
   List<Exercise> exerciseData = objectBox.getAllExercises();
 
@@ -88,8 +90,8 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
                     width: double.infinity,
                     child: TextButton(
                       onPressed: () {
-                        objectBox.workoutTemplateService
-                            .deleteEditingWorkoutTemplate();
+                        objectBox.workoutSessionService
+                            .deleteEditingWorkoutSession();
                         Navigator.pop(context);
                         Navigator.pop(context);
                       },
@@ -188,10 +190,13 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
                     child: TextButton(
                       onPressed: () {
                         try {
-                          // objectBox.workoutTemplateService
-                          //     .updateTemplate(widget.workoutTemplateId);
+                          objectBox.workoutSessionService
+                              .updateSession(widget.workoutSessionId);
                           Navigator.pop(context);
                           Navigator.pop(context);
+                          if (widget.fromDetailPage) {
+                            Navigator.pop(context);
+                          }
                         } catch (error) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
@@ -237,9 +242,8 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
   }
 
   void selectExercise(Exercise selectedExercise) {
-    // objectBox.workoutTemplateService
-    //     .addExerciseToEditingWorkoutTemplate(selectedExercise);
-    // Todo
+    objectBox.workoutSessionService
+        .addExerciseToEditingWorkoutSession(selectedExercise);
     setState(() {
       editingWorkoutSession =
           objectBox.workoutSessionService.getEditingWorkoutSession();
@@ -262,7 +266,7 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
 
   @override
   void dispose() {
-    objectBox.workoutSessionService.cancelEditingWorkoutSession();
+    objectBox.workoutSessionService.deleteEditingWorkoutSession();
     super.dispose();
   }
 
@@ -307,23 +311,22 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
             margin: const EdgeInsets.all(5),
             child: TextButton(
               onPressed: () {
-                // check if there are changes
-                // objectBox.workoutTemplateService
-                //         .editingWorkoutTemplateHasChanges(
-                //             widget.workoutTemplateId)
-                // ? _askToSave()
-                // : ScaffoldMessenger.of(context).showSnackBar(
-                //     const SnackBar(
-                //       content: Text(
-                //         'There are no changes!',
-                //         style: TextStyle(
-                //           fontSize: 16,
-                //           color: Colors.white,
-                //         ),
-                //       ),
-                //       backgroundColor: AppColours.primary,
-                //     ),
-                //   );
+                objectBox.workoutSessionService.editingWorkoutSessionHasChanges(
+                  widget.workoutSessionId,
+                )
+                    ? _askToSave()
+                    : ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text(
+                            'There are no changes!',
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.white,
+                            ),
+                          ),
+                          backgroundColor: AppColours.primary,
+                        ),
+                      );
               },
               style: ButtonStyle(
                 backgroundColor:
@@ -353,10 +356,11 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
           child: Column(
             children: [
               TextFormField(
-                initialValue: editingWorkoutSession.title,
+                initialValue: editingWorkoutSession!.title,
                 onChanged: (value) {
-                  objectBox.workoutTemplateService
-                      .updateEditingWorkoutTemplateTitle(value);
+                  objectBox.workoutSessionService
+                      .updateEditingWorkoutSessionTitle(
+                          widget.workoutSessionId, value);
                 },
                 decoration: InputDecoration(
                   contentPadding: const EdgeInsets.only(bottom: 10),
@@ -376,10 +380,11 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
                 ),
               ),
               TextFormField(
-                initialValue: editingWorkoutSession.note,
+                initialValue: editingWorkoutSession!.note,
                 onChanged: (value) {
-                  objectBox.workoutTemplateService
-                      .updateEditingWorkoutTemplateNote(value);
+                  objectBox.workoutSessionService
+                      .updateEditingWorkoutSessionNote(
+                          widget.workoutSessionId, value);
                 },
                 decoration: InputDecoration(
                   hintText: 'Add a workout note',
@@ -407,7 +412,7 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
                 selectExercise: selectExercise,
                 removeSet: removeSet,
                 addSet: addSet,
-                exercisesSetsInfoList: editingWorkoutSession.exercisesSetsInfo,
+                exercisesSetsInfoList: editingWorkoutSession!.exercisesSetsInfo,
               )
             ],
           ),
