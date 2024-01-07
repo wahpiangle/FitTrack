@@ -3,47 +3,28 @@ import 'package:group_project/constants/themes/app_colours.dart';
 import 'package:group_project/main.dart';
 import 'package:group_project/models/exercise.dart';
 import 'package:group_project/models/exercises_sets_info.dart';
-import 'package:group_project/models/workout_template.dart';
 import 'package:group_project/pages/workout/components/tiles/components/edit_exercise_tile.dart';
+import 'package:group_project/models/workout_session.dart';
 
-class CreateTemplatePage extends StatefulWidget {
-  const CreateTemplatePage({
+class EditWorkoutScreen extends StatefulWidget {
+  final int workoutSessionId;
+  final bool fromDetailPage;
+  const EditWorkoutScreen({
     super.key,
+    required this.workoutSessionId,
+    required this.fromDetailPage,
   });
 
   @override
-  State<CreateTemplatePage> createState() => _CreateTemplatePageState();
+  State<EditWorkoutScreen> createState() => _EditWorkoutScreenState();
 }
 
-class _CreateTemplatePageState extends State<CreateTemplatePage> {
-  WorkoutTemplate editingWorkoutTemplate =
-      objectBox.workoutTemplateService.getEditingWorkoutTemplate();
+class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
+  WorkoutSession? editingWorkoutSession =
+      objectBox.workoutSessionService.getEditingWorkoutSession();
   List<Exercise> exerciseData = objectBox.getAllExercises();
 
-  void selectExercise(Exercise selectedExercise) {
-    objectBox.workoutTemplateService
-        .addExerciseToEditingWorkoutTemplate(selectedExercise);
-    setState(() {
-      editingWorkoutTemplate =
-          objectBox.workoutTemplateService.getEditingWorkoutTemplate();
-    });
-  }
-
-  void removeSet(int exerciseSetId) {
-    objectBox.removeSetFromExercise(exerciseSetId);
-    setState(() {
-      editingWorkoutTemplate =
-          objectBox.workoutTemplateService.getEditingWorkoutTemplate();
-    });
-  }
-
-  void addSet(ExercisesSetsInfo exercisesSetsInfo) {
-    setState(() {
-      objectBox.addSetToExercise(exercisesSetsInfo);
-    });
-  }
-
-  void _askToDiscard() {
+  void _askToRevert() {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -52,7 +33,7 @@ class _CreateTemplatePageState extends State<CreateTemplatePage> {
           surfaceTintColor: Colors.transparent,
           title: const Center(
             child: Text(
-              'Discard Template?',
+              'Revert Changes?',
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 18,
@@ -61,7 +42,7 @@ class _CreateTemplatePageState extends State<CreateTemplatePage> {
             ),
           ),
           content: Text(
-            'Are you sure you want to discard this template? All changes will be lost.',
+            'Are you sure you want to discard changes to this template? All changes will be lost.',
             style: TextStyle(
               color: Colors.grey[500],
               fontSize: 16,
@@ -109,8 +90,8 @@ class _CreateTemplatePageState extends State<CreateTemplatePage> {
                     width: double.infinity,
                     child: TextButton(
                       onPressed: () {
-                        objectBox.workoutTemplateService
-                            .deleteEditingWorkoutTemplate();
+                        objectBox.workoutSessionService
+                            .deleteEditingWorkoutSession();
                         Navigator.pop(context);
                         Navigator.pop(context);
                       },
@@ -125,7 +106,7 @@ class _CreateTemplatePageState extends State<CreateTemplatePage> {
                         ),
                       ),
                       child: const Text(
-                        'Discard',
+                        'Revert',
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 16,
@@ -209,10 +190,13 @@ class _CreateTemplatePageState extends State<CreateTemplatePage> {
                     child: TextButton(
                       onPressed: () {
                         try {
-                          objectBox.workoutTemplateService
-                              .saveEditingWorkoutTemplate();
+                          objectBox.workoutSessionService
+                              .updateSession(widget.workoutSessionId);
                           Navigator.pop(context);
                           Navigator.pop(context);
+                          if (widget.fromDetailPage) {
+                            Navigator.pop(context);
+                          }
                         } catch (error) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
@@ -257,9 +241,32 @@ class _CreateTemplatePageState extends State<CreateTemplatePage> {
     );
   }
 
+  void selectExercise(Exercise selectedExercise) {
+    objectBox.workoutSessionService
+        .addExerciseToEditingWorkoutSession(selectedExercise);
+    setState(() {
+      editingWorkoutSession =
+          objectBox.workoutSessionService.getEditingWorkoutSession();
+    });
+  }
+
+  void removeSet(int exerciseSetId) {
+    objectBox.removeSetFromExercise(exerciseSetId);
+    setState(() {
+      editingWorkoutSession =
+          objectBox.workoutSessionService.getEditingWorkoutSession();
+    });
+  }
+
+  void addSet(ExercisesSetsInfo exercisesSetsInfo) {
+    setState(() {
+      objectBox.addSetToExercise(exercisesSetsInfo);
+    });
+  }
+
   @override
   void dispose() {
-    objectBox.workoutTemplateService.deleteEditingWorkoutTemplate();
+    objectBox.workoutSessionService.deleteEditingWorkoutSession();
     super.dispose();
   }
 
@@ -284,7 +291,7 @@ class _CreateTemplatePageState extends State<CreateTemplatePage> {
             ),
           ),
           onPressed: () {
-            _askToDiscard();
+            _askToRevert();
           },
           icon: const Icon(
             Icons.close,
@@ -292,7 +299,7 @@ class _CreateTemplatePageState extends State<CreateTemplatePage> {
           ),
         ),
         title: const Text(
-          'New Template',
+          'Edit Workout',
           style: TextStyle(
             color: Colors.white,
             fontSize: 18,
@@ -304,12 +311,26 @@ class _CreateTemplatePageState extends State<CreateTemplatePage> {
             margin: const EdgeInsets.all(5),
             child: TextButton(
               onPressed: () {
-                _askToSave();
+                objectBox.workoutSessionService.editingWorkoutSessionHasChanges(
+                  widget.workoutSessionId,
+                )
+                    ? _askToSave()
+                    : ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text(
+                            'There are no changes!',
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.white,
+                            ),
+                          ),
+                          backgroundColor: AppColours.primary,
+                        ),
+                      );
               },
               style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all(
-                  AppColours.secondary,
-                ),
+                backgroundColor:
+                    MaterialStateProperty.all(AppColours.secondary),
                 shape: MaterialStateProperty.all(
                   RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
@@ -335,43 +356,36 @@ class _CreateTemplatePageState extends State<CreateTemplatePage> {
           child: Column(
             children: [
               TextFormField(
+                initialValue: editingWorkoutSession!.title,
                 onChanged: (value) {
-                  editingWorkoutTemplate.title = value;
-                  objectBox.workoutTemplateService
-                      .updateEditingWorkoutTemplateTitle(
-                    editingWorkoutTemplate.title,
-                  );
+                  objectBox.workoutSessionService
+                      .updateEditingWorkoutSessionTitle(
+                          widget.workoutSessionId, value);
                 },
-                initialValue: editingWorkoutTemplate.title,
                 decoration: InputDecoration(
                   contentPadding: const EdgeInsets.only(bottom: 10),
                   isDense: true,
                   hintText: 'Template Title',
                   hintStyle: TextStyle(
                     color: Colors.grey[600],
-                    fontSize: 24,
+                    fontSize: 20,
                     fontWeight: FontWeight.bold,
                   ),
                   border: InputBorder.none,
                 ),
                 style: const TextStyle(
                   color: Colors.white,
-                  fontSize: 24,
+                  fontSize: 20,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              const SizedBox(
-                height: 10,
-              ),
               TextFormField(
+                initialValue: editingWorkoutSession!.note,
                 onChanged: (value) {
-                  editingWorkoutTemplate.note = value;
-                  objectBox.workoutTemplateService
-                      .updateEditingWorkoutTemplateNote(
-                    editingWorkoutTemplate.note,
-                  );
+                  objectBox.workoutSessionService
+                      .updateEditingWorkoutSessionNote(
+                          widget.workoutSessionId, value);
                 },
-                initialValue: editingWorkoutTemplate.note,
                 decoration: InputDecoration(
                   hintText: 'Add a workout note',
                   hintStyle: const TextStyle(
@@ -394,11 +408,11 @@ class _CreateTemplatePageState extends State<CreateTemplatePage> {
                 height: 20,
               ),
               EditExerciseTile(
-                exerciseData: exerciseData,
+                exerciseData: objectBox.getAllExercises(),
                 selectExercise: selectExercise,
                 removeSet: removeSet,
                 addSet: addSet,
-                exercisesSetsInfoList: editingWorkoutTemplate.exercisesSetsInfo,
+                exercisesSetsInfoList: editingWorkoutSession!.exercisesSetsInfo,
               )
             ],
           ),
