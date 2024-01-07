@@ -21,8 +21,38 @@ class TopNavBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    String profileImage =
-        Provider.of<ProfileImageProvider>(context).profileImage;
+    String profileImage = Provider.of<ProfileImageProvider>(context).profileImage;
+
+    Widget leadingWidget;
+
+    if (showBackButton) {
+      leadingWidget = IconButton(
+        icon: const Icon(Icons.arrow_back),
+        onPressed: () {
+          Navigator.pop(context);
+        },
+      );
+    } else if (pageIndex == 3) {
+      leadingWidget = TextButton(
+        onPressed: () {
+          // Add the action you want when the "New" button is pressed on Exercise List page
+        },
+        child: Text(
+          'New',
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      );
+    } else {
+      leadingWidget = IconButton(
+        icon: const Icon(Icons.menu, color: Colors.white),
+        onPressed: () {
+          // Default action, e.g., open the navigation drawer
+        },
+      );
+    }
 
     return AppBar(
       backgroundColor: const Color(0xFF1A1A1A),
@@ -37,19 +67,7 @@ class TopNavBar extends StatelessWidget implements PreferredSizeWidget {
         ),
       ),
       centerTitle: true,
-      leading: showBackButton
-          ? IconButton(
-              icon: const Icon(Icons.arrow_back),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-            )
-          : IconButton(
-              icon: const Icon(Icons.menu, color: Colors.white),
-              onPressed: () {
-                // Will lead to Search friends page
-              },
-            ),
+      leading: leadingWidget,
       actions: [
         GestureDetector(
           onTap: () {
@@ -67,16 +85,16 @@ class TopNavBar extends StatelessWidget implements PreferredSizeWidget {
                 height: 40,
                 child: ClipOval(
                   child: (profileImage.isEmpty ||
-                          profileImage == 'assets/icons/defaultimage.jpg')
+                      profileImage == 'assets/icons/defaultimage.jpg')
                       ? const CircleAvatar(
-                          radius: 50,
-                          backgroundImage:
-                              AssetImage('assets/icons/defaultimage.jpg'),
-                        )
+                    radius: 50,
+                    backgroundImage:
+                    AssetImage('assets/icons/defaultimage.jpg'),
+                  )
                       : CircleAvatar(
-                          radius: 50,
-                          backgroundImage: FileImage(File(profileImage)),
-                        ),
+                    radius: 50,
+                    backgroundImage: FileImage(File(profileImage)),
+                  ),
                 ),
               ),
             ),
