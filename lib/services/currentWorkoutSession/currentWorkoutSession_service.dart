@@ -77,6 +77,9 @@ class CurrentWorkoutSessionService {
         .forEach((exercisesSetsInfo) {
       exercisesSetsInfoBox.remove(exercisesSetsInfo.id);
     });
+
+    currentWorkoutSession.note = '';
+    currentWorkoutSession.title = 'Workout';
     currentWorkoutSessionBox.put(currentWorkoutSession);
   }
 

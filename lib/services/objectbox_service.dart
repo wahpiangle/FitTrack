@@ -10,7 +10,7 @@ import 'package:group_project/models/workout_session.dart';
 import 'package:group_project/models/workout_template.dart';
 import 'package:group_project/objectbox.g.dart';
 import 'package:group_project/services/currentWorkoutSession/currentWorkoutSession_service.dart';
-import 'package:group_project/services/workoutSession/workoutSessionService.dart';
+import 'package:group_project/services/workoutSession/workout_session_service.dart';
 import 'package:group_project/services/workoutTemplate/workout_template_service.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
@@ -75,6 +75,7 @@ class ObjectBox {
         workoutSessionBox: _workoutSessionBox,
         exercisesSetsInfoBox: _exercisesSetsInfoBox,
         exerciseSetBox: _exerciseSetBox,
+        exerciseBox: _exerciseBox,
       );
 
   WorkoutTemplateService get workoutTemplateService => WorkoutTemplateService(

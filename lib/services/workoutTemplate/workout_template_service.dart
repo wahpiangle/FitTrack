@@ -38,18 +38,18 @@ class WorkoutTemplateService {
       createdAt: DateTime.now(),
       isCurrentEditing: true,
     );
-    workoutTemplate.exercisesSetsInfo.forEach((exercisesSetsInfo) {
+    for (var exercisesSetsInfo in workoutTemplate.exercisesSetsInfo) {
       final newExercisesSetsInfo = ExercisesSetsInfo();
       newExercisesSetsInfo.exercise.target = exercisesSetsInfo.exercise.target;
-      exercisesSetsInfo.exerciseSets.forEach((exerciseSet) {
+      for (var exerciseSet in exercisesSetsInfo.exerciseSets) {
         final newExerciseSet = ExerciseSet();
         newExerciseSet.reps = exerciseSet.reps;
         newExerciseSet.weight = exerciseSet.weight;
         newExerciseSet.exerciseSetInfo.target = newExercisesSetsInfo;
         newExercisesSetsInfo.exerciseSets.add(newExerciseSet);
-      });
+      }
       newWorkoutTemplate.exercisesSetsInfo.add(newExercisesSetsInfo);
-    });
+    }
     workoutTemplateBox.put(newWorkoutTemplate);
   }
 
@@ -144,28 +144,27 @@ class WorkoutTemplateService {
     WorkoutTemplate workoutTemplate = getWorkoutTemplate(workoutTemplateId)!;
     workoutTemplate.title = editingTemplate.title;
     workoutTemplate.note = editingTemplate.note;
-    workoutTemplate.exercisesSetsInfo.forEach((exerciseSetsInfo) {
+    for (var exerciseSetsInfo in workoutTemplate.exercisesSetsInfo) {
       exerciseSetsBox.removeMany(exerciseSetsInfo.exerciseSets.map((e) {
         return e.id;
       }).toList());
       exerciseSetsInfo.exerciseSets.clear();
-    });
-    workoutTemplate.exercisesSetsInfo.clear();
+    }
     exercisesSetsInfoBox.removeMany(workoutTemplate.exercisesSetsInfo.map((e) {
       return e.id;
     }).toList());
-    editingTemplate.exercisesSetsInfo.forEach((exercisesSetsInfo) {
+    for (var exercisesSetsInfo in editingTemplate.exercisesSetsInfo) {
       final newExercisesSetsInfo = ExercisesSetsInfo();
       newExercisesSetsInfo.exercise.target = exercisesSetsInfo.exercise.target;
-      exercisesSetsInfo.exerciseSets.forEach((exerciseSet) {
+      for (var exerciseSet in exercisesSetsInfo.exerciseSets) {
         final newExerciseSet = ExerciseSet();
         newExerciseSet.reps = exerciseSet.reps;
         newExerciseSet.weight = exerciseSet.weight;
         newExerciseSet.exerciseSetInfo.target = newExercisesSetsInfo;
         newExercisesSetsInfo.exerciseSets.add(newExerciseSet);
-      });
+      }
       workoutTemplate.exercisesSetsInfo.add(newExercisesSetsInfo);
-    });
+    }
     workoutTemplateBox.put(workoutTemplate);
     deleteEditingWorkoutTemplate();
   }
@@ -206,18 +205,5 @@ class WorkoutTemplateService {
       }
     }
     return false;
-  }
-
-  void test() {
-    print(workoutTemplateBox.count());
-    print(exerciseSetsBox.count());
-  }
-
-  void testEdit() {
-    print(workoutTemplateBox
-        .query(WorkoutTemplate_.isCurrentEditing.equals(true))
-        .build()
-        .count());
-    print(getEditingWorkoutTemplate().exercisesSetsInfo.length);
   }
 }
