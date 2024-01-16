@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:group_project/constants/data/category_data.dart';
+import 'package:group_project/constants/data/bodypart_data.dart';
+import '../../../models/body_part.dart';
+import '../../../models/category.dart';
 
 class CustomExerciseDialog {
   static void showNewExerciseDialog(BuildContext context) {
@@ -10,114 +14,97 @@ class CustomExerciseDialog {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          backgroundColor: Color(0xFF1A1A1A), // Set the background color
+          backgroundColor: Color(0xFF1A1A1A),
           title: (selectedBodyPart == null && selectedCategory == null)
               ? Text(
             'Custom Exercise',
             style: TextStyle(color: Colors.white),
-
           )
               : null,
           content: SingleChildScrollView(
             child: Column(
               children: [
-                // Add a custom-styled TextField for custom workout name
                 Container(
                   margin: EdgeInsets.symmetric(vertical: 8.0),
                   padding: EdgeInsets.symmetric(horizontal: 16.0),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(8.0),
-                    color: Color(0xFF1A1A1A), // Set the background color
-                    border: Border.all(color: Color(0xFF1A1A1A)), // Set the border color
+                    color: Color(0xFF1A1A1A),
+                    border: Border.all(color: Color(0xFF1A1A1A)),
                   ),
                   child: TextField(
                     onChanged: (value) {
                       customWorkoutName = value;
                     },
-                    style: TextStyle(color: Colors.white), // Set text color to white
+                    style: TextStyle(color: Colors.white),
                     decoration: InputDecoration(
-                      hintText: 'add name...', // Placeholder text
-                      hintStyle: TextStyle(color: Colors.white), // Set hint text color
+                      hintText: 'add name...',
+                      hintStyle: TextStyle(color: Colors.white),
                       border: InputBorder.none,
                     ),
                   ),
                 ),
 
-                SizedBox(height: 16.0), // Add space between "add name" and "select body part"
+                SizedBox(height: 16.0),
 
-                // Add your body part selection widget here
                 DropdownButtonFormField<String>(
                   value: selectedBodyPart,
                   onChanged: (String? newValue) {
-                    // Update the selected body part
                     selectedBodyPart = newValue;
                   },
-                  items: <String>[
-                    'Body Part 1',
-                    'Body Part 2',
-                    'Body Part 3',
-                    // Add more body parts as needed
-                  ].map<DropdownMenuItem<String>>((String value) {
+                  items: bodyPartData.map<DropdownMenuItem<String>>((BodyPart bodyPart) {
                     return DropdownMenuItem<String>(
-                      value: value,
+                      value: bodyPart.name,
                       child: Text(
-                        value,
-                        style: TextStyle(color: Colors.white), // Set the text color to white
+                        bodyPart.name,
+                        style: TextStyle(color: Colors.white),
                       ),
                     );
                   }).toList(),
                   decoration: InputDecoration(
                     labelText: 'Select Body Part',
                     labelStyle: TextStyle(color: Colors.white),
-                    isDense: true, // Keep the title from being minimized
+                    isDense: true,
                     border: UnderlineInputBorder(borderSide: BorderSide.none),
                   ),
-                  dropdownColor: Color(0xFF1A1A1A), // Set the background color of the dropdown list
+                  dropdownColor: Color(0xFF1A1A1A),
                 ),
 
-                // Add your category selection widget here
                 DropdownButtonFormField<String>(
                   value: selectedCategory,
                   onChanged: (String? newValue) {
-                    // Update the selected category
                     selectedCategory = newValue;
                   },
-                  items: <String>[
-                    'Category 1',
-                    'Category 2',
-                    'Category 3',
-                    // Add more categories as needed
-                  ].map<DropdownMenuItem<String>>((String value) {
+                  items: categoryData.map<DropdownMenuItem<String>>((Category category) {
                     return DropdownMenuItem<String>(
-                      value: value,
+                      value: category.name,
                       child: Text(
-                        value,
-                        style: TextStyle(color: Colors.white), // Set the text color to white
+                        category.name,
+                        style: TextStyle(color: Colors.white),
                       ),
                     );
                   }).toList(),
                   decoration: InputDecoration(
                     labelText: 'Select Category',
                     labelStyle: TextStyle(color: Colors.white),
-                    isDense: false, // Keep the title from being minimized
+                    isDense: false,
                     border: UnderlineInputBorder(borderSide: BorderSide.none),
                   ),
-                  dropdownColor: Color(0xFF1A1A1A), // Set the background color of the dropdown list
+                  dropdownColor: Color(0xFF1A1A1A),
                 ),
+
               ],
             ),
           ),
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.pop(context); // Close the dialog
+                Navigator.pop(context);
               },
-              child: Text('Cancel', style: TextStyle(color: Colors.white)), // Set the button text color to white
+              child: Text('Cancel', style: TextStyle(color: Colors.white)),
             ),
             TextButton(
               onPressed: () {
-                // Add logic to handle the selected body part, category, and custom workout name
-                // Perform the desired action based on user selections
                 String selectedBodyPartText =
                 selectedBodyPart != null ? 'Selected Body Part: $selectedBodyPart' : 'No Body Part Selected';
                 String selectedCategoryText =
@@ -129,9 +116,9 @@ class CustomExerciseDialog {
                 print(selectedCategoryText);
                 print(customWorkoutNameText);
 
-                Navigator.pop(context); // Close the dialog
+                Navigator.pop(context);
               },
-              child: Text('Save', style: TextStyle(color: Colors.white)), // Set the button text color to white
+              child: Text('Save', style: TextStyle(color: Colors.white)),
             ),
           ],
         );
