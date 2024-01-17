@@ -51,7 +51,7 @@ class ExercisesListFilters extends StatelessWidget {
                         decoration: const InputDecoration(
                           hintText: 'Search exercise...',
                           border: InputBorder.none,
-                          hintStyle: TextStyle(color: Colors.white),
+                          hintStyle: TextStyle(color: Colors.grey),
                         ),
                       ),
                     ),
@@ -61,7 +61,6 @@ class ExercisesListFilters extends StatelessWidget {
                 Expanded(
                   flex: 1,
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10.0),
                       border: Border.all(color: const Color(0xFF333333)),

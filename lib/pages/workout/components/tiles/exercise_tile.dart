@@ -61,7 +61,6 @@ class _ExerciseTileState extends State<ExerciseTile> {
                 const WorkoutHeader(),
                 AddExerciseButton(
                   exerciseData: widget.exerciseData,
-                  exercisesSetsInfo: widget.exercisesSetsInfo,
                   selectExercise: widget.selectExercise,
                 ),
                 const CancelWorkoutButton(),
@@ -83,7 +82,7 @@ class _ExerciseTileState extends State<ExerciseTile> {
                       child: Text(
                         selectedExercise.exercise.target!.name,
                         style: const TextStyle(
-                          fontSize: 18,
+                          fontSize: 14,
                           fontWeight: FontWeight.bold,
                           color: Color(0xFFE1F0CF),
                         ),
@@ -105,7 +104,6 @@ class _ExerciseTileState extends State<ExerciseTile> {
             return Column(children: [
               AddExerciseButton(
                 exerciseData: widget.exerciseData,
-                exercisesSetsInfo: widget.exercisesSetsInfo,
                 selectExercise: widget.selectExercise,
               ),
               const CancelWorkoutButton(),
@@ -123,7 +121,7 @@ class _ExerciseTileState extends State<ExerciseTile> {
                     child: Text(
                       selectedExercise.exercise.target!.name,
                       style: const TextStyle(
-                        fontSize: 18,
+                        fontSize: 14,
                         fontWeight: FontWeight.bold,
                         color: Color(0xFFE1F0CF),
                       ),

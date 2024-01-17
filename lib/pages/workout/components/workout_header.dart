@@ -36,7 +36,7 @@ class _WorkoutHeaderState extends State<WorkoutHeader> {
               },
               style: const TextStyle(
                 color: Colors.white,
-                fontSize: 24,
+                fontSize: 20,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -61,6 +61,7 @@ class _WorkoutHeaderState extends State<WorkoutHeader> {
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(15.0),
               ),
+              contentPadding: const EdgeInsets.all(10.0),
             ),
           ),
           const SizedBox(height: 20),

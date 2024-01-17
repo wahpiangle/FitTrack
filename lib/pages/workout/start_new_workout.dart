@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:group_project/main.dart';
 import 'package:group_project/models/exercise.dart';
 import 'package:group_project/models/current_workout_session.dart';
-import 'package:group_project/pages/history/congratulation_screen.dart';
+import 'package:group_project/pages/history/complete_workout/congratulation_screen.dart';
 import 'package:group_project/models/workout_session.dart';
 import 'package:group_project/pages/workout/components/tiles/exercise_tile.dart';
-import 'package:group_project/services/firebase/workoutSession/firebase_workouts_service.dart';
+import 'package:group_project/services/firebase/firebase_workouts_service.dart';
 
 class StartNewWorkout extends StatefulWidget {
   final List<Exercise> exerciseData;
@@ -79,7 +79,7 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
     super.dispose();
   }
 
-  void _delete(BuildContext context) {
+  void _finishWorkout(BuildContext context) {
     showDialog(
         context: context,
         builder: (BuildContext ctx) {
@@ -112,26 +112,30 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
                   // Close the dialog
                   Navigator.of(context).pop();
                   Navigator.of(context).pop();
-                  WorkoutSession savedWorkout =
-                  objectBox.saveCurrentWorkoutSession();
+                  WorkoutSession savedWorkout = objectBox
+                      .currentWorkoutSessionService
+                      .saveCurrentWorkoutSession();
                   FirebaseWorkoutsService.createWorkoutSession(savedWorkout);
                   Navigator.of(context).push(
                     PageRouteBuilder(
                       pageBuilder: (context, animation, secondaryAnimation) {
                         return const CongratulationScreen();
                       },
-                      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                      transitionsBuilder:
+                          (context, animation, secondaryAnimation, child) {
                         const begin = 0.0;
                         const end = 1.0;
                         const curve = Curves.easeInOut;
-                        var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+                        var tween = Tween(begin: begin, end: end)
+                            .chain(CurveTween(curve: curve));
                         var offsetAnimation = animation.drive(tween);
                         return ScaleTransition(
                           scale: offsetAnimation,
                           child: child,
                         );
                       },
-                      transitionDuration: const Duration(milliseconds: 500), // Set to 0.5 seconds
+                      transitionDuration: const Duration(
+                          milliseconds: 500), // Set to 0.5 seconds
                     ),
                   );
                 },
@@ -186,7 +190,7 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
                       .isNotEmpty;
                   if (isNotEmpty) {
                     if (everySetCompleted) {
-                      _delete(context);
+                      _finishWorkout(context);
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
@@ -266,12 +270,6 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
             );
           }
         },
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          objectBox.test();
-        },
-        child: Icon(Icons.add),
       ),
     );
   }

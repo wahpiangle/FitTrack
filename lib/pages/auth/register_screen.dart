@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:group_project/services/auth_service.dart';
+import 'package:group_project/services/firebase/auth_service.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -50,13 +50,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     hintText: 'you@example.com',
                     hintStyle: const TextStyle(color: Colors.grey),
                     enabledBorder: OutlineInputBorder(
-                      borderSide:
-                          const BorderSide(color: Color(0xFF333333)),
+                      borderSide: const BorderSide(color: Color(0xFF333333)),
                       borderRadius: BorderRadius.circular(10.0),
                     ),
                     focusedBorder: OutlineInputBorder(
-                      borderSide:
-                          const BorderSide(color: Colors.white),
+                      borderSide: const BorderSide(color: Colors.white),
                       borderRadius: BorderRadius.circular(10.0),
                     ),
                   ),
@@ -79,19 +77,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     hintText: '******',
                     hintStyle: const TextStyle(color: Colors.grey),
                     enabledBorder: OutlineInputBorder(
-                      borderSide:
-                      const BorderSide(color: Color(0xFF333333)),
+                      borderSide: const BorderSide(color: Color(0xFF333333)),
                       borderRadius: BorderRadius.circular(10.0),
                     ),
                     focusedBorder: OutlineInputBorder(
-                      borderSide:
-                      const BorderSide(color: Colors.white),
+                      borderSide: const BorderSide(color: Colors.white),
                       borderRadius: BorderRadius.circular(10.0),
                     ),
                   ),
                   obscureText: true,
-                  validator: (val) =>
-                      val!.length < 6 ? 'Enter a password 6 characters long' : null,
+                  validator: (val) => val!.length < 6
+                      ? 'Enter a password 6 characters long'
+                      : null,
                   onChanged: (val) {
                     setState(() => password = val);
                   }),
@@ -105,20 +102,23 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         showDialog(
                           context: context,
                           builder: (context) {
-                            return const Center(child: CircularProgressIndicator());
+                            return const Center(
+                                child: CircularProgressIndicator());
                           },
                         );
-                        await _auth.registerWithEmailAndPassword(email, password);
+                        await _auth.registerWithEmailAndPassword(
+                            email, password);
                         Future.microtask(() => Navigator.of(context).pop());
                         Future.microtask(() => Navigator.pop(context));
                         errorMessage = '';
-                      } on FirebaseAuthException catch (error){
-                        if (error.code == "invalid-email"){
+                      } on FirebaseAuthException catch (error) {
+                        if (error.code == "invalid-email") {
                           Future.microtask(() => Navigator.of(context).pop());
                           errorMessage = 'The email format is invalid.';
                         } else {
                           Future.microtask(() => Navigator.of(context).pop());
-                          errorMessage = 'The email is already taken by another account.';
+                          errorMessage =
+                              'The email is already taken by another account.';
                         }
                       }
                       setState(() {});
@@ -149,8 +149,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   child: const Text('Already a member? Login',
                       style: TextStyle(
                         color: Colors.white,
-                      )
-                  ),
+                      )),
                   onPressed: () {
                     Navigator.of(context).pushReplacementNamed("login");
                   },
@@ -158,12 +157,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
               ),
               const SizedBox(height: 12.0),
               Center(
-                child: Text(
-                    errorMessage,
+                child: Text(errorMessage,
                     style: const TextStyle(
-                      color:Colors.red,
-                    )
-                ),
+                      color: Colors.red,
+                    )),
               ),
             ],
           ),

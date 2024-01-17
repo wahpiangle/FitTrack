@@ -4,7 +4,7 @@ import 'package:group_project/pages/auth/edit_password.dart';
 import 'package:group_project/pages/auth/settings_signup.dart';
 import 'package:group_project/pages/components/top_nav_bar.dart';
 import 'package:provider/provider.dart';
-import 'package:group_project/services/auth_service.dart';
+import 'package:group_project/services/firebase/auth_service.dart';
 import 'package:group_project/services/user_state.dart';
 import 'package:group_project/pages/auth/offline_edit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -46,7 +46,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
     });
 
     setState(() {
-      isSignInWithGoogle = currentUser?.providerData.first.providerId == 'google.com';
+      isSignInWithGoogle =
+          currentUser?.providerData.first.providerId == 'google.com';
       if (!isSignInWithGoogle) {
         if (currentUser == null || currentUser.isAnonymous) {
           _loadAnonymousUserData();
