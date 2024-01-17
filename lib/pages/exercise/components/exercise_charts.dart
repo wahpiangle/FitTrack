@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:group_project/constants/themes/exercise_list_theme.dart';
 import 'package:group_project/models/exercise.dart';
 import 'package:group_project/pages/exercise/components/exercise_records.dart';
-
 import '../exercise_detail.dart';
 import 'exercise_history.dart';
 
@@ -262,12 +260,9 @@ class _ExerciseChartsState extends State<ExerciseCharts> {
                             ),
                             child: const Text('Records'),
                           ),
-
                         ],
                       ),
                     ),
-
-
                     const SizedBox(height: 10.0),
                     const Align(
                       alignment: Alignment.centerLeft,
@@ -279,11 +274,6 @@ class _ExerciseChartsState extends State<ExerciseCharts> {
                         ),
                       ),
                     ),
-
-
-
-
-
                   ],
                 ),
               ),

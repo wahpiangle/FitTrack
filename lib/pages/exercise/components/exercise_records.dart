@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:group_project/constants/themes/exercise_list_theme.dart';
 import 'package:group_project/models/exercise.dart';
 import 'package:group_project/pages/exercise/components/exercise_history.dart';
-
 import '../exercise_detail.dart';
 import 'exercise_charts.dart';
 
@@ -19,12 +17,9 @@ class _ExerciseRecordsState extends State<ExerciseRecords> {
   int selectedPageIndex = 3;
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
-
       backgroundColor: const Color(0xFF1A1A1A),
       appBar: AppBar(
-
         backgroundColor: const Color(0xFF1A1A1A),
         actions: <Widget>[
           TextButton(
@@ -263,14 +258,9 @@ class _ExerciseRecordsState extends State<ExerciseRecords> {
                             ),
                             child: const Text('Records'),
                           ),
-
                         ],
                       ),
                     ),
-
-
-
-
                     const SizedBox(height: 10.0),
                     const Align(
                       alignment: Alignment.centerLeft,
@@ -282,11 +272,6 @@ class _ExerciseRecordsState extends State<ExerciseRecords> {
                         ),
                       ),
                     ),
-
-
-
-
-
                   ],
                 ),
               ),

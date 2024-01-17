@@ -4,15 +4,12 @@ import 'package:group_project/pages/exercise/components/exercise_charts.dart';
 import 'package:group_project/pages/exercise/components/exercise_records.dart';
 import 'package:group_project/pages/exercise/exercise_detail.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
-
 import '../../../main.dart';
 import '../../../models/workout_session.dart';
-import '../../history/components/complete_workout_card.dart';
-
+import '../../history/complete_workout/complete_workout_card.dart';
 
 class ExerciseHistory extends StatefulWidget {
   final Exercise exercise;
-
   const ExerciseHistory(this.exercise, {super.key});
 
   @override
@@ -34,13 +31,10 @@ class _ExerciseHistoryState extends State<ExerciseHistory> {
   @override
 
 
-
   Widget build(BuildContext context) {
     return Scaffold(
-
       backgroundColor: const Color(0xFF1A1A1A),
       appBar: AppBar(
-
         backgroundColor: const Color(0xFF1A1A1A),
         actions: <Widget>[
           TextButton(
@@ -77,14 +71,6 @@ class _ExerciseHistoryState extends State<ExerciseHistory> {
         child: StreamBuilder<List<WorkoutSession>>(
           stream: objectBox.workoutSessionService.watchWorkoutSession(),
           builder: (context, snapshot) {
-            if (!snapshot.hasData) {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            } else if (snapshot.data!.isEmpty) {
-              return const Center();
-            } else {
-
               return Column(
                 children: [
                   const SizedBox(height: 10.0),
@@ -306,7 +292,7 @@ class _ExerciseHistoryState extends State<ExerciseHistory> {
                           'Exercise History',
                           style: TextStyle(
                             color: Colors.white,
-                            fontSize: 15,
+                            fontSize: 16,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -344,21 +330,13 @@ class _ExerciseHistoryState extends State<ExerciseHistory> {
                         );
                       }).toList(),
                     ),
-
                   ),
-
-
-
                   const SizedBox(height: 10.0),
                 ],
               );
-            }
           },
         ),
       ),
     );
-
-
-
   }
 }

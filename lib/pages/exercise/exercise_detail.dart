@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:group_project/constants/themes/exercise_list_theme.dart';
 import 'package:group_project/models/exercise.dart';
 import 'package:group_project/pages/exercise/components/exercise_charts.dart';
 import 'package:group_project/pages/exercise/components/exercise_records.dart';
-
 import 'components/exercise_history.dart';
 
 class ExerciseDetailScreen extends StatefulWidget {
@@ -22,7 +20,6 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
     return Scaffold(
       backgroundColor: const Color(0xFF1A1A1A),
       appBar: AppBar(
-
         backgroundColor: const Color(0xFF1A1A1A),
         actions: <Widget>[
           TextButton(
@@ -265,16 +262,10 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
                         ],
                       ),
                     ),
-
-
                     const SizedBox(height: 10.0),
-
-
                     Card(
                       child: Image.asset(widget.exercise.imagePath),
                     ),
-
-
                     const SizedBox(height: 10.0),
                     const Align(
                       alignment: Alignment.centerLeft,
@@ -286,11 +277,6 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
                         ),
                       ),
                     ),
-
-
-
-
-
                   ],
                 ),
               ),
