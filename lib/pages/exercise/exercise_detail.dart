@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:group_project/models/exercise.dart';
-import 'package:group_project/pages/exercise/components/exercise_charts.dart';
 import 'package:group_project/pages/exercise/components/exercise_records.dart';
-import 'components/exercise_history.dart';
+import 'package:group_project/pages/exercise/exercise_charts.dart';
+import 'exercise_history.dart';
 
 class ExerciseDetailScreen extends StatefulWidget {
   final Exercise exercise;

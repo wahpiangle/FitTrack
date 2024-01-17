@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:group_project/models/exercise.dart';
-import 'package:group_project/pages/exercise/components/exercise_history.dart';
-import '../exercise_detail.dart';
-import 'exercise_charts.dart';
+import 'package:group_project/pages/exercise/exercise_charts.dart';
+import 'package:group_project/pages/exercise/exercise_detail.dart';
+import 'package:group_project/pages/exercise/exercise_history.dart';
 
 class ExerciseRecords extends StatefulWidget {
   final Exercise exercise;

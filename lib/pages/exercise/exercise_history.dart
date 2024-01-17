@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:group_project/models/exercise.dart';
-import 'package:group_project/pages/exercise/components/exercise_charts.dart';
 import 'package:group_project/pages/exercise/components/exercise_records.dart';
+import 'package:group_project/pages/exercise/exercise_charts.dart';
 import 'package:group_project/pages/exercise/exercise_detail.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
-import '../../../main.dart';
-import '../../../models/workout_session.dart';
-import '../../history/complete_workout/complete_workout_card.dart';
+import '../../main.dart';
+import '../../models/workout_session.dart';
+import '../history/complete_workout/complete_workout_card.dart';
 
 class ExerciseHistory extends StatefulWidget {
   final Exercise exercise;
