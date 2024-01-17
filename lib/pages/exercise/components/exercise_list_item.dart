@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:group_project/models/exercise.dart';
 import 'package:group_project/pages/components/crop_image.dart';
@@ -23,10 +25,36 @@ class ExerciseListItem extends StatelessWidget {
         color: const Color(0xFF1A1A1A),
         child: InkWell(
           onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => ExerciseDetailScreen(exercise),
+            Navigator.of(context).push(
+              PageRouteBuilder(
+                opaque: false, // Set to false to overlay the existing page
+                pageBuilder: (BuildContext context, _, __) {
+                  return Stack(
+                    children: [
+                      // Existing page content
+                      FractionallySizedBox(
+                        widthFactor: 1.0,
+                        heightFactor: 1.0,
+                        child: Container(
+                          color: Colors.black.withOpacity(0.8), // Adjust the opacity as needed
+                        ),
+                      ),
+                      // New page content at the center
+                      Positioned.fill(
+                        child: Center(
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(10.0),
+                            child: FractionallySizedBox(
+                              widthFactor: 0.9,
+                              heightFactor: 0.8,
+                              child: ExerciseDetailScreen(exercise),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  );
+                },
               ),
             );
           },
