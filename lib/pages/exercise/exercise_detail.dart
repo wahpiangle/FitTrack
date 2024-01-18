@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:group_project/models/exercise.dart';
-import 'package:group_project/pages/exercise/components/exercise_records.dart';
+import 'package:group_project/pages/exercise/exercise_records.dart';
 import 'package:group_project/pages/exercise/exercise_charts.dart';
 import 'exercise_history.dart';
 
