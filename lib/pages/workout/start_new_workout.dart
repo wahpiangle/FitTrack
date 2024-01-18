@@ -34,7 +34,6 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
   bool _isSetTimeVisible = true;
   TextEditingController weightsController = TextEditingController();
   TextEditingController repsController = TextEditingController();
-  //late CustomTimerProvider customTimerProvider;
 
   List<Widget> setBorders = [];
 
@@ -44,12 +43,12 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
   void initState() {
     super.initState();
     exerciseData = widget.exerciseData;
-    _initTimers();
+    initTimers();
 
   }
 
 
-  void _initTimers() {//load the saved time after hot restart
+  void initTimers() {//load the saved time after hot restart
     final timerProvider = Provider.of<TimerProvider>(context, listen: false);
     final restTimerProvider = Provider.of<RestTimerProvider>(context, listen: false);
     final customTimerProvider = Provider.of<CustomTimerProvider>(context, listen: false);

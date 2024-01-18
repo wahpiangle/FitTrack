@@ -220,7 +220,7 @@ class CustomTimerDetailsDialogState extends State<CustomTimerDetailsDialog>
 
     // Delay the notification to the end of the build phase
     Future.delayed(Duration.zero, () {
-      widget.customTimerProvider.showRestDialog();
+      widget.customTimerProvider.showCustomDialog();
     });
 
     _animationController.forward();

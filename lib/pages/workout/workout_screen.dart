@@ -7,6 +7,10 @@ import 'package:provider/provider.dart';
 import 'package:group_project/pages/workout/new_workout.dart';
 import 'package:group_project/pages/workout/components/start_new_workout_bottom_sheet.dart';
 
+import 'components/timer/custom_timer_provider.dart';
+import 'components/timer/rest_timer_provider.dart';
+
+
 
 class WorkoutScreen extends StatefulWidget {
   const WorkoutScreen({super.key});
@@ -18,6 +22,8 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
   late List<Exercise> exerciseData;
   bool isBottomSheetVisible = false;
   bool isTimerActiveScreenOpen = false;
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
 
   @override
   void initState() {
@@ -25,8 +31,12 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
     exerciseData = objectBox.getAllExercises();
   }
 
+
+
   Future<void> _startNewWorkout(BuildContext context) async {
     TimerProvider timerProvider = Provider.of<TimerProvider>(context, listen: false);
+    RestTimerProvider restTimerProvider = Provider.of<RestTimerProvider>(context, listen: false);
+    CustomTimerProvider customTimerProvider = Provider.of<CustomTimerProvider>(context, listen: false);
 
     // Check if the timer is active
     if (timerProvider.isTimerRunning) {
@@ -88,6 +98,51 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
       // Always check if the timer is active after the bottom sheet is closed
       _handleTimerActive(context);
     }
+
+    if(restTimerProvider.isRestTimerRunning) {
+      print('kk');
+      _showTimerActiveScreen(context);
+    }
+    else{
+      print('hh');
+      _showCustomTimerActiveScreen(context);
+
+    }
+
+  }
+
+  void _showTimerActiveScreen(BuildContext context) {
+    RestTimerProvider restTimerProvider = Provider.of<RestTimerProvider>(context, listen: false);
+
+    // Show the TimerActiveScreen
+    showBottomSheet(
+      context: context,
+      builder: (context) => TimerActiveScreen(
+        exerciseData: exerciseData,
+        onRestTimerEnded: () {
+          // Show the AlertDialog when the rest timer ends
+          restTimerProvider.showRestTimeEndedNotification(context);
+        },
+      ),
+    );
+  }
+
+
+  void _showCustomTimerActiveScreen(BuildContext context) {
+    CustomTimerProvider customTimerProvider = Provider.of<CustomTimerProvider>(context, listen: false);
+
+    // Show the TimerActiveScreen
+    showBottomSheet(
+      context: context,
+      builder: (context) => TimerActiveScreen(
+        exerciseData: exerciseData,
+        onRestTimerEnded: () {
+          // Show the AlertDialog when the rest timer ends
+          customTimerProvider.showCustomTimeEndedNotification(context);
+
+        },
+      ),
+    );
   }
 
   void _handleTimerActive(BuildContext context) {
@@ -147,6 +202,7 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
 
 
     return Scaffold(
+      key: _scaffoldKey,
       body: Container(
         height: double.infinity,
         padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
@@ -286,12 +342,15 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
                     workoutText: 'Arms',
                     exerciseData: exerciseData, // Add this line
                   ),
+
                 ],
               ),
             ],
           ),
         ),
       ),
+
     );
   }
+
 }

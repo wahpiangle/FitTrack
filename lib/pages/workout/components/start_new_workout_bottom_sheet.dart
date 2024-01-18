@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:group_project/pages/workout/components/timer/custom_timer_provider.dart';
+import 'package:group_project/pages/workout/components/timer/rest_timer_provider.dart';
 import 'package:group_project/pages/workout/start_new_workout.dart';
 import 'package:group_project/models/exercise.dart';
 import 'package:provider/provider.dart';
@@ -112,12 +114,29 @@ class NewWorkoutBottomSheet {
 
 class TimerActiveScreen extends StatelessWidget {
   final List<Exercise> exerciseData;
+  final Function()? onRestTimerEnded;
+  final Function()? onCustomTimerEnded;
 
-  TimerActiveScreen({required this.exerciseData});
+  TimerActiveScreen({
+    required this.exerciseData,
+    this.onRestTimerEnded,
+    this.onCustomTimerEnded
+  });
 
   @override
   Widget build(BuildContext context) {
     final timerProvider = Provider.of<TimerProvider>(context);
+    RestTimerProvider restTimerProvider = Provider.of<RestTimerProvider>(context, listen: false);
+    CustomTimerProvider customTimerProvider = Provider.of<CustomTimerProvider>(context, listen: false);
+
+    // Use onRestTimerEnded callback when rest timer ends
+    restTimerProvider.onRestTimerEnded = () {
+      onRestTimerEnded?.call();
+    };
+
+    customTimerProvider.onCustomTimerEnded = () {
+    onCustomTimerEnded?.call();
+    };
 
     bool isSheetOpen = false; // Track if the new workout sheet is open
 

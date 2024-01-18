@@ -31,6 +31,8 @@ Future<void> main() async {
 }
 
 class MyApp extends StatelessWidget {
+  static final GlobalKey<NavigatorState> navigatorKey =
+  GlobalKey<NavigatorState>();
 
   const MyApp({super.key});
 
@@ -40,7 +42,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => TimerProvider()),
-        ChangeNotifierProvider(create: (_) => RestTimerProvider()),
+        ChangeNotifierProvider(create: (context) => RestTimerProvider()),
         ChangeNotifierProvider(create: (context) => UserStateProvider()),
         ChangeNotifierProvider(create: (context) => ProfileImageProvider()),
         ChangeNotifierProvider(create: (context) => CustomTimerProvider()),
@@ -50,6 +52,7 @@ class MyApp extends StatelessWidget {
         ),
       ],
       child: MaterialApp(
+        navigatorKey: navigatorKey,
         debugShowCheckedModeBanner: false,
         title: 'Flutter Auth',
         home: const AuthWrapper(),

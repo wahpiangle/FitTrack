@@ -21,6 +21,7 @@ class CustomTimerProvider with ChangeNotifier {
   bool get isDialogShown => _isDialogShown;
   bool get isDialogOpen => _isDialogOpen;
 
+  Function()? onCustomTimerEnded;
 
   void loadCustomTimerState(BuildContext context) {
     SharedPreferences.getInstance().then((prefs) {
@@ -46,7 +47,7 @@ class CustomTimerProvider with ChangeNotifier {
     prefs.setInt('customTimerSeconds', _customTimerSeconds);
   }
 
-  void showRestDialog() {//check if the user is opening the rest timer details dialog
+  void showCustomDialog() {//check if the user is opening the rest timer details dialog
     _isDialogOpen = true;
     notifyListeners();
   }
@@ -84,7 +85,9 @@ class CustomTimerProvider with ChangeNotifier {
             if (isDialogOpen == true) {
               Navigator.of(context).pop();
             }
-            _showCustomTimeEndedNotification(context);
+            notifyListeners();
+            onCustomTimerEnded?.call();
+            showCustomTimeEndedNotification(context);
           }  else {
             notifyListeners();
             _customCurrentDuration--;
@@ -111,7 +114,9 @@ class CustomTimerProvider with ChangeNotifier {
             if (isDialogOpen == true) {
               Navigator.of(context).pop();
             }
-            _showCustomTimeEndedNotification(context);
+            notifyListeners();
+            onCustomTimerEnded?.call();
+            showCustomTimeEndedNotification(context);
           } else {
             notifyListeners();
             _customCurrentDuration--;
@@ -132,16 +137,15 @@ class CustomTimerProvider with ChangeNotifier {
     _saveCustomTimerState();
   }
 
-  void _showCustomTimeEndedNotification(BuildContext context) {
+  void showCustomTimeEndedNotification(BuildContext context) {
     showDialog(
       context: context,
       builder: (BuildContext ctx) {
         return AlertDialog(
           backgroundColor: const Color(0xFF1A1A1A),
-          surfaceTintColor: Colors.transparent,
           title: const Center(
             child: Text(
-              'Custom Time Ended',
+              'Rest Time Ended',
               style: TextStyle(color: Colors.white),
             ),
           ),
@@ -158,7 +162,7 @@ class CustomTimerProvider with ChangeNotifier {
               width: double.infinity,
               child: TextButton(
                 onPressed: () {
-                  Navigator.of(ctx).pop(); // Use ctx instead of context here
+                  Navigator.of(ctx).pop();
                 },
                 style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all(
@@ -175,8 +179,8 @@ class CustomTimerProvider with ChangeNotifier {
         );
       },
     );
-  }
 
+  }
 
   void resetCustomTimer(int newDuration, BuildContext context) {
     stopCustomTimer();

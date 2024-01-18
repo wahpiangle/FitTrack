@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:group_project/pages/workout/components/timer/custom_timer_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 
@@ -25,7 +24,7 @@ class RestTimerProvider with ChangeNotifier {
   bool get isDialogShown => _isDialogShown;
   bool get isDialogOpen => _isDialogOpen;
 
-
+  Function()? onRestTimerEnded;
 
   void loadRestTimerState(BuildContext context) {
       SharedPreferences.getInstance().then((prefs) {
@@ -94,13 +93,13 @@ class RestTimerProvider with ChangeNotifier {
             if (isDialogOpen == true) {
               Navigator.of(context).pop();
             }
-            _showRestTimeEndedNotification(context);
+            notifyListeners();
+            onRestTimerEnded?.call();
+            showRestTimeEndedNotification(context);
           } else {
             notifyListeners();
             _currentDuration--;
             _isRestTimerRunning = true;
-            print("restTimerProvider.isRestTimerRunning ee: ${isRestTimerRunning}");
-
           }
           _saveRestTimerState();
         });
@@ -121,14 +120,13 @@ class RestTimerProvider with ChangeNotifier {
             if (isDialogOpen == true) {
               Navigator.of(context).pop();
             }
-            _showRestTimeEndedNotification(context);
+            notifyListeners();
+            onRestTimerEnded?.call();
+            showRestTimeEndedNotification(context);
           } else {
             notifyListeners();
             _currentDuration--;
             _isRestTimerRunning = true;
-            print("restTimerProvider.isRestTimerRunning: ${isRestTimerRunning}");
-
-
           }
           _saveRestTimerState();
         });
@@ -145,51 +143,51 @@ class RestTimerProvider with ChangeNotifier {
     _saveRestTimerState();//so that when set is unchecked after hot restart, it will also being updated
   }
 
-  void _showRestTimeEndedNotification(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext ctx) {
-        return AlertDialog(
-          backgroundColor: const Color(0xFF1A1A1A),
-          title: const Center(
-            child: Text(
-              'Rest Time Ended',
-              style: TextStyle(color: Colors.white),
-            ),
-          ),
-          content: Text(
-            'Your rest time has ended!',
-            style: TextStyle(
-              color: Colors.grey[500],
-              fontSize: 16,
-            ),
-            textAlign: TextAlign.center,
-          ),
-          actions: [
-            SizedBox(
-              width: double.infinity,
-              child: TextButton(
-                onPressed: () {
-                  Navigator.of(ctx).pop();
-                },
-                style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all(
-                    const Color(0xFF333333),
-                  ),
-                ),
-                child: const Text(
-                  'OK',
-                  style: TextStyle(fontSize: 18, color: Colors.blue),
-                ),
+
+  void showRestTimeEndedNotification(BuildContext context) {
+      showDialog(
+        context: context,
+        builder: (BuildContext ctx) {
+          return AlertDialog(
+            backgroundColor: const Color(0xFF1A1A1A),
+            title: const Center(
+              child: Text(
+                'Rest Time Ended',
+                style: TextStyle(color: Colors.white),
               ),
             ),
-          ],
-        );
-      },
-    );
+            content: Text(
+              'Your rest time has ended!',
+              style: TextStyle(
+                color: Colors.grey[500],
+                fontSize: 16,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            actions: [
+              SizedBox(
+                width: double.infinity,
+                child: TextButton(
+                  onPressed: () {
+                    Navigator.of(ctx).pop();
+                  },
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(
+                      const Color(0xFF333333),
+                    ),
+                  ),
+                  child: const Text(
+                    'OK',
+                    style: TextStyle(fontSize: 18, color: Colors.blue),
+                  ),
+                ),
+              ),
+            ],
+          );
+        },
+      );
+
   }
-
-
 
   void resetRestTimer(int newDuration, BuildContext context) {
     stopRestTimer();
