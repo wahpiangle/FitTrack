@@ -98,40 +98,91 @@ class CustomExerciseDialog {
             ),
           ),
           actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: Text('Cancel', style: TextStyle(color: Colors.white)),
-            ),
-            TextButton(
-              onPressed: () {
-                String selectedBodyPartText =
-                selectedBodyPart != null ? 'Selected Body Part: $selectedBodyPart' : 'No Body Part Selected';
-                String selectedCategoryText =
-                selectedCategory != null ? 'Selected Category: $selectedCategory' : 'No Category Selected';
-                String customWorkoutNameText =
-                customWorkoutName != null ? 'Custom Workout Name: $customWorkoutName' : 'No Workout Name Entered';
+            Container(
+              decoration: BoxDecoration(
+                color: Color(0xFF1A1A1A),
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(8.0),
+                  topRight: Radius.circular(8.0),
+                ),
+              ),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      style: TextButton.styleFrom(
+                        padding: EdgeInsets.all(8.0),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.only(
+                            bottomLeft: Radius.circular(8.0),
+                            bottomRight: Radius.circular(0.0), // Adjusted bottomRight radius
+                          ),
+                        ),
+                      ),
+                      child: Container(
+                        padding: EdgeInsets.all(8.0),
+                        decoration: BoxDecoration(
+                          border: Border(right: BorderSide(color: Color(0xFF1A1A1A), width: 1.0)),
+                        ),
+                        child: Text('Cancel', style: TextStyle(color: Colors.white)),
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: 15.0), // Added spacing between Cancel and Save
+                  Expanded(
+                    child: TextButton(
+                      onPressed: () {
+                        String selectedBodyPartText =
+                        selectedBodyPart != null ? 'Selected Body Part: $selectedBodyPart' : 'No Body Part Selected';
+                        String selectedCategoryText =
+                        selectedCategory != null ? 'Selected Category: $selectedCategory' : 'No Category Selected';
+                        String customWorkoutNameText =
+                        customWorkoutName != null ? 'Custom Workout Name: $customWorkoutName' : 'No Workout Name Entered';
 
-                print(selectedBodyPartText);
-                print(selectedCategoryText);
-                print(customWorkoutNameText);
+                        print(selectedBodyPartText);
+                        print(selectedCategoryText);
+                        print(customWorkoutNameText);
 
-                // Create an Exercise object with the entered data
-                Exercise newExercise = Exercise(
-                  name: customWorkoutName ?? '',
-                  bodyPart: selectedBodyPart ?? '', // Provide default value if null
-                  category: selectedCategory ?? '',
-                );
+                        // Create an Exercise object with the entered data
+                        Exercise newExercise = Exercise(
+                          name: customWorkoutName ?? '',
+                          bodyPart: selectedBodyPart ?? '', // Provide default value if null
+                          category: selectedCategory ?? '',
+                        );
 
-                // Use the ObjectBox instance to add the exercise to the list
-                objectBox.addExerciseToList(newExercise);
-                Navigator.pop(context);
-              },
-
-              child: Text('Save', style: TextStyle(color: Colors.white)),
+                        // Use the ObjectBox instance to add the exercise to the list
+                        objectBox.addExerciseToList(newExercise);
+                        Navigator.pop(context);
+                      },
+                      style: TextButton.styleFrom(
+                        padding: EdgeInsets.all(8.0),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.only(
+                            bottomLeft: Radius.circular(0.0), // Adjusted bottomLeft radius
+                            bottomRight: Radius.circular(8.0),
+                          ),
+                        ),
+                        backgroundColor: Color(0xFFE1F0CF), // Background color (border fill)
+                      ),
+                      child: Container(
+                        padding: EdgeInsets.all(8.0),
+                        decoration: BoxDecoration(
+                          border: Border(left: BorderSide(color: Color(0xFFE1F0CF), width: 1.0)),
+                        ),
+                        child: Text('Save', style: TextStyle(color: Colors.black)),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ],
+
+
+
         );
       },
     );
