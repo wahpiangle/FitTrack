@@ -82,8 +82,8 @@ class ExerciseListScreenState extends State<ExerciseListScreen> {
             );
           }
           final filteredData = snapshot.data!.where((exercise) {
-            final exerciseBodyPart = exercise.bodyPart.target!.name;
-            final exerciseCategory = exercise.category.target!.name;
+            final exerciseBodyPart = exercise.bodyPart.target?.name ?? '';
+            final exerciseCategory = exercise.category.target?.name ?? '';
 
             // Check if the exercise body part or category matches the selected body part or category
             final isBodyPartMatch = selectedBodyPart.isEmpty ||

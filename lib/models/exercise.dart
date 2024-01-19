@@ -22,5 +22,6 @@ class Exercise {
       required this.name,
       this.imagePath = '',
       this.halfImagePath = '',
-      this.isSelected = false});
+      this.isSelected = false, required String bodyPart, required String category});
+  
 }

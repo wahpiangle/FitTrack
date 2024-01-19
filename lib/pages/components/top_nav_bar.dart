@@ -6,6 +6,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:group_project/pages/settings/settings_screen.dart';
 import 'package:group_project/pages/exercise/components/custom_exercise.dart';
 
+import '../../main.dart';
+
 class TopNavBar extends StatelessWidget implements PreferredSizeWidget {
   final User? user;
   final String title;
@@ -37,7 +39,7 @@ class TopNavBar extends StatelessWidget implements PreferredSizeWidget {
       leadingWidget = TextButton(
         onPressed: () {
           // Add the action you want when the "New" button is pressed on Exercise List page
-          CustomExerciseDialog.showNewExerciseDialog(context);
+          CustomExerciseDialog.showNewExerciseDialog(context,objectBox);
         },
         child: Text(
           'New',

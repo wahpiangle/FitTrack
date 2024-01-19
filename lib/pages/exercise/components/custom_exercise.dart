@@ -3,9 +3,11 @@ import 'package:group_project/constants/data/category_data.dart';
 import 'package:group_project/constants/data/bodypart_data.dart';
 import '../../../models/body_part.dart';
 import '../../../models/category.dart';
+import '../../../models/exercise.dart';
+import '../../../services/objectbox_service.dart';
 
 class CustomExerciseDialog {
-  static void showNewExerciseDialog(BuildContext context) {
+  static void showNewExerciseDialog(BuildContext context, ObjectBox objectBox) {
     String? customWorkoutName;
     String? selectedBodyPart;
     String? selectedCategory;
@@ -18,7 +20,10 @@ class CustomExerciseDialog {
           title: (selectedBodyPart == null && selectedCategory == null)
               ? Text(
             'Custom Exercise',
-            style: TextStyle(color: Colors.white),
+            style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold, // Set fontWeight to bold
+            ),
           )
               : null,
           content: SingleChildScrollView(
@@ -44,9 +49,7 @@ class CustomExerciseDialog {
                     ),
                   ),
                 ),
-
                 SizedBox(height: 16.0),
-
                 DropdownButtonFormField<String>(
                   value: selectedBodyPart,
                   onChanged: (String? newValue) {
@@ -69,7 +72,6 @@ class CustomExerciseDialog {
                   ),
                   dropdownColor: Color(0xFF1A1A1A),
                 ),
-
                 DropdownButtonFormField<String>(
                   value: selectedCategory,
                   onChanged: (String? newValue) {
@@ -92,7 +94,6 @@ class CustomExerciseDialog {
                   ),
                   dropdownColor: Color(0xFF1A1A1A),
                 ),
-
               ],
             ),
           ),
@@ -116,8 +117,18 @@ class CustomExerciseDialog {
                 print(selectedCategoryText);
                 print(customWorkoutNameText);
 
+                // Create an Exercise object with the entered data
+                Exercise newExercise = Exercise(
+                  name: customWorkoutName ?? '',
+                  bodyPart: selectedBodyPart ?? '', // Provide default value if null
+                  category: selectedCategory ?? '',
+                );
+
+                // Use the ObjectBox instance to add the exercise to the list
+                objectBox.addExerciseToList(newExercise);
                 Navigator.pop(context);
               },
+
               child: Text('Save', style: TextStyle(color: Colors.white)),
             ),
           ],

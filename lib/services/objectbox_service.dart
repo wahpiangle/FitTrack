@@ -105,6 +105,19 @@ class ObjectBox {
     _exerciseBox.removeAll();
   }
 
+  // Function to add an exercise to the list
+  void addExerciseToList(Exercise exercise) {
+    // Get the current list of exercises
+    List<Exercise> exercises = getAllExercises();
+
+    // Add the new exercise to the list
+    exercises.add(exercise);
+
+    // Save the updated list back to the ObjectBox
+    _exerciseBox.removeAll(); // Clear the existing exercises
+    _exerciseBox.putMany(exercises); // Put the updated list of exercises
+  }
+
 //categories & bodyParts
   List<Category> getCategories() {
     return _categoryBox.getAll();
