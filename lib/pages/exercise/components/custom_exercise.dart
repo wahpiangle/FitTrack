@@ -170,7 +170,7 @@ class CustomExerciseDialog {
                           );
 
                           // Use the ObjectBox instance to add the exercise to the list
-                          objectBox.addExerciseToList(newExercise);
+                          objectBox.addExerciseToList(newExercise, selectedCategory, selectedBodyPart);
                           Navigator.pop(context);
                         }
                       },

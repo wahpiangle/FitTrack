@@ -13,15 +13,25 @@ class Exercise {
   String halfImagePath = '';
   bool isSelected;
 
+  // Use ToOne relationship for body part
   final bodyPart = ToOne<BodyPart>();
+
+  // Use ToOne relationship for category
   final category = ToOne<Category>();
+
   final exercisesSetsInfo = ToMany<ExercisesSetsInfo>();
 
-  Exercise(
-      {this.id = 0,
-      required this.name,
-      this.imagePath = '',
-      this.halfImagePath = '',
-      this.isSelected = false, required String bodyPart, required String category});
-  
+  Exercise({
+    this.id = 0,
+    required this.name,
+    this.imagePath = '',
+    this.halfImagePath = '',
+    this.isSelected = false,
+    required String bodyPart,
+    required String category,
+  }) {
+    // Set the body part and category values in the constructor
+    this.bodyPart.target = BodyPart(name: bodyPart);
+    this.category.target = Category(name: category);
+  }
 }
