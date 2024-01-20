@@ -23,11 +23,18 @@ class CustomTimerProvider with ChangeNotifier {
 
   Function()? onCustomTimerEnded;
 
+  GlobalKey<ScaffoldState>? _scaffoldKey;
+
+  void setScaffoldKey(GlobalKey<ScaffoldState> scaffoldKey) {
+    _scaffoldKey = scaffoldKey;
+  }
+
   void loadCustomTimerState(BuildContext context) {
     SharedPreferences.getInstance().then((prefs) {
       _isRestTimerRunning = prefs.getBool('isCustomTimerRunning') ?? false;
       _customCurrentDuration = prefs.getInt('customCurrentDuration') ?? 0;
-      _isDialogShown = prefs.getBool('isCustomDialogShown') ?? false;
+      _isDialogShown = prefs.getBool('isDialogShown') ?? false;
+      _isDialogOpen = prefs.getBool('isDialogOpen') ?? false;
       _customTimerMinutes = prefs.getInt('customTimerMinutes') ?? 0;
       _customTimerSeconds = prefs.getInt('customTimerSeconds') ?? 0;
       if(_customCurrentDuration>0) {
@@ -45,6 +52,8 @@ class CustomTimerProvider with ChangeNotifier {
     prefs.setBool('isCustomDialogShown', _isDialogShown);
     prefs.setInt('customTimerMinutes', _customTimerMinutes);
     prefs.setInt('customTimerSeconds', _customTimerSeconds);
+    prefs.setBool('isDialogShown', _isDialogShown);
+    prefs.setBool('isDialogOpen', _isDialogOpen);
   }
 
   void showCustomDialog() {//check if the user is opening the rest timer details dialog
@@ -73,59 +82,60 @@ class CustomTimerProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void startCustomTimer(BuildContext context) {
-    if (!_isDialogShown) {
-      if (_isRestTimerRunning && _customCurrentDuration > 0) {
-        // Continue from the remaining time
-        _timer?.cancel();
-        _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-          if (_customCurrentDuration <= 0) {
-            stopCustomTimer();
-            _isDialogShown = false;
-            if (isDialogOpen == true) {
-              Navigator.of(context).pop();
+  void startCustomTimer(BuildContext context) async{
+    await Future.microtask(() {
+      if (!_isDialogShown) {
+        if (_isRestTimerRunning && _customCurrentDuration > 0) {
+          // Continue from the remaining time after hot restart
+          _timer?.cancel();
+          _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+            if (_customCurrentDuration <= 0) {
+              stopCustomTimer();
+              _isDialogShown = false;
+              if (isDialogOpen == true) {
+                Navigator.of(context).pop();
+              }
+              notifyListeners();
+              onCustomTimerEnded?.call();
+              showCustomTimeEndedNotification(context);
+            } else {
+              notifyListeners();
+              _customCurrentDuration--;
+              _isRestTimerRunning = true;
             }
-            notifyListeners();
-            onCustomTimerEnded?.call();
-            showCustomTimeEndedNotification(context);
-          }  else {
-            notifyListeners();
-            _customCurrentDuration--;
-            _isRestTimerRunning = true;
-
+            _saveCustomTimerState();
+          });
+        } else {
+          // Check if the user has chosen a time
+          if (_customTimerMinutes == 0 && _customTimerSeconds == 0) {
+            // Use the default time of 2 minutes
+            _customTimerMinutes = 2;
+            _customTimerSeconds = 0;
           }
-          _saveCustomTimerState();
-        });
-      } else {
-        // Check if the user has chosen a time
-        if (_customTimerMinutes == 0 && _customTimerSeconds == 0) {
-          // Use the default time of 2 minutes
-          _customTimerMinutes = 2;
-          _customTimerSeconds = 0;
+
+          _customCurrentDuration =
+              _customTimerMinutes * 60 + _customTimerSeconds;
+          _timer?.cancel();
+          _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+            if (_customCurrentDuration <= 0) {
+              stopCustomTimer();
+              _isDialogShown = false;
+              if (isDialogOpen == true) {
+                Navigator.of(context).pop();
+              }
+              notifyListeners();
+              onCustomTimerEnded?.call();
+              showCustomTimeEndedNotification(context);
+            } else {
+              notifyListeners();
+              _customCurrentDuration--;
+              _isRestTimerRunning = true;
+            }
+            _saveCustomTimerState();
+          });
         }
-
-        _customCurrentDuration = _customTimerMinutes * 60 + _customTimerSeconds;
-
-        _timer?.cancel();
-        _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-          if (_customCurrentDuration <= 0) {
-            stopCustomTimer();
-            _isDialogShown = false;
-            if (isDialogOpen == true) {
-              Navigator.of(context).pop();
-            }
-            notifyListeners();
-            onCustomTimerEnded?.call();
-            showCustomTimeEndedNotification(context);
-          } else {
-            notifyListeners();
-            _customCurrentDuration--;
-            _isRestTimerRunning = true;
-          }
-          _saveCustomTimerState();
-        });
       }
-    }
+    });
   }
 
   void stopCustomTimer() {
@@ -138,14 +148,18 @@ class CustomTimerProvider with ChangeNotifier {
   }
 
   void showCustomTimeEndedNotification(BuildContext context) {
+    if (_scaffoldKey?.currentContext == null) {
+      print("Invalid context. Dialog cannot be shown.");
+      return;
+    }
     showDialog(
-      context: context,
+      context: _scaffoldKey!.currentContext!,
       builder: (BuildContext ctx) {
         return AlertDialog(
           backgroundColor: const Color(0xFF1A1A1A),
           title: const Center(
             child: Text(
-              'Rest Time Ended',
+              'Custom Time Ended',
               style: TextStyle(color: Colors.white),
             ),
           ),

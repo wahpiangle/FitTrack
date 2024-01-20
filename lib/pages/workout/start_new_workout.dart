@@ -28,12 +28,14 @@ class StartNewWorkout extends StatefulWidget {
 
 class _StartNewWorkoutState extends State<StartNewWorkout>
     with TickerProviderStateMixin {
+
   late AnimationController _controller;
   bool _isTimerRunning = false;
   late List<Exercise> exerciseData;
   bool _isSetTimeVisible = true;
   TextEditingController weightsController = TextEditingController();
   TextEditingController repsController = TextEditingController();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   List<Widget> setBorders = [];
 
@@ -52,7 +54,7 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
     final timerProvider = Provider.of<TimerProvider>(context, listen: false);
     final restTimerProvider = Provider.of<RestTimerProvider>(context, listen: false);
     final customTimerProvider = Provider.of<CustomTimerProvider>(context, listen: false);
-
+    customTimerProvider.setScaffoldKey(_scaffoldKey);
 
     if (!_isTimerRunning) {
       timerProvider.startTimer();
@@ -115,7 +117,7 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
     final customTimerProvider = Provider.of<CustomTimerProvider>(context, listen: false);
     final restTimerProvider = Provider.of<RestTimerProvider>(context, listen: false);
     final timerProvider = Provider.of<TimerProvider>(context, listen: false);
-
+    customTimerProvider.setScaffoldKey(_scaffoldKey);
     showDialog(
         context: context,
         builder: (BuildContext ctx) {
@@ -198,12 +200,12 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
     });
   }
 
-
   @override
   Widget build(BuildContext context) {
     final timerProvider = Provider.of<TimerProvider>(context);
     final restTimerProvider = Provider.of<RestTimerProvider>(context);
     final customTimerProvider = Provider.of<CustomTimerProvider>(context);
+    customTimerProvider.setScaffoldKey(_scaffoldKey);
 
     return Scaffold(
       appBar: AppBar(

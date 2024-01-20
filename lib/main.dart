@@ -19,6 +19,8 @@ import 'package:group_project/pages/workout/components/timer/timer_provider.dart
 import 'package:group_project/pages/workout/components/timer/rest_timer_provider.dart';
 
 late ObjectBox objectBox;
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -31,10 +33,9 @@ Future<void> main() async {
 }
 
 class MyApp extends StatelessWidget {
-  static final GlobalKey<NavigatorState> navigatorKey =
-  GlobalKey<NavigatorState>();
 
   const MyApp({super.key});
+
 
   // This widget is the root of your application.
   @override

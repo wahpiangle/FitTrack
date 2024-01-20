@@ -2,6 +2,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../../main.dart';
+
 
 
 class RestTimerProvider with ChangeNotifier {
@@ -23,8 +25,6 @@ class RestTimerProvider with ChangeNotifier {
   int get restTimerSeconds => _restTimerSeconds;
   bool get isDialogShown => _isDialogShown;
   bool get isDialogOpen => _isDialogOpen;
-
-  Function()? onRestTimerEnded;
 
   void loadRestTimerState(BuildContext context) {
       SharedPreferences.getInstance().then((prefs) {
@@ -93,9 +93,7 @@ class RestTimerProvider with ChangeNotifier {
             if (isDialogOpen == true) {
               Navigator.of(context).pop();
             }
-            notifyListeners();
-            onRestTimerEnded?.call();
-            showRestTimeEndedNotification(context);
+            showRestTimeEndedNotification();
           } else {
             notifyListeners();
             _currentDuration--;
@@ -120,9 +118,7 @@ class RestTimerProvider with ChangeNotifier {
             if (isDialogOpen == true) {
               Navigator.of(context).pop();
             }
-            notifyListeners();
-            onRestTimerEnded?.call();
-            showRestTimeEndedNotification(context);
+            showRestTimeEndedNotification();
           } else {
             notifyListeners();
             _currentDuration--;
@@ -144,10 +140,10 @@ class RestTimerProvider with ChangeNotifier {
   }
 
 
-  void showRestTimeEndedNotification(BuildContext context) {
-      showDialog(
-        context: context,
-        builder: (BuildContext ctx) {
+  void showRestTimeEndedNotification() {
+    navigatorKey.currentState?.push(
+      MaterialPageRoute<void>(
+        builder: (BuildContext context) {
           return AlertDialog(
             backgroundColor: const Color(0xFF1A1A1A),
             title: const Center(
@@ -169,7 +165,7 @@ class RestTimerProvider with ChangeNotifier {
                 width: double.infinity,
                 child: TextButton(
                   onPressed: () {
-                    Navigator.of(ctx).pop();
+                    Navigator.of(context).pop();
                   },
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all(
@@ -185,8 +181,8 @@ class RestTimerProvider with ChangeNotifier {
             ],
           );
         },
-      );
-
+      ),
+    );
   }
 
   void resetRestTimer(int newDuration, BuildContext context) {

@@ -7,10 +7,6 @@ import 'package:provider/provider.dart';
 import 'package:group_project/pages/workout/new_workout.dart';
 import 'package:group_project/pages/workout/components/start_new_workout_bottom_sheet.dart';
 
-import 'components/timer/custom_timer_provider.dart';
-import 'components/timer/rest_timer_provider.dart';
-
-
 
 class WorkoutScreen extends StatefulWidget {
   const WorkoutScreen({super.key});
@@ -35,8 +31,6 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
 
   Future<void> _startNewWorkout(BuildContext context) async {
     TimerProvider timerProvider = Provider.of<TimerProvider>(context, listen: false);
-    RestTimerProvider restTimerProvider = Provider.of<RestTimerProvider>(context, listen: false);
-    CustomTimerProvider customTimerProvider = Provider.of<CustomTimerProvider>(context, listen: false);
 
     // Check if the timer is active
     if (timerProvider.isTimerRunning) {
@@ -99,51 +93,8 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
       _handleTimerActive(context);
     }
 
-    if(restTimerProvider.isRestTimerRunning) {
-      print('kk');
-      _showTimerActiveScreen(context);
-    }
-    else{
-      print('hh');
-      _showCustomTimerActiveScreen(context);
-
-    }
-
   }
 
-  void _showTimerActiveScreen(BuildContext context) {
-    RestTimerProvider restTimerProvider = Provider.of<RestTimerProvider>(context, listen: false);
-
-    // Show the TimerActiveScreen
-    showBottomSheet(
-      context: context,
-      builder: (context) => TimerActiveScreen(
-        exerciseData: exerciseData,
-        onRestTimerEnded: () {
-          // Show the AlertDialog when the rest timer ends
-          restTimerProvider.showRestTimeEndedNotification(context);
-        },
-      ),
-    );
-  }
-
-
-  void _showCustomTimerActiveScreen(BuildContext context) {
-    CustomTimerProvider customTimerProvider = Provider.of<CustomTimerProvider>(context, listen: false);
-
-    // Show the TimerActiveScreen
-    showBottomSheet(
-      context: context,
-      builder: (context) => TimerActiveScreen(
-        exerciseData: exerciseData,
-        onRestTimerEnded: () {
-          // Show the AlertDialog when the rest timer ends
-          customTimerProvider.showCustomTimeEndedNotification(context);
-
-        },
-      ),
-    );
-  }
 
   void _handleTimerActive(BuildContext context) {
     TimerProvider timerProvider = Provider.of<TimerProvider>(context, listen: false);
