@@ -2,6 +2,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../../main.dart';
+
 
 class CustomTimerProvider with ChangeNotifier {
   int _customTimerDuration = 120;
@@ -13,21 +15,15 @@ class CustomTimerProvider with ChangeNotifier {
   bool _isDialogShown = false;
   bool _isDialogOpen = false;
 
+
   bool get isRestTimerRunning => _isRestTimerRunning;
   int get customTimerDuration => _customTimerDuration;
   int get customCurrentTimerDuration => _customCurrentDuration;
   int get customTimerMinutes => _customTimerMinutes;
   int get customTimerSeconds => _customTimerSeconds;
   bool get isDialogShown => _isDialogShown;
-  bool get isDialogOpen => _isDialogOpen;
+  bool get isCustomDialogOpen => _isDialogOpen;
 
-  Function()? onCustomTimerEnded;
-
-  GlobalKey<ScaffoldState>? _scaffoldKey;
-
-  void setScaffoldKey(GlobalKey<ScaffoldState> scaffoldKey) {
-    _scaffoldKey = scaffoldKey;
-  }
 
   void loadCustomTimerState(BuildContext context) {
     SharedPreferences.getInstance().then((prefs) {
@@ -92,12 +88,11 @@ class CustomTimerProvider with ChangeNotifier {
             if (_customCurrentDuration <= 0) {
               stopCustomTimer();
               _isDialogShown = false;
-              if (isDialogOpen == true) {
+              if (isCustomDialogOpen == true) {
+                Navigator.of(context).pop();
                 Navigator.of(context).pop();
               }
-              notifyListeners();
-              onCustomTimerEnded?.call();
-              showCustomTimeEndedNotification(context);
+              showCustomTimeEndedNotification();
             } else {
               notifyListeners();
               _customCurrentDuration--;
@@ -120,12 +115,11 @@ class CustomTimerProvider with ChangeNotifier {
             if (_customCurrentDuration <= 0) {
               stopCustomTimer();
               _isDialogShown = false;
-              if (isDialogOpen == true) {
+              if (isCustomDialogOpen == true) {
+                Navigator.of(context).pop();
                 Navigator.of(context).pop();
               }
-              notifyListeners();
-              onCustomTimerEnded?.call();
-              showCustomTimeEndedNotification(context);
+              showCustomTimeEndedNotification();
             } else {
               notifyListeners();
               _customCurrentDuration--;
@@ -147,53 +141,49 @@ class CustomTimerProvider with ChangeNotifier {
     _saveCustomTimerState();
   }
 
-  void showCustomTimeEndedNotification(BuildContext context) {
-    if (_scaffoldKey?.currentContext == null) {
-      print("Invalid context. Dialog cannot be shown.");
-      return;
-    }
-    showDialog(
-      context: _scaffoldKey!.currentContext!,
-      builder: (BuildContext ctx) {
-        return AlertDialog(
-          backgroundColor: const Color(0xFF1A1A1A),
-          title: const Center(
-            child: Text(
-              'Custom Time Ended',
-              style: TextStyle(color: Colors.white),
-            ),
-          ),
-          content: Text(
-            'Your rest time has ended!',
-            style: TextStyle(
-              color: Colors.grey[500],
-              fontSize: 16,
-            ),
-            textAlign: TextAlign.center,
-          ),
-          actions: [
-            SizedBox(
-              width: double.infinity,
-              child: TextButton(
-                onPressed: () {
-                  Navigator.of(ctx).pop();
-                },
-                style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all(
-                    const Color(0xFF333333),
-                  ),
-                ),
-                child: const Text(
-                  'OK',
-                  style: TextStyle(fontSize: 18, color: Colors.blue),
-                ),
+  void showCustomTimeEndedNotification() {
+    navigatorKey.currentState?.push(
+      MaterialPageRoute<void>(
+        builder: (BuildContext context) {
+          return AlertDialog(
+            backgroundColor: const Color(0xFF1A1A1A),
+            title: const Center(
+              child: Text(
+                'Custom Time Ended',
+                style: TextStyle(color: Colors.white),
               ),
             ),
-          ],
-        );
-      },
+            content: Text(
+              'Your rest time has ended!',
+              style: TextStyle(
+                color: Colors.grey[500],
+                fontSize: 16,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            actions: [
+              SizedBox(
+                width: double.infinity,
+                child: TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(
+                      const Color(0xFF333333),
+                    ),
+                  ),
+                  child: const Text(
+                    'OK',
+                    style: TextStyle(fontSize: 18, color: Colors.blue),
+                  ),
+                ),
+              ),
+            ],
+          );
+        },
+      ),
     );
-
   }
 
   void resetCustomTimer(int newDuration, BuildContext context) {

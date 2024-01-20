@@ -33,9 +33,11 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
   bool _isTimerRunning = false;
   late List<Exercise> exerciseData;
   bool _isSetTimeVisible = true;
+  bool _isPickerOpen = false;
   TextEditingController weightsController = TextEditingController();
   TextEditingController repsController = TextEditingController();
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  bool get isPickerOpen => _isPickerOpen;
 
   List<Widget> setBorders = [];
 
@@ -54,7 +56,6 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
     final timerProvider = Provider.of<TimerProvider>(context, listen: false);
     final restTimerProvider = Provider.of<RestTimerProvider>(context, listen: false);
     final customTimerProvider = Provider.of<CustomTimerProvider>(context, listen: false);
-    customTimerProvider.setScaffoldKey(_scaffoldKey);
 
     if (!_isTimerRunning) {
       timerProvider.startTimer();
@@ -117,7 +118,7 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
     final customTimerProvider = Provider.of<CustomTimerProvider>(context, listen: false);
     final restTimerProvider = Provider.of<RestTimerProvider>(context, listen: false);
     final timerProvider = Provider.of<TimerProvider>(context, listen: false);
-    customTimerProvider.setScaffoldKey(_scaffoldKey);
+
     showDialog(
         context: context,
         builder: (BuildContext ctx) {
@@ -205,7 +206,6 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
     final timerProvider = Provider.of<TimerProvider>(context);
     final restTimerProvider = Provider.of<RestTimerProvider>(context);
     final customTimerProvider = Provider.of<CustomTimerProvider>(context);
-    customTimerProvider.setScaffoldKey(_scaffoldKey);
 
     return Scaffold(
       appBar: AppBar(
@@ -479,6 +479,7 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
     );
   }
 
+
   Future<void> showRestTimerDetailsDialog(
       RestTimerProvider restTimerProvider) async {
     showDialog(
@@ -541,8 +542,7 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
                     IconButton(
                       icon: const Icon(Icons.help, color: Colors.white),
                       onPressed: () {
-                        // Handle question mark icon press
-                        // You can show a tooltip or navigate to a help screen
+                        showAboutRestTimerDialog(context);
                       },
                     ),
                   ],
@@ -576,11 +576,20 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
                             customTimerProvider.customTimerSeconds,
                         context,
                       );
-                      Navigator.of(context).pop();
-                      //show the rest timer details dialog
+
                       showCustomTimerDetailsDialog(customTimerProvider);
                     },
-                    child: const Text('Start Rest Timer'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Color(0xFFC1C1C1), // Set the background color to green
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(50),
+                      ),
+                    ),
+                    child: const Text('Start Rest Timer',
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold),
+                    ),
                   ),
                 ),
               ],
@@ -592,3 +601,5 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
   }
 
 }
+
+

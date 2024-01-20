@@ -3,13 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:group_project/constants/themes/app_colours.dart';
 import 'package:group_project/pages/workout/components/timer/rest_timer_provider.dart';
 
+
 import 'custom_timer_provider.dart';
 
 
 class RestTimerDetailsDialog extends StatefulWidget {
   final RestTimerProvider restTimerProvider;
 
-  const RestTimerDetailsDialog({Key? key, required this.restTimerProvider}) : super(key: key);
+  const RestTimerDetailsDialog({super.key, required this.restTimerProvider});
 
 
   @override
@@ -190,7 +191,7 @@ class RestTimerDetailsDialogState extends State<RestTimerDetailsDialog>
 class CustomTimerDetailsDialog extends StatefulWidget {
   final CustomTimerProvider customTimerProvider;
 
-  const CustomTimerDetailsDialog({Key? key, required this.customTimerProvider}) : super(key: key);
+  const CustomTimerDetailsDialog({super.key, required this.customTimerProvider});
 
 
   @override
@@ -273,7 +274,7 @@ class CustomTimerDetailsDialogState extends State<CustomTimerDetailsDialog>
                           onPressed: () {
                             _timer.cancel();
                             Navigator.of(context).pop();
-                          },
+                            },
                           icon: const Icon(Icons.close,
                               size: 32, color: Color(0xFFC1C1C1)),
                         ),
@@ -363,4 +364,71 @@ class CustomTimerDetailsDialogState extends State<CustomTimerDetailsDialog>
       },
     );
   }
+}
+
+void showAboutRestTimerDialog(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        backgroundColor:  AppColours.primaryBright, // Grey background color
+        title: const Center(
+          child: Text(
+            'About Rest Timer',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 22,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+        content:const Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                'Manually set a Custom Rest Timer at any time.',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              SizedBox(height: 16),
+              Text(
+                'Auto Rest Timers can be set up to start when a set is completed.',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              SizedBox(height: 14),
+              Text(
+                'To set the Auto Rest Timer duration, navigate to Settings >> Timer >> Rest Duration.',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: const Text(
+              'Close',
+              style: TextStyle(
+                fontSize: 18,
+                color: AppColours.secondary,
+              ),
+            ),
+          ),
+        ],
+      );
+    },
+  );
 }
