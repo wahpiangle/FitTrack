@@ -17,9 +17,9 @@ class CustomExerciseDialog {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          backgroundColor: Color(0xFF1A1A1A),
+          backgroundColor: const Color(0xFF1A1A1A),
           title: (selectedBodyPart == null && selectedCategory == null)
-              ? Text(
+              ? const Text(
             'Custom Exercise',
             style: TextStyle(
               color: Colors.white,
@@ -33,14 +33,14 @@ class CustomExerciseDialog {
               child: Column(
                 children: [
                   Container(
-                    margin: EdgeInsets.symmetric(vertical: 8.0),
-                    padding: EdgeInsets.symmetric(horizontal: 16.0),
+                    margin: const EdgeInsets.symmetric(vertical: 8.0),
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
                     child: TextFormField(
                       onChanged: (value) {
                         customWorkoutName = value;
                       },
-                      style: TextStyle(color: Colors.white),
-                      decoration: InputDecoration(
+                      style: const TextStyle(color: Colors.white),
+                      decoration: const InputDecoration(
                         hintText: 'add name...',
                         hintStyle: TextStyle(color: Colors.white),
                         enabledBorder: UnderlineInputBorder(
@@ -63,7 +63,7 @@ class CustomExerciseDialog {
                     ),
                   ),
 
-                  SizedBox(height: 16.0),
+                  const SizedBox(height: 16.0),
                   DropdownButtonFormField<String>(
                     value: selectedBodyPart,
                     onChanged: (String? newValue) {
@@ -74,17 +74,17 @@ class CustomExerciseDialog {
                         value: bodyPart.name,
                         child: Text(
                           bodyPart.name,
-                          style: TextStyle(color: Colors.white),
+                          style: const TextStyle(color: Colors.white),
                         ),
                       );
                     }).toList(),
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       labelText: 'Select Body Part',
                       labelStyle: TextStyle(color: Colors.white),
                       isDense: true,
                       border: UnderlineInputBorder(borderSide: BorderSide.none),
                     ),
-                    dropdownColor: Color(0xFF1A1A1A),
+                    dropdownColor: const Color(0xFF1A1A1A),
                   ),
                   DropdownButtonFormField<String>(
                     value: selectedCategory,
@@ -96,17 +96,17 @@ class CustomExerciseDialog {
                         value: category.name,
                         child: Text(
                           category.name,
-                          style: TextStyle(color: Colors.white),
+                          style: const TextStyle(color: Colors.white),
                         ),
                       );
                     }).toList(),
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       labelText: 'Select Category',
                       labelStyle: TextStyle(color: Colors.white),
                       isDense: false,
                       border: UnderlineInputBorder(borderSide: BorderSide.none),
                     ),
-                    dropdownColor: Color(0xFF1A1A1A),
+                    dropdownColor: const Color(0xFF1A1A1A),
                   ),
                 ],
               ),
@@ -114,7 +114,7 @@ class CustomExerciseDialog {
           ),
           actions: [
             Container(
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 color: Color(0xFF1A1A1A),
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(8.0),
@@ -129,8 +129,8 @@ class CustomExerciseDialog {
                         Navigator.pop(context);
                       },
                       style: TextButton.styleFrom(
-                        padding: EdgeInsets.all(8.0),
-                        shape: RoundedRectangleBorder(
+                        padding: const EdgeInsets.all(8.0),
+                        shape: const RoundedRectangleBorder(
                           borderRadius: BorderRadius.only(
                             bottomLeft: Radius.circular(8.0),
                             bottomRight: Radius.circular(0.0), // Adjusted bottomRight radius
@@ -138,29 +138,20 @@ class CustomExerciseDialog {
                         ),
                       ),
                       child: Container(
-                        padding: EdgeInsets.all(8.0),
-                        decoration: BoxDecoration(
+                        padding: const EdgeInsets.all(8.0),
+                        decoration: const BoxDecoration(
                           border: Border(right: BorderSide(color: Color(0xFF1A1A1A), width: 1.0)),
                         ),
-                        child: Text('Cancel', style: TextStyle(color: Colors.white)),
+                        child: const Text('Cancel', style: TextStyle(color: Colors.white)),
                       ),
                     ),
                   ),
-                  SizedBox(width: 15.0), // Added spacing between Cancel and Save
+                  const SizedBox(width: 15.0), // Added spacing between Cancel and Save
                   Expanded(
                     child: TextButton(
                       onPressed: () {
                         if (formKey.currentState?.validate() ?? false) {
-                          String selectedBodyPartText =
-                          selectedBodyPart != null ? 'Selected Body Part: $selectedBodyPart' : 'No Body Part Selected';
-                          String selectedCategoryText =
-                          selectedCategory != null ? 'Selected Category: $selectedCategory' : 'No Category Selected';
-                          String customWorkoutNameText =
-                          customWorkoutName != null ? 'Custom Workout Name: $customWorkoutName' : 'No Workout Name Entered';
 
-                          print(selectedBodyPartText);
-                          print(selectedCategoryText);
-                          print(customWorkoutNameText);
 
                           // Create an Exercise object with the entered data
                           Exercise newExercise = Exercise(
@@ -175,21 +166,21 @@ class CustomExerciseDialog {
                         }
                       },
                       style: TextButton.styleFrom(
-                        padding: EdgeInsets.all(8.0),
-                        shape: RoundedRectangleBorder(
+                        padding: const EdgeInsets.all(8.0),
+                        shape: const RoundedRectangleBorder(
                           borderRadius: BorderRadius.only(
                             bottomLeft: Radius.circular(0.0), // Adjusted bottomLeft radius
                             bottomRight: Radius.circular(8.0),
                           ),
                         ),
-                        backgroundColor: Color(0xFFE1F0CF), // Background color (border fill)
+                        backgroundColor: const Color(0xFFE1F0CF), // Background color (border fill)
                       ),
                       child: Container(
-                        padding: EdgeInsets.all(8.0),
-                        decoration: BoxDecoration(
+                        padding: const EdgeInsets.all(8.0),
+                        decoration: const BoxDecoration(
                           border: Border(left: BorderSide(color: Color(0xFFE1F0CF), width: 1.0)),
                         ),
-                        child: Text('Save', style: TextStyle(color: Colors.black)),
+                        child: const Text('Save', style: TextStyle(color: Colors.black)),
                       ),
                     ),
                   ),
