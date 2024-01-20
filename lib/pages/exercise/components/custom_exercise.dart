@@ -23,7 +23,7 @@ class CustomExerciseDialog {
             'Custom Exercise',
             style: TextStyle(
               color: Colors.white,
-              fontWeight: FontWeight.bold, // Set fontWeight to bold
+              fontWeight: FontWeight.bold,
             ),
           )
               : null,
@@ -44,13 +44,13 @@ class CustomExerciseDialog {
                         hintText: 'add name...',
                         hintStyle: TextStyle(color: Colors.white),
                         enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white), // Color of the underline
+                          borderSide: BorderSide(color: Colors.white),
                         ),
                         focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white), // Color of the focused underline
+                          borderSide: BorderSide(color: Colors.white),
                         ),
                         errorBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.red), // Color of the error underline
+                          borderSide: BorderSide(color: Colors.red),
                         ),
                         errorStyle: TextStyle(color: Colors.red),
                       ),
@@ -133,7 +133,7 @@ class CustomExerciseDialog {
                         shape: const RoundedRectangleBorder(
                           borderRadius: BorderRadius.only(
                             bottomLeft: Radius.circular(8.0),
-                            bottomRight: Radius.circular(0.0), // Adjusted bottomRight radius
+                            bottomRight: Radius.circular(0.0),
                           ),
                         ),
                       ),
@@ -146,34 +146,45 @@ class CustomExerciseDialog {
                       ),
                     ),
                   ),
-                  const SizedBox(width: 15.0), // Added spacing between Cancel and Save
+                  const SizedBox(width: 15.0),
                   Expanded(
                     child: TextButton(
                       onPressed: () {
                         if (formKey.currentState?.validate() ?? false) {
+                          if (selectedBodyPart == null || selectedCategory == null) {
+                            // Display a warning message if either body part or category is not selected
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text(
+                                  'Please select both Body Part and Category before saving.',
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                                backgroundColor: Colors.red,
+                              ),
+                            );
+                          } else {
+                            // Create an Exercise object with the entered data
+                            Exercise newExercise = Exercise(
+                              name: customWorkoutName ?? '',
+                              bodyPart: selectedBodyPart ?? '',
+                              category: selectedCategory ?? '',
+                            );
 
-
-                          // Create an Exercise object with the entered data
-                          Exercise newExercise = Exercise(
-                            name: customWorkoutName ?? '',
-                            bodyPart: selectedBodyPart ?? '', // Provide default value if null
-                            category: selectedCategory ?? '',
-                          );
-
-                          // Use the ObjectBox instance to add the exercise to the list
-                          objectBox.addExerciseToList(newExercise, selectedCategory, selectedBodyPart);
-                          Navigator.pop(context);
+                            // Use the ObjectBox instance to add the exercise to the list
+                            objectBox.addExerciseToList(newExercise, selectedCategory, selectedBodyPart);
+                            Navigator.pop(context);
+                          }
                         }
                       },
                       style: TextButton.styleFrom(
                         padding: const EdgeInsets.all(8.0),
                         shape: const RoundedRectangleBorder(
                           borderRadius: BorderRadius.only(
-                            bottomLeft: Radius.circular(0.0), // Adjusted bottomLeft radius
+                            bottomLeft: Radius.circular(0.0),
                             bottomRight: Radius.circular(8.0),
                           ),
                         ),
-                        backgroundColor: const Color(0xFFE1F0CF), // Background color (border fill)
+                        backgroundColor: const Color(0xFFE1F0CF),
                       ),
                       child: Container(
                         padding: const EdgeInsets.all(8.0),
