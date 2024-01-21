@@ -5,13 +5,13 @@ import 'package:group_project/pages/auth/register_screen.dart';
 import 'package:group_project/pages/auth/settings_login.dart';
 import 'package:group_project/pages/auth/settings_signup.dart';
 import 'package:group_project/pages/auth_wrapper.dart';
-import 'package:group_project/pages/components/app_layout.dart';
+import 'package:group_project/pages/layout/app_layout.dart';
 import 'package:group_project/pages/history/history_screen.dart';
 import 'package:group_project/services/firebase/auth_service.dart';
 import 'package:group_project/services/objectbox_service.dart';
 import 'package:provider/provider.dart';
 import 'firebase_options.dart';
-import 'package:group_project/pages/components/top_nav_bar.dart';
+import 'package:group_project/pages/layout/top_nav_bar.dart';
 import 'package:group_project/services/user_state.dart';
 
 late ObjectBox objectBox;

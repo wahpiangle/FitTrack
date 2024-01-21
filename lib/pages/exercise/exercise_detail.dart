@@ -15,33 +15,32 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: ExerciseListThemes.appBarBackground,
-      body: SingleChildScrollView(
-        child: Row(
-          children: [
-            Expanded(
-              flex: 4,
-              child: Center(
-                child: Column(
-                  children: [
-                    Card(
-                      child: Image.asset(widget.exercise.imagePath),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Text(
-                        'Exercise Name: ${widget.exercise.name}',
-                        style:
-                            const TextStyle(fontSize: 18, color: Colors.white),
+        backgroundColor: ExerciseListThemes.appBarBackground,
+        body: SingleChildScrollView(
+          child: Row(
+            children: [
+              Expanded(
+                flex: 4,
+                child: Center(
+                  child: Column(
+                    children: [
+                      Card(
+                        child: Image.asset(widget.exercise.imagePath),
                       ),
-                    ),
-                  ],
+                      Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Text(
+                          'Exercise Name: ${widget.exercise.name}',
+                          style: const TextStyle(
+                              fontSize: 18, color: Colors.white),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
-        ),
-      ),
-    );
+            ],
+          ),
+        ));
   }
 }

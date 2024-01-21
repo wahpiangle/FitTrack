@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:group_project/pages/auth/edit_password.dart';
 import 'package:group_project/pages/auth/settings_signup.dart';
-import 'package:group_project/pages/components/top_nav_bar.dart';
+import 'package:group_project/pages/layout/top_nav_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:group_project/services/firebase/auth_service.dart';
 import 'package:group_project/services/user_state.dart';
