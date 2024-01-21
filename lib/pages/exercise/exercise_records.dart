@@ -70,7 +70,8 @@ class _ExerciseRecordsState extends State<ExerciseRecords> {
                               });
                               Navigator.of(context).pushReplacement(
                                 PageRouteBuilder(
-                                  opaque: false, // Set to false to overlay the existing page
+                                  opaque:
+                                      false, // Set to false to overlay the existing page
                                   pageBuilder: (BuildContext context, _, __) {
                                     return Stack(
                                       children: [
@@ -79,18 +80,21 @@ class _ExerciseRecordsState extends State<ExerciseRecords> {
                                           widthFactor: 1.0,
                                           heightFactor: 1.0,
                                           child: Container(
-                                            color: Colors.black.withOpacity(0.8), // Adjust the opacity as needed
+                                            color: Colors.black.withOpacity(
+                                                0.8), // Adjust the opacity as needed
                                           ),
                                         ),
                                         // New page content at the center
                                         Positioned.fill(
                                           child: Center(
                                             child: ClipRRect(
-                                              borderRadius: BorderRadius.circular(10.0),
+                                              borderRadius:
+                                                  BorderRadius.circular(10.0),
                                               child: FractionallySizedBox(
                                                 widthFactor: 0.9,
                                                 heightFactor: 0.8,
-                                                child: ExerciseDetailScreen(widget.exercise),
+                                                child: ExerciseDetailScreen(
+                                                    widget.exercise),
                                               ),
                                             ),
                                           ),
@@ -102,7 +106,7 @@ class _ExerciseRecordsState extends State<ExerciseRecords> {
                               );
                             },
                             style: ElevatedButton.styleFrom(
-                              primary: selectedPageIndex == 0
+                              backgroundColor: selectedPageIndex == 0
                                   ? const Color(0xFF555555)
                                   : const Color(0xFF333333),
                               shape: RoundedRectangleBorder(
@@ -119,7 +123,8 @@ class _ExerciseRecordsState extends State<ExerciseRecords> {
                               });
                               Navigator.of(context).pushReplacement(
                                 PageRouteBuilder(
-                                  opaque: false, // Set to false to overlay the existing page
+                                  opaque:
+                                      false, // Set to false to overlay the existing page
                                   pageBuilder: (BuildContext context, _, __) {
                                     return Stack(
                                       children: [
@@ -128,18 +133,21 @@ class _ExerciseRecordsState extends State<ExerciseRecords> {
                                           widthFactor: 1.0,
                                           heightFactor: 1.0,
                                           child: Container(
-                                            color: Colors.black.withOpacity(0.8), // Adjust the opacity as needed
+                                            color: Colors.black.withOpacity(
+                                                0.8), // Adjust the opacity as needed
                                           ),
                                         ),
                                         // New page content at the center
                                         Positioned.fill(
                                           child: Center(
                                             child: ClipRRect(
-                                              borderRadius: BorderRadius.circular(10.0),
+                                              borderRadius:
+                                                  BorderRadius.circular(10.0),
                                               child: FractionallySizedBox(
                                                 widthFactor: 0.9,
                                                 heightFactor: 0.8,
-                                                child: ExerciseHistory(widget.exercise),
+                                                child: ExerciseHistory(
+                                                    widget.exercise),
                                               ),
                                             ),
                                           ),
@@ -151,7 +159,7 @@ class _ExerciseRecordsState extends State<ExerciseRecords> {
                               );
                             },
                             style: ElevatedButton.styleFrom(
-                              primary: selectedPageIndex == 1
+                              backgroundColor: selectedPageIndex == 1
                                   ? const Color(0xFF555555)
                                   : const Color(0xFF333333),
                               shape: RoundedRectangleBorder(
@@ -168,7 +176,8 @@ class _ExerciseRecordsState extends State<ExerciseRecords> {
                               });
                               Navigator.of(context).pushReplacement(
                                 PageRouteBuilder(
-                                  opaque: false, // Set to false to overlay the existing page
+                                  opaque:
+                                      false, // Set to false to overlay the existing page
                                   pageBuilder: (BuildContext context, _, __) {
                                     return Stack(
                                       children: [
@@ -177,18 +186,21 @@ class _ExerciseRecordsState extends State<ExerciseRecords> {
                                           widthFactor: 1.0,
                                           heightFactor: 1.0,
                                           child: Container(
-                                            color: Colors.black.withOpacity(0.8), // Adjust the opacity as needed
+                                            color: Colors.black.withOpacity(
+                                                0.8), // Adjust the opacity as needed
                                           ),
                                         ),
                                         // New page content at the center
                                         Positioned.fill(
                                           child: Center(
                                             child: ClipRRect(
-                                              borderRadius: BorderRadius.circular(10.0),
+                                              borderRadius:
+                                                  BorderRadius.circular(10.0),
                                               child: FractionallySizedBox(
                                                 widthFactor: 0.9,
                                                 heightFactor: 0.8,
-                                                child: ExerciseCharts(widget.exercise),
+                                                child: ExerciseCharts(
+                                                    widget.exercise),
                                               ),
                                             ),
                                           ),
@@ -200,7 +212,7 @@ class _ExerciseRecordsState extends State<ExerciseRecords> {
                               );
                             },
                             style: ElevatedButton.styleFrom(
-                              primary: selectedPageIndex == 2
+                              backgroundColor: selectedPageIndex == 2
                                   ? const Color(0xFF555555)
                                   : const Color(0xFF333333),
                               shape: RoundedRectangleBorder(
@@ -217,7 +229,8 @@ class _ExerciseRecordsState extends State<ExerciseRecords> {
                               });
                               Navigator.of(context).pushReplacement(
                                 PageRouteBuilder(
-                                  opaque: false, // Set to false to overlay the existing page
+                                  opaque:
+                                      false, // Set to false to overlay the existing page
                                   pageBuilder: (BuildContext context, _, __) {
                                     return Stack(
                                       children: [
@@ -226,18 +239,21 @@ class _ExerciseRecordsState extends State<ExerciseRecords> {
                                           widthFactor: 1.0,
                                           heightFactor: 1.0,
                                           child: Container(
-                                            color: Colors.black.withOpacity(0.8), // Adjust the opacity as needed
+                                            color: Colors.black.withOpacity(
+                                                0.8), // Adjust the opacity as needed
                                           ),
                                         ),
                                         // New page content at the center
                                         Positioned.fill(
                                           child: Center(
                                             child: ClipRRect(
-                                              borderRadius: BorderRadius.circular(10.0),
+                                              borderRadius:
+                                                  BorderRadius.circular(10.0),
                                               child: FractionallySizedBox(
                                                 widthFactor: 0.9,
                                                 heightFactor: 0.8,
-                                                child: ExerciseRecords(widget.exercise),
+                                                child: ExerciseRecords(
+                                                    widget.exercise),
                                               ),
                                             ),
                                           ),
@@ -249,7 +265,7 @@ class _ExerciseRecordsState extends State<ExerciseRecords> {
                               );
                             },
                             style: ElevatedButton.styleFrom(
-                              primary: selectedPageIndex == 3
+                              backgroundColor: selectedPageIndex == 3
                                   ? const Color(0xFF555555)
                                   : const Color(0xFF333333),
                               shape: RoundedRectangleBorder(
