@@ -52,4 +52,36 @@ class FirebaseWorkoutsService {
       'workoutSessions': FieldValue.arrayRemove(workoutSession),
     });
   }
+
+  static void saveEditWorkoutSession(WorkoutSession workoutSession) async {
+    final User user = auth.currentUser!;
+    final uid = user.uid;
+    final collectionRef = db.collection('workouts');
+    final workoutSessions = await collectionRef
+        .doc(uid)
+        .get()
+        .then((value) => value.data()!['workoutSessions']);
+    final workoutSessionIndex = workoutSessions
+        .indexWhere((element) => element['id'] == workoutSession.id);
+    workoutSessions[workoutSessionIndex] = {
+      'id': workoutSession.id,
+      'date': DateTime.now(),
+      'title': workoutSession.title,
+      'note': workoutSession.note,
+      'exercisesSetsInfo': workoutSession.exercisesSetsInfo
+          .map((exercisesSetsInfo) => {
+                'exercise': exercisesSetsInfo.exercise.targetId,
+                'exerciseSets': exercisesSetsInfo.exerciseSets
+                    .map((exerciseSet) => {
+                          'reps': exerciseSet.reps,
+                          'weight': exerciseSet.weight,
+                        })
+                    .toList(),
+              })
+          .toList(),
+    };
+    await collectionRef.doc(uid).update({
+      'workoutSessions': workoutSessions,
+    });
+  }
 }
