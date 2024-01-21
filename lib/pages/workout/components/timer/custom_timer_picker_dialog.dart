@@ -19,8 +19,8 @@ class CustomTimerPickerDialog extends StatelessWidget {
     return AlertDialog(
       backgroundColor: AppColours.primaryBright,
       content: SizedBox(
-        height: 500,
-        width: 500,
+        height: MediaQuery.of(context).size.height*0.56,
+        width:MediaQuery.of(context).size.width,
         child: Column(
           children: [
             Row(
@@ -52,8 +52,8 @@ class CustomTimerPickerDialog extends StatelessWidget {
             ),
             const SizedBox(height: 30),
             Container(
-              height: 295,
-              width: 300,
+              height: MediaQuery.of(context).size.height * 0.33,
+              width: MediaQuery.of(context).size.width* 0.7,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(150),
                 border: Border.all(color: AppColours.secondary, width: 5),
@@ -69,8 +69,8 @@ class CustomTimerPickerDialog extends StatelessWidget {
             ),
             const SizedBox(height: 50),
             Container(
-              height: 50,
-              width: 300,
+              height: MediaQuery.of(context).size.height * 0.055,
+              width: MediaQuery.of(context).size.width * 0.7,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(50),
                 // Rounded corners
