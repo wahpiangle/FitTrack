@@ -27,8 +27,10 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
   void initState() {
     super.initState();
     initTimers();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _handleTimerActive(context);
+    });
   }
-
   void initTimers() {
     final timerProvider = Provider.of<TimerProvider>(context, listen: false);
     final restTimerProvider =
@@ -176,6 +178,13 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
       return;
     }
 
+    // Check if the timer is running when the screen is opened
+    if (timerProvider.isTimerRunning) {
+      isTimerActiveScreenOpen = true;
+      _showTimerBottomSheet(context);
+    }
+
+    // Listen for changes in the timer state
     timerProvider.addListener(() {
       if (timerProvider.isTimerRunning && !isTimerActiveScreenOpen) {
         isTimerActiveScreenOpen = true;
@@ -186,6 +195,7 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
       }
     });
   }
+
 
   void _showTimerBottomSheet(BuildContext context) {
     isTimerActiveScreenOpen = true;
