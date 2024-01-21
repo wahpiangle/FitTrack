@@ -9,10 +9,10 @@ class CustomTimerPickerDialog extends StatelessWidget {
   final void Function(BuildContext) showCustomTimerDetailsDialog;
 
   const CustomTimerPickerDialog({
-    Key? key,
+    super.key,
     required this.customTimerProvider,
     required this.showCustomTimerDetailsDialog,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +32,7 @@ class CustomTimerPickerDialog extends StatelessWidget {
                     Navigator.of(context).pop();
                   },
                 ),
-                const Spacer(), // Add spacer to center the title
+                const Spacer(),
                 const Text(
                   'Rest Timer',
                   style: TextStyle(
@@ -41,7 +41,7 @@ class CustomTimerPickerDialog extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                const Spacer(), // Add spacer to center the title
+                const Spacer(),
                 IconButton(
                   icon: const Icon(Icons.help, color: Colors.white),
                   onPressed: () {
@@ -50,15 +50,13 @@ class CustomTimerPickerDialog extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 30), // Adjust spacing
+            const SizedBox(height: 30),
             Container(
               height: 295,
               width: 300,
               decoration: BoxDecoration(
-                borderRadius:
-                BorderRadius.circular(150), // Half of height or width for a perfect circle
-                border: Border.all(
-                    color: AppColours.secondary, width: 5),
+                borderRadius: BorderRadius.circular(150),
+                border: Border.all(color: AppColours.secondary, width: 5),
               ),
               child: ClipOval(
                 child: Container(
@@ -69,9 +67,9 @@ class CustomTimerPickerDialog extends StatelessWidget {
                 ),
               ),
             ),
-            const SizedBox(height: 50), // Adjust spacing
+            const SizedBox(height: 50),
             Container(
-              height: 50, // Set a specific height for the ElevatedButton
+              height: 50,
               width: 300,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(50),
@@ -88,8 +86,7 @@ class CustomTimerPickerDialog extends StatelessWidget {
                   showCustomTimerDetailsDialog(context);
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor:
-                  Color(0xFFC1C1C1), // Set the background color to green
+                  backgroundColor: Color(0xFFC1C1C1),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(50),
                   ),

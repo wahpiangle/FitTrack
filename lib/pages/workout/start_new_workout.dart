@@ -13,9 +13,7 @@ import 'package:group_project/pages/workout/components/timer/timer_provider.dart
 import 'package:group_project/pages/workout/components/timer/rest_timer_provider.dart';
 import 'components/timer/custom_timer_picker_dialog.dart';
 import 'components/timer/custom_timer_provider.dart';
-import 'components/timer/rest_time_picker.dart';
 import 'components/timer/resttimer_details_dialog.dart';
-
 
 class StartNewWorkout extends StatefulWidget {
   final List<Exercise> exerciseData;
@@ -26,34 +24,22 @@ class StartNewWorkout extends StatefulWidget {
   State<StartNewWorkout> createState() => _StartNewWorkoutState();
 }
 
-class _StartNewWorkoutState extends State<StartNewWorkout>
-    with TickerProviderStateMixin {
-
-  late AnimationController _controller;
-  late Animation<double> _animation;
+class _StartNewWorkoutState extends State<StartNewWorkout> {
   bool _isTimerRunning = false;
-  late List<Exercise> exerciseData;
   bool _isSetTimeVisible = true;
-  TextEditingController weightsController = TextEditingController();
-  TextEditingController repsController = TextEditingController();
 
-  List<Widget> setBorders = [];
-
-
-  @override
   @override
   void initState() {
     super.initState();
-    exerciseData = widget.exerciseData;
     initTimers();
-
   }
 
-
-  void initTimers() {//load the saved time after hot restart
+  void initTimers() {
     final timerProvider = Provider.of<TimerProvider>(context, listen: false);
-    final restTimerProvider = Provider.of<RestTimerProvider>(context, listen: false);
-    final customTimerProvider = Provider.of<CustomTimerProvider>(context, listen: false);
+    final restTimerProvider =
+        Provider.of<RestTimerProvider>(context, listen: false);
+    final customTimerProvider =
+        Provider.of<CustomTimerProvider>(context, listen: false);
 
     if (!_isTimerRunning) {
       timerProvider.startTimer();
@@ -69,52 +55,18 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
     if (!customTimerProvider.isRestTimerRunning) {
       customTimerProvider.loadCustomTimerState(context);
     }
-
-  }
-
-
-  Widget createSetBorder(int weight, int reps) {
-    return Container(
-      decoration: BoxDecoration(
-        border: Border.all(
-          color: Colors.white,
-          width: 2.0,
-        ),
-        borderRadius: BorderRadius.circular(10),
-      ),
-      margin: const EdgeInsets.all(10),
-      padding: const EdgeInsets.all(10),
-      child: Row(
-        children: [
-          Text("Weight: $weight"),
-          const SizedBox(width: 10),
-          Text("Reps: $reps"),
-        ],
-      ),
-    );
-  }
-
-  Widget buildSetBordersList() {
-    return ListView(
-      children: setBorders,
-    );
   }
 
   void selectExercise(Exercise selectedExercise) {
     objectBox.currentWorkoutSessionService
         .addExerciseToCurrentWorkoutSession(selectedExercise);
-
-  }
-  @override
-  void dispose() {
-    weightsController.dispose();
-    repsController.dispose();
-    super.dispose();
   }
 
   void _finishWorkout(BuildContext context) {
-    final customTimerProvider = Provider.of<CustomTimerProvider>(context, listen: false);
-    final restTimerProvider = Provider.of<RestTimerProvider>(context, listen: false);
+    final customTimerProvider =
+        Provider.of<CustomTimerProvider>(context, listen: false);
+    final restTimerProvider =
+        Provider.of<RestTimerProvider>(context, listen: false);
     final timerProvider = Provider.of<TimerProvider>(context, listen: false);
 
     showDialog(
@@ -146,17 +98,16 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
               ),
               TextButton(
                 onPressed: () {
-                  // Stop the rest timer and general workout timer
+                  WorkoutSession savedWorkout = objectBox
+                      .currentWorkoutSessionService
+                      .saveCurrentWorkoutSession(
+                          timeInSeconds: timerProvider.currentDuration);
                   restTimerProvider.stopRestTimer();
                   customTimerProvider.stopCustomTimer();
                   timerProvider.stopTimer();
                   timerProvider.resetTimer();
-                  // Close the dialog
                   Navigator.of(context).pop();
                   Navigator.of(context).pop();
-                  WorkoutSession savedWorkout = objectBox
-                      .currentWorkoutSessionService
-                      .saveCurrentWorkoutSession();
                   FirebaseWorkoutsService.createWorkoutSession(savedWorkout);
                   Navigator.of(context).push(
                     PageRouteBuilder(
@@ -304,14 +255,13 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
                     child: LinearProgressIndicator(
                       value: restTimerProvider.currentRestTimerDuration > 0
                           ? restTimerProvider.currentRestTimerDuration /
-                          restTimerProvider.restTimerDuration
+                              restTimerProvider.restTimerDuration
                           : 0.0,
                       valueColor: const AlwaysStoppedAnimation<Color>(
                         AppColours.secondaryDark,
                       ),
                       backgroundColor: Colors.grey[800],
                       minHeight: 40,
-                      // thickness of the progress bar
                       semanticsLabel: 'Linear progress indicator',
                     ),
                   ),
@@ -321,18 +271,17 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
                   ClipRRect(
                     borderRadius: BorderRadius.circular(8.0),
                     child: SizedBox(
-                      width: 90, //length longer as is icon + text
+                      width: 90,
                       child: LinearProgressIndicator(
                         value: restTimerProvider.currentRestTimerDuration > 0
                             ? restTimerProvider.currentRestTimerDuration /
-                            restTimerProvider.restTimerDuration
+                                restTimerProvider.restTimerDuration
                             : 0.0,
                         valueColor: const AlwaysStoppedAnimation<Color>(
                           AppColours.secondaryDark,
                         ),
                         backgroundColor: Colors.grey[800],
                         minHeight: 40,
-                        // thickness of the progress bar
                         semanticsLabel: 'Linear progress indicator',
                       ),
                     ),
@@ -341,11 +290,12 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
                   ClipRRect(
                     borderRadius: BorderRadius.circular(8.0),
                     child: SizedBox(
-                      width: 90, //length longer as is icon + text
+                      width: 90,
                       child: LinearProgressIndicator(
-                        value: customTimerProvider.customCurrentTimerDuration > 0
+                        value: customTimerProvider.customCurrentTimerDuration >
+                                0
                             ? customTimerProvider.customCurrentTimerDuration /
-                            customTimerProvider.customTimerDuration
+                                customTimerProvider.customTimerDuration
                             : 0.0,
                         valueColor: const AlwaysStoppedAnimation<Color>(
                           AppColours.secondaryDark,
@@ -360,7 +310,7 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
                 AnimatedCrossFade(
                   duration: const Duration(milliseconds: 300),
                   crossFadeState: restTimerProvider.isRestTimerEnabled &&
-                      restTimerProvider.isRestTimerRunning
+                          restTimerProvider.isRestTimerRunning
                       ? CrossFadeState.showFirst
                       : CrossFadeState.showSecond,
                   firstChild: Padding(
@@ -371,8 +321,7 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
                             color: Colors.white, size: 24),
                         const SizedBox(width: 4),
                         Text(
-                          " ${RestTimerProvider.formatDuration(
-                              restTimerProvider.currentRestTimerDuration)}",
+                          " ${RestTimerProvider.formatDuration(restTimerProvider.currentRestTimerDuration)}",
                           style: const TextStyle(
                             fontSize: 16,
                             color: Colors.white,
@@ -383,7 +332,8 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
                   ),
                   secondChild: GestureDetector(
                     onTap: () async {
-                      await _showScrollCustomPicker(context, customTimerProvider);
+                      await _showScrollCustomPicker(
+                          context, customTimerProvider);
                       setState(() {
                         _isSetTimeVisible = !_isSetTimeVisible;
                       });
@@ -412,8 +362,7 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
                             color: Colors.white, size: 24),
                         const SizedBox(width: 4),
                         Text(
-                          " ${RestTimerProvider.formatDuration(
-                              customTimerProvider.customCurrentTimerDuration)}",
+                          " ${RestTimerProvider.formatDuration(customTimerProvider.customCurrentTimerDuration)}",
                           style: const TextStyle(
                             fontSize: 16,
                             color: Colors.white,
@@ -431,8 +380,8 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
       ),
       backgroundColor: AppColours.primary,
       body: StreamBuilder<CurrentWorkoutSession>(
-        stream: objectBox.currentWorkoutSessionService
-            .watchCurrentWorkoutSession(),
+        stream:
+            objectBox.currentWorkoutSessionService.watchCurrentWorkoutSession(),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
             return const Center(child: CircularProgressIndicator());
@@ -442,9 +391,9 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
               child: Column(
                 children: [
                   ExerciseTile(
-                    exerciseData: exerciseData,
+                    exerciseData: widget.exerciseData,
                     exercisesSetsInfo:
-                    snapshot.data!.exercisesSetsInfo.toList(),
+                        snapshot.data!.exercisesSetsInfo.toList(),
                     selectExercise: selectExercise,
                     removeSet: removeSet,
                     timerProvider: timerProvider,
@@ -458,7 +407,6 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
     );
   }
 
-
   Future<void> showRestTimerDetailsDialog(
       RestTimerProvider restTimerProvider) async {
     showDialog(
@@ -471,7 +419,6 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
     );
   }
 
-
   Future<void> showCustomTimerDetailsDialog(
       CustomTimerProvider customTimerProvider) async {
     showDialog(
@@ -483,7 +430,6 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
       },
     );
   }
-
 
   Future<void> _showScrollCustomPicker(
       BuildContext context, CustomTimerProvider customTimerProvider) async {
@@ -499,7 +445,4 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
       },
     );
   }
-
 }
-
-

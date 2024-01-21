@@ -119,7 +119,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
     final UserStateProvider userStateProvider =
-    Provider.of<UserStateProvider>(context);
+        Provider.of<UserStateProvider>(context);
 
     bool isLoggedIn = userStateProvider.userState.isLoggedIn;
 
@@ -135,7 +135,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Add a Column for the Profile heading
                     const Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -160,18 +159,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           height: 100,
                           child: ClipOval(
                             child: (profileImage.isEmpty ||
-                                profileImage ==
-                                    'assets/icons/defaultimage.jpg')
+                                    profileImage ==
+                                        'assets/icons/defaultimage.jpg')
                                 ? const CircleAvatar(
-                              radius: 50,
-                              backgroundImage: AssetImage(
-                                  'assets/icons/defaultimage.jpg'),
-                            )
+                                    radius: 50,
+                                    backgroundImage: AssetImage(
+                                        'assets/icons/defaultimage.jpg'),
+                                  )
                                 : CircleAvatar(
-                              radius: 50,
-                              backgroundImage:
-                              FileImage(File(profileImage)),
-                            ),
+                                    radius: 50,
+                                    backgroundImage:
+                                        FileImage(File(profileImage)),
+                                  ),
                           ),
                         ),
                         const SizedBox(width: 20),
@@ -222,9 +221,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     ProfileMenuItem(
                       title: "Notifications",
                       icon: Icons.notifications,
-                      onPressed: () {
-                        // Navigate to the Notifications screen
-                      },
+                      onPressed: () {},
                     ),
                     ProfileMenuItem(
                       title: "Timer",
@@ -245,12 +242,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         // Navigate to the Privacy Policy screen
                       },
                     ),
-                    if ((isAnonymous)) // User logged in anonymous
+                    if ((isAnonymous))
                       ProfileMenuItem(
                         title: "Sign Up / Log In",
                         icon: Icons.person,
                         onPressed: () {
-                          // Navigate to sign-up or login screen
                           Navigator.of(context).push(
                             MaterialPageRoute(
                               builder: (context) => const SettingsSignup(),
@@ -258,12 +254,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           );
                         },
                       )
-                    else if (!isSignInWithGoogle) // User logged in with email and password
+                    else if (!isSignInWithGoogle)
                       ProfileMenuItem(
                         title: "Edit Password",
                         icon: Icons.key_outlined,
                         onPressed: () {
-                          // Navigate to edit password screen
                           Navigator.of(context).push(
                             MaterialPageRoute(
                               builder: (context) => const EditPassword(),
@@ -298,7 +293,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       if (isAnonymous) {
         _saveUserData(); // Save updated profile image for anonymous users
       } else {
-        // Update profile image in Firebase for authenticated users
+        //TODO: Update profile image in Firebase for authenticated users
         // (Implement the logic to upload to Firebase here)
       }
     });
@@ -319,7 +314,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
         username = result['username']!;
         if (result.containsKey('profileImage')) {
           profileImage = result['profileImage'];
-          // Update Firebase user profile for authenticated users
           if (!isAnonymous) {
             AuthService().updateUserProfile(
                 displayName: username, photoURL: profileImage);
@@ -408,7 +402,7 @@ class LogoutButton extends StatelessWidget {
         onPressed: () {
           authService.signOut();
           Future.microtask(
-                  () => Navigator.of(context).popAndPushNamed('/auth'));
+              () => Navigator.of(context).popAndPushNamed('/auth'));
         },
         style: TextButton.styleFrom(
           foregroundColor: Colors.red,

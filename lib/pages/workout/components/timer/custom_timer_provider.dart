@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:group_project/main.dart';
 
-
 class CustomTimerProvider with ChangeNotifier {
   int _customTimerDuration = 120;
   int _customCurrentDuration = 0;
@@ -13,7 +12,6 @@ class CustomTimerProvider with ChangeNotifier {
   bool _isRestTimerRunning = false;
   bool _isDialogShown = false;
   bool _isDialogOpen = false;
-
 
   bool get isRestTimerRunning => _isRestTimerRunning;
   int get customTimerDuration => _customTimerDuration;
@@ -26,7 +24,6 @@ class CustomTimerProvider with ChangeNotifier {
   //it is used when the picker dialog already popped and the context no longer exists,
   // when isdialogopen==true, pop the dialog page without error
   BuildContext? _contextForDialog;
-  BuildContext? _contextForTimer;
 
   void loadCustomTimerState(BuildContext context) {
     SharedPreferences.getInstance().then((prefs) {
@@ -36,13 +33,11 @@ class CustomTimerProvider with ChangeNotifier {
       _isDialogOpen = prefs.getBool('isDialogOpen') ?? false;
       _customTimerMinutes = prefs.getInt('customTimerMinutes') ?? 0;
       _customTimerSeconds = prefs.getInt('customTimerSeconds') ?? 0;
-      if(_customCurrentDuration>0) {
+      if (_customCurrentDuration > 0) {
         startCustomTimer(context);
       }
     });
   }
-
-
 
   Future<void> _saveCustomTimerState() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -55,7 +50,6 @@ class CustomTimerProvider with ChangeNotifier {
     prefs.setBool('isDialogOpen', _isDialogOpen);
   }
 
-  //check if the user is opening the rest timer details dialog
   void showCustomDialog(BuildContext context) {
     _isDialogOpen = true;
     _contextForDialog = context;
@@ -78,15 +72,13 @@ class CustomTimerProvider with ChangeNotifier {
     notifyListeners();
   }
 
-
   void setCustomTimerDuration(int duration) {
     _customTimerDuration = duration;
     notifyListeners();
   }
 
-  void startCustomTimer(BuildContext context) async{
+  void startCustomTimer(BuildContext context) async {
     await Future.microtask(() {
-      _contextForTimer = context;
       if (!_isDialogShown) {
         if (_isRestTimerRunning && _customCurrentDuration > 0) {
           // Continue from the remaining time after hot restart
@@ -152,6 +144,7 @@ class CustomTimerProvider with ChangeNotifier {
         builder: (BuildContext context) {
           return AlertDialog(
             backgroundColor: const Color(0xFF1A1A1A),
+            surfaceTintColor: Colors.transparent,
             title: const Center(
               child: Text(
                 'Custom Time Ended',
@@ -207,10 +200,10 @@ class CustomTimerProvider with ChangeNotifier {
     if (_customCurrentDuration < 0) {
       _customCurrentDuration = 1;
     }
-    _customTimerDuration = _customCurrentDuration; // update the rest timer duration after pressing 10s buttons
+    _customTimerDuration =
+        _customCurrentDuration; // update the rest timer duration after pressing 10s buttons
     notifyListeners();
   }
-
 
   @override
   void dispose() {
@@ -218,5 +211,3 @@ class CustomTimerProvider with ChangeNotifier {
     super.dispose();
   }
 }
-
-
