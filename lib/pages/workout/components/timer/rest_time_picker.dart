@@ -70,7 +70,6 @@ class CustomTimerPicker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Adjust the initial item
     int initialItem = (customTimerProvider.customTimerMinutes * 60 +
         customTimerProvider.customTimerSeconds) ~/
         5 -

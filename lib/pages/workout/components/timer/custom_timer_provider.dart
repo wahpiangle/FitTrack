@@ -23,8 +23,6 @@ class CustomTimerProvider with ChangeNotifier {
   bool get isDialogShown => _isDialogShown;
   bool get isCustomDialogOpen => _isDialogOpen;
 
-  //it is used when the picker dialog already popped and the context no longer exists,
-  // when isdialogopen==true, pop the dialog page without error
   BuildContext? _contextForDialog;
   BuildContext? _contextForTimer;
 
@@ -109,7 +107,7 @@ class CustomTimerProvider with ChangeNotifier {
         } else {
           // Check if the user has chosen a time
           if (_customTimerMinutes == 0 && _customTimerSeconds == 0) {
-            // Use the default time of 2 minutes
+            // default time of 2 minutes
             _customTimerMinutes = 2;
             _customTimerSeconds = 0;
           }

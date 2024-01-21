@@ -36,7 +36,6 @@ class RestTimerDetailsDialogState extends State<RestTimerDetailsDialog>
       ),
     );
 
-    // Delay the notification to the end of the build phase
     Future.delayed(Duration.zero, () {
       widget.restTimerProvider.showRestDialog();
     });
@@ -160,7 +159,7 @@ class RestTimerDetailsDialogState extends State<RestTimerDetailsDialog>
                           ),
                           ElevatedButton(
                             onPressed: () {
-                              // Increase the rest time by 10 seconds
+
                               widget.restTimerProvider.adjustRestTime(10);
                             },
                             style: ElevatedButton.styleFrom(
@@ -217,7 +216,6 @@ class CustomTimerDetailsDialogState extends State<CustomTimerDetailsDialog>
       ),
     );
 
-    // Delay the notification to the end of the build phase
     Future.delayed(Duration.zero, () {
       widget.customTimerProvider.showCustomDialog(context);
     });
@@ -341,7 +339,6 @@ class CustomTimerDetailsDialogState extends State<CustomTimerDetailsDialog>
                           ),
                           ElevatedButton(
                             onPressed: () {
-                              // Increase the rest time by 10 seconds
                               widget.customTimerProvider.adjustCustomTime(10);
                             },
                             style: ElevatedButton.styleFrom(
@@ -369,7 +366,7 @@ void showAboutRestTimerDialog(BuildContext context) {
     context: context,
     builder: (BuildContext context) {
       return AlertDialog(
-        backgroundColor:  AppColours.primaryBright, // Grey background color
+        backgroundColor:  AppColours.primaryBright,
         title: const Center(
           child: Text(
             'About Rest Timer',

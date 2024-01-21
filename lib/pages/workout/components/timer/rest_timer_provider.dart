@@ -103,7 +103,7 @@ class RestTimerProvider with ChangeNotifier {
       } else {
         // Check if the user has chosen a time
         if (_restTimerMinutes == 0 && _restTimerSeconds == 0) {
-          // Use the default time of 2 minutes
+          // default time of 2 minutes
           _restTimerMinutes = 2;
           _restTimerSeconds = 0;
         }

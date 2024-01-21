@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:group_project/pages/workout/components/timer/rest_timer_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:group_project/pages/components/top_nav_bar.dart';
-
-import '../workout/components/timer/rest_time_picker.dart';
+import 'package:group_project/pages/workout/components/timer/rest_time_picker.dart';
 
 
 class TimerDetailsSettings extends StatelessWidget {
@@ -19,7 +18,7 @@ class TimerDetailsSettings extends StatelessWidget {
         showBackButton: true,
       ),
       body: Container(
-        color: const Color(0xFF1A1A1A), // Set the background color
+        color: const Color(0xFF1A1A1A),
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -59,10 +58,10 @@ class TimerDetailsSettings extends StatelessWidget {
                                     }
                                     restTimerProvider.toggleRestTimer(value);
                                   },
-                                  activeTrackColor: const Color(0xFFB3BFA5), // Set the active track color
-                                  activeColor: const Color(0xFFE1F0CF), // Set the active color
-                                  inactiveThumbColor: const Color(0xFFC1C1C1), // Set the inactive thumb color
-                                  inactiveTrackColor: const Color(0xFFC1C1C1), // Set the inactive track color
+                                  activeTrackColor: const Color(0xFFB3BFA5),
+                                  activeColor: const Color(0xFFE1F0CF),
+                                  inactiveThumbColor: const Color(0xFFC1C1C1),
+                                  inactiveTrackColor: const Color(0xFFC1C1C1),
                                 ),
                               ],
                             ),
@@ -74,7 +73,7 @@ class TimerDetailsSettings extends StatelessWidget {
                     const SizedBox(height: 16),
                     Container(
                       decoration: BoxDecoration(
-                        color: Colors.grey[850], // box background color
+                        color: Colors.grey[850],
                         borderRadius: BorderRadius.circular(20.0),
                       ),
                       child: Padding(

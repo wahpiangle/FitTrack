@@ -135,7 +135,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Add a Column for the Profile heading
+
                     const Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -223,7 +223,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       title: "Notifications",
                       icon: Icons.notifications,
                       onPressed: () {
-                        // Navigate to the Notifications screen
+
                       },
                     ),
                     ProfileMenuItem(
@@ -242,7 +242,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       title: "Help Centre",
                       icon: Icons.info,
                       onPressed: () {
-                        // Navigate to the Privacy Policy screen
+
                       },
                     ),
                     if ((isAnonymous)) // User logged in anonymous
@@ -250,7 +250,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         title: "Sign Up / Log In",
                         icon: Icons.person,
                         onPressed: () {
-                          // Navigate to sign-up or login screen
                           Navigator.of(context).push(
                             MaterialPageRoute(
                               builder: (context) => const SettingsSignup(),
@@ -275,7 +274,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       title: "Terms and Conditions",
                       icon: Icons.gavel,
                       onPressed: () {
-                        // Navigate to the Terms and Conditions screen
+
                       },
                     ),
                     const SizedBox(height: 40),
@@ -298,8 +297,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       if (isAnonymous) {
         _saveUserData(); // Save updated profile image for anonymous users
       } else {
-        // Update profile image in Firebase for authenticated users
-        // (Implement the logic to upload to Firebase here)
+
       }
     });
   }

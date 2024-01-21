@@ -177,7 +177,7 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
                         );
                       },
                       transitionDuration: const Duration(
-                          milliseconds: 500), // Set to 0.5 seconds
+                          milliseconds: 500),
                     ),
                   );
                 },
@@ -311,7 +311,6 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
                       ),
                       backgroundColor: Colors.grey[800],
                       minHeight: 40,
-                      // thickness of the progress bar
                       semanticsLabel: 'Linear progress indicator',
                     ),
                   ),
@@ -321,7 +320,7 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
                   ClipRRect(
                     borderRadius: BorderRadius.circular(8.0),
                     child: SizedBox(
-                      width: 90, //length longer as is icon + text
+                      width: 90,
                       child: LinearProgressIndicator(
                         value: restTimerProvider.currentRestTimerDuration > 0
                             ? restTimerProvider.currentRestTimerDuration /
