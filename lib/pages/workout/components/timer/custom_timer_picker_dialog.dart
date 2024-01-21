@@ -18,91 +18,88 @@ class CustomTimerPickerDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return AlertDialog(
       backgroundColor: AppColours.primaryBright,
-      content: SizedBox(
-        height: 500,
-        width: 500,
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                IconButton(
-                  icon: const Icon(Icons.close, color: Colors.white),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
-                const Spacer(),
-                const Text(
-                  'Rest Timer',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const Spacer(),
-                IconButton(
-                  icon: const Icon(Icons.help, color: Colors.white),
-                  onPressed: () {
-                    showAboutRestTimerDialog(context);
-                  },
-                ),
-              ],
-            ),
-            const SizedBox(height: 30),
-            Container(
-              height: 295,
-              width: 300,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(150),
-                border: Border.all(color: AppColours.secondary, width: 5),
-              ),
-              child: ClipOval(
-                child: Container(
-                  color: AppColours.secondary,
-                  child: CustomTimerPicker(
-                    customTimerProvider: customTimerProvider,
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(height: 50),
-            Container(
-              height: 50,
-              width: 300,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(50),
-                // Rounded corners
-              ),
-              child: ElevatedButton(
+      surfaceTintColor: Colors.transparent,
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              IconButton(
+                icon: const Icon(Icons.close, color: Colors.white),
                 onPressed: () {
-                  customTimerProvider.resetCustomTimer(
-                    customTimerProvider.customTimerMinutes * 60 +
-                        customTimerProvider.customTimerSeconds,
-                    context,
-                  );
                   Navigator.of(context).pop();
-                  showCustomTimerDetailsDialog(context);
                 },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xFFC1C1C1),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(50),
-                  ),
+              ),
+              const Spacer(),
+              const Text(
+                'Rest Timer',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
                 ),
-                child: const Text(
-                  'Start Rest Timer',
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
-                  ),
+              ),
+              const Spacer(),
+              IconButton(
+                icon: const Icon(Icons.help, color: Colors.white),
+                onPressed: () {
+                  showAboutRestTimerDialog(context);
+                },
+              ),
+            ],
+          ),
+          const SizedBox(height: 30),
+          Container(
+            height: 295,
+            width: 300,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(150),
+              border: Border.all(color: AppColours.secondary, width: 5),
+            ),
+            child: ClipOval(
+              child: Container(
+                color: AppColours.secondary,
+                child: CustomTimerPicker(
+                  customTimerProvider: customTimerProvider,
                 ),
               ),
             ),
-          ],
-        ),
+          ),
+          const SizedBox(height: 50),
+          Container(
+            height: 50,
+            width: 300,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(50),
+            ),
+            child: ElevatedButton(
+              onPressed: () {
+                customTimerProvider.resetCustomTimer(
+                  customTimerProvider.customTimerMinutes * 60 +
+                      customTimerProvider.customTimerSeconds,
+                  context,
+                );
+                Navigator.of(context).pop();
+                showCustomTimerDetailsDialog(context);
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFFC1C1C1),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(50),
+                ),
+              ),
+              child: const Text(
+                'Start Rest Timer',
+                style: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
