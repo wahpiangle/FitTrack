@@ -91,8 +91,8 @@ class WorkoutSessionService {
   }
 
   void deleteEditingWorkoutSession() {
-    WorkoutSession editingWorkoutSession = getEditingWorkoutSession()!;
-    exerciseSetBox.removeMany(editingWorkoutSession.exercisesSetsInfo
+    WorkoutSession? editingWorkoutSession = getEditingWorkoutSession();
+    exerciseSetBox.removeMany(editingWorkoutSession!.exercisesSetsInfo
         .expand((element) => element.exerciseSets)
         .map((e) {
       return e.id;
