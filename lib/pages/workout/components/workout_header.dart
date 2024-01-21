@@ -59,7 +59,7 @@ class _WorkoutHeaderState extends State<WorkoutHeader> {
                 "Timer: ${TimerProvider.formatTimerDuration(timerProvider.currentDuration)}",
                 style: const TextStyle(
                   color: Color(0xFFC1C1C1),
-                  fontSize: 15,
+                  fontSize: 17,
                   fontWeight: FontWeight.bold,
                 ),
               );

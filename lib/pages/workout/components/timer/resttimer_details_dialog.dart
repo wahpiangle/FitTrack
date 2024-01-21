@@ -2,8 +2,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:group_project/constants/themes/app_colours.dart';
 import 'package:group_project/pages/workout/components/timer/rest_timer_provider.dart';
-
-
 import 'custom_timer_provider.dart';
 
 
@@ -221,7 +219,7 @@ class CustomTimerDetailsDialogState extends State<CustomTimerDetailsDialog>
 
     // Delay the notification to the end of the build phase
     Future.delayed(Duration.zero, () {
-      widget.customTimerProvider.showCustomDialog();
+      widget.customTimerProvider.showCustomDialog(context);
     });
 
     _animationController.forward();

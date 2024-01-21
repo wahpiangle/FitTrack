@@ -11,6 +11,7 @@ import 'package:group_project/services/firebase/workoutSession/firebase_workouts
 import 'package:provider/provider.dart';
 import 'package:group_project/pages/workout/components/timer/timer_provider.dart';
 import 'package:group_project/pages/workout/components/timer/rest_timer_provider.dart';
+import 'components/timer/custom_timer_picker_dialog.dart';
 import 'components/timer/custom_timer_provider.dart';
 import 'components/timer/rest_time_picker.dart';
 import 'components/timer/resttimer_details_dialog.dart';
@@ -33,11 +34,8 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
   bool _isTimerRunning = false;
   late List<Exercise> exerciseData;
   bool _isSetTimeVisible = true;
-  bool _isPickerOpen = false;
   TextEditingController weightsController = TextEditingController();
   TextEditingController repsController = TextEditingController();
-
-  bool get isPickerOpen => _isPickerOpen;
 
   List<Widget> setBorders = [];
 
@@ -427,23 +425,7 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
                       ],
                     ),
                   ),
-                  secondChild: GestureDetector(
-                    onTap: () async {
-                      await _showScrollCustomPicker(context, customTimerProvider);
-                      setState(() {
-                        _isSetTimeVisible = !_isSetTimeVisible;
-                      });
-                    },
-                    child: const Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: Row(
-                        children: [
-                          Icon(Icons.access_time,
-                              color: Colors.white, size: 24),
-                        ],
-                      ),
-                    ),
-                  ),
+                  secondChild: Container(),
                 ),
               ],
             ),
@@ -506,99 +488,21 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
   }
 
 
-
-
   Future<void> _showScrollCustomPicker(
       BuildContext context, CustomTimerProvider customTimerProvider) async {
     return showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          backgroundColor: AppColours.primaryBright,
-          content: SizedBox(
-            height: 500,
-            width:500,
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    IconButton(
-                      icon: const Icon(Icons.close, color: Colors.white),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                    ),
-                    const Spacer(), // Add spacer to center the title
-                    const Text(
-                      'Rest Timer',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const Spacer(), // Add spacer to center the title
-                    IconButton(
-                      icon: const Icon(Icons.help, color: Colors.white),
-                      onPressed: () {
-                        showAboutRestTimerDialog(context);
-                      },
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 30), // Adjust spacing
-                Container(
-                  height: 295,
-                  width: 300,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(150), // Half of height or width for a perfect circle
-                    border: Border.all(color: AppColours.secondary, width: 5),
-                  ),
-                  child: ClipOval(
-                    child: Container(
-                      color: AppColours.secondary,
-                      child: CustomTimerPicker(customTimerProvider: customTimerProvider),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 50), // Adjust spacing
-                Container(
-                  height: 50, // Set a specific height for the ElevatedButton
-                  width: 300,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(50), // Rounded corners
-                  ),
-                  child: ElevatedButton(
-                    onPressed: () {
-                      customTimerProvider.resetCustomTimer(
-                        customTimerProvider.customTimerMinutes * 60 +
-                            customTimerProvider.customTimerSeconds,
-                        context,
-                      );
-
-                      showCustomTimerDetailsDialog(customTimerProvider);
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Color(0xFFC1C1C1), // Set the background color to green
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(50),
-                      ),
-                    ),
-                    child: const Text('Start Rest Timer',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
+        return CustomTimerPickerDialog(
+          customTimerProvider: customTimerProvider,
+          showCustomTimerDetailsDialog: (BuildContext context) {
+            showCustomTimerDetailsDialog(customTimerProvider);
+          },
         );
       },
     );
   }
+
 
 }
 

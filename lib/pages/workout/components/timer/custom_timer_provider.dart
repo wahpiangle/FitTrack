@@ -1,8 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import '../../../../main.dart';
+import 'package:group_project/main.dart';
 
 
 class CustomTimerProvider with ChangeNotifier {
@@ -24,6 +23,10 @@ class CustomTimerProvider with ChangeNotifier {
   bool get isDialogShown => _isDialogShown;
   bool get isCustomDialogOpen => _isDialogOpen;
 
+  //it is used when the picker dialog already popped and the context no longer exists,
+  // when isdialogopen==true, pop the dialog page without error
+  BuildContext? _contextForDialog;
+  BuildContext? _contextForTimer;
 
   void loadCustomTimerState(BuildContext context) {
     SharedPreferences.getInstance().then((prefs) {
@@ -52,13 +55,16 @@ class CustomTimerProvider with ChangeNotifier {
     prefs.setBool('isDialogOpen', _isDialogOpen);
   }
 
-  void showCustomDialog() {//check if the user is opening the rest timer details dialog
+  //check if the user is opening the rest timer details dialog
+  void showCustomDialog(BuildContext context) {
     _isDialogOpen = true;
+    _contextForDialog = context;
     notifyListeners();
   }
 
   void closeRestDialog() {
     _isDialogOpen = false;
+    _contextForDialog = null;
     notifyListeners();
   }
 
@@ -80,6 +86,7 @@ class CustomTimerProvider with ChangeNotifier {
 
   void startCustomTimer(BuildContext context) async{
     await Future.microtask(() {
+      _contextForTimer = context;
       if (!_isDialogShown) {
         if (_isRestTimerRunning && _customCurrentDuration > 0) {
           // Continue from the remaining time after hot restart
@@ -88,9 +95,8 @@ class CustomTimerProvider with ChangeNotifier {
             if (_customCurrentDuration <= 0) {
               stopCustomTimer();
               _isDialogShown = false;
-              if (isCustomDialogOpen == true) {
-                Navigator.of(context).pop();
-                Navigator.of(context).pop();
+              if (isCustomDialogOpen == true && _contextForDialog != null) {
+                Navigator.of(_contextForDialog!).pop();
               }
               showCustomTimeEndedNotification();
             } else {
@@ -115,9 +121,8 @@ class CustomTimerProvider with ChangeNotifier {
             if (_customCurrentDuration <= 0) {
               stopCustomTimer();
               _isDialogShown = false;
-              if (isCustomDialogOpen == true) {
-                Navigator.of(context).pop();
-                Navigator.of(context).pop();
+              if (isCustomDialogOpen == true && _contextForDialog != null) {
+                Navigator.of(_contextForDialog!).pop();
               }
               showCustomTimeEndedNotification();
             } else {
