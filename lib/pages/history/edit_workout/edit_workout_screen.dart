@@ -4,6 +4,8 @@ import 'package:group_project/main.dart';
 import 'package:group_project/models/exercise.dart';
 import 'package:group_project/models/exercises_sets_info.dart';
 import 'package:group_project/models/workout_session.dart';
+import 'package:group_project/pages/history/edit_workout/dialog/cancel_edit_dialog.dart';
+import 'package:group_project/pages/history/edit_workout/dialog/save_edit_dialog.dart';
 import 'package:group_project/pages/workout/components/tiles/edit_exercise_tile.dart';
 
 class EditWorkoutScreen extends StatefulWidget {
@@ -23,223 +25,6 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
   WorkoutSession? editingWorkoutSession =
       objectBox.workoutSessionService.getEditingWorkoutSession();
   List<Exercise> exerciseData = objectBox.getAllExercises();
-
-  void _askToRevert() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          backgroundColor: AppColours.primary,
-          surfaceTintColor: Colors.transparent,
-          title: const Center(
-            child: Text(
-              'Revert Changes?',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-          content: Text(
-            'Are you sure you want to discard changes to this template? All changes will be lost.',
-            style: TextStyle(
-              color: Colors.grey[500],
-              fontSize: 16,
-            ),
-            textAlign: TextAlign.center,
-          ),
-          actions: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Flexible(
-                  flex: 1,
-                  child: SizedBox(
-                    width: double.infinity,
-                    child: TextButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all(
-                          Colors.black38,
-                        ),
-                        shape: MaterialStateProperty.all(
-                          RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                        ),
-                      ),
-                      child: const Text(
-                        'Cancel',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  width: 20,
-                ),
-                Flexible(
-                  flex: 1,
-                  child: SizedBox(
-                    width: double.infinity,
-                    child: TextButton(
-                      onPressed: () {
-                        objectBox.workoutSessionService
-                            .deleteEditingWorkoutSession();
-                        Navigator.pop(context);
-                        Navigator.pop(context);
-                      },
-                      style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all(
-                          Colors.red,
-                        ),
-                        shape: MaterialStateProperty.all(
-                          RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                        ),
-                      ),
-                      child: const Text(
-                        'Revert',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            )
-          ],
-        );
-      },
-    );
-  }
-
-  void _askToSave() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          backgroundColor: AppColours.primary,
-          surfaceTintColor: Colors.transparent,
-          title: const Center(
-            child: Text(
-              'Save Template?',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-          content: Text(
-            'Are you sure you want to save this template?',
-            style: TextStyle(
-              color: Colors.grey[500],
-              fontSize: 16,
-            ),
-            textAlign: TextAlign.center,
-          ),
-          actions: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Flexible(
-                  flex: 1,
-                  child: SizedBox(
-                    width: double.infinity,
-                    child: TextButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all(
-                          Colors.black38,
-                        ),
-                        shape: MaterialStateProperty.all(
-                          RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                        ),
-                      ),
-                      child: const Text(
-                        'Cancel',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  width: 20,
-                ),
-                Flexible(
-                  flex: 1,
-                  child: SizedBox(
-                    width: double.infinity,
-                    child: TextButton(
-                      onPressed: () {
-                        try {
-                          objectBox.workoutSessionService
-                              .updateSession(widget.workoutSessionId);
-                          Navigator.pop(context);
-                          Navigator.pop(context);
-                          if (widget.fromDetailPage) {
-                            Navigator.pop(context);
-                          }
-                        } catch (error) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                error.toString(),
-                                style: const TextStyle(
-                                  fontSize: 16,
-                                  color: Colors.white,
-                                ),
-                              ),
-                              backgroundColor: AppColours.primary,
-                            ),
-                          );
-                          Navigator.pop(context);
-                        }
-                      },
-                      style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all(
-                          AppColours.secondary,
-                        ),
-                        shape: MaterialStateProperty.all(
-                          RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                        ),
-                      ),
-                      child: const Text(
-                        'Save',
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 16,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            )
-          ],
-        );
-      },
-    );
-  }
 
   void selectExercise(Exercise selectedExercise) {
     objectBox.workoutSessionService
@@ -291,7 +76,12 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
             ),
           ),
           onPressed: () {
-            _askToRevert();
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return const CancelEditDialog();
+              },
+            );
           },
           icon: const Icon(
             Icons.close,
@@ -314,7 +104,15 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
                 objectBox.workoutSessionService.editingWorkoutSessionHasChanges(
                   widget.workoutSessionId,
                 )
-                    ? _askToSave()
+                    ? showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return SaveEditDialog(
+                            workoutSessionId: widget.workoutSessionId,
+                            fromDetailPage: widget.fromDetailPage,
+                          );
+                        },
+                      )
                     : ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
                           content: Text(
