@@ -302,7 +302,6 @@ class _StartNewWorkoutState extends State<StartNewWorkout> {
                         ),
                         backgroundColor: Colors.grey[800],
                         minHeight: 40,
-                        // thickness of the progress bar
                         semanticsLabel: 'Linear progress indicator',
                       ),
                     ),
