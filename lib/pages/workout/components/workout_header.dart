@@ -47,7 +47,7 @@ class _WorkoutHeaderState extends State<WorkoutHeader> {
               },
               style: const TextStyle(
                 color: Colors.white,
-                fontSize: 24,
+                fontSize: 20,
                 fontWeight: FontWeight.bold,
               ),
             ),

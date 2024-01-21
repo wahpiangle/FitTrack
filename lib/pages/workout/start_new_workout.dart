@@ -4,9 +4,10 @@ import 'package:group_project/constants/themes/app_colours.dart';
 import 'package:group_project/main.dart';
 import 'package:group_project/models/exercise.dart';
 import 'package:group_project/models/current_workout_session.dart';
-import 'package:group_project/pages/history/congratulation_screen.dart';
+import 'package:group_project/pages/history/complete_workout/congratulation_screen.dart';
 import 'package:group_project/models/workout_session.dart';
 import 'package:group_project/pages/workout/components/tiles/exercise_tile.dart';
+import 'package:group_project/services/firebase/firebase_workouts_service.dart';
 import 'package:group_project/services/firebase/workoutSession/firebase_workouts_service.dart';
 import 'package:provider/provider.dart';
 import 'package:group_project/pages/workout/components/timer/timer_provider.dart';
@@ -22,7 +23,6 @@ class StartNewWorkout extends StatefulWidget {
 
   const StartNewWorkout({super.key, required this.exerciseData});
 
-
   @override
   State<StartNewWorkout> createState() => _StartNewWorkoutState();
 }
@@ -31,6 +31,7 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
     with TickerProviderStateMixin {
 
   late AnimationController _controller;
+  late Animation<double> _animation;
   bool _isTimerRunning = false;
   late List<Exercise> exerciseData;
   bool _isSetTimeVisible = true;
@@ -112,7 +113,7 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
     super.dispose();
   }
 
-  void _delete(BuildContext context) {
+  void _finishWorkout(BuildContext context) {
     final customTimerProvider = Provider.of<CustomTimerProvider>(context, listen: false);
     final restTimerProvider = Provider.of<RestTimerProvider>(context, listen: false);
     final timerProvider = Provider.of<TimerProvider>(context, listen: false);
@@ -154,8 +155,9 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
                   // Close the dialog
                   Navigator.of(context).pop();
                   Navigator.of(context).pop();
-                  WorkoutSession savedWorkout =
-                  objectBox.saveCurrentWorkoutSession();
+                  WorkoutSession savedWorkout = objectBox
+                      .currentWorkoutSessionService
+                      .saveCurrentWorkoutSession();
                   FirebaseWorkoutsService.createWorkoutSession(savedWorkout);
                   Navigator.of(context).push(
                     PageRouteBuilder(
@@ -221,48 +223,32 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
         ),
         actions: [
           Center(
-            child: Container(
-              margin: const EdgeInsets.only(right: 10),
-              child: Material(
-                color: Colors.transparent,
-                child: InkWell(
-                  borderRadius: BorderRadius.circular(8),
-                  onTap: () {
-                    bool everySetCompleted = objectBox
-                        .currentWorkoutSessionService
-                        .getCurrentWorkoutSession()
-                        .exercisesSetsInfo
-                        .every((exercisesSetsInfo) {
-                      return exercisesSetsInfo.exerciseSets
-                          .every((exerciseSet) {
-                        return exerciseSet.isCompleted;
-                      });
+            child: Material(
+              color: Colors.transparent,
+              child: InkWell(
+                borderRadius: BorderRadius.circular(8),
+                onTap: () {
+                  bool everySetCompleted = objectBox
+                      .currentWorkoutSessionService
+                      .getCurrentWorkoutSession()
+                      .exercisesSetsInfo
+                      .every((exercisesSetsInfo) {
+                    return exercisesSetsInfo.exerciseSets.every((exerciseSet) {
+                      return exerciseSet.isCompleted;
                     });
-                    bool isNotEmpty = objectBox.currentWorkoutSessionService
-                        .getCurrentWorkoutSession()
-                        .exercisesSetsInfo
-                        .isNotEmpty;
-                    if (isNotEmpty) {
-                      if (everySetCompleted) {
-                        _delete(context);
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text(
-                              "Please complete all sets",
-                              style: TextStyle(
-                                color: Colors.white,
-                              ),
-                            ),
-                            backgroundColor: Color(0xFF1A1A1A),
-                          ),
-                        );
-                      }
+                  });
+                  bool isNotEmpty = objectBox.currentWorkoutSessionService
+                      .getCurrentWorkoutSession()
+                      .exercisesSetsInfo
+                      .isNotEmpty;
+                  if (isNotEmpty) {
+                    if (everySetCompleted) {
+                      _finishWorkout(context);
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
                           content: Text(
-                            "Please add at least one exercise",
+                            "Please complete all sets",
                             style: TextStyle(
                               color: Colors.white,
                             ),
@@ -271,15 +257,27 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
                         ),
                       );
                     }
-                  },
-                  child: const Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Text(
-                      "Finish",
-                      style: TextStyle(
-                        color: AppColours.secondary,
-                        fontSize: 18,
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text(
+                          "Please add at least one exercise",
+                          style: TextStyle(
+                            color: Colors.white,
+                          ),
+                        ),
+                        backgroundColor: Color(0xFF1A1A1A),
                       ),
+                    );
+                  }
+                },
+                child: const Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Text(
+                    "Finish",
+                    style: TextStyle(
+                      color: Color(0xFFE1F0CF),
+                      fontSize: 18,
                     ),
                   ),
                 ),
@@ -502,7 +500,6 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
       },
     );
   }
-
 
 }
 

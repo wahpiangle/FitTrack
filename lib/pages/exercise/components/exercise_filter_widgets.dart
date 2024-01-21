@@ -2,19 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:group_project/pages/exercise/exercise_filter_page.dart';
 
 class ExerciseFilterWidgets extends StatelessWidget {
-
   final List data;
   final bool isBodyPart;
   final bool isCategory;
   final ExerciseFilterPageState state;
 
-  const ExerciseFilterWidgets({
-    super.key,
-    required this.data,
-    required this.isBodyPart,
-    required this.isCategory,
-    required this.state
-  });
+  const ExerciseFilterWidgets(
+      {super.key,
+      required this.data,
+      required this.isBodyPart,
+      required this.isCategory,
+      required this.state});
 
   @override
   Widget build(BuildContext context) {
@@ -27,10 +25,10 @@ class ExerciseFilterWidgets extends StatelessWidget {
           return generateColoredBorderItem(
             isFilterSelected,
             const Color(0xFFE1F0CF), // Green border color (#E1F0CF)
-            18,
+            14,
             bodyPart.name,
-                () {
-                  state.changeExerciseState(bodyPart.name);
+            () {
+              state.changeExerciseState(bodyPart.name);
             },
           );
         }).toList(),
@@ -40,14 +38,15 @@ class ExerciseFilterWidgets extends StatelessWidget {
         spacing: 12,
         runSpacing: 20,
         children: data.map((category) {
-          final isFilterSelected = state.selectedCategories.contains(category.name);
+          final isFilterSelected =
+              state.selectedCategories.contains(category.name);
           return generateColoredBorderItem(
             isFilterSelected,
             const Color(0xFFE1F0CF), // Green border color (#E1F0CF)
-            18,
+            14,
             category.name,
-                () {
-                  state.changeCategoryState(category.name);
+            () {
+              state.changeCategoryState(category.name);
             },
           );
         }).toList(),
@@ -58,14 +57,13 @@ class ExerciseFilterWidgets extends StatelessWidget {
   }
 }
 
-
 Widget generateColoredBorderItem(
-    bool isFilterSelected,
-    Color selectedColor,
-    double fontSize,
-    String text,
-    Function() onTap,
-    ) {
+  bool isFilterSelected,
+  Color selectedColor,
+  double fontSize,
+  String text,
+  Function() onTap,
+) {
   return FittedBox(
     fit: BoxFit.fitWidth,
     child: Container(
@@ -97,5 +95,3 @@ Widget generateColoredBorderItem(
     ),
   );
 }
-
-

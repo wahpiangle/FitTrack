@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:group_project/pages/auth/email_password_login.dart';
 import 'package:group_project/pages/auth/register_screen.dart';
 import 'package:magic_text/magic_text.dart';
-import 'package:group_project/services/auth_service.dart';
+import 'package:group_project/services/firebase/auth_service.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -81,7 +81,8 @@ class _LoginScreenState extends State<LoginScreen> {
                       showDialog(
                         context: context,
                         builder: (context) {
-                          return const Center(child: CircularProgressIndicator());
+                          return const Center(
+                              child: CircularProgressIndicator());
                         },
                       );
                       await _auth.signInWithGoogle();
@@ -140,7 +141,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         ),
                         child: const Padding(
-                          padding: EdgeInsets.fromLTRB(30, 12, 30, 12),
+                          padding: EdgeInsets.fromLTRB(20, 12, 20, 12),
                           child: Text(
                             'Register',
                             style: TextStyle(
@@ -174,7 +175,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         ),
                         child: const Padding(
-                          padding: EdgeInsets.fromLTRB(30, 12, 30, 12),
+                          padding: EdgeInsets.fromLTRB(20, 12, 20, 12),
                           child: Text(
                             'Login',
                             style: TextStyle(

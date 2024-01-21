@@ -170,7 +170,7 @@ class ExerciseListScreenState extends State<ExerciseListScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Container(
-                              margin: const EdgeInsets.symmetric(vertical: 5),
+                              margin: const EdgeInsets.symmetric(vertical: 3),
                               child: searchText == ''
                                   ? Text(
                                       key,

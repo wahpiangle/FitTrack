@@ -122,7 +122,6 @@ class _ExerciseTileState extends State<ExerciseTile> {
                 const WorkoutHeader(),
                 AddExerciseButton(
                   exerciseData: widget.exerciseData,
-                  exercisesSetsInfo: widget.exercisesSetsInfo,
                   selectExercise: widget.selectExercise,
                 ),
                 CancelWorkoutButton(
@@ -146,7 +145,7 @@ class _ExerciseTileState extends State<ExerciseTile> {
                       child: Text(
                         selectedExercise.exercise.target!.name,
                         style: const TextStyle(
-                          fontSize: 18,
+                          fontSize: 14,
                           fontWeight: FontWeight.bold,
                           color: Color(0xFFE1F0CF),
                         ),
@@ -168,7 +167,6 @@ class _ExerciseTileState extends State<ExerciseTile> {
             return Column(children: [
               AddExerciseButton(
                 exerciseData: widget.exerciseData,
-                exercisesSetsInfo: widget.exercisesSetsInfo,
                 selectExercise: widget.selectExercise,
               ),
               CancelWorkoutButton(
@@ -185,18 +183,13 @@ class _ExerciseTileState extends State<ExerciseTile> {
                 children: [
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                    child: Row(
-                      children: [
-                        Text(
-                          selectedExercise.exercise.target!.name,
-                          style: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: Color(0xFFE1F0CF),
-                          ),
-                        ),
-                        const SizedBox(width: 10),
-                      ],
+                    child: Text(
+                      selectedExercise.exercise.target!.name,
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFFE1F0CF),
+                      ),
                     ),
                   ),
                   const SizedBox(height: 20),

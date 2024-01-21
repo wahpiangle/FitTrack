@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:group_project/main.dart';
-import 'package:group_project/services/firebase/workoutSession/firebase_workouts_service.dart';
+import 'package:group_project/pages/history/edit_workout/edit_workout_screen.dart';
+import 'package:group_project/services/firebase/firebase_workouts_service.dart';
 
 class WorkoutMenuAnchor extends StatelessWidget {
   final int workoutSessionId;
@@ -101,7 +102,17 @@ class WorkoutMenuAnchor extends StatelessWidget {
                 style: TextStyle(color: Colors.white, fontSize: 18),
               ),
               onPressed: () {
-                // TODO edit workout session
+                objectBox.workoutSessionService.createEditingWorkoutSessionCopy(
+                    objectBox.workoutSessionService
+                        .getWorkoutSession(workoutSessionId)!);
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => EditWorkoutScreen(
+                      workoutSessionId: workoutSessionId,
+                      fromDetailPage: isDetailPage,
+                    ),
+                  ),
+                );
               },
             );
           case 1:

@@ -6,7 +6,7 @@ import 'package:group_project/main.dart';
 import 'package:group_project/models/workout_session.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
 import 'package:confetti/confetti.dart';
-import 'components/complete_workout_card.dart';
+import 'complete_workout_card.dart';
 
 class CongratulationScreen extends StatefulWidget {
   const CongratulationScreen({super.key});

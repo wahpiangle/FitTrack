@@ -5,7 +5,7 @@ import 'package:group_project/pages/auth/settings_signup.dart';
 import 'package:group_project/pages/components/top_nav_bar.dart';
 import 'package:group_project/pages/settings/timer_details_settings.dart';
 import 'package:provider/provider.dart';
-import 'package:group_project/services/auth_service.dart';
+import 'package:group_project/services/firebase/auth_service.dart';
 import 'package:group_project/services/user_state.dart';
 import 'package:group_project/pages/auth/offline_edit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -35,11 +35,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
     _prefs = await SharedPreferences.getInstance();
     User? currentUser = AuthService().getCurrentUser();
     bool fetchedIsAnonymous =
-        currentUser?.isAnonymous ?? false;
+        AuthService().getCurrentUser()?.isAnonymous ?? false;
 
     setState(() {
       isAnonymous = fetchedIsAnonymous;
-      if (!isAnonymous && currentUser != null) {
+      if (!isAnonymous) {
         _loadFirebaseUserData();
       } else {
         _loadAnonymousUserData();
@@ -47,10 +47,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
     });
 
     setState(() {
-      isSignInWithGoogle = currentUser?.providerData.isNotEmpty ?? false &&
+      isSignInWithGoogle =
           currentUser?.providerData.first.providerId == 'google.com';
-      if (!isSignInWithGoogle && currentUser != null) {
-        if (currentUser.isAnonymous) {
+      if (!isSignInWithGoogle) {
+        if (currentUser == null || currentUser.isAnonymous) {
           _loadAnonymousUserData();
         } else {
           _loadFirebaseUserData();
@@ -58,7 +58,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
       }
     });
   }
-
 
   _loadFirebaseUserData() async {
     User? currentUser = AuthService().getCurrentUser();
