@@ -7,7 +7,10 @@ class WorkoutSession {
   int id;
   String title;
   String note;
+
+  @Property(type: PropertyType.date)
   DateTime date = DateTime.now();
+
   bool isCurrentEditing;
 
   // 1 workout session can have multiple exercises
