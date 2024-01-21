@@ -109,7 +109,6 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
               ),
               TextButton(
                 onPressed: () {
-                  // Close the dialog
                   Navigator.of(context).pop();
                   Navigator.of(context).pop();
                   WorkoutSession savedWorkout = objectBox
@@ -119,23 +118,22 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
                   Navigator.of(context).push(
                     PageRouteBuilder(
                       pageBuilder: (context, animation, secondaryAnimation) {
-                        return const CongratulationScreen();
+                        return CongratulationScreen(
+                          workoutSession: savedWorkout,
+                        );
                       },
                       transitionsBuilder:
                           (context, animation, secondaryAnimation, child) {
-                        const begin = 0.0;
-                        const end = 1.0;
-                        const curve = Curves.easeInOut;
-                        var tween = Tween(begin: begin, end: end)
-                            .chain(CurveTween(curve: curve));
-                        var offsetAnimation = animation.drive(tween);
                         return ScaleTransition(
-                          scale: offsetAnimation,
+                          scale: animation.drive(
+                            Tween(begin: 0.0, end: 1.0).chain(
+                              CurveTween(curve: Curves.easeInOut),
+                            ),
+                          ),
                           child: child,
                         );
                       },
-                      transitionDuration: const Duration(
-                          milliseconds: 500), // Set to 0.5 seconds
+                      transitionDuration: const Duration(milliseconds: 500),
                     ),
                   );
                 },

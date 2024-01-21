@@ -138,10 +138,4 @@ class ObjectBox {
   void updateExerciseSet(ExerciseSet exerciseSet) {
     _exerciseSetBox.put(exerciseSet);
   }
-
-// check history
-  void test() {
-    print(_workoutTemplateBox.getAll().length);
-    // print(_workoutTemplateBox.removeAll());
-  }
 }

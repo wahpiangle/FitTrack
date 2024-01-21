@@ -9,8 +9,8 @@ class Exercise {
   @Id()
   int id;
   String name;
-  String imagePath = '';
-  String halfImagePath = '';
+  String imagePath;
+  String halfImagePath;
   bool isSelected;
 
   final bodyPart = ToOne<BodyPart>();

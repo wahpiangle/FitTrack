@@ -9,7 +9,12 @@ import 'package:confetti/confetti.dart';
 import 'complete_workout_card.dart';
 
 class CongratulationScreen extends StatefulWidget {
-  const CongratulationScreen({super.key});
+  final WorkoutSession workoutSession;
+
+  const CongratulationScreen({
+    super.key,
+    required this.workoutSession,
+  });
 
   @override
   State<CongratulationScreen> createState() => _CongratulationScreenState();
@@ -32,15 +37,7 @@ class _CongratulationScreenState extends State<CongratulationScreen> {
     });
   }
 
-  void scrollToItem(int index) async {
-    await _scrollController.scrollToIndex(
-      index,
-      preferPosition: AutoScrollPosition.begin,
-    );
-    await _scrollController.highlight(index);
-  }
-
-  void _delete(BuildContext context) {
+  void _displayTemplateDialog(BuildContext context) {
     showDialog(
       context: context,
       builder: (BuildContext ctx) {
@@ -87,7 +84,12 @@ class _CongratulationScreenState extends State<CongratulationScreen> {
                         ),
                       ),
                       onPressed: () {
-                        //TODO: direct to save template
+                        objectBox.workoutTemplateService
+                            .createWorkoutTemplateFromWorkoutSession(
+                          widget.workoutSession,
+                        );
+                        Navigator.of(context).pop();
+                        Navigator.of(context).pop();
                       },
                       child: const Text(
                         'Save Template',
@@ -140,6 +142,7 @@ class _CongratulationScreenState extends State<CongratulationScreen> {
 
   @override
   Widget build(BuildContext context) {
+    print(widget.workoutSession.id);
     return Scaffold(
       backgroundColor: const Color(0xFF1A1A1A),
       appBar: AppBar(
@@ -153,13 +156,10 @@ class _CongratulationScreenState extends State<CongratulationScreen> {
           )
         ],
         leading: IconButton(
-          onPressed: () {},
-          icon: IconButton(
-            icon: const Icon(Icons.close_sharp, color: Colors.white),
-            onPressed: () {
-              _delete(context);
-            },
-          ),
+          onPressed: () {
+            _displayTemplateDialog(context);
+          },
+          icon: const Icon(Icons.close_sharp, color: Colors.white),
         ),
       ),
       body: Container(
@@ -172,12 +172,9 @@ class _CongratulationScreenState extends State<CongratulationScreen> {
               return const Center(
                 child: CircularProgressIndicator(),
               );
-            } else if (snapshot.data!.isEmpty) {
-              return const Center();
             } else {
               int workoutNumber = snapshot.data!.length;
               _celebrate();
-
               return Column(
                 children: [
                   Align(

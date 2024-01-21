@@ -1,6 +1,7 @@
 import 'package:group_project/models/exercise.dart';
 import 'package:group_project/models/exercise_set.dart';
 import 'package:group_project/models/exercises_sets_info.dart';
+import 'package:group_project/models/workout_session.dart';
 import 'package:group_project/models/workout_template.dart';
 import 'package:group_project/objectbox.g.dart';
 
@@ -205,5 +206,26 @@ class WorkoutTemplateService {
       }
     }
     return false;
+  }
+
+  void createWorkoutTemplateFromWorkoutSession(WorkoutSession workoutSession) {
+    WorkoutTemplate workoutTemplate = WorkoutTemplate(
+      title: workoutSession.title,
+      note: workoutSession.note,
+      createdAt: DateTime.now(),
+    );
+    for (var exercisesSetsInfo in workoutSession.exercisesSetsInfo) {
+      final newExercisesSetsInfo = ExercisesSetsInfo();
+      newExercisesSetsInfo.exercise.target = exercisesSetsInfo.exercise.target;
+      for (var exerciseSet in exercisesSetsInfo.exerciseSets) {
+        final newExerciseSet = ExerciseSet();
+        newExerciseSet.reps = exerciseSet.reps;
+        newExerciseSet.weight = exerciseSet.weight;
+        newExerciseSet.exerciseSetInfo.target = newExercisesSetsInfo;
+        newExercisesSetsInfo.exerciseSets.add(newExerciseSet);
+      }
+      workoutTemplate.exercisesSetsInfo.add(newExercisesSetsInfo);
+    }
+    workoutTemplateBox.put(workoutTemplate);
   }
 }
