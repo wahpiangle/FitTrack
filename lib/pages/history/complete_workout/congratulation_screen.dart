@@ -142,19 +142,10 @@ class _CongratulationScreenState extends State<CongratulationScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print(widget.workoutSession.id);
     return Scaffold(
       backgroundColor: const Color(0xFF1A1A1A),
       appBar: AppBar(
         backgroundColor: const Color(0xFF1A1A1A),
-        actions: <Widget>[
-          IconButton(
-            icon: const Icon(Icons.share),
-            onPressed: () {
-              //TODO: Share workout feature
-            },
-          )
-        ],
         leading: IconButton(
           onPressed: () {
             _displayTemplateDialog(context);
