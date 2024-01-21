@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:group_project/main.dart';
 import 'package:group_project/models/exercise.dart';
 import 'package:group_project/models/exercises_sets_info.dart';
-import 'package:group_project/pages/workout/components/tiles/components/cancel_workout_button.dart';
-import 'package:group_project/pages/workout/components/tiles/components/add_exercise_button.dart';
+import 'package:group_project/pages/workout/components/tiles/add_exercise_button.dart';
+import 'package:group_project/pages/workout/components/tiles/cancel_workout_button.dart';
 import 'package:group_project/pages/workout/components/tiles/set_tiles.dart';
 import 'package:group_project/pages/workout/components/workout_header.dart';
 

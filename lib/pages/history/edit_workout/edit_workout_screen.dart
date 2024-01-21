@@ -3,8 +3,8 @@ import 'package:group_project/constants/themes/app_colours.dart';
 import 'package:group_project/main.dart';
 import 'package:group_project/models/exercise.dart';
 import 'package:group_project/models/exercises_sets_info.dart';
-import 'package:group_project/pages/workout/components/tiles/components/edit_exercise_tile.dart';
 import 'package:group_project/models/workout_session.dart';
+import 'package:group_project/pages/workout/components/tiles/edit_exercise_tile.dart';
 
 class EditWorkoutScreen extends StatefulWidget {
   final int workoutSessionId;
