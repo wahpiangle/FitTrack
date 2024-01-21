@@ -7,6 +7,7 @@ import 'package:group_project/models/current_workout_session.dart';
 import 'package:group_project/pages/history/complete_workout/congratulation_screen.dart';
 import 'package:group_project/models/workout_session.dart';
 import 'package:group_project/pages/workout/components/tiles/exercise_tile.dart';
+import 'package:group_project/pages/workout/workout_screen.dart';
 import 'package:group_project/services/firebase/firebase_workouts_service.dart';
 import 'package:provider/provider.dart';
 import 'package:group_project/pages/workout/components/timer/timer_provider.dart';
@@ -25,21 +26,13 @@ class StartNewWorkout extends StatefulWidget {
 }
 
 class _StartNewWorkoutState extends State<StartNewWorkout> {
-  bool _isTimerRunning = false;
   bool _isSetTimeVisible = true;
+  bool _isTimerRunning = false;
 
   @override
   void initState() {
     super.initState();
-    initTimers();
-  }
-
-  void initTimers() {
     final timerProvider = Provider.of<TimerProvider>(context, listen: false);
-    final restTimerProvider =
-        Provider.of<RestTimerProvider>(context, listen: false);
-    final customTimerProvider =
-        Provider.of<CustomTimerProvider>(context, listen: false);
 
     if (!_isTimerRunning) {
       timerProvider.startTimer();
@@ -47,15 +40,8 @@ class _StartNewWorkoutState extends State<StartNewWorkout> {
         _isTimerRunning = true;
       });
     }
-
-    if (!restTimerProvider.isRestTimerRunning) {
-      restTimerProvider.loadRestTimerState(context);
-    }
-
-    if (!customTimerProvider.isRestTimerRunning) {
-      customTimerProvider.loadCustomTimerState(context);
-    }
   }
+
 
   void selectExercise(Exercise selectedExercise) {
     objectBox.currentWorkoutSessionService

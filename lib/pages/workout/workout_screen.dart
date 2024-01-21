@@ -7,6 +7,9 @@ import 'package:group_project/pages/workout/components/timer/timer_provider.dart
 import 'package:provider/provider.dart';
 import 'package:group_project/pages/workout/components/start_new_workout_bottom_sheet.dart';
 
+import 'components/timer/custom_timer_provider.dart';
+import 'components/timer/rest_timer_provider.dart';
+
 class WorkoutScreen extends StatefulWidget {
   const WorkoutScreen({super.key});
 
@@ -16,9 +19,38 @@ class WorkoutScreen extends StatefulWidget {
 
 class _WorkoutScreenState extends State<WorkoutScreen> {
   List<Exercise> exerciseData = objectBox.getAllExercises();
-  bool isBottomSheetVisible = false;
   bool isTimerActiveScreenOpen = false;
+  bool _isTimerRunning = false;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  @override
+  void initState() {
+    super.initState();
+    initTimers();
+  }
+
+  void initTimers() {
+    final timerProvider = Provider.of<TimerProvider>(context, listen: false);
+    final restTimerProvider =
+    Provider.of<RestTimerProvider>(context, listen: false);
+    final customTimerProvider =
+    Provider.of<CustomTimerProvider>(context, listen: false);
+
+    if (!_isTimerRunning) {
+      timerProvider.startTimer();
+      setState(() {
+        _isTimerRunning = true;
+      });
+    }
+
+    if (!restTimerProvider.isRestTimerRunning) {
+      restTimerProvider.loadRestTimerState(context);
+    }
+
+    if (!customTimerProvider.isRestTimerRunning) {
+      customTimerProvider.loadCustomTimerState(context);
+    }
+  }
 
   Future<void> _startNewWorkout(BuildContext context) async {
     TimerProvider timerProvider =
@@ -138,8 +170,7 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
   }
 
   void _handleTimerActive(BuildContext context) {
-    TimerProvider timerProvider =
-        Provider.of<TimerProvider>(context, listen: false);
+    TimerProvider timerProvider = Provider.of<TimerProvider>(context, listen: false);
 
     if (isTimerActiveScreenOpen) {
       return;
@@ -148,25 +179,24 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
     timerProvider.addListener(() {
       if (timerProvider.isTimerRunning && !isTimerActiveScreenOpen) {
         isTimerActiveScreenOpen = true;
-        showBottomSheet(
-          context: context,
-          builder: (context) => TimerActiveScreen(exerciseData: exerciseData),
-        ).closed.then((value) {
-          isTimerActiveScreenOpen = false;
-        });
+        _showTimerBottomSheet(context);
+      } else if (!timerProvider.isTimerRunning && isTimerActiveScreenOpen) {
+        isTimerActiveScreenOpen = false;
+        Navigator.pop(context); // Close the bottom sheet if the timer stops
       }
     });
-
-    if (timerProvider.isTimerRunning && !isTimerActiveScreenOpen) {
-      isTimerActiveScreenOpen = true;
-      showBottomSheet(
-        context: context,
-        builder: (context) => TimerActiveScreen(exerciseData: exerciseData),
-      ).closed.then((value) {
-        isTimerActiveScreenOpen = false;
-      });
-    }
   }
+
+  void _showTimerBottomSheet(BuildContext context) {
+    isTimerActiveScreenOpen = true;
+    showBottomSheet(
+      context: context,
+      builder: (context) => TimerActiveScreen(exerciseData: exerciseData),
+    ).closed.then((value) {
+      isTimerActiveScreenOpen = false;
+    });
+  }
+
 
   void _resetWorkout() {
     objectBox.currentWorkoutSessionService.cancelWorkout();
@@ -174,6 +204,7 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
     final timerProvider = Provider.of<TimerProvider>(context, listen: false);
     timerProvider.resetTimer();
     timerProvider.stopTimer();
+
   }
 
   @override
