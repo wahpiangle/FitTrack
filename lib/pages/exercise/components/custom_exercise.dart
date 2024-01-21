@@ -8,41 +8,40 @@ import '../../../services/objectbox_service.dart';
 
 class CustomExerciseDialog {
   static void showNewExerciseDialog(BuildContext context, ObjectBox objectBox) {
-    String? customWorkoutName;
-    String? selectedBodyPart;
-    String? selectedCategory;
+    String? customExerciseName;
+    BodyPart selectedBodyPart = bodyPartData[0];
+    Category selectedCategory = categoryData[0];
     GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
+          surfaceTintColor: const Color(0xFF1A1A1A),
           backgroundColor: const Color(0xFF1A1A1A),
-          title: (selectedBodyPart == null && selectedCategory == null)
-              ? const Text(
+          title: const Text(
             'Custom Exercise',
             style: TextStyle(
               color: Colors.white,
               fontWeight: FontWeight.bold,
             ),
-          )
-              : null,
+          ),
           content: SingleChildScrollView(
             child: Form(
               key: formKey,
               child: Column(
                 children: [
                   Container(
+                    width: MediaQuery.of(context).size.width * 0.8,
                     margin: const EdgeInsets.symmetric(vertical: 8.0),
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
                     child: TextFormField(
                       onChanged: (value) {
-                        customWorkoutName = value;
+                        customExerciseName = value;
                       },
                       style: const TextStyle(color: Colors.white),
                       decoration: const InputDecoration(
-                        hintText: 'add name...',
-                        hintStyle: TextStyle(color: Colors.white),
+                        hintText: 'Exercise Name',
+                        hintStyle: TextStyle(color: Colors.grey),
                         enabledBorder: UnderlineInputBorder(
                           borderSide: BorderSide(color: Colors.white),
                         ),
@@ -62,16 +61,17 @@ class CustomExerciseDialog {
                       },
                     ),
                   ),
-
                   const SizedBox(height: 16.0),
                   DropdownButtonFormField<String>(
-                    value: selectedBodyPart,
+                    value: selectedBodyPart.id.toString(),
                     onChanged: (String? newValue) {
-                      selectedBodyPart = newValue;
+                      selectedBodyPart = bodyPartData.firstWhere((element) {
+                        return element.id.toString() == newValue;
+                      });
                     },
-                    items: bodyPartData.map<DropdownMenuItem<String>>((BodyPart bodyPart) {
+                    items: bodyPartData.map((BodyPart bodyPart) {
                       return DropdownMenuItem<String>(
-                        value: bodyPart.name,
+                        value: bodyPart.id.toString(),
                         child: Text(
                           bodyPart.name,
                           style: const TextStyle(color: Colors.white),
@@ -87,11 +87,14 @@ class CustomExerciseDialog {
                     dropdownColor: const Color(0xFF1A1A1A),
                   ),
                   DropdownButtonFormField<String>(
-                    value: selectedCategory,
+                    value: selectedCategory.name,
                     onChanged: (String? newValue) {
-                      selectedCategory = newValue;
+                      selectedCategory = categoryData.firstWhere((element) {
+                        return element.name == newValue;
+                      });
                     },
-                    items: categoryData.map<DropdownMenuItem<String>>((Category category) {
+                    items: categoryData
+                        .map<DropdownMenuItem<String>>((Category category) {
                       return DropdownMenuItem<String>(
                         value: category.name,
                         child: Text(
@@ -140,9 +143,12 @@ class CustomExerciseDialog {
                       child: Container(
                         padding: const EdgeInsets.all(8.0),
                         decoration: const BoxDecoration(
-                          border: Border(right: BorderSide(color: Color(0xFF1A1A1A), width: 1.0)),
+                          border: Border(
+                              right: BorderSide(
+                                  color: Color(0xFF1A1A1A), width: 1.0)),
                         ),
-                        child: const Text('Cancel', style: TextStyle(color: Colors.white)),
+                        child: const Text('Cancel',
+                            style: TextStyle(color: Colors.white)),
                       ),
                     ),
                   ),
@@ -151,27 +157,27 @@ class CustomExerciseDialog {
                     child: TextButton(
                       onPressed: () {
                         if (formKey.currentState?.validate() ?? false) {
-                          if (selectedBodyPart == null || selectedCategory == null) {
+                          if (customExerciseName == null) {
                             // Display a warning message if either body part or category is not selected
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
                                 content: Text(
-                                  'Please select both Body Part and Category before saving.',
+                                  'Exercise name cannot be empty!',
                                   style: TextStyle(color: Colors.white),
                                 ),
                                 backgroundColor: Colors.red,
                               ),
                             );
                           } else {
-                            // Create an Exercise object with the entered data
                             Exercise newExercise = Exercise(
-                              name: customWorkoutName ?? '',
-                              bodyPart: selectedBodyPart ?? '',
-                              category: selectedCategory ?? '',
+                              name: customExerciseName ?? '',
                             );
 
-                            // Use the ObjectBox instance to add the exercise to the list
-                            objectBox.addExerciseToList(newExercise, selectedCategory, selectedBodyPart);
+                            objectBox.addExerciseToList(
+                              newExercise,
+                              selectedCategory,
+                              selectedBodyPart,
+                            );
                             Navigator.pop(context);
                           }
                         }
@@ -189,9 +195,12 @@ class CustomExerciseDialog {
                       child: Container(
                         padding: const EdgeInsets.all(8.0),
                         decoration: const BoxDecoration(
-                          border: Border(left: BorderSide(color: Color(0xFFE1F0CF), width: 1.0)),
+                          border: Border(
+                              left: BorderSide(
+                                  color: Color(0xFFE1F0CF), width: 1.0)),
                         ),
-                        child: const Text('Save', style: TextStyle(color: Colors.black)),
+                        child: const Text('Save',
+                            style: TextStyle(color: Colors.black)),
                       ),
                     ),
                   ),

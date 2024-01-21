@@ -105,29 +105,12 @@ class ObjectBox {
     _exerciseBox.removeAll();
   }
 
-  // Function to add a custom exercise to the list
-  void addExerciseToList(Exercise exercise, String? category, String? bodyPart) {
-    // Save the custom category
-    List<Category> categories = getCategories();
-    categories.add(Category(name: category ?? ''));
-    _categoryBox.putMany(categories);
-
-    // Save the custom body part
-    List<BodyPart> bodyParts = _bodyPartBox.getAll();
-    bodyParts.add(BodyPart(name: bodyPart ?? ''));
-    _bodyPartBox.putMany(bodyParts);
-    // Get the existing list of exercises
-    List<Exercise> exercises = getAllExercises();
-
-    // Add the new exercise to the list
-    exercises.add(exercise);
-
-    // Update the exercise box with the new list of exercises
-    _exerciseBox.removeAll();
-    _exerciseBox.putMany(exercises);
+  void addExerciseToList(
+      Exercise exercise, Category category, BodyPart bodyPart) {
+    exercise.category.target = category;
+    exercise.bodyPart.target = bodyPart;
+    _exerciseBox.put(exercise);
   }
-
-
 
 //categories & bodyParts
   List<Category> getCategories() {

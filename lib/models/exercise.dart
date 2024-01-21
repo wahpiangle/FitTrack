@@ -27,11 +27,5 @@ class Exercise {
     this.imagePath = '',
     this.halfImagePath = '',
     this.isSelected = false,
-    required String bodyPart,
-    required String category,
-  }) {
-    // Set the body part and category values in the constructor
-    this.bodyPart.target = BodyPart(name: bodyPart);
-    this.category.target = Category(name: category);
-  }
+  });
 }
