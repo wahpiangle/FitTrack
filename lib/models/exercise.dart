@@ -9,16 +9,12 @@ class Exercise {
   @Id()
   int id;
   String name;
-  String imagePath = '';
-  String halfImagePath = '';
+  String imagePath;
+  String halfImagePath;
   bool isSelected;
 
-  // Use ToOne relationship for body part
   final bodyPart = ToOne<BodyPart>();
-
-  // Use ToOne relationship for category
   final category = ToOne<Category>();
-
   final exercisesSetsInfo = ToMany<ExercisesSetsInfo>();
 
   Exercise({
