@@ -8,7 +8,6 @@ import 'package:group_project/pages/history/complete_workout/congratulation_scre
 import 'package:group_project/models/workout_session.dart';
 import 'package:group_project/pages/workout/components/tiles/exercise_tile.dart';
 import 'package:group_project/services/firebase/firebase_workouts_service.dart';
-import 'package:group_project/services/firebase/workoutSession/firebase_workouts_service.dart';
 import 'package:provider/provider.dart';
 import 'package:group_project/pages/workout/components/timer/timer_provider.dart';
 import 'package:group_project/pages/workout/components/timer/rest_timer_provider.dart';
