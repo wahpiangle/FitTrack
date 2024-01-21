@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:group_project/main.dart';
 import 'package:group_project/models/workout_session.dart';
-import 'package:group_project/pages/history/components/calendar_button.dart';
+import 'package:group_project/pages/history/calendar/calendar_button.dart';
 import 'package:group_project/pages/history/components/workout_card.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
 
