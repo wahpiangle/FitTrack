@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:group_project/pages/history/complete_workout/congratulation_screen.dart';
 import 'package:group_project/pages/auth/email_password_login.dart';
 import 'package:group_project/pages/auth/register_screen.dart';
 import 'package:group_project/pages/auth/settings_login.dart';
