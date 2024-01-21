@@ -107,8 +107,8 @@ class TimerDetailsSettings extends StatelessWidget {
     showModalBottomSheet<void>(
       context: context,
       builder: (BuildContext context) {
-        return SizedBox(
-          height: 800,
+        return FractionallySizedBox(
+          heightFactor: 0.8,
           child: RestTimePicker(restTimerProvider: restTimerProvider),
         );
       },

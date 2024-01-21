@@ -76,6 +76,8 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
                     if (isBottomSheetClosed) {
                       _handleTimerActive(context);
                     }
+
+
                   },
                   style: ButtonStyle(
                     backgroundColor:

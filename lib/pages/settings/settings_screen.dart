@@ -405,7 +405,7 @@ class LogoutButton extends StatelessWidget {
         onPressed: () {
           authService.signOut();
           Future.microtask(
-              () => Navigator.of(context).popAndPushNamed('/auth'));
+                  () => Navigator.of(context).popAndPushNamed('/auth'));
         },
         style: TextButton.styleFrom(
           foregroundColor: Colors.red,

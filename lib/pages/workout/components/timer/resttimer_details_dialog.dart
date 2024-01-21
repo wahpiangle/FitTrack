@@ -106,8 +106,8 @@ class RestTimerDetailsDialogState extends State<RestTimerDetailsDialog>
                       alignment: Alignment.center,
                       children: [
                         SizedBox(
-                          width: 230,
-                          height: 230,
+                          width: MediaQuery.of(context).size.width*0.65,
+                          height: MediaQuery.of(context).size.height*0.32,
                           child: CircularProgressIndicator(
                             value: widget.restTimerProvider
                                     .currentRestTimerDuration /
