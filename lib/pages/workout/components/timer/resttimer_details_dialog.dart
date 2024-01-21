@@ -4,12 +4,10 @@ import 'package:group_project/constants/themes/app_colours.dart';
 import 'package:group_project/pages/workout/components/timer/rest_timer_provider.dart';
 import 'custom_timer_provider.dart';
 
-
 class RestTimerDetailsDialog extends StatefulWidget {
   final RestTimerProvider restTimerProvider;
 
   const RestTimerDetailsDialog({super.key, required this.restTimerProvider});
-
 
   @override
   RestTimerDetailsDialogState createState() => RestTimerDetailsDialogState();
@@ -45,7 +43,6 @@ class RestTimerDetailsDialogState extends State<RestTimerDetailsDialog>
 
   void _startUpdatingTimer() {
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-
       setState(() {});
     });
   }
@@ -112,16 +109,18 @@ class RestTimerDetailsDialogState extends State<RestTimerDetailsDialog>
                           width: 230,
                           height: 230,
                           child: CircularProgressIndicator(
-                            value: widget.restTimerProvider.currentRestTimerDuration /
+                            value: widget.restTimerProvider
+                                    .currentRestTimerDuration /
                                 widget.restTimerProvider.restTimerDuration,
                             valueColor: const AlwaysStoppedAnimation<Color>(
-                              Color(0xFFB9D499),),
+                              Color(0xFFB9D499),
+                            ),
                             strokeWidth: 6,
                           ),
                         ),
                         Text(
-                          RestTimerProvider.formatDuration(
-                              widget.restTimerProvider.currentRestTimerDuration),
+                          RestTimerProvider.formatDuration(widget
+                              .restTimerProvider.currentRestTimerDuration),
                           style: const TextStyle(
                             color: Color(0xFFE1F0CF),
                             fontSize: 64,
@@ -182,17 +181,15 @@ class RestTimerDetailsDialogState extends State<RestTimerDetailsDialog>
   }
 }
 
-
-
-
 class CustomTimerDetailsDialog extends StatefulWidget {
   final CustomTimerProvider customTimerProvider;
 
-  const CustomTimerDetailsDialog({super.key, required this.customTimerProvider});
-
+  const CustomTimerDetailsDialog(
+      {super.key, required this.customTimerProvider});
 
   @override
-  CustomTimerDetailsDialogState createState() => CustomTimerDetailsDialogState();
+  CustomTimerDetailsDialogState createState() =>
+      CustomTimerDetailsDialogState();
 }
 
 class CustomTimerDetailsDialogState extends State<CustomTimerDetailsDialog>
@@ -225,7 +222,6 @@ class CustomTimerDetailsDialogState extends State<CustomTimerDetailsDialog>
 
   void _startUpdatingTimer() {
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-
       setState(() {});
     });
   }
@@ -270,7 +266,7 @@ class CustomTimerDetailsDialogState extends State<CustomTimerDetailsDialog>
                           onPressed: () {
                             _timer.cancel();
                             Navigator.of(context).pop();
-                            },
+                          },
                           icon: const Icon(Icons.close,
                               size: 32, color: Color(0xFFC1C1C1)),
                         ),
@@ -292,16 +288,18 @@ class CustomTimerDetailsDialogState extends State<CustomTimerDetailsDialog>
                           width: 230,
                           height: 230,
                           child: CircularProgressIndicator(
-                            value: widget.customTimerProvider.customCurrentTimerDuration /
+                            value: widget.customTimerProvider
+                                    .customCurrentTimerDuration /
                                 widget.customTimerProvider.customTimerDuration,
                             valueColor: const AlwaysStoppedAnimation<Color>(
-                              Color(0xFFB9D499),),
+                              Color(0xFFB9D499),
+                            ),
                             strokeWidth: 6,
                           ),
                         ),
                         Text(
-                          RestTimerProvider.formatDuration(
-                              widget.customTimerProvider.customCurrentTimerDuration),
+                          RestTimerProvider.formatDuration(widget
+                              .customTimerProvider.customCurrentTimerDuration),
                           style: const TextStyle(
                             color: Color(0xFFE1F0CF),
                             fontSize: 64,
@@ -377,38 +375,37 @@ void showAboutRestTimerDialog(BuildContext context) {
             ),
           ),
         ),
-        content:const Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                'Manually set a Custom Rest Timer at any time.',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
-                ),
-                textAlign: TextAlign.center,
+        content: const Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              'Manually set a Custom Rest Timer at any time.',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 16,
               ),
-              SizedBox(height: 16),
-              Text(
-                'Auto Rest Timers can be set up to start when a set is completed.',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
-                ),
-                textAlign: TextAlign.center,
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(height: 16),
+            Text(
+              'Auto Rest Timers can be set up to start when a set is completed.',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 16,
               ),
-              SizedBox(height: 14),
-              Text(
-                'To set the Auto Rest Timer duration, navigate to Settings >> Timer >> Rest Duration.',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
-                ),
-                textAlign: TextAlign.center,
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(height: 14),
+            Text(
+              'To set the Auto Rest Timer duration, navigate to Settings >> Timer >> Rest Duration.',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 16,
               ),
-            ],
-          ),
-
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
         actions: [
           TextButton(
             onPressed: () {

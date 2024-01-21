@@ -119,7 +119,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
     final UserStateProvider userStateProvider =
-    Provider.of<UserStateProvider>(context);
+        Provider.of<UserStateProvider>(context);
 
     bool isLoggedIn = userStateProvider.userState.isLoggedIn;
 
@@ -160,18 +160,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           height: 100,
                           child: ClipOval(
                             child: (profileImage.isEmpty ||
-                                profileImage ==
-                                    'assets/icons/defaultimage.jpg')
+                                    profileImage ==
+                                        'assets/icons/defaultimage.jpg')
                                 ? const CircleAvatar(
-                              radius: 50,
-                              backgroundImage: AssetImage(
-                                  'assets/icons/defaultimage.jpg'),
-                            )
+                                    radius: 50,
+                                    backgroundImage: AssetImage(
+                                        'assets/icons/defaultimage.jpg'),
+                                  )
                                 : CircleAvatar(
-                              radius: 50,
-                              backgroundImage:
-                              FileImage(File(profileImage)),
-                            ),
+                                    radius: 50,
+                                    backgroundImage:
+                                        FileImage(File(profileImage)),
+                                  ),
                           ),
                         ),
                         const SizedBox(width: 20),
@@ -245,7 +245,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
                       },
                     ),
-                    if ((isAnonymous)) // User logged in anonymous
+                    if ((isAnonymous))
                       ProfileMenuItem(
                         title: "Sign Up / Log In",
                         icon: Icons.person,
@@ -257,12 +257,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           );
                         },
                       )
-                    else if (!isSignInWithGoogle) // User logged in with email and password
+                    else if (!isSignInWithGoogle)
                       ProfileMenuItem(
                         title: "Edit Password",
                         icon: Icons.key_outlined,
                         onPressed: () {
-                          // Navigate to edit password screen
                           Navigator.of(context).push(
                             MaterialPageRoute(
                               builder: (context) => const EditPassword(),
@@ -406,7 +405,7 @@ class LogoutButton extends StatelessWidget {
         onPressed: () {
           authService.signOut();
           Future.microtask(
-                  () => Navigator.of(context).popAndPushNamed('/auth'));
+              () => Navigator.of(context).popAndPushNamed('/auth'));
         },
         style: TextButton.styleFrom(
           foregroundColor: Colors.red,

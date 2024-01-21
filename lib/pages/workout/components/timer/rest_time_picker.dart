@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:group_project/constants/themes/app_colours.dart';
 import 'package:group_project/pages/workout/components/timer/rest_timer_provider.dart';
-
 import 'custom_timer_provider.dart';
 
 class RestTimePicker extends StatelessWidget {
@@ -15,10 +14,9 @@ class RestTimePicker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Adjust the initial item
     int initialItem = (restTimerProvider.restTimerMinutes * 60 +
-        restTimerProvider.restTimerSeconds) ~/
-        5 -
+                restTimerProvider.restTimerSeconds) ~/
+            5 -
         1;
 
     return Container(
@@ -58,10 +56,8 @@ class RestTimePicker extends StatelessWidget {
   }
 }
 
-
 class CustomTimerPicker extends StatelessWidget {
   final CustomTimerProvider customTimerProvider;
-
 
   const CustomTimerPicker({
     super.key,
@@ -71,8 +67,8 @@ class CustomTimerPicker extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     int initialItem = (customTimerProvider.customTimerMinutes * 60 +
-        customTimerProvider.customTimerSeconds) ~/
-        5 -
+                customTimerProvider.customTimerSeconds) ~/
+            5 -
         1;
 
     return Container(
