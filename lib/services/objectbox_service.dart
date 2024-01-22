@@ -105,6 +105,7 @@ class ObjectBox {
     _exerciseBox.removeAll();
   }
 
+//custom exercise
   void addExerciseToList(
       Exercise exercise, Category category, BodyPart bodyPart) {
     exercise.category.target = category;

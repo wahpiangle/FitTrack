@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:group_project/constants/data/category_data.dart';
 import 'package:group_project/constants/data/bodypart_data.dart';
-import '../../../models/body_part.dart';
-import '../../../models/category.dart';
-import '../../../models/exercise.dart';
-import '../../../services/objectbox_service.dart';
+import 'package:group_project/models/body_part.dart';
+import 'package:group_project/models/category.dart';
+import 'package:group_project/models/exercise.dart';
+import 'package:group_project/services/objectbox_service.dart';
 
 class CustomExerciseDialog {
   static void showNewExerciseDialog(BuildContext context, ObjectBox objectBox) {
@@ -62,16 +62,16 @@ class CustomExerciseDialog {
                     ),
                   ),
                   const SizedBox(height: 16.0),
-                  DropdownButtonFormField<String>(
-                    value: selectedBodyPart.id.toString(),
-                    onChanged: (String? newValue) {
-                      selectedBodyPart = bodyPartData.firstWhere((element) {
-                        return element.id.toString() == newValue;
-                      });
+                  DropdownButtonFormField<BodyPart>(
+                    value: selectedBodyPart,
+                    onChanged: (BodyPart? newValue) {
+                      if (newValue != null) {
+                        selectedBodyPart = newValue;
+                      }
                     },
                     items: bodyPartData.map((BodyPart bodyPart) {
-                      return DropdownMenuItem<String>(
-                        value: bodyPart.id.toString(),
+                      return DropdownMenuItem<BodyPart>(
+                        value: bodyPart,
                         child: Text(
                           bodyPart.name,
                           style: const TextStyle(color: Colors.white),
@@ -86,17 +86,16 @@ class CustomExerciseDialog {
                     ),
                     dropdownColor: const Color(0xFF1A1A1A),
                   ),
-                  DropdownButtonFormField<String>(
-                    value: selectedCategory.name,
-                    onChanged: (String? newValue) {
-                      selectedCategory = categoryData.firstWhere((element) {
-                        return element.name == newValue;
-                      });
+                  DropdownButtonFormField<Category>(
+                    value: selectedCategory,
+                    onChanged: (Category? newValue) {
+                      if (newValue != null) {
+                        selectedCategory = newValue;
+                      }
                     },
-                    items: categoryData
-                        .map<DropdownMenuItem<String>>((Category category) {
-                      return DropdownMenuItem<String>(
-                        value: category.name,
+                    items: categoryData.map<DropdownMenuItem<Category>>((Category category) {
+                      return DropdownMenuItem<Category>(
+                        value: category,
                         child: Text(
                           category.name,
                           style: const TextStyle(color: Colors.white),
@@ -111,6 +110,7 @@ class CustomExerciseDialog {
                     ),
                     dropdownColor: const Color(0xFF1A1A1A),
                   ),
+
                 ],
               ),
             ),
