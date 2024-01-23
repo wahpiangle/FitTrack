@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:group_project/constants/themes/app_colours.dart';
+import 'package:group_project/pages/workout/components/timer/components/about_rest_timer_dialog.dart';
 import 'package:group_project/pages/workout/components/timer/components/time_picker.dart';
 import 'package:group_project/pages/workout/components/timer/providers/custom_timer_provider.dart';
-import 'package:group_project/pages/workout/components/timer/rest_timer_details_dialog.dart';
 
 class CustomTimerPickerDialog extends StatelessWidget {
   final CustomTimerProvider customTimerProvider;
@@ -101,4 +101,13 @@ class CustomTimerPickerDialog extends StatelessWidget {
       ),
     );
   }
+}
+
+void showAboutRestTimerDialog(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return const AboutRestTimerDialog();
+    },
+  );
 }
