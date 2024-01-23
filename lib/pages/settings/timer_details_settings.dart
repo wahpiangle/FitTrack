@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:group_project/constants/themes/app_colours.dart';
-import 'package:group_project/pages/workout/components/timer/rest_timer_provider.dart';
+import 'package:group_project/pages/workout/components/timer/components/time_picker.dart';
+import 'package:group_project/pages/workout/components/timer/providers/rest_timer_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:group_project/pages/components/top_nav_bar.dart';
-import 'package:group_project/pages/workout/components/timer/rest_time_picker.dart';
 
 class TimerDetailsSettings extends StatelessWidget {
   const TimerDetailsSettings({
@@ -109,7 +109,7 @@ class TimerDetailsSettings extends StatelessWidget {
       builder: (BuildContext context) {
         return FractionallySizedBox(
           heightFactor: 0.8,
-          child: RestTimePicker(restTimerProvider: restTimerProvider),
+          child: TimePicker(restTimerProvider: restTimerProvider),
         );
       },
     );

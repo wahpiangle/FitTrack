@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:group_project/pages/workout/start_new_workout.dart';
 import 'package:group_project/models/exercise.dart';
 import 'package:provider/provider.dart';
-import 'package:group_project/pages/workout/components/timer/timer_provider.dart';
+import 'package:group_project/pages/workout/components/timer/providers/timer_provider.dart';
 import 'dart:async';
 
 class NewWorkoutBottomSheet {
@@ -16,7 +16,7 @@ class NewWorkoutBottomSheet {
       // Close the active timer sheet
       _closeTimerScreen(context);
       // Wait for a short duration to allow the timer sheet to close
-      await Future.delayed(Duration(milliseconds: 10));
+      await Future.delayed(const Duration(milliseconds: 10));
       // Show the new workout bottom sheet
       return _showNewWorkoutBottomSheet(context, exerciseData);
     } else {
@@ -168,14 +168,13 @@ class TimerActiveScreen extends StatelessWidget {
             child: ListView(
               controller: controller,
               children: [
-                Container(
+                SizedBox(
                   height: MediaQuery.of(context).size.height * 0.8,
                   child: Scaffold(
                     appBar: AppBar(
                       backgroundColor: const Color(0xFF1A1A1A),
-                      elevation: 0.0, // Remove the default shadow
-                      automaticallyImplyLeading:
-                          false, // Disable the back button
+                      elevation: 0.0,
+                      automaticallyImplyLeading: false,
                       title: Container(
                         padding: const EdgeInsets.symmetric(horizontal: 8.0),
                         child: Column(

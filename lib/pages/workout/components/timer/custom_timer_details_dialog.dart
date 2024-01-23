@@ -1,19 +1,21 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
-import 'package:group_project/pages/workout/components/timer/components/about_rest_timer_dialog.dart';
+import 'package:group_project/pages/workout/components/timer/providers/custom_timer_provider.dart';
 import 'package:group_project/pages/workout/components/timer/components/rest_timer_dialog.dart';
-import 'package:group_project/pages/workout/components/timer/providers/rest_timer_provider.dart';
 
-class RestTimerDetailsDialog extends StatefulWidget {
-  final RestTimerProvider restTimerProvider;
+class CustomTimerDetailsDialog extends StatefulWidget {
+  final CustomTimerProvider customTimerProvider;
 
-  const RestTimerDetailsDialog({super.key, required this.restTimerProvider});
+  const CustomTimerDetailsDialog(
+      {super.key, required this.customTimerProvider});
 
   @override
-  RestTimerDetailsDialogState createState() => RestTimerDetailsDialogState();
+  CustomTimerDetailsDialogState createState() =>
+      CustomTimerDetailsDialogState();
 }
 
-class RestTimerDetailsDialogState extends State<RestTimerDetailsDialog>
+class CustomTimerDetailsDialogState extends State<CustomTimerDetailsDialog>
     with SingleTickerProviderStateMixin {
   late Timer _timer;
   late AnimationController _animationController;
@@ -36,7 +38,7 @@ class RestTimerDetailsDialogState extends State<RestTimerDetailsDialog>
     );
 
     Future.delayed(Duration.zero, () {
-      widget.restTimerProvider.showRestDialog();
+      widget.customTimerProvider.showCustomDialog(context);
     });
 
     _animationController.forward();
@@ -52,7 +54,7 @@ class RestTimerDetailsDialogState extends State<RestTimerDetailsDialog>
   void dispose() {
     _timer.cancel();
     Future.delayed(Duration.zero, () {
-      widget.restTimerProvider.closeRestDialog();
+      widget.customTimerProvider.closeRestDialog();
     });
     _animationController.dispose();
     super.dispose();
@@ -64,16 +66,7 @@ class RestTimerDetailsDialogState extends State<RestTimerDetailsDialog>
       animation: _animation,
       changeTimeSeconds: _changeTimeSeconds,
       timer: _timer,
-      restTimerProvider: widget.restTimerProvider,
+      customTimerProvider: widget.customTimerProvider,
     );
   }
-}
-
-void showAboutRestTimerDialog(BuildContext context) {
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return const AboutRestTimerDialog();
-    },
-  );
 }

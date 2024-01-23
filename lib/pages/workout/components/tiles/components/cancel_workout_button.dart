@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:group_project/main.dart';
-import 'package:group_project/pages/workout/components/timer/timer_provider.dart';
-import 'package:group_project/pages/workout/components/timer/rest_timer_provider.dart';
+import 'package:group_project/pages/workout/components/timer/providers/custom_timer_provider.dart';
+import 'package:group_project/pages/workout/components/timer/providers/rest_timer_provider.dart';
+import 'package:group_project/pages/workout/components/timer/providers/timer_provider.dart';
 import 'package:provider/provider.dart';
-
-import '../../timer/custom_timer_provider.dart';
 
 class CancelWorkoutButton extends StatelessWidget {
   final TimerProvider timerProvider;
@@ -52,7 +51,8 @@ class CancelWorkoutButton extends StatelessWidget {
                     Navigator.of(context).pop();
                     objectBox.currentWorkoutSessionService.cancelWorkout();
                     timerProvider.stopTimer(); // Stop the general workout timer
-                    timerProvider.resetTimer(); //reset the general workout timer
+                    timerProvider
+                        .resetTimer(); //reset the general workout timer
 
                     // Stop the rest timer
                     Provider.of<RestTimerProvider>(context, listen: false)

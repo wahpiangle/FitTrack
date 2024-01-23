@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:group_project/constants/themes/app_colours.dart';
-import 'package:group_project/pages/workout/components/timer/rest_time_picker.dart';
+import 'package:group_project/pages/workout/components/timer/components/time_picker.dart';
+import 'package:group_project/pages/workout/components/timer/providers/custom_timer_provider.dart';
 import 'package:group_project/pages/workout/components/timer/resttimer_details_dialog.dart';
-import 'custom_timer_provider.dart';
 
 class CustomTimerPickerDialog extends StatelessWidget {
   final CustomTimerProvider customTimerProvider;
@@ -17,11 +17,11 @@ class CustomTimerPickerDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      backgroundColor: AppColours.primaryBright,
+      backgroundColor: AppColours.primary,
+      surfaceTintColor: Colors.transparent,
       content: SizedBox(
-        height: MediaQuery.of(context).size.height*0.56,
-        width:MediaQuery.of(context).size.width,
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -53,7 +53,7 @@ class CustomTimerPickerDialog extends StatelessWidget {
             const SizedBox(height: 30),
             Container(
               height: MediaQuery.of(context).size.height * 0.33,
-              width: MediaQuery.of(context).size.width* 0.7,
+              width: MediaQuery.of(context).size.width * 0.7,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(150),
                 border: Border.all(color: AppColours.secondary, width: 5),
@@ -61,20 +61,15 @@ class CustomTimerPickerDialog extends StatelessWidget {
               child: ClipOval(
                 child: Container(
                   color: AppColours.secondary,
-                  child: CustomTimerPicker(
+                  child: TimePicker(
                     customTimerProvider: customTimerProvider,
                   ),
                 ),
               ),
             ),
             const SizedBox(height: 50),
-            Container(
-              height: MediaQuery.of(context).size.height * 0.055,
-              width: MediaQuery.of(context).size.width * 0.7,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(50),
-                // Rounded corners
-              ),
+            SizedBox(
+              width: double.infinity,
               child: ElevatedButton(
                 onPressed: () {
                   customTimerProvider.resetCustomTimer(
@@ -86,7 +81,7 @@ class CustomTimerPickerDialog extends StatelessWidget {
                   showCustomTimerDetailsDialog(context);
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xFFC1C1C1),
+                  backgroundColor: const Color(0xFFC1C1C1),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(50),
                   ),
