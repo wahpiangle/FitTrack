@@ -4,6 +4,7 @@ import 'package:group_project/constants/data/bodypart_data.dart';
 import 'package:group_project/models/body_part.dart';
 import 'package:group_project/models/category.dart';
 import 'package:group_project/models/exercise.dart';
+import 'package:group_project/services/firebase/firebase_customexercise_service.dart';
 import 'package:group_project/services/objectbox_service.dart';
 
 class CustomExerciseDialog {
@@ -110,7 +111,6 @@ class CustomExerciseDialog {
                     ),
                     dropdownColor: const Color(0xFF1A1A1A),
                   ),
-
                 ],
               ),
             ),
@@ -155,10 +155,11 @@ class CustomExerciseDialog {
                   const SizedBox(width: 15.0),
                   Expanded(
                     child: TextButton(
-                      onPressed: () {
+                      onPressed: () async {
+                        print('Save button pressed');
                         if (formKey.currentState?.validate() ?? false) {
+                          print('Form is valid');
                           if (customExerciseName == null) {
-                            // Display a warning message if either body part or category is not selected
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
                                 content: Text(
@@ -173,15 +174,21 @@ class CustomExerciseDialog {
                               name: customExerciseName ?? '',
                             );
 
+                            print('Adding exercise to ObjectBox');
                             objectBox.addExerciseToList(
                               newExercise,
                               selectedCategory,
                               selectedBodyPart,
                             );
+
+                            print('Adding exercise to Firebase');
+                            FirebaseExercisesService.addExercise(newExercise);
+
                             Navigator.pop(context);
                           }
                         }
                       },
+
                       style: TextButton.styleFrom(
                         padding: const EdgeInsets.all(8.0),
                         shape: const RoundedRectangleBorder(
