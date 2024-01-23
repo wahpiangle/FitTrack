@@ -13,14 +13,15 @@ class WorkoutScreen extends StatefulWidget {
   const WorkoutScreen({super.key});
 
   @override
-  State<WorkoutScreen> createState() => _WorkoutScreenState();
+  State<WorkoutScreen> createState() => WorkoutScreenState();
 }
 
-class _WorkoutScreenState extends State<WorkoutScreen> {
+class WorkoutScreenState extends State<WorkoutScreen> {
   List<Exercise> exerciseData = objectBox.getAllExercises();
-  bool isTimerActiveScreenOpen = false;
+  static bool isTimerActiveScreenOpen = false;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final GlobalKey _bottomSheetKey = GlobalKey();
+//  static bool shouldShowBottomSheetAgain = false;
 
 
   @override
@@ -165,39 +166,51 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
   }
 
   void _handleTimerActive(BuildContext context) {
-    TimerProvider timerProvider =
+    TimerProvider? timerProvider =
     Provider.of<TimerProvider>(context, listen: false);
 
-    if (isTimerActiveScreenOpen) {
+    if (timerProvider == null || isTimerActiveScreenOpen) {
       return;
     }
 
-    // Check if the timer is running when the screen is opened
-    if (timerProvider.isTimerRunning) {
-      isTimerActiveScreenOpen = true;
-      showTimerBottomSheet(context, exerciseData);
-    }
-
-    // Listen for changes in the timer state
-    timerProvider.addListener(() {
-      if (timerProvider.isTimerRunning && !isTimerActiveScreenOpen) {
+    void handleTimerStateChanged() {
+      if (timerProvider != null &&
+          timerProvider.isTimerRunning &&
+          !isTimerActiveScreenOpen) {
         isTimerActiveScreenOpen = true;
         showTimerBottomSheet(context, exerciseData);
-      } else if (!timerProvider.isTimerRunning && isTimerActiveScreenOpen) {
+      } else if (timerProvider != null &&
+          !timerProvider.isTimerRunning &&
+          isTimerActiveScreenOpen) {
         isTimerActiveScreenOpen = false;
         Navigator.pop(context); // Close the bottom sheet if the timer stops
       }
-    });
+    }
+
+    // Listen for changes in the timer state
+    void Function()? listener;
+    listener = () {
+      if (mounted) {
+        handleTimerStateChanged();
+      } else {
+        // If the component is disposed, remove the listener
+        timerProvider?.removeListener(listener!);
+      }
+    };
+
+    timerProvider.addListener(listener);
   }
+
 
   static void showTimerBottomSheet(BuildContext context, List<Exercise> exerciseData) {
     showBottomSheet(
       context: context,
       builder: (context) => TimerActiveScreen(exerciseData: exerciseData),
     ).closed.then((value) {
-      // Handle any cleanup or state changes after the bottom sheet is closed
+      isTimerActiveScreenOpen = false;
     });
   }
+
   void _resetWorkout() {
     objectBox.currentWorkoutSessionService.cancelWorkout();
 

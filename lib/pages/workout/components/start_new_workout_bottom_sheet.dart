@@ -7,7 +7,6 @@ import 'package:group_project/pages/workout/components/timer/providers/timer_pro
 import 'dart:async';
 
 class NewWorkoutBottomSheet {
-  static get _WorkoutScreenState => WorkoutScreen();
 
   static Future<bool> show(
       BuildContext context, List<Exercise> exerciseData) async {
@@ -83,7 +82,7 @@ class NewWorkoutBottomSheet {
             minChildSize: 0.2,
             builder: (context, controller) {
               // Call the static method from _WorkoutScreenState
-              _WorkoutScreenState.showTimerBottomSheet(context, exerciseData);
+              WorkoutScreenState.showTimerBottomSheet(context, exerciseData);
               return StartNewWorkout(
                 exerciseData: exerciseData,
               );
