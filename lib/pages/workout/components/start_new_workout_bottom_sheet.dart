@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:group_project/pages/workout/start_new_workout.dart';
 import 'package:group_project/models/exercise.dart';
+import 'package:group_project/pages/workout/workout_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:group_project/pages/workout/components/timer/providers/timer_provider.dart';
 import 'dart:async';
 
 class NewWorkoutBottomSheet {
+  static get _WorkoutScreenState => WorkoutScreen();
+
   static Future<bool> show(
       BuildContext context, List<Exercise> exerciseData) async {
     bool isTimerActive =
@@ -56,7 +59,7 @@ class NewWorkoutBottomSheet {
   static void _closeTimerScreen(BuildContext context) {
     Navigator.popUntil(
       context,
-      (route) => route.isFirst,
+          (route) => route.isFirst,
     );
   }
 
@@ -79,6 +82,8 @@ class NewWorkoutBottomSheet {
             maxChildSize: 1.0,
             minChildSize: 0.2,
             builder: (context, controller) {
+              // Call the static method from _WorkoutScreenState
+              _WorkoutScreenState.showTimerBottomSheet(context, exerciseData);
               return StartNewWorkout(
                 exerciseData: exerciseData,
               );

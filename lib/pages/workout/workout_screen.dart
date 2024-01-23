@@ -20,6 +20,8 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
   List<Exercise> exerciseData = objectBox.getAllExercises();
   bool isTimerActiveScreenOpen = false;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  final GlobalKey _bottomSheetKey = GlobalKey();
+
 
   @override
   void initState() {
@@ -33,9 +35,9 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
 
   void initTimers() {
     final restTimerProvider =
-        Provider.of<RestTimerProvider>(context, listen: false);
+    Provider.of<RestTimerProvider>(context, listen: false);
     final customTimerProvider =
-        Provider.of<CustomTimerProvider>(context, listen: false);
+    Provider.of<CustomTimerProvider>(context, listen: false);
 
 
     if (!restTimerProvider.isRestTimerRunning) {
@@ -49,7 +51,7 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
 
   Future<void> _startNewWorkout(BuildContext context) async {
     TimerProvider timerProvider =
-        Provider.of<TimerProvider>(context, listen: false);
+    Provider.of<TimerProvider>(context, listen: false);
 
     if (timerProvider.isTimerRunning) {
       showDialog(
@@ -71,7 +73,7 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
                 child: TextButton(
                   style: ButtonStyle(
                     backgroundColor:
-                        MaterialStateProperty.all<Color>(Colors.red),
+                    MaterialStateProperty.all<Color>(Colors.red),
                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                       RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
@@ -98,7 +100,7 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
                     Navigator.of(ctx).pop();
 
                     bool isBottomSheetClosed =
-                        await NewWorkoutBottomSheet.show(context, exerciseData);
+                    await NewWorkoutBottomSheet.show(context, exerciseData);
 
                     if (isBottomSheetClosed) {
                       _handleTimerActive(context);
@@ -106,7 +108,7 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
                   },
                   style: ButtonStyle(
                     backgroundColor:
-                        MaterialStateProperty.all<Color>(Colors.black26),
+                    MaterialStateProperty.all<Color>(Colors.black26),
                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                       RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
@@ -126,7 +128,7 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
                 child: TextButton(
                   style: ButtonStyle(
                     backgroundColor:
-                        MaterialStateProperty.all<Color>(Colors.black26),
+                    MaterialStateProperty.all<Color>(Colors.black26),
                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                       RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
@@ -155,7 +157,7 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
     objectBox.currentWorkoutSessionService.createCurrentWorkoutSession();
 
     bool isBottomSheetClosed =
-        await NewWorkoutBottomSheet.show(context, exerciseData);
+    await NewWorkoutBottomSheet.show(context, exerciseData);
 
     if (isBottomSheetClosed) {
       _handleTimerActive(context);
@@ -164,7 +166,7 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
 
   void _handleTimerActive(BuildContext context) {
     TimerProvider timerProvider =
-        Provider.of<TimerProvider>(context, listen: false);
+    Provider.of<TimerProvider>(context, listen: false);
 
     if (isTimerActiveScreenOpen) {
       return;
@@ -173,14 +175,14 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
     // Check if the timer is running when the screen is opened
     if (timerProvider.isTimerRunning) {
       isTimerActiveScreenOpen = true;
-      _showTimerBottomSheet(context);
+      showTimerBottomSheet(context, exerciseData);
     }
 
     // Listen for changes in the timer state
     timerProvider.addListener(() {
       if (timerProvider.isTimerRunning && !isTimerActiveScreenOpen) {
         isTimerActiveScreenOpen = true;
-        _showTimerBottomSheet(context);
+        showTimerBottomSheet(context, exerciseData);
       } else if (!timerProvider.isTimerRunning && isTimerActiveScreenOpen) {
         isTimerActiveScreenOpen = false;
         Navigator.pop(context); // Close the bottom sheet if the timer stops
@@ -188,16 +190,14 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
     });
   }
 
-  void _showTimerBottomSheet(BuildContext context) {
-    isTimerActiveScreenOpen = true;
+  static void showTimerBottomSheet(BuildContext context, List<Exercise> exerciseData) {
     showBottomSheet(
       context: context,
       builder: (context) => TimerActiveScreen(exerciseData: exerciseData),
     ).closed.then((value) {
-      isTimerActiveScreenOpen = false;
+      // Handle any cleanup or state changes after the bottom sheet is closed
     });
   }
-
   void _resetWorkout() {
     objectBox.currentWorkoutSessionService.cancelWorkout();
 
@@ -227,7 +227,7 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
                     },
                     style: ButtonStyle(
                       backgroundColor:
-                          MaterialStateProperty.all(const Color(0xFFC1C1C1)),
+                      MaterialStateProperty.all(const Color(0xFFC1C1C1)),
                       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                         RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(30),
