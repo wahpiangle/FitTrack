@@ -11,7 +11,7 @@ import 'package:group_project/pages/workout/components/workout_header.dart';
 import 'package:group_project/pages/workout/components/timer/providers/timer_provider.dart';
 import 'package:provider/provider.dart';
 
-import '../timer/resttimer_details_dialog.dart';
+import '../timer/rest_timer_details_dialog.dart';
 
 class ExerciseTile extends StatefulWidget {
   final List<Exercise> exerciseData;

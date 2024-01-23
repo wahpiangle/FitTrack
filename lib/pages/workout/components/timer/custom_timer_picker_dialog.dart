@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:group_project/constants/themes/app_colours.dart';
 import 'package:group_project/pages/workout/components/timer/components/time_picker.dart';
 import 'package:group_project/pages/workout/components/timer/providers/custom_timer_provider.dart';
-import 'package:group_project/pages/workout/components/timer/resttimer_details_dialog.dart';
+import 'package:group_project/pages/workout/components/timer/rest_timer_details_dialog.dart';
 
 class CustomTimerPickerDialog extends StatelessWidget {
   final CustomTimerProvider customTimerProvider;

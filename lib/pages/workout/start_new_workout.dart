@@ -14,7 +14,7 @@ import 'package:group_project/services/firebase/firebase_workouts_service.dart';
 import 'package:provider/provider.dart';
 import 'package:group_project/pages/workout/components/timer/providers/timer_provider.dart';
 import 'components/timer/custom_timer_picker_dialog.dart';
-import 'components/timer/resttimer_details_dialog.dart';
+import 'components/timer/rest_timer_details_dialog.dart';
 
 class StartNewWorkout extends StatefulWidget {
   final List<Exercise> exerciseData;
