@@ -13,7 +13,6 @@ class FirebaseExercisesService {
       final collectionRef = db.collection('exercises');
 
       try {
-        print('About to add exercise to Firestore');
         await collectionRef.doc(uid).set({
           'addednewExercises': FieldValue.arrayUnion(
             [
@@ -22,17 +21,30 @@ class FirebaseExercisesService {
                 'name': exercise.name,
                 'categoryId': exercise.category.targetId,
                 'bodyPartId': exercise.bodyPart.targetId,
-                // Add other exercise properties
               },
             ],
           ),
         }, SetOptions(merge: true));
-
-        print('Exercise added to Firestore successfully!');
       } catch (error) {
         print('Error adding exercise to Firestore: $error');
       }
     }
   }
 
+  static Future<List<dynamic>> getAllCustomExercises() async {
+    final User user = auth.currentUser!;
+    if (!user.isAnonymous) {
+      final uid = user.uid;
+      final collectionRef = db.collection('exercises');
+
+      final allCustomExercises = await collectionRef
+          .doc(uid)
+          .get()
+          .then((value) => value.data()!['addednewExercises']);
+      return allCustomExercises;
+    }
+    return [];
+  }
+
+  // TODO: add delete exercise method
 }

@@ -94,7 +94,8 @@ class CustomExerciseDialog {
                         selectedCategory = newValue;
                       }
                     },
-                    items: categoryData.map<DropdownMenuItem<Category>>((Category category) {
+                    items: categoryData
+                        .map<DropdownMenuItem<Category>>((Category category) {
                       return DropdownMenuItem<Category>(
                         value: category,
                         child: Text(
@@ -156,9 +157,7 @@ class CustomExerciseDialog {
                   Expanded(
                     child: TextButton(
                       onPressed: () async {
-                        print('Save button pressed');
                         if (formKey.currentState?.validate() ?? false) {
-                          print('Form is valid');
                           if (customExerciseName == null) {
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
@@ -174,21 +173,18 @@ class CustomExerciseDialog {
                               name: customExerciseName ?? '',
                             );
 
-                            print('Adding exercise to ObjectBox');
-                            objectBox.addExerciseToList(
+                            objectBox.exerciseService.addExerciseToList(
                               newExercise,
                               selectedCategory,
                               selectedBodyPart,
                             );
 
-                            print('Adding exercise to Firebase');
                             FirebaseExercisesService.addExercise(newExercise);
 
                             Navigator.pop(context);
                           }
                         }
                       },
-
                       style: TextButton.styleFrom(
                         padding: const EdgeInsets.all(8.0),
                         shape: const RoundedRectangleBorder(

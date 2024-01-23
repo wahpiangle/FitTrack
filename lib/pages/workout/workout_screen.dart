@@ -17,7 +17,7 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
   @override
   void initState() {
     super.initState();
-    exerciseData = objectBox.getAllExercises();
+    exerciseData = objectBox.exerciseService.getAllExercises();
   }
 
   Future<void> _startNewWorkout(BuildContext context) async {

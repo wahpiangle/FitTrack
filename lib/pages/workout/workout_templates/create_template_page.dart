@@ -18,7 +18,7 @@ class CreateTemplatePage extends StatefulWidget {
 class _CreateTemplatePageState extends State<CreateTemplatePage> {
   WorkoutTemplate editingWorkoutTemplate =
       objectBox.workoutTemplateService.getEditingWorkoutTemplate();
-  List<Exercise> exerciseData = objectBox.getAllExercises();
+  List<Exercise> exerciseData = objectBox.exerciseService.getAllExercises();
 
   void selectExercise(Exercise selectedExercise) {
     objectBox.workoutTemplateService
@@ -30,7 +30,7 @@ class _CreateTemplatePageState extends State<CreateTemplatePage> {
   }
 
   void removeSet(int exerciseSetId) {
-    objectBox.removeSetFromExercise(exerciseSetId);
+    objectBox.exerciseService.removeSetFromExercise(exerciseSetId);
     setState(() {
       editingWorkoutTemplate =
           objectBox.workoutTemplateService.getEditingWorkoutTemplate();
@@ -39,7 +39,7 @@ class _CreateTemplatePageState extends State<CreateTemplatePage> {
 
   void addSet(ExercisesSetsInfo exercisesSetsInfo) {
     setState(() {
-      objectBox.addSetToExercise(exercisesSetsInfo);
+      objectBox.exerciseService.addSetToExercise(exercisesSetsInfo);
     });
   }
 

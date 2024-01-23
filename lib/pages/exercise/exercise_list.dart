@@ -19,8 +19,9 @@ class ExerciseListScreenState extends State<ExerciseListScreen> {
   List<String> selectedCategory = []; // Default to []
   String selectedBodyPart = '';
   Map<String, List<Exercise>> exerciseGroups = {};
-  Stream<List<Exercise>> streamExercises = objectBox.watchAllExercise();
-  final categories = objectBox.getCategories();
+  Stream<List<Exercise>> streamExercises =
+      objectBox.exerciseService.watchAllExercise();
+  final categories = objectBox.exerciseService.getCategories();
 
   @override
   void initState() {

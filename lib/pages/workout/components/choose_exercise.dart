@@ -34,7 +34,8 @@ class ChooseExerciseState extends State<ChooseExercise> {
   bool isAnyExerciseSelected = false;
   List<String> selectedCategory = [];
   String selectedBodyPart = '';
-  Stream<List<Exercise>> streamExercises = objectBox.watchAllExercise();
+  Stream<List<Exercise>> streamExercises =
+      objectBox.exerciseService.watchAllExercise();
 
   @override
   void initState() {
