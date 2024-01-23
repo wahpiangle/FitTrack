@@ -5,12 +5,12 @@ import 'package:group_project/models/exercises_sets_info.dart';
 import 'package:group_project/pages/workout/components/tiles/components/cancel_workout_button.dart';
 import 'package:group_project/pages/workout/components/tiles/components/add_exercise_button.dart';
 import 'package:group_project/pages/workout/components/tiles/set_tiles.dart';
+import 'package:group_project/pages/workout/components/timer/components/rest_timer_dialog.dart';
+import 'package:group_project/pages/workout/components/timer/providers/custom_timer_provider.dart';
+import 'package:group_project/pages/workout/components/timer/providers/rest_timer_provider.dart';
 import 'package:group_project/pages/workout/components/workout_header.dart';
-import 'package:group_project/pages/workout/components/timer/timer_provider.dart';
+import 'package:group_project/pages/workout/components/timer/providers/timer_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:group_project/pages/workout/components/timer/rest_timer_provider.dart';
-
-import '../timer/resttimer_details_dialog.dart';
 
 class ExerciseTile extends StatefulWidget {
   final List<Exercise> exerciseData;
@@ -35,9 +35,9 @@ class ExerciseTile extends StatefulWidget {
 class _ExerciseTileState extends State<ExerciseTile> {
   late TimerProvider timerProvider;
   late RestTimerProvider restTimerProvider;
+  late CustomTimerProvider customTimerProvider;
   bool isSetCompleted = false;
   bool displayRestTimer = false;
-  late int restTimerDuration;
 
   @override
   void didChangeDependencies() {
@@ -45,7 +45,8 @@ class _ExerciseTileState extends State<ExerciseTile> {
     timerProvider = Provider.of<TimerProvider>(context);
     restTimerProvider =
         Provider.of<RestTimerProvider>(context); // Initialize restTimerProvider
-    restTimerDuration = restTimerProvider.restTimerDuration;
+    customTimerProvider = Provider.of<CustomTimerProvider>(
+        context); // Initialize restTimerProvider
   }
 
   void addSet(ExercisesSetsInfo exercisesSetsInfo) {
@@ -67,16 +68,20 @@ class _ExerciseTileState extends State<ExerciseTile> {
           }
 
           if (exerciseSet.isCompleted && restTimerProvider.isRestTimerEnabled) {
-            // Start the rest timer when a set is completed
+            //check if the custom timer is running, if yes, stop the custom timer first
+            //to prevent 2 timers run at same time
+            if (customTimerProvider.isRestTimerRunning) {
+              customTimerProvider.stopCustomTimer();
+            }
+            if (restTimerProvider.isRestTimerRunning) {
+              // Stop the existing rest timer if second set is completed
+              restTimerProvider.stopRestTimer();
+            }
             restTimerProvider.startRestTimer(context);
-            // Set the flag to display the rest timer
             displayRestTimer = true;
-            //show the rest timer details dialog
             showRestTimerDetailsDialog(context);
           } else {
-            // Cancel the rest timer when a set is not completed
             restTimerProvider.stopRestTimer();
-            // Set the flag to hide the rest timer
             displayRestTimer = false;
           }
         });
@@ -84,19 +89,16 @@ class _ExerciseTileState extends State<ExerciseTile> {
     });
   }
 
-  //To show the RestTimerDetailsDialog
   void showRestTimerDetailsDialog(BuildContext context) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return RestTimerDetailsDialog(
+        return RestTimerDialog(
           restTimerProvider: restTimerProvider,
         );
       },
     );
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -111,7 +113,6 @@ class _ExerciseTileState extends State<ExerciseTile> {
                 const WorkoutHeader(),
                 AddExerciseButton(
                   exerciseData: widget.exerciseData,
-                  exercisesSetsInfo: widget.exercisesSetsInfo,
                   selectExercise: widget.selectExercise,
                 ),
                 CancelWorkoutButton(
@@ -135,7 +136,7 @@ class _ExerciseTileState extends State<ExerciseTile> {
                       child: Text(
                         selectedExercise.exercise.target!.name,
                         style: const TextStyle(
-                          fontSize: 18,
+                          fontSize: 14,
                           fontWeight: FontWeight.bold,
                           color: Color(0xFFE1F0CF),
                         ),
@@ -157,7 +158,6 @@ class _ExerciseTileState extends State<ExerciseTile> {
             return Column(children: [
               AddExerciseButton(
                 exerciseData: widget.exerciseData,
-                exercisesSetsInfo: widget.exercisesSetsInfo,
                 selectExercise: widget.selectExercise,
               ),
               CancelWorkoutButton(
@@ -174,18 +174,13 @@ class _ExerciseTileState extends State<ExerciseTile> {
                 children: [
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                    child: Row(
-                      children: [
-                        Text(
-                          selectedExercise.exercise.target!.name,
-                          style: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: Color(0xFFE1F0CF),
-                          ),
-                        ),
-                        const SizedBox(width: 10),
-                      ],
+                    child: Text(
+                      selectedExercise.exercise.target!.name,
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFFE1F0CF),
+                      ),
                     ),
                   ),
                   const SizedBox(height: 20),

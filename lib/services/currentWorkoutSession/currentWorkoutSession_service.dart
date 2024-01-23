@@ -2,16 +2,20 @@ import 'package:group_project/models/current_workout_session.dart';
 import 'package:group_project/models/exercise.dart';
 import 'package:group_project/models/exercise_set.dart';
 import 'package:group_project/models/exercises_sets_info.dart';
+import 'package:group_project/models/workout_session.dart';
+import 'package:group_project/models/workout_template.dart';
 import 'package:objectbox/objectbox.dart';
 
 class CurrentWorkoutSessionService {
   Box<CurrentWorkoutSession> currentWorkoutSessionBox;
+  Box<WorkoutSession> workoutSessionBox;
   Box<ExercisesSetsInfo> exercisesSetsInfoBox;
   Box<ExerciseSet> exerciseSetBox;
   Box<Exercise> exerciseBox;
 
   CurrentWorkoutSessionService({
     required this.currentWorkoutSessionBox,
+    required this.workoutSessionBox,
     required this.exercisesSetsInfoBox,
     required this.exerciseSetBox,
     required this.exerciseBox,
@@ -54,7 +58,7 @@ class CurrentWorkoutSessionService {
   void removeExerciseFromCurrentWorkoutSession(int exercisesSetsInfoId) {
     CurrentWorkoutSession currentWorkoutSession = getCurrentWorkoutSession();
     currentWorkoutSession.exercisesSetsInfo.removeWhere(
-            (exercisesSetsInfo) => exercisesSetsInfo.id == exercisesSetsInfoId);
+        (exercisesSetsInfo) => exercisesSetsInfo.id == exercisesSetsInfoId);
     currentWorkoutSessionBox.put(currentWorkoutSession);
   }
 
@@ -73,6 +77,9 @@ class CurrentWorkoutSessionService {
         .forEach((exercisesSetsInfo) {
       exercisesSetsInfoBox.remove(exercisesSetsInfo.id);
     });
+
+    currentWorkoutSession.note = '';
+    currentWorkoutSession.title = 'Workout';
     currentWorkoutSessionBox.put(currentWorkoutSession);
   }
 
@@ -102,6 +109,45 @@ class CurrentWorkoutSessionService {
   void updateCurrentWorkoutSessionTitle(String newText) {
     CurrentWorkoutSession currentWorkoutSession = getCurrentWorkoutSession();
     currentWorkoutSession.title = newText;
+    currentWorkoutSessionBox.put(currentWorkoutSession);
+  }
+
+  // save to history
+  WorkoutSession saveCurrentWorkoutSession({required int timeInSeconds}) {
+    CurrentWorkoutSession currentWorkoutSession = getCurrentWorkoutSession();
+    WorkoutSession workoutSession = WorkoutSession(
+      date: DateTime.now(),
+      duration: timeInSeconds,
+    );
+    workoutSession.exercisesSetsInfo
+        .addAll(currentWorkoutSession.exercisesSetsInfo);
+    workoutSession.note = currentWorkoutSession.note;
+    workoutSession.title = currentWorkoutSession.title;
+    workoutSessionBox.put(workoutSession);
+    clearCurrentWorkoutSession();
+    return workoutSession;
+  }
+
+  void startCurrentWorkoutFromTemplate(WorkoutTemplate workoutTemplate) {
+    CurrentWorkoutSession currentWorkoutSession = getCurrentWorkoutSession();
+    currentWorkoutSession.title = workoutTemplate.title;
+    currentWorkoutSession.note = workoutTemplate.note;
+    // create copy of exercisesSetsInfo from workoutTemplate and add to workoutTemplate
+    workoutTemplate.exercisesSetsInfo.forEach((exercisesSetsInfo) {
+      final exercisesSetsInfoCopy = ExercisesSetsInfo();
+      exercisesSetsInfo.exerciseSets.forEach((exerciseSet) {
+        final exerciseSetCopy = ExerciseSet();
+        exercisesSetsInfoCopy.exerciseSets.add(exerciseSetCopy);
+        exerciseSetCopy.exerciseSetInfo.target = exercisesSetsInfoCopy;
+        exerciseSetCopy.reps = exerciseSet.reps;
+        exerciseSetCopy.weight = exerciseSet.weight;
+        exerciseSetBox.put(exerciseSetCopy);
+      });
+      exercisesSetsInfoCopy.exercise.target = exercisesSetsInfo.exercise.target;
+      currentWorkoutSession.exercisesSetsInfo.add(exercisesSetsInfoCopy);
+      exercisesSetsInfoBox.put(exercisesSetsInfoCopy);
+    });
+
     currentWorkoutSessionBox.put(currentWorkoutSession);
   }
 }

@@ -8,6 +8,8 @@ class WorkoutSession {
   String title;
   String note;
   DateTime date = DateTime.now();
+  bool isCurrentEditing;
+  int duration;
 
   // 1 workout session can have multiple exercises
   // each exercise can have multiple sets
@@ -18,5 +20,7 @@ class WorkoutSession {
     this.title = 'Workout',
     this.note = '',
     required this.date,
+    this.isCurrentEditing = false,
+    this.duration = 0,
   });
 }

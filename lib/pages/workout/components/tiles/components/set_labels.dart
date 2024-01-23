@@ -1,56 +1,67 @@
 import 'package:flutter/material.dart';
 
 class SetLabels extends StatelessWidget {
-  const SetLabels({super.key});
+  final void Function(int exerciseSetId)? setIsCompleted;
+  const SetLabels({
+    super.key,
+    this.setIsCompleted,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return const Row(
+    return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SizedBox(
+        const SizedBox(
           width: 30,
-          child: Center(
-            child: Text(
-              "Set",
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
+          child: Text(
+            "Set",
+            style: TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
             ),
+            textAlign: TextAlign.center,
           ),
         ),
-        SizedBox(width: 20),
-        Expanded(
+        const SizedBox(width: 20),
+        const Expanded(
           flex: 1,
           child: Center(
             child: Text(
               "Weight",
               style: TextStyle(
-                fontSize: 18,
+                fontSize: 12,
                 fontWeight: FontWeight.bold,
                 color: Colors.white,
               ),
+              textAlign: TextAlign.center,
             ),
           ),
         ),
-        SizedBox(width: 20),
-        Expanded(
+        const SizedBox(width: 20),
+        const Expanded(
           flex: 1,
           child: Center(
             child: Text(
               "Reps",
               style: TextStyle(
-                fontSize: 18,
+                fontSize: 12,
                 fontWeight: FontWeight.bold,
                 color: Colors.white,
               ),
             ),
           ),
         ),
-        SizedBox(width: 20),
-        SizedBox(width: 40)
+        const SizedBox(width: 10),
+        SizedBox(
+          width: 40,
+          child: Icon(
+            setIsCompleted != null ? Icons.check : Icons.lock_outline,
+            size: 20,
+            color: Colors.white,
+          ),
+        )
       ],
     );
   }

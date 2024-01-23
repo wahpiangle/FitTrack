@@ -1,18 +1,26 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:group_project/constants/themes/app_colours.dart';
-import 'package:group_project/pages/workout/components/timer/rest_timer_provider.dart';
+import 'package:group_project/pages/workout/components/timer/providers/custom_timer_provider.dart';
+import 'package:group_project/pages/workout/components/timer/providers/rest_timer_provider.dart';
 
-class RestTimerDetailsDialog extends StatefulWidget {
-  final RestTimerProvider restTimerProvider;
+class RestTimerDialog extends StatefulWidget {
+  final int changeTimeSeconds = 10;
+  final RestTimerProvider? restTimerProvider;
+  final CustomTimerProvider? customTimerProvider;
 
-  const RestTimerDetailsDialog({super.key, required this.restTimerProvider});
+  const RestTimerDialog({
+    super.key,
+    this.restTimerProvider,
+    this.customTimerProvider,
+  });
 
   @override
-  RestTimerDetailsDialogState createState() => RestTimerDetailsDialogState();
+  State<RestTimerDialog> createState() => _RestTimerDialogState();
 }
 
-class RestTimerDetailsDialogState extends State<RestTimerDetailsDialog>
+class _RestTimerDialogState extends State<RestTimerDialog>
     with SingleTickerProviderStateMixin {
   late Timer _timer;
   late AnimationController _animationController;
@@ -33,9 +41,12 @@ class RestTimerDetailsDialogState extends State<RestTimerDetailsDialog>
       ),
     );
 
-    // Delay the notification to the end of the build phase
     Future.delayed(Duration.zero, () {
-      widget.restTimerProvider.showRestDialog();
+      if (widget.restTimerProvider != null) {
+        widget.restTimerProvider!.showRestDialog();
+      } else {
+        widget.customTimerProvider!.showCustomDialog(context);
+      }
     });
 
     _animationController.forward();
@@ -43,7 +54,6 @@ class RestTimerDetailsDialogState extends State<RestTimerDetailsDialog>
 
   void _startUpdatingTimer() {
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-
       setState(() {});
     });
   }
@@ -52,7 +62,9 @@ class RestTimerDetailsDialogState extends State<RestTimerDetailsDialog>
   void dispose() {
     _timer.cancel();
     Future.delayed(Duration.zero, () {
-      widget.restTimerProvider.closeRestDialog();
+      widget.restTimerProvider != null
+          ? widget.restTimerProvider!.closeRestDialog()
+          : widget.customTimerProvider!.closeRestDialog();
     });
     _animationController.dispose();
     super.dispose();
@@ -70,6 +82,7 @@ class RestTimerDetailsDialogState extends State<RestTimerDetailsDialog>
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(16.0),
             ),
+            surfaceTintColor: Colors.transparent,
             backgroundColor: Colors.transparent,
             child: Container(
               decoration: BoxDecoration(
@@ -107,19 +120,31 @@ class RestTimerDetailsDialogState extends State<RestTimerDetailsDialog>
                       alignment: Alignment.center,
                       children: [
                         SizedBox(
-                          width: 230,
                           height: 230,
+                          width: 230,
                           child: CircularProgressIndicator(
-                            value: widget.restTimerProvider.currentDuration /
-                                widget.restTimerProvider.restTimerDuration,
+                            value: widget.restTimerProvider != null
+                                ? widget.restTimerProvider!
+                                        .currentRestTimerDuration /
+                                    widget.restTimerProvider!.restTimerDuration
+                                : widget.customTimerProvider!
+                                        .customCurrentTimerDuration /
+                                    widget.customTimerProvider!
+                                        .customTimerDuration,
                             valueColor: const AlwaysStoppedAnimation<Color>(
-                              Color(0xFFB9D499),),
+                              Color(0xFFB9D499),
+                            ),
                             strokeWidth: 6,
                           ),
                         ),
                         Text(
                           RestTimerProvider.formatDuration(
-                              widget.restTimerProvider.currentDuration),
+                            widget.restTimerProvider != null
+                                ? widget
+                                    .restTimerProvider!.currentRestTimerDuration
+                                : widget.customTimerProvider!
+                                    .customCurrentTimerDuration,
+                          ),
                           style: const TextStyle(
                             color: Color(0xFFE1F0CF),
                             fontSize: 64,
@@ -135,18 +160,25 @@ class RestTimerDetailsDialogState extends State<RestTimerDetailsDialog>
                         children: [
                           ElevatedButton(
                             onPressed: () {
-                              widget.restTimerProvider.adjustRestTime(-10);
+                              widget.restTimerProvider != null
+                                  ? widget.restTimerProvider!
+                                      .adjustRestTime(-widget.changeTimeSeconds)
+                                  : widget.customTimerProvider!
+                                      .adjustCustomTime(
+                                          -widget.changeTimeSeconds);
                             },
                             style: ElevatedButton.styleFrom(
                               foregroundColor: Colors.black,
                               backgroundColor: const Color(0xFFE1F0CF),
                             ),
-                            child: const Text('-10s'),
+                            child: Text('-${widget.changeTimeSeconds}s'),
                           ),
                           ElevatedButton(
                             onPressed: () {
-                              // End the whole rest timer
-                              widget.restTimerProvider.stopRestTimer();
+                              widget.restTimerProvider != null
+                                  ? widget.restTimerProvider!.stopRestTimer()
+                                  : widget.customTimerProvider!
+                                      .stopCustomTimer();
                               Navigator.of(context).pop();
                             },
                             style: ElevatedButton.styleFrom(
@@ -157,14 +189,18 @@ class RestTimerDetailsDialogState extends State<RestTimerDetailsDialog>
                           ),
                           ElevatedButton(
                             onPressed: () {
-                              // Increase the rest time by 10 seconds
-                              widget.restTimerProvider.adjustRestTime(10);
+                              widget.restTimerProvider != null
+                                  ? widget.restTimerProvider!
+                                      .adjustRestTime(widget.changeTimeSeconds)
+                                  : widget.customTimerProvider!
+                                      .adjustCustomTime(
+                                          widget.changeTimeSeconds);
                             },
                             style: ElevatedButton.styleFrom(
                               foregroundColor: Colors.black,
                               backgroundColor: const Color(0xFFE1F0CF),
                             ),
-                            child: const Text('+10s'),
+                            child: Text('+${widget.changeTimeSeconds}s'),
                           ),
                         ],
                       ),

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:group_project/main.dart';
 import 'package:group_project/models/exercise.dart';
-import 'package:group_project/pages/components/crop_image.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -39,19 +38,15 @@ class _HomeState extends State<Home> {
                 itemCount: snapshot.data?.length,
                 itemBuilder: (context, index) {
                   return ListTile(
-                    leading: ClipPath(
-                      clipper: MyClipperPath(),
-                      child: Container(
-                        height:500,
+                    leading: Container(
+                        height: 500,
                         width: 100,
                         decoration: BoxDecoration(
-                          image: DecorationImage(
-                            image: Image.asset(snapshot.data![index].imagePath).image,
-                            fit: BoxFit.fill, //or whatever BoxFit you want
-                          )
-                        )
-                      )
-                    ),
+                            image: DecorationImage(
+                          image: Image.asset(snapshot.data![index].imagePath)
+                              .image,
+                          fit: BoxFit.fill, //or whatever BoxFit you want
+                        ))),
                     title: Text(snapshot.data![index].name),
                     subtitle: Text(snapshot.data![index].bodyPart.target!.name),
                   );

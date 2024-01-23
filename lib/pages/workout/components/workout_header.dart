@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:group_project/main.dart';
-import 'package:group_project/pages/workout/components/timer/timer_provider.dart';
+import 'package:group_project/pages/workout/components/timer/providers/timer_provider.dart';
 import 'package:provider/provider.dart';
 
 class WorkoutHeader extends StatefulWidget {
@@ -47,7 +47,7 @@ class _WorkoutHeaderState extends State<WorkoutHeader> {
               },
               style: const TextStyle(
                 color: Colors.white,
-                fontSize: 24,
+                fontSize: 20,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -59,7 +59,7 @@ class _WorkoutHeaderState extends State<WorkoutHeader> {
                 "Timer: ${TimerProvider.formatTimerDuration(timerProvider.currentDuration)}",
                 style: const TextStyle(
                   color: Color(0xFFC1C1C1),
-                  fontSize: 15,
+                  fontSize: 14,
                   fontWeight: FontWeight.bold,
                 ),
               );

@@ -2,19 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:group_project/pages/workout/start_new_workout.dart';
 import 'package:group_project/models/exercise.dart';
 import 'package:provider/provider.dart';
-import 'package:group_project/pages/workout/components/timer/timer_provider.dart';
+import 'package:group_project/pages/workout/components/timer/providers/timer_provider.dart';
 import 'dart:async';
 
 class NewWorkoutBottomSheet {
-  static Future<bool> show(BuildContext context, List<Exercise> exerciseData) async {
-    bool isTimerActive = Provider.of<TimerProvider>(context, listen: false).isTimerRunning;
+  static Future<bool> show(
+      BuildContext context, List<Exercise> exerciseData) async {
+    bool isTimerActive =
+        Provider.of<TimerProvider>(context, listen: false).isTimerRunning;
 
     // Check if the timer is active and the bottom sheet is not open
     if (isTimerActive && !_isBottomSheetOpen(context)) {
       // Close the active timer sheet
       _closeTimerScreen(context);
       // Wait for a short duration to allow the timer sheet to close
-      await Future.delayed(Duration(milliseconds: 10));
+      await Future.delayed(const Duration(milliseconds: 10));
       // Show the new workout bottom sheet
       return _showNewWorkoutBottomSheet(context, exerciseData);
     } else {
@@ -36,36 +38,30 @@ class NewWorkoutBottomSheet {
               maxChildSize: 1.0,
               minChildSize: 0.2,
               builder: (context, controller) {
-                return ClipRRect(
-                  borderRadius: BorderRadius.vertical(top: Radius.circular(20.0)),
-                  child: Container(
-                    child: StartNewWorkout(
-                      exerciseData: exerciseData,
-                    ),
-                  ),
+                return StartNewWorkout(
+                  exerciseData: exerciseData,
                 );
               },
             ),
           );
         },
       );
-      // If the bottom sheet is closed, complete the Completer with true
+
       bottomSheetCompleter.complete(true);
 
-      // Return the Future<bool> from the Completer
       return bottomSheetCompleter.future;
     }
   }
 
-  // Helper function to close the TimerActiveScreen
   static void _closeTimerScreen(BuildContext context) {
     Navigator.popUntil(
       context,
-          (route) => route.isFirst, // Pop until the first route (main screen)
+      (route) => route.isFirst,
     );
   }
 
-  static Future<bool> _showNewWorkoutBottomSheet(BuildContext context, List<Exercise> exerciseData) async {
+  static Future<bool> _showNewWorkoutBottomSheet(
+      BuildContext context, List<Exercise> exerciseData) async {
     Completer<bool> bottomSheetCompleter = Completer<bool>();
 
     await showModalBottomSheet(
@@ -75,7 +71,6 @@ class NewWorkoutBottomSheet {
       builder: (context) {
         return GestureDetector(
           onTap: () {
-            // Do nothing on tap to prevent closing when the bottom sheet is open
             bottomSheetCompleter.complete(false);
           },
           child: DraggableScrollableSheet(
@@ -84,13 +79,8 @@ class NewWorkoutBottomSheet {
             maxChildSize: 1.0,
             minChildSize: 0.2,
             builder: (context, controller) {
-              return ClipRRect(
-                  borderRadius: BorderRadius.vertical(top: Radius.circular(20.0)),
-              child: Container(
-              child: StartNewWorkout(
-              exerciseData: exerciseData,
-              ),
-              ),
+              return StartNewWorkout(
+                exerciseData: exerciseData,
               );
             },
           ),
@@ -98,46 +88,43 @@ class NewWorkoutBottomSheet {
       },
     );
 
-    // If the bottom sheet is closed, complete the Completer with true
     bottomSheetCompleter.complete(true);
 
-    // Return the Future<bool> from the Completer
     return bottomSheetCompleter.future;
   }
 
-  // Helper function to check if the bottom sheet is open
   static bool _isBottomSheetOpen(BuildContext context) {
     return Scaffold.of(context).isDrawerOpen ||
         Scaffold.of(context).isEndDrawerOpen ||
         Navigator.of(context).canPop();
   }
-
 }
 
 class TimerActiveScreen extends StatelessWidget {
   final List<Exercise> exerciseData;
 
-  TimerActiveScreen({required this.exerciseData});
+  const TimerActiveScreen({
+    super.key,
+    required this.exerciseData,
+  });
 
   @override
   Widget build(BuildContext context) {
     final timerProvider = Provider.of<TimerProvider>(context);
 
-    bool isSheetOpen = false; // Track if the new workout sheet is open
+    bool isSheetOpen = false;
 
     return NotificationListener<DraggableScrollableNotification>(
       onNotification: (notification) {
         if (notification.extent == notification.maxExtent) {
-          // Check if the new workout sheet is already open
           if (!isSheetOpen) {
-            // The sheet is dragged up to the maxChildSize, close the current sheet and reopen NewWorkoutBottomSheet
             Navigator.pop(context);
             showModalBottomSheet(
               context: context,
               isScrollControlled: true,
               isDismissible: false,
               builder: (context) {
-                isSheetOpen = true; // Set the flag to indicate that the new workout sheet is open
+                isSheetOpen = true;
                 return GestureDetector(
                   onTap: () {
                     // Do nothing on tap to prevent closing when the bottom sheet is open
@@ -149,11 +136,10 @@ class TimerActiveScreen extends StatelessWidget {
                     minChildSize: 0.2,
                     builder: (context, controller) {
                       return Container(
-                          color: const Color(0xFF1A1A1A), // Background color
-                          child: StartNewWorkout(
-                            exerciseData: exerciseData,
-                          ),
-
+                        color: const Color(0xFF1A1A1A),
+                        child: StartNewWorkout(
+                          exerciseData: exerciseData,
+                        ),
                       );
                     },
                   ),
@@ -174,59 +160,58 @@ class TimerActiveScreen extends StatelessWidget {
       child: DraggableScrollableSheet(
         expand: false,
         initialChildSize: 0.1,
-        maxChildSize: 0.15, // Change maxChildSize to 1.0
+        maxChildSize: 0.15,
         minChildSize: 0.01,
         builder: (context, controller) {
-          return ClipRRect(
-            borderRadius: BorderRadius.vertical(top: Radius.circular(20.0)),
-            child: Container(
-              color: const Color(0xFF1A1A1A), // Background color
-              child: ListView(
-                controller: controller,
-                children: [
-                  Container(
-                    height: MediaQuery.of(context).size.height * 0.8,
-                    child: Scaffold(
-                      appBar: AppBar(
-                        backgroundColor: const Color(0xFF1A1A1A),
-                        elevation: 0.0, // Remove the default shadow
-                        title: Container(
-                          padding: EdgeInsets.symmetric(horizontal: 8.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                margin: EdgeInsets.only(left: 90.0),
-                                width: 50.0,
-                                height: 5.0,
-                                decoration: BoxDecoration(
-                                  color: Colors.grey,
-                                  borderRadius: BorderRadius.circular(10.0),
+          return Container(
+            color: const Color(0xFF1A1A1A),
+            child: ListView(
+              controller: controller,
+              children: [
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.8,
+                  child: Scaffold(
+                    appBar: AppBar(
+                      backgroundColor: const Color(0xFF1A1A1A),
+                      elevation: 0.0,
+                      automaticallyImplyLeading: false,
+                      title: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const SizedBox(height: 15),
+                            Container(
+                              margin: const EdgeInsets.only(left: 150.0),
+                              width: 50.0,
+                              height: 5.0,
+                              decoration: BoxDecoration(
+                                color: Colors.grey,
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                            ),
+                            const SizedBox(height: 10),
+                            Container(
+                              margin: const EdgeInsets.only(left: 110.0),
+                              padding: const EdgeInsets.only(bottom: 20.0),
+                              child: Text(
+                                'Timer: ${TimerProvider.formatTimerDuration(timerProvider.currentDuration)}',
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 18,
                                 ),
                               ),
-                              Container(
-                                margin: EdgeInsets.only(left: 70.0),
-                                padding: EdgeInsets.only(bottom: 20.0),
-                                child: Text(
-                                  'Timer: ${TimerProvider.formatTimerDuration(timerProvider.currentDuration)}',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 18,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
                       ),
-                      body: Container(
-                        color: const Color(0xFF1A1A1A),
-                        // The rest of your body content
-                      ),
+                    ),
+                    body: Container(
+                      color: const Color(0xFF1A1A1A),
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           );
         },

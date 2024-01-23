@@ -5,7 +5,7 @@ import 'package:group_project/pages/auth/settings_signup.dart';
 import 'package:group_project/pages/components/top_nav_bar.dart';
 import 'package:group_project/pages/settings/timer_details_settings.dart';
 import 'package:provider/provider.dart';
-import 'package:group_project/services/auth_service.dart';
+import 'package:group_project/services/firebase/auth_service.dart';
 import 'package:group_project/services/user_state.dart';
 import 'package:group_project/pages/auth/offline_edit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -35,11 +35,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
     _prefs = await SharedPreferences.getInstance();
     User? currentUser = AuthService().getCurrentUser();
     bool fetchedIsAnonymous =
-        currentUser?.isAnonymous ?? false;
+        AuthService().getCurrentUser()?.isAnonymous ?? false;
 
     setState(() {
       isAnonymous = fetchedIsAnonymous;
-      if (!isAnonymous && currentUser != null) {
+      if (!isAnonymous) {
         _loadFirebaseUserData();
       } else {
         _loadAnonymousUserData();
@@ -47,10 +47,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
     });
 
     setState(() {
-      isSignInWithGoogle = currentUser?.providerData.isNotEmpty ?? false &&
+      isSignInWithGoogle =
           currentUser?.providerData.first.providerId == 'google.com';
-      if (!isSignInWithGoogle && currentUser != null) {
-        if (currentUser.isAnonymous) {
+      if (!isSignInWithGoogle) {
+        if (currentUser == null || currentUser.isAnonymous) {
           _loadAnonymousUserData();
         } else {
           _loadFirebaseUserData();
@@ -58,7 +58,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
       }
     });
   }
-
 
   _loadFirebaseUserData() async {
     User? currentUser = AuthService().getCurrentUser();
@@ -120,7 +119,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
     final UserStateProvider userStateProvider =
-    Provider.of<UserStateProvider>(context);
+        Provider.of<UserStateProvider>(context);
 
     bool isLoggedIn = userStateProvider.userState.isLoggedIn;
 
@@ -136,7 +135,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Add a Column for the Profile heading
+
                     const Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -161,18 +160,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           height: 100,
                           child: ClipOval(
                             child: (profileImage.isEmpty ||
-                                profileImage ==
-                                    'assets/icons/defaultimage.jpg')
+                                    profileImage ==
+                                        'assets/icons/defaultimage.jpg')
                                 ? const CircleAvatar(
-                              radius: 50,
-                              backgroundImage: AssetImage(
-                                  'assets/icons/defaultimage.jpg'),
-                            )
+                                    radius: 50,
+                                    backgroundImage: AssetImage(
+                                        'assets/icons/defaultimage.jpg'),
+                                  )
                                 : CircleAvatar(
-                              radius: 50,
-                              backgroundImage:
-                              FileImage(File(profileImage)),
-                            ),
+                                    radius: 50,
+                                    backgroundImage:
+                                        FileImage(File(profileImage)),
+                                  ),
                           ),
                         ),
                         const SizedBox(width: 20),
@@ -224,7 +223,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       title: "Notifications",
                       icon: Icons.notifications,
                       onPressed: () {
-                        // Navigate to the Notifications screen
+
                       },
                     ),
                     ProfileMenuItem(
@@ -243,15 +242,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       title: "Help Centre",
                       icon: Icons.info,
                       onPressed: () {
-                        // Navigate to the Privacy Policy screen
+
                       },
                     ),
-                    if ((isAnonymous)) // User logged in anonymous
+                    if ((isAnonymous))
                       ProfileMenuItem(
                         title: "Sign Up / Log In",
                         icon: Icons.person,
                         onPressed: () {
-                          // Navigate to sign-up or login screen
                           Navigator.of(context).push(
                             MaterialPageRoute(
                               builder: (context) => const SettingsSignup(),
@@ -259,12 +257,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           );
                         },
                       )
-                    else if (!isSignInWithGoogle) // User logged in with email and password
+                    else if (!isSignInWithGoogle)
                       ProfileMenuItem(
                         title: "Edit Password",
                         icon: Icons.key_outlined,
                         onPressed: () {
-                          // Navigate to edit password screen
                           Navigator.of(context).push(
                             MaterialPageRoute(
                               builder: (context) => const EditPassword(),
@@ -276,7 +273,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       title: "Terms and Conditions",
                       icon: Icons.gavel,
                       onPressed: () {
-                        // Navigate to the Terms and Conditions screen
+
                       },
                     ),
                     const SizedBox(height: 40),
@@ -299,8 +296,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       if (isAnonymous) {
         _saveUserData(); // Save updated profile image for anonymous users
       } else {
-        // Update profile image in Firebase for authenticated users
-        // (Implement the logic to upload to Firebase here)
+
       }
     });
   }
