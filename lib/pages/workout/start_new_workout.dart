@@ -48,9 +48,9 @@ class _StartNewWorkoutState extends State<StartNewWorkout> {
 
   void _finishWorkout(BuildContext context) {
     final customTimerProvider =
-        Provider.of<CustomTimerProvider>(context, listen: false);
+    Provider.of<CustomTimerProvider>(context, listen: false);
     final restTimerProvider =
-        Provider.of<RestTimerProvider>(context, listen: false);
+    Provider.of<RestTimerProvider>(context, listen: false);
     final timerProvider = Provider.of<TimerProvider>(context, listen: false);
 
     showDialog(
@@ -85,7 +85,7 @@ class _StartNewWorkoutState extends State<StartNewWorkout> {
                   WorkoutSession savedWorkout = objectBox
                       .currentWorkoutSessionService
                       .saveCurrentWorkoutSession(
-                          timeInSeconds: timerProvider.currentDuration);
+                      timeInSeconds: timerProvider.currentDuration);
                   restTimerProvider.stopRestTimer();
                   customTimerProvider.stopCustomTimer();
                   timerProvider.stopTimer();
@@ -238,7 +238,7 @@ class _StartNewWorkoutState extends State<StartNewWorkout> {
                     child: LinearProgressIndicator(
                       value: restTimerProvider.currentRestTimerDuration > 0
                           ? restTimerProvider.currentRestTimerDuration /
-                              restTimerProvider.restTimerDuration
+                          restTimerProvider.restTimerDuration
                           : 0.0,
                       valueColor: const AlwaysStoppedAnimation<Color>(
                         AppColours.secondaryDark,
@@ -258,7 +258,7 @@ class _StartNewWorkoutState extends State<StartNewWorkout> {
                       child: LinearProgressIndicator(
                         value: restTimerProvider.currentRestTimerDuration > 0
                             ? restTimerProvider.currentRestTimerDuration /
-                                restTimerProvider.restTimerDuration
+                            restTimerProvider.restTimerDuration
                             : 0.0,
                         valueColor: const AlwaysStoppedAnimation<Color>(
                           AppColours.secondaryDark,
@@ -276,9 +276,9 @@ class _StartNewWorkoutState extends State<StartNewWorkout> {
                       widthFactor: 0.35,
                       child: LinearProgressIndicator(
                         value: customTimerProvider.customCurrentTimerDuration >
-                                0
+                            0
                             ? customTimerProvider.customCurrentTimerDuration /
-                                customTimerProvider.customTimerDuration
+                            customTimerProvider.customTimerDuration
                             : 0.0,
                         valueColor: const AlwaysStoppedAnimation<Color>(
                           AppColours.secondaryDark,
@@ -292,7 +292,7 @@ class _StartNewWorkoutState extends State<StartNewWorkout> {
                 AnimatedCrossFade(
                   duration: const Duration(milliseconds: 300),
                   crossFadeState: restTimerProvider.isRestTimerEnabled &&
-                          restTimerProvider.isRestTimerRunning
+                      restTimerProvider.isRestTimerRunning
                       ? CrossFadeState.showFirst
                       : CrossFadeState.showSecond,
                   firstChild: Padding(
@@ -363,7 +363,7 @@ class _StartNewWorkoutState extends State<StartNewWorkout> {
       backgroundColor: AppColours.primary,
       body: StreamBuilder<CurrentWorkoutSession>(
         stream:
-            objectBox.currentWorkoutSessionService.watchCurrentWorkoutSession(),
+        objectBox.currentWorkoutSessionService.watchCurrentWorkoutSession(),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
             return const Center(child: CircularProgressIndicator());
@@ -375,7 +375,7 @@ class _StartNewWorkoutState extends State<StartNewWorkout> {
                   ExerciseTile(
                     exerciseData: widget.exerciseData,
                     exercisesSetsInfo:
-                        snapshot.data!.exercisesSetsInfo.toList(),
+                    snapshot.data!.exercisesSetsInfo.toList(),
                     selectExercise: selectExercise,
                     removeSet: removeSet,
                     timerProvider: timerProvider,
