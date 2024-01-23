@@ -5,13 +5,13 @@ import 'package:group_project/models/exercises_sets_info.dart';
 import 'package:group_project/pages/workout/components/tiles/components/cancel_workout_button.dart';
 import 'package:group_project/pages/workout/components/tiles/components/add_exercise_button.dart';
 import 'package:group_project/pages/workout/components/tiles/set_tiles.dart';
+import 'package:group_project/pages/workout/components/timer/providers/custom_timer_provider.dart';
+import 'package:group_project/pages/workout/components/timer/providers/rest_timer_provider.dart';
 import 'package:group_project/pages/workout/components/workout_header.dart';
-import 'package:group_project/pages/workout/components/timer/timer_provider.dart';
+import 'package:group_project/pages/workout/components/timer/providers/timer_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:group_project/pages/workout/components/timer/rest_timer_provider.dart';
 
-import '../timer/custom_timer_provider.dart';
-import '../timer/resttimer_details_dialog.dart';
+import '../timer/rest_timer_details_dialog.dart';
 
 class ExerciseTile extends StatefulWidget {
   final List<Exercise> exerciseData;
@@ -46,8 +46,8 @@ class _ExerciseTileState extends State<ExerciseTile> {
     timerProvider = Provider.of<TimerProvider>(context);
     restTimerProvider =
         Provider.of<RestTimerProvider>(context); // Initialize restTimerProvider
-    customTimerProvider =
-        Provider.of<CustomTimerProvider>(context); // Initialize restTimerProvider
+    customTimerProvider = Provider.of<CustomTimerProvider>(
+        context); // Initialize restTimerProvider
   }
 
   void addSet(ExercisesSetsInfo exercisesSetsInfo) {
@@ -106,8 +106,6 @@ class _ExerciseTileState extends State<ExerciseTile> {
       },
     );
   }
-
-
 
   @override
   Widget build(BuildContext context) {

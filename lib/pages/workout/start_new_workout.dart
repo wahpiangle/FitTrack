@@ -7,14 +7,14 @@ import 'package:group_project/models/current_workout_session.dart';
 import 'package:group_project/pages/history/complete_workout/congratulation_screen.dart';
 import 'package:group_project/models/workout_session.dart';
 import 'package:group_project/pages/workout/components/tiles/exercise_tile.dart';
-import 'package:group_project/pages/workout/workout_screen.dart';
+import 'package:group_project/pages/workout/components/timer/custom_timer_details_dialog.dart';
+import 'package:group_project/pages/workout/components/timer/providers/custom_timer_provider.dart';
+import 'package:group_project/pages/workout/components/timer/providers/rest_timer_provider.dart';
 import 'package:group_project/services/firebase/firebase_workouts_service.dart';
 import 'package:provider/provider.dart';
-import 'package:group_project/pages/workout/components/timer/timer_provider.dart';
-import 'package:group_project/pages/workout/components/timer/rest_timer_provider.dart';
+import 'package:group_project/pages/workout/components/timer/providers/timer_provider.dart';
 import 'components/timer/custom_timer_picker_dialog.dart';
-import 'components/timer/custom_timer_provider.dart';
-import 'components/timer/resttimer_details_dialog.dart';
+import 'components/timer/rest_timer_details_dialog.dart';
 
 class StartNewWorkout extends StatefulWidget {
   final List<Exercise> exerciseData;
@@ -41,8 +41,6 @@ class _StartNewWorkoutState extends State<StartNewWorkout> {
       });
     }
   }
-
-
 
   void selectExercise(Exercise selectedExercise) {
     objectBox.currentWorkoutSessionService
@@ -114,8 +112,7 @@ class _StartNewWorkoutState extends State<StartNewWorkout> {
                           child: child,
                         );
                       },
-                      transitionDuration: const Duration(
-                          milliseconds: 500),
+                      transitionDuration: const Duration(milliseconds: 500),
                     ),
                   );
                 },
@@ -238,7 +235,7 @@ class _StartNewWorkoutState extends State<StartNewWorkout> {
                 ClipRRect(
                   borderRadius: BorderRadius.circular(8.0),
                   child: FractionallySizedBox(
-                    widthFactor:0.15,
+                    widthFactor: 0.15,
                     child: LinearProgressIndicator(
                       value: restTimerProvider.currentRestTimerDuration > 0
                           ? restTimerProvider.currentRestTimerDuration /
@@ -257,8 +254,8 @@ class _StartNewWorkoutState extends State<StartNewWorkout> {
                     restTimerProvider.isRestTimerRunning)
                   ClipRRect(
                     borderRadius: BorderRadius.circular(8.0),
-                    child:FractionallySizedBox(
-                      widthFactor:0.35,
+                    child: FractionallySizedBox(
+                      widthFactor: 0.35,
                       child: LinearProgressIndicator(
                         value: restTimerProvider.currentRestTimerDuration > 0
                             ? restTimerProvider.currentRestTimerDuration /
@@ -277,7 +274,7 @@ class _StartNewWorkoutState extends State<StartNewWorkout> {
                   ClipRRect(
                     borderRadius: BorderRadius.circular(8.0),
                     child: FractionallySizedBox(
-                      widthFactor:0.35,
+                      widthFactor: 0.35,
                       child: LinearProgressIndicator(
                         value: customTimerProvider.customCurrentTimerDuration >
                                 0
