@@ -12,7 +12,7 @@ class TimerProvider with ChangeNotifier {
   bool get isTimerRunning => _isTimerRunning;
 
   TimerProvider() {
-    _loadTimerValue();
+    loadTimerValue();
   }
 
 
@@ -37,17 +37,21 @@ class TimerProvider with ChangeNotifier {
   void stopTimer() {
     _timer?.cancel();
     _isTimerRunning = false;
+    _saveTimerValue();
   }
 
-  Future<void> _loadTimerValue() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    _currentDuration = prefs.getInt('timerValue') ?? 0;
-    startTimer(); // Start the timer again after loading the value
+  void loadTimerValue() {
+    SharedPreferences.getInstance().then((prefs) {
+      _currentDuration = prefs.getInt('TimerCurrentDuration') ?? 0;
+      if (_currentDuration > 0) {
+        startTimer();
+      }
+    });
   }
 
   Future<void> _saveTimerValue() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setInt('timerValue', _currentDuration);
+    prefs.setInt('TimerCurrentDuration', _currentDuration);
   }
 
 

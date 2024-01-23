@@ -43,6 +43,7 @@ class _StartNewWorkoutState extends State<StartNewWorkout> {
   }
 
 
+
   void selectExercise(Exercise selectedExercise) {
     objectBox.currentWorkoutSessionService
         .addExerciseToCurrentWorkoutSession(selectedExercise);

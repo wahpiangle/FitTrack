@@ -20,30 +20,24 @@ class WorkoutScreen extends StatefulWidget {
 class _WorkoutScreenState extends State<WorkoutScreen> {
   List<Exercise> exerciseData = objectBox.getAllExercises();
   bool isTimerActiveScreenOpen = false;
-  bool _isTimerRunning = false;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
     super.initState();
     initTimers();
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _handleTimerActive(context);
     });
   }
+
   void initTimers() {
-    final timerProvider = Provider.of<TimerProvider>(context, listen: false);
     final restTimerProvider =
     Provider.of<RestTimerProvider>(context, listen: false);
     final customTimerProvider =
     Provider.of<CustomTimerProvider>(context, listen: false);
 
-    if (!_isTimerRunning) {
-      timerProvider.startTimer();
-      setState(() {
-        _isTimerRunning = true;
-      });
-    }
 
     if (!restTimerProvider.isRestTimerRunning) {
       restTimerProvider.loadRestTimerState(context);
