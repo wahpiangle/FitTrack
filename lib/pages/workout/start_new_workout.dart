@@ -7,14 +7,13 @@ import 'package:group_project/models/current_workout_session.dart';
 import 'package:group_project/pages/history/complete_workout/congratulation_screen.dart';
 import 'package:group_project/models/workout_session.dart';
 import 'package:group_project/pages/workout/components/tiles/exercise_tile.dart';
-import 'package:group_project/pages/workout/components/timer/custom_timer_details_dialog.dart';
+import 'package:group_project/pages/workout/components/timer/components/rest_timer_dialog.dart';
 import 'package:group_project/pages/workout/components/timer/providers/custom_timer_provider.dart';
 import 'package:group_project/pages/workout/components/timer/providers/rest_timer_provider.dart';
 import 'package:group_project/services/firebase/firebase_workouts_service.dart';
 import 'package:provider/provider.dart';
 import 'package:group_project/pages/workout/components/timer/providers/timer_provider.dart';
 import 'components/timer/custom_timer_picker_dialog.dart';
-import 'components/timer/rest_timer_details_dialog.dart';
 
 class StartNewWorkout extends StatefulWidget {
   final List<Exercise> exerciseData;
@@ -395,7 +394,7 @@ class _StartNewWorkoutState extends State<StartNewWorkout> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return RestTimerDetailsDialog(
+        return RestTimerDialog(
           restTimerProvider: restTimerProvider,
         );
       },
@@ -407,7 +406,7 @@ class _StartNewWorkoutState extends State<StartNewWorkout> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return CustomTimerDetailsDialog(
+        return RestTimerDialog(
           customTimerProvider: customTimerProvider,
         );
       },

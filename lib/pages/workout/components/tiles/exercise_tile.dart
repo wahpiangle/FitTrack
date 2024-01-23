@@ -5,13 +5,12 @@ import 'package:group_project/models/exercises_sets_info.dart';
 import 'package:group_project/pages/workout/components/tiles/components/cancel_workout_button.dart';
 import 'package:group_project/pages/workout/components/tiles/components/add_exercise_button.dart';
 import 'package:group_project/pages/workout/components/tiles/set_tiles.dart';
+import 'package:group_project/pages/workout/components/timer/components/rest_timer_dialog.dart';
 import 'package:group_project/pages/workout/components/timer/providers/custom_timer_provider.dart';
 import 'package:group_project/pages/workout/components/timer/providers/rest_timer_provider.dart';
 import 'package:group_project/pages/workout/components/workout_header.dart';
 import 'package:group_project/pages/workout/components/timer/providers/timer_provider.dart';
 import 'package:provider/provider.dart';
-
-import '../timer/rest_timer_details_dialog.dart';
 
 class ExerciseTile extends StatefulWidget {
   final List<Exercise> exerciseData;
@@ -78,16 +77,11 @@ class _ExerciseTileState extends State<ExerciseTile> {
               // Stop the existing rest timer if second set is completed
               restTimerProvider.stopRestTimer();
             }
-            // Start the rest timer when a set is completed
             restTimerProvider.startRestTimer(context);
-            // Set the flag to display the rest timer
             displayRestTimer = true;
-            //show the rest timer details dialog
             showRestTimerDetailsDialog(context);
           } else {
-            // Cancel the rest timer when a set is not completed
             restTimerProvider.stopRestTimer();
-            // Set the flag to hide the rest timer
             displayRestTimer = false;
           }
         });
@@ -95,12 +89,11 @@ class _ExerciseTileState extends State<ExerciseTile> {
     });
   }
 
-  //To show the RestTimerDetailsDialog
   void showRestTimerDetailsDialog(BuildContext context) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return RestTimerDetailsDialog(
+        return RestTimerDialog(
           restTimerProvider: restTimerProvider,
         );
       },

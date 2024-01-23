@@ -6,17 +6,12 @@ import 'package:group_project/pages/workout/components/timer/providers/custom_ti
 import 'package:group_project/pages/workout/components/timer/providers/rest_timer_provider.dart';
 
 class RestTimerDialog extends StatefulWidget {
-  final Animation<double> animation;
-  final int changeTimeSeconds;
-  final Timer timer;
+  final int changeTimeSeconds = 10;
   final RestTimerProvider? restTimerProvider;
   final CustomTimerProvider? customTimerProvider;
 
   const RestTimerDialog({
     super.key,
-    required this.animation,
-    required this.changeTimeSeconds,
-    required this.timer,
     this.restTimerProvider,
     this.customTimerProvider,
   });
@@ -25,15 +20,64 @@ class RestTimerDialog extends StatefulWidget {
   State<RestTimerDialog> createState() => _RestTimerDialogState();
 }
 
-class _RestTimerDialogState extends State<RestTimerDialog> {
+class _RestTimerDialogState extends State<RestTimerDialog>
+    with SingleTickerProviderStateMixin {
+  late Timer _timer;
+  late AnimationController _animationController;
+  late Animation<double> _animation;
+
+  @override
+  void initState() {
+    super.initState();
+    _startUpdatingTimer();
+    _animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 400),
+    );
+    _animation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(
+        parent: _animationController,
+        curve: Curves.easeIn,
+      ),
+    );
+
+    Future.delayed(Duration.zero, () {
+      if (widget.restTimerProvider != null) {
+        widget.restTimerProvider!.showRestDialog();
+      } else {
+        widget.customTimerProvider!.showCustomDialog(context);
+      }
+    });
+
+    _animationController.forward();
+  }
+
+  void _startUpdatingTimer() {
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      setState(() {});
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    Future.delayed(Duration.zero, () {
+      widget.restTimerProvider != null
+          ? widget.restTimerProvider!.closeRestDialog()
+          : widget.customTimerProvider!.closeRestDialog();
+    });
+    _animationController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
-      animation: widget.animation,
+      animation: _animation,
       builder: (context, child) {
         return Transform.scale(
           alignment: Alignment.center,
-          scale: widget.animation.value,
+          scale: _animation.value,
           child: Dialog(
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(16.0),
@@ -55,7 +99,7 @@ class _RestTimerDialogState extends State<RestTimerDialog> {
                       children: [
                         IconButton(
                           onPressed: () {
-                            widget.timer.cancel();
+                            _timer.cancel();
                             Navigator.of(context).pop();
                           },
                           icon: const Icon(Icons.close,
