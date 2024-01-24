@@ -154,7 +154,7 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
 
   void removeSet(int exerciseSetId) {
     setState(() {
-      objectBox.removeSetFromExercise(exerciseSetId);
+      objectBox.exerciseService.removeSetFromExercise(exerciseSetId);
     });
   }
 
