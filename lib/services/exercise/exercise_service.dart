@@ -47,7 +47,9 @@ class ExerciseService {
     exercise.category.target = category;
     exercise.bodyPart.target = bodyPart;
     exerciseBox.put(exercise);
+
   }
+
 
 //categories & bodyParts
   List<Category> getCategories() {

@@ -180,7 +180,6 @@ class CustomExerciseDialog {
                             );
 
                             FirebaseExercisesService.addExercise(newExercise);
-
                             Navigator.pop(context);
                           }
                         }
