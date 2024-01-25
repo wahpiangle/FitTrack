@@ -20,8 +20,8 @@ class WorkoutSessionService {
   Stream<List<WorkoutSession>> watchWorkoutSession() {
     return workoutSessionBox
         .query(
-      WorkoutSession_.isCurrentEditing.equals(false),
-    )
+          WorkoutSession_.isCurrentEditing.equals(false),
+        )
         .order(WorkoutSession_.date, flags: Order.descending)
         .watch(triggerImmediately: true)
         .map((query) => query.find());
@@ -49,8 +49,8 @@ class WorkoutSessionService {
   WorkoutSession? getEditingWorkoutSession() {
     return workoutSessionBox
         .query(
-      WorkoutSession_.isCurrentEditing.equals(true),
-    )
+          WorkoutSession_.isCurrentEditing.equals(true),
+        )
         .build()
         .findFirst();
   }
@@ -127,8 +127,8 @@ class WorkoutSessionService {
         return true;
       }
       for (int j = 0;
-      j < editingWorkoutSession.exercisesSetsInfo[i].exerciseSets.length;
-      j++) {
+          j < editingWorkoutSession.exercisesSetsInfo[i].exerciseSets.length;
+          j++) {
         if (editingWorkoutSession.exercisesSetsInfo[i].exerciseSets[j].reps !=
             workoutSession.exercisesSetsInfo[i].exerciseSets[j].reps) {
           return true;
