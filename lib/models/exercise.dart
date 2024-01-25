@@ -17,10 +17,11 @@ class Exercise {
   final category = ToOne<Category>();
   final exercisesSetsInfo = ToMany<ExercisesSetsInfo>();
 
-  Exercise(
-      {this.id = 0,
-      required this.name,
-      this.imagePath = '',
-      this.halfImagePath = '',
-      this.isSelected = false});
+  Exercise({
+    this.id = 0,
+    required this.name,
+    this.imagePath = '',
+    this.halfImagePath = '',
+    this.isSelected = false,
+  });
 }

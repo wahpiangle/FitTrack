@@ -3,6 +3,9 @@ import 'package:group_project/constants/themes/app_colours.dart';
 import 'package:group_project/main.dart';
 import 'package:group_project/models/exercise.dart';
 import 'package:group_project/models/exercises_sets_info.dart';
+import 'package:group_project/pages/history/edit_workout/dialogs/revert_dialog.dart';
+import 'package:group_project/pages/history/edit_workout/dialogs/save_dialog.dart';
+import 'package:group_project/pages/workout/components/tiles/components/edit_exercise_tile.dart';
 import 'package:group_project/models/workout_session.dart';
 import 'package:group_project/pages/history/edit_workout/dialog/cancel_edit_dialog.dart';
 import 'package:group_project/pages/history/edit_workout/dialog/save_edit_dialog.dart';
@@ -24,7 +27,28 @@ class EditWorkoutScreen extends StatefulWidget {
 class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
   WorkoutSession? editingWorkoutSession =
       objectBox.workoutSessionService.getEditingWorkoutSession();
-  List<Exercise> exerciseData = objectBox.getAllExercises();
+  List<Exercise> exerciseData = objectBox.exerciseService.getAllExercises();
+
+  void _askToRevert() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return const RevertDialog();
+      },
+    );
+  }
+
+  void _askToSave() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return SaveDialog(
+          workoutSessionId: widget.workoutSessionId,
+          fromDetailPage: widget.fromDetailPage,
+        );
+      },
+    );
+  }
 
   void selectExercise(Exercise selectedExercise) {
     objectBox.workoutSessionService
@@ -36,7 +60,7 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
   }
 
   void removeSet(int exerciseSetId) {
-    objectBox.removeSetFromExercise(exerciseSetId);
+    objectBox.exerciseService.removeSetFromExercise(exerciseSetId);
     setState(() {
       editingWorkoutSession =
           objectBox.workoutSessionService.getEditingWorkoutSession();
@@ -45,7 +69,7 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
 
   void addSet(ExercisesSetsInfo exercisesSetsInfo) {
     setState(() {
-      objectBox.addSetToExercise(exercisesSetsInfo);
+      objectBox.exerciseService.addSetToExercise(exercisesSetsInfo);
     });
   }
 
@@ -206,7 +230,7 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
                 height: 20,
               ),
               EditExerciseTile(
-                exerciseData: objectBox.getAllExercises(),
+                exerciseData: objectBox.exerciseService.getAllExercises(),
                 selectExercise: selectExercise,
                 removeSet: removeSet,
                 addSet: addSet,

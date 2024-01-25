@@ -20,7 +20,7 @@ class EditTemplatePage extends StatefulWidget {
 class _EditTemplatePageState extends State<EditTemplatePage> {
   WorkoutTemplate editingWorkoutTemplate =
       objectBox.workoutTemplateService.getEditingWorkoutTemplate();
-  List<Exercise> exerciseData = objectBox.getAllExercises();
+  List<Exercise> exerciseData = objectBox.exerciseService.getAllExercises();
 
   void _askToRevert() {
     showDialog(
@@ -246,7 +246,7 @@ class _EditTemplatePageState extends State<EditTemplatePage> {
   }
 
   void removeSet(int exerciseSetId) {
-    objectBox.removeSetFromExercise(exerciseSetId);
+    objectBox.exerciseService.removeSetFromExercise(exerciseSetId);
     setState(() {
       editingWorkoutTemplate =
           objectBox.workoutTemplateService.getEditingWorkoutTemplate();
@@ -255,7 +255,7 @@ class _EditTemplatePageState extends State<EditTemplatePage> {
 
   void addSet(ExercisesSetsInfo exercisesSetsInfo) {
     setState(() {
-      objectBox.addSetToExercise(exercisesSetsInfo);
+      objectBox.exerciseService.addSetToExercise(exercisesSetsInfo);
     });
   }
 
@@ -402,7 +402,7 @@ class _EditTemplatePageState extends State<EditTemplatePage> {
                 height: 20,
               ),
               EditExerciseTile(
-                exerciseData: objectBox.getAllExercises(),
+                exerciseData: objectBox.exerciseService.getAllExercises(),
                 selectExercise: selectExercise,
                 removeSet: removeSet,
                 addSet: addSet,
