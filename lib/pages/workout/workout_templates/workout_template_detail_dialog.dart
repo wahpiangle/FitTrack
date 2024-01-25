@@ -90,10 +90,17 @@ class WorkoutTemplateDetails extends StatelessWidget {
                 Navigator.of(context).pop();
                 await showModalBottomSheet(
                   context: context,
-                  builder: (context) => StartNewWorkout(
-                    exerciseData: objectBox.exerciseService.getAllExercises(),
+                  isScrollControlled: true,
+                  builder: (context) => SingleChildScrollView(
+                    child: SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.95,
+                      child: StartNewWorkout(
+                        exerciseData: objectBox.exerciseService.getAllExercises(),
+                      ),
+                    ),
                   ),
                 );
+
               },
               style: ButtonStyle(
                 backgroundColor:
