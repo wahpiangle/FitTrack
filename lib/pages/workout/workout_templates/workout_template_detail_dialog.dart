@@ -2,16 +2,53 @@ import 'package:flutter/material.dart';
 import 'package:group_project/constants/themes/app_colours.dart';
 import 'package:group_project/main.dart';
 import 'package:group_project/models/workout_template.dart';
+import 'package:group_project/pages/workout/State/timer_sheet_manager.dart';
+import 'package:group_project/pages/workout/components/timer/components/ongoing_exercise_dialog.dart';
+import 'package:group_project/pages/workout/components/timer/providers/timer_provider.dart';
 import 'package:group_project/pages/workout/start_new_workout.dart';
 import 'package:group_project/pages/workout/workout_templates/edit_template_page.dart';
+import 'package:provider/provider.dart';
 
-class WorkoutTemplateDetails extends StatelessWidget {
+import '../components/start_new_workout_bottom_sheet.dart';
+
+class WorkoutTemplateDetails extends StatefulWidget {
   final WorkoutTemplate workoutTemplateData;
 
   const WorkoutTemplateDetails({
     super.key,
     required this.workoutTemplateData,
   });
+
+  @override
+  State<WorkoutTemplateDetails> createState() => _WorkoutTemplateDetailsState();
+}
+
+class _WorkoutTemplateDetailsState extends State<WorkoutTemplateDetails> {
+  void handleTimerActive(BuildContext context) {
+    TimerProvider? timerProvider =
+        Provider.of<TimerProvider>(context, listen: false);
+
+    void handleTimerStateChanged() {
+      if (timerProvider.isTimerRunning &&
+          TimerManager().isTimerActiveScreenOpen) {
+        TimerManager().showTimerBottomSheet(
+            context, objectBox.exerciseService.getAllExercises());
+      } else if (!timerProvider.isTimerRunning &&
+          TimerManager().isTimerActiveScreenOpen) {
+        TimerManager().closeTimerBottomSheet(context);
+      }
+    }
+
+    void listener() {
+      if (mounted) {
+        handleTimerStateChanged();
+      } else {
+        timerProvider.removeListener(listener);
+      }
+    }
+
+    timerProvider.addListener(listener);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +65,7 @@ class WorkoutTemplateDetails extends StatelessWidget {
             appBar: AppBar(
               backgroundColor: Colors.transparent,
               title: Text(
-                workoutTemplateData.title,
+                widget.workoutTemplateData.title,
                 style: const TextStyle(
                   color: Colors.white,
                   fontSize: 20,
@@ -58,11 +95,12 @@ class WorkoutTemplateDetails extends StatelessWidget {
                   onPressed: () {
                     Navigator.of(context).pop();
                     objectBox.workoutTemplateService
-                        .createEditingWorkoutTemplateCopy(workoutTemplateData);
+                        .createEditingWorkoutTemplateCopy(
+                            widget.workoutTemplateData);
                     Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (context) => EditTemplatePage(
-                          workoutTemplateId: workoutTemplateData.id,
+                          workoutTemplateId: widget.workoutTemplateData.id,
                         ),
                       ),
                     );
@@ -85,22 +123,47 @@ class WorkoutTemplateDetails extends StatelessWidget {
             ),
             bottomNavigationBar: TextButton(
               onPressed: () async {
-                objectBox.currentWorkoutSessionService
-                    .startCurrentWorkoutFromTemplate(workoutTemplateData);
                 Navigator.of(context).pop();
-                await showModalBottomSheet(
-                  context: context,
-                  isScrollControlled: true,
-                  builder: (context) => SingleChildScrollView(
-                    child: SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.95,
-                      child: StartNewWorkout(
-                        exerciseData: objectBox.exerciseService.getAllExercises(),
+                TimerProvider timerProvider =
+                    Provider.of<TimerProvider>(context, listen: false);
+
+                void handleResumeWorkout() async {
+                  bool isBottomSheetClosed = await NewWorkoutBottomSheet.show(
+                      context, objectBox.exerciseService.getAllExercises());
+
+                  if (isBottomSheetClosed) {
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      handleTimerActive(context);
+                    });
+                  }
+                }
+
+                if (timerProvider.isTimerRunning) {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return OngoingExerciseDialog(
+                        handleResumeWorkout: handleResumeWorkout,
+                        startFromTemplate: true,
+                        workoutTemplateData: widget.workoutTemplateData,
+                      );
+                    },
+                  );
+                } else {
+                  await showModalBottomSheet(
+                    context: context,
+                    isScrollControlled: true,
+                    builder: (context) => SingleChildScrollView(
+                      child: SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.95,
+                        child: StartNewWorkout(
+                          exerciseData:
+                              objectBox.exerciseService.getAllExercises(),
+                        ),
                       ),
                     ),
-                  ),
-                );
-
+                  );
+                }
               },
               style: ButtonStyle(
                 backgroundColor:
@@ -121,9 +184,9 @@ class WorkoutTemplateDetails extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      workoutTemplateData.note == ''
+                      widget.workoutTemplateData.note == ''
                           ? 'No notes'
-                          : workoutTemplateData.note,
+                          : widget.workoutTemplateData.note,
                       style: const TextStyle(
                         color: Colors.grey,
                         fontSize: 16,
@@ -133,7 +196,7 @@ class WorkoutTemplateDetails extends StatelessWidget {
                       height: 20,
                     ),
                     Column(
-                      children: workoutTemplateData.exercisesSetsInfo
+                      children: widget.workoutTemplateData.exercisesSetsInfo
                           .map(
                             (exercisesSetInfo) => Row(
                               mainAxisAlignment: MainAxisAlignment.start,

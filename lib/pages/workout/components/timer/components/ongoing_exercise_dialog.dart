@@ -2,21 +2,30 @@ import 'package:flutter/material.dart';
 import 'package:group_project/constants/themes/app_colours.dart';
 import 'package:group_project/main.dart';
 import 'package:group_project/models/exercise.dart';
+import 'package:group_project/models/workout_template.dart';
 import 'package:group_project/pages/workout/components/start_new_workout_bottom_sheet.dart';
+import 'package:group_project/pages/workout/components/timer/providers/custom_timer_provider.dart';
+import 'package:group_project/pages/workout/components/timer/providers/rest_timer_provider.dart';
 import 'package:group_project/pages/workout/components/timer/providers/timer_provider.dart';
 import 'package:provider/provider.dart';
 
 class OngoingExerciseDialog extends StatelessWidget {
   final void Function() handleResumeWorkout;
+  final bool? startFromTemplate;
+  final WorkoutTemplate? workoutTemplateData;
 
   const OngoingExerciseDialog({
     super.key,
     required this.handleResumeWorkout,
+    this.startFromTemplate,
+    this.workoutTemplateData,
   });
 
   @override
   Widget build(BuildContext context) {
     final timerProvider = Provider.of<TimerProvider>(context, listen: false);
+    final restTimerProvider = Provider.of<RestTimerProvider>(context);
+    final customTimerProvider = Provider.of<CustomTimerProvider>(context);
 
     List<Exercise> exerciseData = objectBox.exerciseService.getAllExercises();
     return AlertDialog(
@@ -49,8 +58,15 @@ class OngoingExerciseDialog extends StatelessWidget {
             onPressed: () {
               Navigator.of(context).pop();
               objectBox.currentWorkoutSessionService.cancelWorkout();
+
               timerProvider.resetTimer();
               timerProvider.stopTimer();
+              restTimerProvider.stopRestTimer();
+              customTimerProvider.stopCustomTimer();
+              if (startFromTemplate == true) {
+                objectBox.currentWorkoutSessionService
+                    .startCurrentWorkoutFromTemplate(workoutTemplateData!);
+              }
               NewWorkoutBottomSheet.show(context, exerciseData);
             },
             child: const Text('Start a New Workout',
