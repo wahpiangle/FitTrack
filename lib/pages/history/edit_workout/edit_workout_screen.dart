@@ -5,10 +5,7 @@ import 'package:group_project/models/exercise.dart';
 import 'package:group_project/models/exercises_sets_info.dart';
 import 'package:group_project/pages/history/edit_workout/dialogs/revert_dialog.dart';
 import 'package:group_project/pages/history/edit_workout/dialogs/save_dialog.dart';
-import 'package:group_project/pages/workout/components/tiles/components/edit_exercise_tile.dart';
 import 'package:group_project/models/workout_session.dart';
-import 'package:group_project/pages/history/edit_workout/dialog/cancel_edit_dialog.dart';
-import 'package:group_project/pages/history/edit_workout/dialog/save_edit_dialog.dart';
 import 'package:group_project/pages/workout/components/tiles/edit_exercise_tile.dart';
 
 class EditWorkoutScreen extends StatefulWidget {
@@ -28,27 +25,6 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
   WorkoutSession? editingWorkoutSession =
       objectBox.workoutSessionService.getEditingWorkoutSession();
   List<Exercise> exerciseData = objectBox.exerciseService.getAllExercises();
-
-  void _askToRevert() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return const RevertDialog();
-      },
-    );
-  }
-
-  void _askToSave() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return SaveDialog(
-          workoutSessionId: widget.workoutSessionId,
-          fromDetailPage: widget.fromDetailPage,
-        );
-      },
-    );
-  }
 
   void selectExercise(Exercise selectedExercise) {
     objectBox.workoutSessionService
@@ -103,7 +79,7 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
             showDialog(
               context: context,
               builder: (BuildContext context) {
-                return const CancelEditDialog();
+                return const RevertDialog();
               },
             );
           },
@@ -131,7 +107,7 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
                     ? showDialog(
                         context: context,
                         builder: (BuildContext context) {
-                          return SaveEditDialog(
+                          return SaveDialog(
                             workoutSessionId: widget.workoutSessionId,
                             fromDetailPage: widget.fromDetailPage,
                           );
