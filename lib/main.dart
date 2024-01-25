@@ -61,7 +61,7 @@ class MyApp extends StatelessWidget {
           "settings_signup": (context) => const SettingsSignup(),
           "app_layout": (context) => const AppLayout(),
           "congratulation_screen": (context) => const CongratulationScreen(),
-          "history_screen": (context) => const HistoryScreen(),
+          "history_screen": (context) => const HistoryScreen(exerciseData: [],),
         },
         theme: ThemeData(
           bottomNavigationBarTheme: const BottomNavigationBarThemeData(
