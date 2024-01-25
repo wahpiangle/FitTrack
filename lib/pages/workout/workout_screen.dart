@@ -5,6 +5,7 @@ import 'package:group_project/pages/workout/State/timer_sheet_manager.dart';
 import 'package:group_project/pages/workout/components/timer/components/ongoing_exercise_dialog.dart';
 import 'package:group_project/pages/workout/components/timer/providers/custom_timer_provider.dart';
 import 'package:group_project/pages/workout/components/timer/providers/rest_timer_provider.dart';
+import 'package:group_project/pages/workout/components/timer/timer_active_screen.dart';
 import 'package:group_project/pages/workout/workout_templates/workout_templates.dart';
 import 'package:group_project/pages/workout/components/timer/providers/timer_provider.dart';
 import 'package:provider/provider.dart';

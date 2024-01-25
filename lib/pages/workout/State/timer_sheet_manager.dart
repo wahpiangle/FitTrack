@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:group_project/models/exercise.dart';
-import 'package:group_project/pages/workout/components/start_new_workout_bottom_sheet.dart';
-
+import 'package:group_project/pages/workout/components/timer/timer_active_screen.dart';
 
 class TimerManager {
   static final TimerManager _instance = TimerManager._internal();
