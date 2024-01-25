@@ -22,7 +22,6 @@ class WorkoutScreenState extends State<WorkoutScreen> {
   static bool isTimerActiveScreenOpen = false;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final GlobalKey bottomSheetKey = GlobalKey();
-//  static bool shouldShowBottomSheetAgain = false;
 
   @override
   void initState() {
@@ -102,7 +101,9 @@ class WorkoutScreenState extends State<WorkoutScreen> {
                         await NewWorkoutBottomSheet.show(context, exerciseData);
 
                     if (isBottomSheetClosed) {
-                      _handleTimerActive(context);
+                      WidgetsBinding.instance.addPostFrameCallback((_) {
+                        _handleTimerActive(context);
+                      });
                     }
                   },
                   style: ButtonStyle(
@@ -150,16 +151,17 @@ class WorkoutScreenState extends State<WorkoutScreen> {
           );
         },
       );
-      return;
-    }
+    } else {
+      objectBox.currentWorkoutSessionService.createCurrentWorkoutSession();
 
-    objectBox.currentWorkoutSessionService.createCurrentWorkoutSession();
+      bool isBottomSheetClosed =
+          await NewWorkoutBottomSheet.show(context, exerciseData);
 
-    bool isBottomSheetClosed =
-        await NewWorkoutBottomSheet.show(context, exerciseData);
-
-    if (isBottomSheetClosed) {
-      _handleTimerActive(context);
+      if (isBottomSheetClosed) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          _handleTimerActive(context);
+        });
+      }
     }
   }
 
@@ -177,14 +179,13 @@ class WorkoutScreenState extends State<WorkoutScreen> {
       }
     }
 
-    void Function()? listener;
-    listener = () {
+    void listener() {
       if (mounted) {
         handleTimerStateChanged();
       } else {
-        timerProvider.removeListener(listener!);
+        timerProvider.removeListener(listener);
       }
-    };
+    }
 
     timerProvider.addListener(listener);
   }
@@ -252,6 +253,16 @@ class WorkoutScreenState extends State<WorkoutScreen> {
               const WorkoutTemplates(),
             ],
           ),
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          objectBox.test();
+        },
+        backgroundColor: const Color(0xFFC1C1C1),
+        child: const Icon(
+          Icons.add,
+          color: Colors.black,
         ),
       ),
     );

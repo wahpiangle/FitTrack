@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:group_project/main.dart';
 import 'package:group_project/models/exercise.dart';
 import 'package:group_project/pages/workout/components/choose_exercise.dart';
 
 class AddExerciseButton extends StatelessWidget {
-  final List<Exercise> exerciseData;
   final void Function(Exercise selectedExercise) selectExercise;
 
   const AddExerciseButton({
     super.key,
-    required this.exerciseData,
     required this.selectExercise,
   });
 
   @override
   Widget build(BuildContext context) {
+    final List<Exercise> exerciseData =
+        objectBox.exerciseService.getAllExercises();
     return TextButton(
       style: ButtonStyle(
         padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
@@ -33,7 +34,6 @@ class AddExerciseButton extends StatelessWidget {
           context,
           MaterialPageRoute(
             builder: (context) => ChooseExercise(
-              exercises: exerciseData,
               selectExercise: selectExercise,
             ),
           ),
