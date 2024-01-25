@@ -189,30 +189,33 @@ class WorkoutSessionService {
   }
 
   Future<void> populateDataFromFirebase() async {
-    final List<dynamic> workoutSessions =
-        await FirebaseWorkoutsService.getWorkoutSessionsOfUser();
-    for (var workoutSession in workoutSessions) {
-      final newWorkoutSession = WorkoutSession(
-        date: workoutSession['date'].toDate(),
-        note: workoutSession['note'],
-        title: workoutSession['title'],
-        isCurrentEditing: false,
-      );
+    if (workoutSessionBox.isEmpty()) {
+      final List<dynamic> workoutSessions =
+          await FirebaseWorkoutsService.getWorkoutSessionsOfUser();
+      for (var workoutSession in workoutSessions) {
+        final newWorkoutSession = WorkoutSession(
+          date: workoutSession['date'].toDate(),
+          note: workoutSession['note'],
+          title: workoutSession['title'],
+          isCurrentEditing: false,
+        );
 
-      for (var exercisesSetsInfo in workoutSession['exercisesSetsInfo']) {
-        final newExercisesSetsInfo = ExercisesSetsInfo();
-        newExercisesSetsInfo.exercise.targetId = exercisesSetsInfo['exercise'];
-        for (var exerciseSet in exercisesSetsInfo['exerciseSets']) {
-          final newExerciseSet = ExerciseSet();
-          newExerciseSet.reps = exerciseSet['reps'];
-          newExerciseSet.weight = exerciseSet['weight'];
-          newExerciseSet.exerciseSetInfo.target = newExercisesSetsInfo;
-          newExercisesSetsInfo.exerciseSets.add(newExerciseSet);
+        for (var exercisesSetsInfo in workoutSession['exercisesSetsInfo']) {
+          final newExercisesSetsInfo = ExercisesSetsInfo();
+          newExercisesSetsInfo.exercise.targetId =
+              exercisesSetsInfo['exercise'];
+          for (var exerciseSet in exercisesSetsInfo['exerciseSets']) {
+            final newExerciseSet = ExerciseSet();
+            newExerciseSet.reps = exerciseSet['reps'];
+            newExerciseSet.weight = exerciseSet['weight'];
+            newExerciseSet.exerciseSetInfo.target = newExercisesSetsInfo;
+            newExercisesSetsInfo.exerciseSets.add(newExerciseSet);
+          }
+          newWorkoutSession.exercisesSetsInfo.add(newExercisesSetsInfo);
         }
-        newWorkoutSession.exercisesSetsInfo.add(newExercisesSetsInfo);
-      }
 
-      workoutSessionBox.put(newWorkoutSession);
+        workoutSessionBox.put(newWorkoutSession);
+      }
     }
   }
 }
