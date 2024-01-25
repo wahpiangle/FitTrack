@@ -91,7 +91,7 @@ class WorkoutTemplateDetails extends StatelessWidget {
                 await showModalBottomSheet(
                   context: context,
                   builder: (context) => StartNewWorkout(
-                    exerciseData: objectBox.getAllExercises(),
+                    exerciseData: objectBox.exerciseService.getAllExercises(),
                   ),
                 );
               },

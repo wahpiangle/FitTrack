@@ -15,7 +15,7 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
-    streamExercises = objectBox.watchAllExercise();
+    streamExercises = objectBox.exerciseService.watchAllExercise();
   }
 
   @override

@@ -51,12 +51,12 @@ class _ExerciseTileState extends State<ExerciseTile> {
 
   void addSet(ExercisesSetsInfo exercisesSetsInfo) {
     setState(() {
-      objectBox.addSetToExercise(exercisesSetsInfo);
+      objectBox.exerciseService.addSetToExercise(exercisesSetsInfo);
     });
   }
 
   void setIsCompleted(int exerciseSetId) {
-    objectBox.completeExerciseSet(exerciseSetId);
+    objectBox.exerciseService.completeExerciseSet(exerciseSetId);
     setState(() {
       for (ExercisesSetsInfo exercisesSetsInfo in widget.exercisesSetsInfo) {
         exercisesSetsInfo.exerciseSets

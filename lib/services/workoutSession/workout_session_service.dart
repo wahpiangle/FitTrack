@@ -3,6 +3,7 @@ import 'package:group_project/models/exercise_set.dart';
 import 'package:group_project/models/exercises_sets_info.dart';
 import 'package:group_project/models/workout_session.dart';
 import 'package:group_project/objectbox.g.dart';
+import 'package:group_project/services/firebase/firebase_workouts_service.dart';
 
 class WorkoutSessionService {
   Box<WorkoutSession> workoutSessionBox;
@@ -20,8 +21,8 @@ class WorkoutSessionService {
   Stream<List<WorkoutSession>> watchWorkoutSession() {
     return workoutSessionBox
         .query(
-      WorkoutSession_.isCurrentEditing.equals(false),
-    )
+          WorkoutSession_.isCurrentEditing.equals(false),
+        )
         .order(WorkoutSession_.date, flags: Order.descending)
         .watch(triggerImmediately: true)
         .map((query) => query.find());
@@ -49,8 +50,8 @@ class WorkoutSessionService {
   WorkoutSession? getEditingWorkoutSession() {
     return workoutSessionBox
         .query(
-      WorkoutSession_.isCurrentEditing.equals(true),
-    )
+          WorkoutSession_.isCurrentEditing.equals(true),
+        )
         .build()
         .findFirst();
   }
@@ -91,7 +92,10 @@ class WorkoutSessionService {
   }
 
   void deleteEditingWorkoutSession() {
-    WorkoutSession editingWorkoutSession = getEditingWorkoutSession()!;
+    WorkoutSession? editingWorkoutSession = getEditingWorkoutSession();
+    if (editingWorkoutSession == null) {
+      return;
+    }
     exerciseSetBox.removeMany(editingWorkoutSession.exercisesSetsInfo
         .expand((element) => element.exerciseSets)
         .map((e) {
@@ -127,8 +131,8 @@ class WorkoutSessionService {
         return true;
       }
       for (int j = 0;
-      j < editingWorkoutSession.exercisesSetsInfo[i].exerciseSets.length;
-      j++) {
+          j < editingWorkoutSession.exercisesSetsInfo[i].exerciseSets.length;
+          j++) {
         if (editingWorkoutSession.exercisesSetsInfo[i].exerciseSets[j].reps !=
             workoutSession.exercisesSetsInfo[i].exerciseSets[j].reps) {
           return true;
@@ -182,5 +186,33 @@ class WorkoutSessionService {
     WorkoutSession editingWorkoutSession = getEditingWorkoutSession()!;
     editingWorkoutSession.note = value;
     workoutSessionBox.put(editingWorkoutSession);
+  }
+
+  Future<void> populateDataFromFirebase() async {
+    final List<dynamic> workoutSessions =
+        await FirebaseWorkoutsService.getWorkoutSessionsOfUser();
+    for (var workoutSession in workoutSessions) {
+      final newWorkoutSession = WorkoutSession(
+        date: workoutSession['date'].toDate(),
+        note: workoutSession['note'],
+        title: workoutSession['title'],
+        isCurrentEditing: false,
+      );
+
+      for (var exercisesSetsInfo in workoutSession['exercisesSetsInfo']) {
+        final newExercisesSetsInfo = ExercisesSetsInfo();
+        newExercisesSetsInfo.exercise.targetId = exercisesSetsInfo['exercise'];
+        for (var exerciseSet in exercisesSetsInfo['exerciseSets']) {
+          final newExerciseSet = ExerciseSet();
+          newExerciseSet.reps = exerciseSet['reps'];
+          newExerciseSet.weight = exerciseSet['weight'];
+          newExerciseSet.exerciseSetInfo.target = newExercisesSetsInfo;
+          newExercisesSetsInfo.exerciseSets.add(newExerciseSet);
+        }
+        newWorkoutSession.exercisesSetsInfo.add(newExercisesSetsInfo);
+      }
+
+      workoutSessionBox.put(newWorkoutSession);
+    }
   }
 }

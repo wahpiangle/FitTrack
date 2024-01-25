@@ -78,7 +78,8 @@ class _WorkoutTemplatesState extends State<WorkoutTemplates> {
                       margin: const EdgeInsets.symmetric(vertical: 10),
                       child: WorkoutTemplateCard(
                         workoutTemplateData: workoutTemplate,
-                        exerciseData: objectBox.getAllExercises(),
+                        exerciseData:
+                            objectBox.exerciseService.getAllExercises(),
                       ),
                     );
                   },

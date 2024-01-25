@@ -12,7 +12,8 @@ class ExerciseListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final exerciseName = exercise.name;
-    final exerciseBodyPart = exercise.bodyPart.target!.name;
+    final exerciseBodyPart = exercise.bodyPart.target?.name ?? '';
+
 
     // Check if the exercise name or category contains the search text
     final containsSearchText =
