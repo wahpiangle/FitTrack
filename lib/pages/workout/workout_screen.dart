@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:group_project/constants/themes/app_colours.dart';
 import 'package:group_project/main.dart';
 import 'package:group_project/models/exercise.dart';
+import 'package:group_project/pages/workout/State/timer_sheet_manager.dart';
 import 'package:group_project/pages/workout/components/timer/providers/custom_timer_provider.dart';
 import 'package:group_project/pages/workout/components/timer/providers/rest_timer_provider.dart';
 import 'package:group_project/pages/workout/workout_templates/workout_templates.dart';
@@ -17,17 +18,16 @@ class WorkoutScreen extends StatefulWidget {
 }
 
 class WorkoutScreenState extends State<WorkoutScreen> {
-  List<Exercise> exerciseData = objectBox.getAllExercises();
+  List<Exercise> exerciseData = objectBox.exerciseService.getAllExercises();
   static bool isTimerActiveScreenOpen = false;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  final GlobalKey _bottomSheetKey = GlobalKey();
+  final GlobalKey bottomSheetKey = GlobalKey();
 //  static bool shouldShowBottomSheetAgain = false;
 
   @override
   void initState() {
     super.initState();
     initTimers();
-
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _handleTimerActive(context);
     });
@@ -167,32 +167,22 @@ class WorkoutScreenState extends State<WorkoutScreen> {
     TimerProvider? timerProvider =
         Provider.of<TimerProvider>(context, listen: false);
 
-    if (timerProvider == null || isTimerActiveScreenOpen) {
-      return;
-    }
-
     void handleTimerStateChanged() {
-      if (timerProvider != null &&
-          timerProvider.isTimerRunning &&
-          !isTimerActiveScreenOpen) {
-        isTimerActiveScreenOpen = true;
-        showTimerBottomSheet(context, exerciseData);
-      } else if (timerProvider != null &&
-          !timerProvider.isTimerRunning &&
-          isTimerActiveScreenOpen) {
-        isTimerActiveScreenOpen = false;
-        Navigator.pop(context); // Close the bottom sheet if the timer stops
+      if (timerProvider.isTimerRunning &&
+          !TimerManager().isTimerActiveScreenOpen) {
+        TimerManager().showTimerBottomSheet(context, exerciseData);
+      } else if (!timerProvider.isTimerRunning &&
+          TimerManager().isTimerActiveScreenOpen) {
+        TimerManager().closeTimerBottomSheet(context);
       }
     }
 
-    // Listen for changes in the timer state
     void Function()? listener;
     listener = () {
       if (mounted) {
         handleTimerStateChanged();
       } else {
-        // If the component is disposed, remove the listener
-        timerProvider?.removeListener(listener!);
+        timerProvider.removeListener(listener!);
       }
     };
 
