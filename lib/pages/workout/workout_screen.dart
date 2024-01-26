@@ -35,9 +35,9 @@ class WorkoutScreenState extends State<WorkoutScreen> {
 
   void initTimers() {
     final restTimerProvider =
-        Provider.of<RestTimerProvider>(context, listen: false);
+    Provider.of<RestTimerProvider>(context, listen: false);
     final customTimerProvider =
-        Provider.of<CustomTimerProvider>(context, listen: false);
+    Provider.of<CustomTimerProvider>(context, listen: false);
 
     if (!restTimerProvider.isRestTimerRunning) {
       restTimerProvider.loadRestTimerState(context);
@@ -50,13 +50,12 @@ class WorkoutScreenState extends State<WorkoutScreen> {
 
   Future<void> _startNewWorkout(BuildContext context) async {
     TimerProvider timerProvider =
-        Provider.of<TimerProvider>(context, listen: false);
+    Provider.of<TimerProvider>(context, listen: false);
 
     void handleResumeWorkout() async {
       Navigator.of(context).pop();
-
       bool isBottomSheetClosed =
-          await NewWorkoutBottomSheet.show(context, exerciseData);
+      await NewWorkoutBottomSheet.show(context, exerciseData);
 
       if (isBottomSheetClosed) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -78,7 +77,7 @@ class WorkoutScreenState extends State<WorkoutScreen> {
       objectBox.currentWorkoutSessionService.createCurrentWorkoutSession();
 
       bool isBottomSheetClosed =
-          await NewWorkoutBottomSheet.show(context, exerciseData);
+      await NewWorkoutBottomSheet.show(context, exerciseData);
 
       if (isBottomSheetClosed) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -90,7 +89,7 @@ class WorkoutScreenState extends State<WorkoutScreen> {
 
   void _handleTimerActive(BuildContext context) {
     TimerProvider? timerProvider =
-        Provider.of<TimerProvider>(context, listen: false);
+    Provider.of<TimerProvider>(context, listen: false);
 
     void handleTimerStateChanged() {
       if (timerProvider.isTimerRunning &&
@@ -144,7 +143,7 @@ class WorkoutScreenState extends State<WorkoutScreen> {
                     },
                     style: ButtonStyle(
                       backgroundColor:
-                          MaterialStateProperty.all(const Color(0xFFC1C1C1)),
+                      MaterialStateProperty.all(const Color(0xFFC1C1C1)),
                       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                         RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(30),

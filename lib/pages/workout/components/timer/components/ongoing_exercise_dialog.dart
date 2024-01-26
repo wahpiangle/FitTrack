@@ -78,6 +78,9 @@ class OngoingExerciseDialog extends StatelessWidget {
           width: double.infinity,
           child: TextButton(
             onPressed: () async {
+              if (startFromTemplate == true) {
+                Navigator.of(context).pop();
+              }
               handleResumeWorkout();
             },
             style: ButtonStyle(
