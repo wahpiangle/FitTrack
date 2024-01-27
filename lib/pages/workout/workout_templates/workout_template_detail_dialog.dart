@@ -9,7 +9,6 @@ import 'package:group_project/pages/workout/start_new_workout.dart';
 import 'package:group_project/pages/workout/workout_templates/edit_template_page.dart';
 import 'package:provider/provider.dart';
 
-
 class WorkoutTemplateDetails extends StatefulWidget {
   final WorkoutTemplate workoutTemplateData;
 
@@ -25,7 +24,7 @@ class WorkoutTemplateDetails extends StatefulWidget {
 class _WorkoutTemplateDetailsState extends State<WorkoutTemplateDetails> {
   void handleTimerActive(BuildContext context) {
     TimerProvider? timerProvider =
-    Provider.of<TimerProvider>(context, listen: false);
+        Provider.of<TimerProvider>(context, listen: false);
 
     void handleTimerStateChanged() {
       if (timerProvider.isTimerRunning &&
@@ -95,7 +94,7 @@ class _WorkoutTemplateDetailsState extends State<WorkoutTemplateDetails> {
                     Navigator.of(context).pop();
                     objectBox.workoutTemplateService
                         .createEditingWorkoutTemplateCopy(
-                        widget.workoutTemplateData);
+                            widget.workoutTemplateData);
                     Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (context) => EditTemplatePage(
@@ -124,7 +123,7 @@ class _WorkoutTemplateDetailsState extends State<WorkoutTemplateDetails> {
               onPressed: () async {
                 Navigator.of(context).pop();
                 TimerProvider timerProvider =
-                Provider.of<TimerProvider>(context, listen: false);
+                    Provider.of<TimerProvider>(context, listen: false);
 
                 void handleResumeWorkout() async {
                   navigatorKey.currentState?.push(MaterialPageRoute(
@@ -146,6 +145,9 @@ class _WorkoutTemplateDetailsState extends State<WorkoutTemplateDetails> {
                     },
                   );
                 } else {
+                  objectBox.currentWorkoutSessionService
+                      .startCurrentWorkoutFromTemplate(
+                          widget.workoutTemplateData);
                   await showModalBottomSheet(
                     context: context,
                     isScrollControlled: true,
@@ -154,7 +156,7 @@ class _WorkoutTemplateDetailsState extends State<WorkoutTemplateDetails> {
                         height: MediaQuery.of(context).size.height * 0.95,
                         child: StartNewWorkout(
                           exerciseData:
-                          objectBox.exerciseService.getAllExercises(),
+                              objectBox.exerciseService.getAllExercises(),
                         ),
                       ),
                     ),
@@ -163,7 +165,7 @@ class _WorkoutTemplateDetailsState extends State<WorkoutTemplateDetails> {
               },
               style: ButtonStyle(
                 backgroundColor:
-                MaterialStateProperty.all(AppColours.secondary),
+                    MaterialStateProperty.all(AppColours.secondary),
               ),
               child: const Text(
                 'Start workout',
@@ -195,77 +197,77 @@ class _WorkoutTemplateDetailsState extends State<WorkoutTemplateDetails> {
                       children: widget.workoutTemplateData.exercisesSetsInfo
                           .map(
                             (exercisesSetInfo) => Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(300.0),
-                              child: exercisesSetInfo
-                                  .exercise.target!.imagePath ==
-                                  ''
-                                  ? Container(
-                                width: 60,
-                                height: 60,
-                                decoration: BoxDecoration(
-                                  color: const Color(0xFFE1F0CF),
-                                  borderRadius:
-                                  BorderRadius.circular(300.0),
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(300.0),
+                                  child: exercisesSetInfo
+                                              .exercise.target!.imagePath ==
+                                          ''
+                                      ? Container(
+                                          width: 60,
+                                          height: 60,
+                                          decoration: BoxDecoration(
+                                            color: const Color(0xFFE1F0CF),
+                                            borderRadius:
+                                                BorderRadius.circular(300.0),
+                                          ),
+                                          margin: const EdgeInsets.only(
+                                            right: 20,
+                                          ),
+                                          child: Center(
+                                            child: Text(
+                                              exercisesSetInfo
+                                                  .exercise.target!.name[0]
+                                                  .toUpperCase(),
+                                              style: const TextStyle(
+                                                color: Colors.black,
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 24.0,
+                                              ),
+                                            ),
+                                          ),
+                                        )
+                                      : Container(
+                                          margin: const EdgeInsets.only(
+                                            right: 20,
+                                          ),
+                                          child: Image.asset(
+                                            exercisesSetInfo
+                                                .exercise.target!.halfImagePath,
+                                            width: 60,
+                                            height: 60,
+                                          ),
+                                        ),
                                 ),
-                                margin: const EdgeInsets.only(
-                                  right: 20,
-                                ),
-                                child: Center(
-                                  child: Text(
-                                    exercisesSetInfo
-                                        .exercise.target!.name[0]
-                                        .toUpperCase(),
-                                    style: const TextStyle(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 24.0,
-                                    ),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      Text(
+                                        '${exercisesSetInfo.exerciseSets.length} × ${exercisesSetInfo.exercise.target!.name}',
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 14,
+                                        ),
+                                      ),
+                                      Text(
+                                        exercisesSetInfo.exercise.target!
+                                            .bodyPart.target!.name,
+                                        style: const TextStyle(
+                                          color: Colors.grey,
+                                          fontSize: 14,
+                                        ),
+                                      )
+                                    ],
                                   ),
-                                ),
-                              )
-                                  : Container(
-                                margin: const EdgeInsets.only(
-                                  right: 20,
-                                ),
-                                child: Image.asset(
-                                  exercisesSetInfo
-                                      .exercise.target!.halfImagePath,
-                                  width: 60,
-                                  height: 60,
-                                ),
-                              ),
+                                )
+                              ],
                             ),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment:
-                                CrossAxisAlignment.start,
-                                mainAxisAlignment:
-                                MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  Text(
-                                    '${exercisesSetInfo.exerciseSets.length} × ${exercisesSetInfo.exercise.target!.name}',
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 14,
-                                    ),
-                                  ),
-                                  Text(
-                                    exercisesSetInfo.exercise.target!
-                                        .bodyPart.target!.name,
-                                    style: const TextStyle(
-                                      color: Colors.grey,
-                                      fontSize: 14,
-                                    ),
-                                  )
-                                ],
-                              ),
-                            )
-                          ],
-                        ),
-                      )
+                          )
                           .toList(),
                     ),
                   ],
