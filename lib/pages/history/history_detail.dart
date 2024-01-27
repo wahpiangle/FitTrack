@@ -12,6 +12,17 @@ class HistoryDetail extends StatelessWidget {
     required this.workoutSession,
   });
 
+  String formatDuration(int totalSeconds) {
+    final duration = Duration(seconds: totalSeconds);
+    final hours = duration.inHours;
+    final minutes = duration.inMinutes;
+    final seconds = totalSeconds % 60;
+    final hoursString = '$hours'.padLeft(2, '0');
+    final minutesString = '$minutes'.padLeft(2, '0');
+    final secondsString = '$seconds'.padLeft(2, '0');
+    return '$hoursString:$minutesString:$secondsString';
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -60,22 +71,21 @@ class HistoryDetail extends StatelessWidget {
                   fontSize: 16,
                 ),
               ),
-              const Padding(
-                padding: EdgeInsets.symmetric(vertical: 8.0),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
                 child: Row(
                   children: [
-                    Icon(
+                    const Icon(
                       Icons.access_time_sharp,
                       color: Colors.white,
                       size: 20,
                     ),
-                    SizedBox(
+                    const SizedBox(
                       width: 10,
                     ),
                     Text(
-                      // TODO: integrate with timer feature
-                      'duration',
-                      style: TextStyle(
+                      formatDuration(workoutSession.duration),
+                      style: const TextStyle(
                         color: Colors.white,
                         fontSize: 16,
                       ),

@@ -1,12 +1,17 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:group_project/constants/themes/app_colours.dart';
 import 'package:group_project/main.dart';
 import 'package:group_project/models/exercise.dart';
 import 'package:group_project/models/current_workout_session.dart';
-import 'package:group_project/pages/history/complete_workout/congratulation_screen.dart';
-import 'package:group_project/models/workout_session.dart';
 import 'package:group_project/pages/workout/components/tiles/exercise_tile.dart';
-import 'package:group_project/services/firebase/firebase_workouts_service.dart';
+import 'package:group_project/pages/workout/components/timer/components/finish_workout_dialog.dart';
+import 'package:group_project/pages/workout/components/timer/components/rest_timer_dialog.dart';
+import 'package:group_project/pages/workout/components/timer/providers/custom_timer_provider.dart';
+import 'package:group_project/pages/workout/components/timer/providers/rest_timer_provider.dart';
+import 'package:provider/provider.dart';
+import 'package:group_project/pages/workout/components/timer/providers/timer_provider.dart';
+import 'components/timer/custom_timer_picker_dialog.dart';
 
 class StartNewWorkout extends StatefulWidget {
   final List<Exercise> exerciseData;
@@ -17,137 +22,26 @@ class StartNewWorkout extends StatefulWidget {
   State<StartNewWorkout> createState() => _StartNewWorkoutState();
 }
 
-class _StartNewWorkoutState extends State<StartNewWorkout>
-    with TickerProviderStateMixin {
-  late Timer _timer;
-  late AnimationController _controller;
-  late Animation<double> _animation;
+class _StartNewWorkoutState extends State<StartNewWorkout> {
+  bool _isSetTimeVisible = true;
   bool _isTimerRunning = false;
-  late List<Exercise> exerciseData;
-  TextEditingController weightsController = TextEditingController();
-  TextEditingController repsController = TextEditingController();
-  List<Widget> setBorders = [];
 
   @override
   void initState() {
     super.initState();
-    exerciseData = widget.exerciseData;
-    _controller = AnimationController(
-      vsync: this,
-      duration: const Duration(seconds: 1),
-    );
+    final timerProvider = Provider.of<TimerProvider>(context, listen: false);
 
-    _animation = Tween<double>(begin: 1, end: 0).animate(_controller);
-
-    _animation.addListener(() {
-      setState(() {});
-    });
-  }
-
-  void _startTimer() {
     if (!_isTimerRunning) {
-      _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-        setState(() {
-          _controller.reset();
-          _controller.forward();
-        });
+      timerProvider.startTimer();
+      setState(() {
+        _isTimerRunning = true;
       });
-      _isTimerRunning = true;
-    }
-  }
-
-  void _stopTimer() {
-    if (_isTimerRunning) {
-      _timer.cancel();
-      _isTimerRunning = false;
     }
   }
 
   void selectExercise(Exercise selectedExercise) {
     objectBox.currentWorkoutSessionService
         .addExerciseToCurrentWorkoutSession(selectedExercise);
-  }
-
-  @override
-  void dispose() {
-    if (_isTimerRunning) {
-      _timer.cancel();
-    }
-    _controller.dispose();
-    weightsController.dispose();
-    repsController.dispose();
-    super.dispose();
-  }
-
-  void _finishWorkout(BuildContext context) {
-    showDialog(
-        context: context,
-        builder: (BuildContext ctx) {
-          return AlertDialog(
-            backgroundColor: const Color(0xFF1A1A1A),
-            surfaceTintColor: Colors.transparent,
-            title: const Text(
-              'Finish Workout',
-              style: TextStyle(color: Colors.white),
-            ),
-            content: const Text(
-              'Are you sure that you want to finish workout?',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 18,
-              ),
-            ),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: const Text(
-                  'Cancel',
-                  style: TextStyle(fontSize: 18, color: Colors.red),
-                ),
-              ),
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                  Navigator.of(context).pop();
-                  WorkoutSession savedWorkout = objectBox
-                      .currentWorkoutSessionService
-                      .saveCurrentWorkoutSession();
-                  FirebaseWorkoutsService.createWorkoutSession(savedWorkout);
-                  Navigator.of(context).push(
-                    PageRouteBuilder(
-                      pageBuilder: (context, animation, secondaryAnimation) {
-                        return CongratulationScreen(
-                          workoutSession: savedWorkout,
-                        );
-                      },
-                      transitionsBuilder:
-                          (context, animation, secondaryAnimation, child) {
-                        return ScaleTransition(
-                          scale: animation.drive(
-                            Tween(begin: 0.0, end: 1.0).chain(
-                              CurveTween(curve: Curves.easeInOut),
-                            ),
-                          ),
-                          child: child,
-                        );
-                      },
-                      transitionDuration: const Duration(milliseconds: 500),
-                    ),
-                  );
-                },
-                child: const Text(
-                  'Finish Workout',
-                  style: TextStyle(
-                    fontSize: 18,
-                    color: Colors.blue,
-                  ),
-                ),
-              ),
-            ],
-          );
-        });
   }
 
   void removeSet(int exerciseSetId) {
@@ -158,10 +52,20 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
 
   @override
   Widget build(BuildContext context) {
+    final timerProvider = Provider.of<TimerProvider>(context);
+    final restTimerProvider = Provider.of<RestTimerProvider>(context);
+    final customTimerProvider = Provider.of<CustomTimerProvider>(context);
+
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: AppColours.primary,
+        surfaceTintColor: Colors.transparent,
+        elevation: 0.0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios),
+          icon: const Icon(
+            Icons.arrow_back_ios,
+            color: Colors.white,
+          ),
           onPressed: () {
             Navigator.pop(context);
           },
@@ -188,7 +92,12 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
                       .isNotEmpty;
                   if (isNotEmpty) {
                     if (everySetCompleted) {
-                      _finishWorkout(context);
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext ctx) {
+                          return const FinishWorkoutDialog();
+                        },
+                      );
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
@@ -230,21 +139,156 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
             ),
           ),
         ],
-        title: const Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              "Timer",
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 18,
-              ),
+        title: PreferredSize(
+          preferredSize: const Size.fromHeight(40),
+          child: GestureDetector(
+            onTap: () {
+              if (restTimerProvider.isRestTimerRunning) {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return RestTimerDialog(
+                      restTimerProvider: restTimerProvider,
+                    );
+                  },
+                );
+              }
+              if (customTimerProvider.isRestTimerRunning) {
+                showCustomTimerDetailsDialog(customTimerProvider);
+              }
+            },
+            child: Stack(
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(8.0),
+                  child: FractionallySizedBox(
+                    widthFactor: 0.15,
+                    child: LinearProgressIndicator(
+                      value: restTimerProvider.currentRestTimerDuration > 0
+                          ? restTimerProvider.currentRestTimerDuration /
+                              restTimerProvider.restTimerDuration
+                          : 0.0,
+                      valueColor: const AlwaysStoppedAnimation<Color>(
+                        AppColours.secondaryDark,
+                      ),
+                      backgroundColor: Colors.grey[800],
+                      minHeight: 40,
+                      semanticsLabel: 'Linear progress indicator',
+                    ),
+                  ),
+                ),
+                if (restTimerProvider.isRestTimerEnabled &&
+                    restTimerProvider.isRestTimerRunning)
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(8.0),
+                    child: FractionallySizedBox(
+                      widthFactor: 0.35,
+                      child: LinearProgressIndicator(
+                        value: restTimerProvider.currentRestTimerDuration > 0
+                            ? restTimerProvider.currentRestTimerDuration /
+                                restTimerProvider.restTimerDuration
+                            : 0.0,
+                        valueColor: const AlwaysStoppedAnimation<Color>(
+                          AppColours.secondaryDark,
+                        ),
+                        backgroundColor: Colors.grey[800],
+                        minHeight: 40,
+                        semanticsLabel: 'Linear progress indicator',
+                      ),
+                    ),
+                  ),
+                if (customTimerProvider.isRestTimerRunning)
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(8.0),
+                    child: FractionallySizedBox(
+                      widthFactor: 0.35,
+                      child: LinearProgressIndicator(
+                        value: customTimerProvider.customCurrentTimerDuration >
+                                0
+                            ? customTimerProvider.customCurrentTimerDuration /
+                                customTimerProvider.customTimerDuration
+                            : 0.0,
+                        valueColor: const AlwaysStoppedAnimation<Color>(
+                          AppColours.secondaryDark,
+                        ),
+                        backgroundColor: Colors.grey[800],
+                        minHeight: 40,
+                        semanticsLabel: 'Linear progress indicator',
+                      ),
+                    ),
+                  ),
+                AnimatedCrossFade(
+                  duration: const Duration(milliseconds: 300),
+                  crossFadeState: restTimerProvider.isRestTimerEnabled &&
+                          restTimerProvider.isRestTimerRunning
+                      ? CrossFadeState.showFirst
+                      : CrossFadeState.showSecond,
+                  firstChild: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      children: [
+                        const Icon(Icons.access_time,
+                            color: Colors.white, size: 24),
+                        const SizedBox(width: 4),
+                        Text(
+                          " ${RestTimerProvider.formatDuration(restTimerProvider.currentRestTimerDuration)}",
+                          style: const TextStyle(
+                            fontSize: 16,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  secondChild: GestureDetector(
+                    onTap: () async {
+                      await _showScrollCustomPicker(
+                          context, customTimerProvider);
+                      setState(() {
+                        _isSetTimeVisible = !_isSetTimeVisible;
+                      });
+                    },
+                    child: const Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Row(
+                        children: [
+                          Icon(Icons.access_time,
+                              color: Colors.white, size: 24),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                AnimatedCrossFade(
+                  duration: const Duration(milliseconds: 300),
+                  crossFadeState: customTimerProvider.isRestTimerRunning
+                      ? CrossFadeState.showFirst
+                      : CrossFadeState.showSecond,
+                  firstChild: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      children: [
+                        const Icon(Icons.access_time,
+                            color: Colors.white, size: 24),
+                        const SizedBox(width: 4),
+                        Text(
+                          " ${RestTimerProvider.formatDuration(customTimerProvider.customCurrentTimerDuration)}",
+                          style: const TextStyle(
+                            fontSize: 16,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  secondChild: Container(),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
-        backgroundColor: const Color(0xFF1A1A1A),
       ),
-      backgroundColor: const Color(0xFF1A1A1A),
+      backgroundColor: AppColours.primary,
       body: StreamBuilder<CurrentWorkoutSession>(
         stream:
             objectBox.currentWorkoutSessionService.watchCurrentWorkoutSession(),
@@ -257,11 +301,12 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
               child: Column(
                 children: [
                   ExerciseTile(
-                    exerciseData: exerciseData,
+                    exerciseData: widget.exerciseData,
                     exercisesSetsInfo:
                         snapshot.data!.exercisesSetsInfo.toList(),
                     selectExercise: selectExercise,
                     removeSet: removeSet,
+                    timerProvider: timerProvider,
                   ),
                 ],
               ),
@@ -272,10 +317,30 @@ class _StartNewWorkoutState extends State<StartNewWorkout>
     );
   }
 
-  String _formatTime(int seconds) {
-    final hours = (seconds ~/ 3600).toString().padLeft(2, '0');
-    final minutes = ((seconds % 3600) ~/ 60).toString().padLeft(2, '0');
-    final remainingSeconds = (seconds % 60).toString().padLeft(2, '0');
-    return "$hours:$minutes:$remainingSeconds";
+  Future<void> showCustomTimerDetailsDialog(
+      CustomTimerProvider customTimerProvider) async {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return RestTimerDialog(
+          customTimerProvider: customTimerProvider,
+        );
+      },
+    );
+  }
+
+  Future<void> _showScrollCustomPicker(
+      BuildContext context, CustomTimerProvider customTimerProvider) async {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return CustomTimerPickerDialog(
+          customTimerProvider: customTimerProvider,
+          showCustomTimerDetailsDialog: (BuildContext context) {
+            showCustomTimerDetailsDialog(customTimerProvider);
+          },
+        );
+      },
+    );
   }
 }

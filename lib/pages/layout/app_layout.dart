@@ -59,7 +59,7 @@ class _AppLayoutState extends State<AppLayout> {
       case 0:
         return const Home();
       case 1:
-        return const HistoryScreen();
+        return const HistoryScreen(exerciseData: [],);
       case 2:
         return const WorkoutScreen();
       case 3:

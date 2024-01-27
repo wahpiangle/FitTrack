@@ -62,7 +62,7 @@ class CompleteHistoryDetail extends StatelessWidget {
                     Icon(
                       Icons.access_time_sharp,
                       color: Colors.white,
-                      size: 20,
+                      size: 30,
                     ),
                     SizedBox(
                       width: 10,

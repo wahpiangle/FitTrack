@@ -6,6 +6,9 @@ import 'package:group_project/models/exercise.dart';
 import 'package:group_project/pages/exercise/components/exercises_list_filters.dart';
 import 'package:group_project/pages/exercise/components/filter_label.dart';
 import 'package:group_project/pages/exercise/components/exercise_list_item.dart';
+import 'package:group_project/pages/workout/State/timer_sheet_manager.dart';
+import 'package:group_project/pages/workout/components/timer/providers/timer_provider.dart';
+import 'package:provider/provider.dart';
 
 class ExerciseListScreen extends StatefulWidget {
   const ExerciseListScreen({super.key});
@@ -28,6 +31,7 @@ class ExerciseListScreenState extends State<ExerciseListScreen> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       filterExercises('');
+      _handleTimerActive(context); // Add this line to handle timer state
     });
   }
 
@@ -65,6 +69,31 @@ class ExerciseListScreenState extends State<ExerciseListScreen> {
     setState(() {
       selectedCategory.remove(category);
     });
+  }
+  void _handleTimerActive(BuildContext context) {
+    TimerProvider? timerProvider =
+    Provider.of<TimerProvider>(context, listen: false);
+
+    void handleTimerStateChanged() {
+      if (timerProvider.isTimerRunning &&
+          !TimerManager().isTimerActiveScreenOpen) {
+        TimerManager().showTimerBottomSheet(context, []); // Pass an empty exercise list or provide relevant data
+      } else if (!timerProvider.isTimerRunning &&
+          TimerManager().isTimerActiveScreenOpen) {
+        TimerManager().closeTimerBottomSheet(context);
+      }
+    }
+
+    void Function()? listener;
+    listener = () {
+      if (mounted) {
+        handleTimerStateChanged();
+      } else {
+        timerProvider.removeListener(listener!);
+      }
+    };
+
+    timerProvider.addListener(listener);
   }
 
   @override

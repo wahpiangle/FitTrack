@@ -31,7 +31,6 @@ class _EditExerciseTileState extends State<EditExerciseTile> {
         children: [
           const SizedBox(height: 20),
           AddExerciseButton(
-            exerciseData: widget.exerciseData,
             selectExercise: widget.selectExercise,
           ),
         ],
@@ -70,7 +69,6 @@ class _EditExerciseTileState extends State<EditExerciseTile> {
           ),
           const SizedBox(height: 20),
           AddExerciseButton(
-            exerciseData: widget.exerciseData,
             selectExercise: widget.selectExercise,
           ),
         ],
