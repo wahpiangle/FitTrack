@@ -5,6 +5,7 @@ import 'package:group_project/pages/auth/register_screen.dart';
 import 'package:group_project/pages/auth/settings_login.dart';
 import 'package:group_project/pages/auth/settings_signup.dart';
 import 'package:group_project/pages/auth_wrapper.dart';
+import 'package:group_project/pages/history/complete_workout/congratulation_screen.dart';
 import 'package:group_project/pages/layout/app_layout.dart';
 import 'package:group_project/pages/history/history_screen.dart';
 import 'package:group_project/pages/workout/components/timer/providers/custom_timer_provider.dart';

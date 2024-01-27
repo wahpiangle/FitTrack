@@ -59,7 +59,9 @@ class FinishWorkoutDialog extends StatelessWidget {
             Navigator.of(context).push(
               PageRouteBuilder(
                 pageBuilder: (context, animation, secondaryAnimation) {
-                  return const CongratulationScreen();
+                  return CongratulationScreen(
+                    workoutSession: savedWorkout,
+                  );
                 },
                 transitionsBuilder:
                     (context, animation, secondaryAnimation, child) {

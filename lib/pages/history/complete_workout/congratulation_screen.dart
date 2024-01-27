@@ -8,11 +8,11 @@ import 'package:confetti/confetti.dart';
 import 'complete_workout_card.dart';
 
 class CongratulationScreen extends StatefulWidget {
-  final WorkoutSession workoutSession;
+  final WorkoutSession? workoutSession;
 
   const CongratulationScreen({
     super.key,
-    required this.workoutSession,
+    this.workoutSession,
   });
 
   @override
@@ -50,7 +50,7 @@ class _CongratulationScreenState extends State<CongratulationScreen> {
               context: context,
               builder: (BuildContext ctx) {
                 return TemplateDialog(
-                  workoutSession: widget.workoutSession,
+                  workoutSession: widget.workoutSession!,
                 );
               },
             );
@@ -106,7 +106,7 @@ class _CongratulationScreenState extends State<CongratulationScreen> {
             ),
             const SizedBox(height: 15.0),
             CompleteWorkoutCard(
-              workoutSession: widget.workoutSession,
+              workoutSession: widget.workoutSession!,
             ),
             const SizedBox(height: 30.0),
           ],
