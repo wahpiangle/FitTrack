@@ -96,7 +96,10 @@ class ObjectBox {
 
 // check history
   void test() {
-    print(_workoutTemplateBox.getAll().length);
+    print(currentWorkoutSessionService
+        .getCurrentWorkoutSession()
+        .exercisesSetsInfo
+        .length);
     // print(_workoutTemplateBox.removeAll());
   }
 }

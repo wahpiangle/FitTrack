@@ -20,8 +20,8 @@ class WorkoutTemplateService {
   Stream<List<WorkoutTemplate>> watchWorkoutTemplates() {
     return workoutTemplateBox
         .query(
-          WorkoutTemplate_.isCurrentEditing.equals(false),
-        )
+      WorkoutTemplate_.isCurrentEditing.equals(false),
+    )
         .order(WorkoutTemplate_.createdAt, flags: Order.descending)
         .watch(triggerImmediately: true)
         .map((query) => query.find());
@@ -57,8 +57,8 @@ class WorkoutTemplateService {
   WorkoutTemplate getEditingWorkoutTemplate() {
     WorkoutTemplate? editingTemplate = workoutTemplateBox
         .query(
-          WorkoutTemplate_.isCurrentEditing.equals(true),
-        )
+      WorkoutTemplate_.isCurrentEditing.equals(true),
+    )
         .build()
         .findFirst();
     if (editingTemplate == null) {
@@ -66,8 +66,8 @@ class WorkoutTemplateService {
           WorkoutTemplate(isCurrentEditing: true, createdAt: DateTime.now()));
       return workoutTemplateBox
           .query(
-            WorkoutTemplate_.isCurrentEditing.equals(true),
-          )
+        WorkoutTemplate_.isCurrentEditing.equals(true),
+      )
           .build()
           .findFirst()!;
     } else {
@@ -192,8 +192,8 @@ class WorkoutTemplateService {
         return true;
       }
       for (int j = 0;
-          j < editingTemplate.exercisesSetsInfo[i].exerciseSets.length;
-          j++) {
+      j < editingTemplate.exercisesSetsInfo[i].exerciseSets.length;
+      j++) {
         if (editingTemplate.exercisesSetsInfo[i].exerciseSets[j].reps !=
             workoutTemplate.exercisesSetsInfo[i].exerciseSets[j].reps) {
           return true;

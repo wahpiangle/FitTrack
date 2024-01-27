@@ -47,9 +47,7 @@ class ExerciseService {
     exercise.category.target = category;
     exercise.bodyPart.target = bodyPart;
     exerciseBox.put(exercise);
-
   }
-
 
 //categories & bodyParts
   List<Category> getCategories() {
@@ -83,5 +81,10 @@ class ExerciseService {
 
   void updateExerciseSet(ExerciseSet exerciseSet) {
     exerciseSetBox.put(exerciseSet);
+  }
+
+  void deselectExercise(Exercise exercise) {
+    exercise.isSelected = false;
+    exerciseBox.put(exercise);
   }
 }

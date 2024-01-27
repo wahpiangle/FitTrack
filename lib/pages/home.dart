@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:group_project/main.dart';
 import 'package:group_project/models/exercise.dart';
+import 'package:group_project/pages/workout/State/timer_sheet_manager.dart';
+import 'package:group_project/pages/workout/components/timer/providers/timer_provider.dart';
+import 'package:provider/provider.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -16,7 +19,36 @@ class _HomeState extends State<Home> {
   void initState() {
     super.initState();
     streamExercises = objectBox.exerciseService.watchAllExercise();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+
+      _handleTimerActive(context); // Add this line to handle timer state
+    });
   }
+  void _handleTimerActive(BuildContext context) {
+    TimerProvider? timerProvider =
+    Provider.of<TimerProvider>(context, listen: false);
+
+    void handleTimerStateChanged() {
+      if (timerProvider.isTimerRunning &&
+          !TimerManager().isTimerActiveScreenOpen) {
+        TimerManager().showTimerBottomSheet(context, []); // Pass an empty exercise list or provide relevant data
+      } else if (!timerProvider.isTimerRunning &&
+          TimerManager().isTimerActiveScreenOpen) {
+        TimerManager().closeTimerBottomSheet(context);
+      }
+    }
+    void Function()? listener;
+    listener = () {
+      if (mounted) {
+        handleTimerStateChanged();
+      } else {
+        timerProvider.removeListener(listener!);
+      }
+    };
+
+    timerProvider.addListener(listener);
+  }
+
 
   @override
   Widget build(BuildContext context) {

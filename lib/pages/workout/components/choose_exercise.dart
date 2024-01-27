@@ -11,17 +11,17 @@ import 'package:group_project/pages/exercise/components/filter_label.dart';
 // Allows it to be called outside of this class
 void deselectAllExercises(List<Exercise> exercises) {
   for (var exercise in exercises) {
+    objectBox.exerciseService.deselectExercise(exercise);
     exercise.isSelected = false;
   }
 }
 
 class ChooseExercise extends StatefulWidget {
-  final List<Exercise> exercises;
   final void Function(Exercise selectedExercise) selectExercise;
+  final List<Exercise> exercises = objectBox.exerciseService.getAllExercises();
 
-  const ChooseExercise({
+  ChooseExercise({
     super.key,
-    required this.exercises,
     required this.selectExercise,
   });
 
