@@ -233,7 +233,7 @@
     },
     {
       "id": "11:4929714596174845997",
-      "lastPropertyId": "6:2967866759072202744",
+      "lastPropertyId": "7:8572005245043511818",
       "name": "WorkoutSession",
       "properties": [
         {
@@ -266,6 +266,11 @@
           "id": "6:2967866759072202744",
           "name": "duration",
           "type": 6
+        },
+        {
+          "id": "7:8572005245043511818",
+          "name": "imageUrl",
+          "type": 9
         }
       ],
       "relations": [

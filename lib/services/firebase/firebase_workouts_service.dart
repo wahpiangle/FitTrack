@@ -20,6 +20,7 @@ class FirebaseWorkoutsService {
               'date': DateTime.now(),
               'title': workoutSession.title,
               'note': workoutSession.note,
+              'imageUrl': workoutSession.imageUrl,
               'exercisesSetsInfo': workoutSession.exercisesSetsInfo
                   .map((exercisesSetsInfo) => {
                         'exercise': exercisesSetsInfo.exercise.targetId,
@@ -89,6 +90,7 @@ class FirebaseWorkoutsService {
             'date': updatedWorkoutSession.date,
             'title': updatedWorkoutSession.title,
             'note': updatedWorkoutSession.note,
+            'imageUrl': updatedWorkoutSession.imageUrl,
             'exercisesSetsInfo': updatedWorkoutSession.exercisesSetsInfo
                 .map((exercisesSetsInfo) => {
                       'exercise': exercisesSetsInfo.exercise.targetId,

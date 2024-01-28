@@ -1,3 +1,4 @@
+import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:group_project/pages/auth/email_password_login.dart';
@@ -5,7 +6,8 @@ import 'package:group_project/pages/auth/register_screen.dart';
 import 'package:group_project/pages/auth/settings_login.dart';
 import 'package:group_project/pages/auth/settings_signup.dart';
 import 'package:group_project/pages/auth_wrapper.dart';
-import 'package:group_project/pages/history/complete_workout/congratulation_screen.dart';
+import 'package:group_project/pages/complete_workout/congratulation_screen.dart';
+import 'package:group_project/pages/complete_workout/capture_image/post_workout_prompt.dart';
 import 'package:group_project/pages/layout/app_layout.dart';
 import 'package:group_project/pages/history/history_screen.dart';
 import 'package:group_project/pages/workout/components/timer/providers/custom_timer_provider.dart';
@@ -27,11 +29,20 @@ Future<void> main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   objectBox = await ObjectBox.create();
-  runApp(const MyApp());
+
+  final cameras = await availableCameras();
+
+  runApp(MyApp(
+    cameras: cameras,
+  ));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final List<CameraDescription> cameras;
+  const MyApp({
+    super.key,
+    required this.cameras,
+  });
 
   // This widget is the root of your application.
   @override
@@ -63,6 +74,9 @@ class MyApp extends StatelessWidget {
           "congratulation_screen": (context) => const CongratulationScreen(),
           "history_screen": (context) => const HistoryScreen(
                 exerciseData: [],
+              ),
+          "post_workout_prompt": (context) => PostWorkoutPrompt(
+                cameras: cameras,
               ),
         },
         theme: ThemeData(
