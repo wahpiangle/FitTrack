@@ -10,6 +10,7 @@ import 'package:group_project/models/workout_session.dart';
 import 'package:group_project/models/workout_template.dart';
 import 'package:group_project/objectbox.g.dart';
 import 'package:group_project/services/currentWorkoutSession/currentWorkoutSession_service.dart';
+import 'package:group_project/services/exercise/exercise_service.dart';
 import 'package:group_project/services/workoutSession/workout_session_service.dart';
 import 'package:group_project/services/workoutTemplate/workout_template_service.dart';
 import 'package:path/path.dart' as p;
@@ -85,63 +86,20 @@ class ObjectBox {
         exercisesSetsInfoBox: _exercisesSetsInfoBox,
       );
 
-//exercises
-  Stream<List<Exercise>> watchAllExercise() {
-    return _exerciseBox
-        .query()
-        .watch(triggerImmediately: true)
-        .map((query) => query.find());
-  }
-
-  void addExercises() {
-    _exerciseBox.putMany(generateExerciseData());
-  }
-
-  List<Exercise> getAllExercises() {
-    return _exerciseBox.getAll();
-  }
-
-  void removeExercises() {
-    _exerciseBox.removeAll();
-  }
-
-//categories & bodyParts
-  List<Category> getCategories() {
-    return _categoryBox.getAll();
-  }
-
-  void addSetToExercise(ExercisesSetsInfo exercisesSetsInfo) {
-    ExerciseSet exerciseSet = ExerciseSet();
-    exerciseSet.exerciseSetInfo.target = exercisesSetsInfo;
-    exercisesSetsInfo.exerciseSets.add(exerciseSet);
-    _exercisesSetsInfoBox.put(exercisesSetsInfo);
-  }
-
-  void removeSetFromExercise(int setId) {
-    ExerciseSet exerciseSet = _exerciseSetBox.get(setId)!;
-    ExercisesSetsInfo? exerciseSetInfo = exerciseSet.exerciseSetInfo.target;
-    if (exerciseSetInfo?.exerciseSets.length == 1) {
-      _exercisesSetsInfoBox.remove(exerciseSetInfo!.id);
-    }
-    _exerciseSetBox.remove(setId);
-  }
-
-  void completeExerciseSet(int exerciseSetId) {
-    ExerciseSet exerciseSet = _exerciseSetBox.get(exerciseSetId)!;
-    if (exerciseSet.reps == null || exerciseSet.weight == null) {
-      return;
-    }
-    exerciseSet.isCompleted = !exerciseSet.isCompleted;
-    _exerciseSetBox.put(exerciseSet);
-  }
-
-  void updateExerciseSet(ExerciseSet exerciseSet) {
-    _exerciseSetBox.put(exerciseSet);
-  }
+  ExerciseService get exerciseService => ExerciseService(
+        exerciseBox: _exerciseBox,
+        categoryBox: _categoryBox,
+        bodyPartBox: _bodyPartBox,
+        exerciseSetBox: _exerciseSetBox,
+        exercisesSetsInfoBox: _exercisesSetsInfoBox,
+      );
 
 // check history
   void test() {
-    print(_workoutTemplateBox.getAll().length);
+    print(currentWorkoutSessionService
+        .getCurrentWorkoutSession()
+        .exercisesSetsInfo
+        .length);
     // print(_workoutTemplateBox.removeAll());
   }
 }

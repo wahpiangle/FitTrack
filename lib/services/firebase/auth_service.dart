@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:group_project/main.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -27,13 +28,13 @@ class AuthService {
     }
   }
 
-
   //sign in with email and password
   Future signInWithEmailAndPassword(String email, String password) async {
     try {
       UserCredential result = await _auth.signInWithEmailAndPassword(
           email: email, password: password);
       User? user = result.user;
+      objectBox.workoutSessionService.populateDataFromFirebase();
       return user;
     } catch (e) {
       rethrow;
@@ -73,7 +74,9 @@ class AuthService {
       User? user = getCurrentUser();
 
       if (user != null) {
-        await user.updateProfile(displayName: displayName, photoURL: photoURL);
+        // await user.updateProfile(displayName: displayName, photoURL: photoURL);
+        await user.updateDisplayName(displayName);
+        await user.updatePhotoURL(photoURL);
         await user.reload();
         user = getCurrentUser();
       }
@@ -83,20 +86,20 @@ class AuthService {
     }
   }
 
-
   //sign in with Google
   Future signInWithGoogle() async {
     try {
       final GoogleSignInAccount? googleSignInAccount =
-          await googleSignIn.signIn();
+      await googleSignIn.signIn();
       final GoogleSignInAuthentication googleSignInAuthentication =
-          await googleSignInAccount!.authentication;
+      await googleSignInAccount!.authentication;
       final AuthCredential credential = GoogleAuthProvider.credential(
         accessToken: googleSignInAuthentication.accessToken,
         idToken: googleSignInAuthentication.idToken,
       );
       UserCredential result = await _auth.signInWithCredential(credential);
       User? user = result.user;
+      objectBox.workoutSessionService.populateDataFromFirebase();
       return user;
     } catch (e) {
       rethrow;

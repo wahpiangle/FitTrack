@@ -4,6 +4,9 @@ import 'package:provider/provider.dart';
 import 'dart:io';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:group_project/pages/settings/settings_screen.dart';
+import 'package:group_project/pages/exercise/components/custom_exercise.dart';
+
+import '../../main.dart';
 
 class TopNavBar extends StatelessWidget implements PreferredSizeWidget {
   final User? user;
@@ -24,6 +27,37 @@ class TopNavBar extends StatelessWidget implements PreferredSizeWidget {
     String profileImage =
         Provider.of<ProfileImageProvider>(context).profileImage;
 
+    Widget leadingWidget;
+
+    if (showBackButton) {
+      leadingWidget = IconButton(
+        icon: const Icon(Icons.arrow_back),
+        onPressed: () {
+          Navigator.pop(context);
+        },
+      );
+    } else if (pageIndex == 3) {
+      leadingWidget = TextButton(
+        onPressed: () {
+          CustomExerciseDialog.showNewExerciseDialog(context, objectBox);
+        },
+        child: const Text(
+          'New',
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      );
+    } else {
+      leadingWidget = IconButton(
+        icon: const Icon(Icons.menu, color: Colors.white),
+        onPressed: () {
+          // Default action, e.g., open the navigation drawer
+        },
+      );
+    }
+
     return AppBar(
       backgroundColor: const Color(0xFF1A1A1A),
       title: FittedBox(
@@ -37,19 +71,7 @@ class TopNavBar extends StatelessWidget implements PreferredSizeWidget {
         ),
       ),
       centerTitle: true,
-      leading: showBackButton
-          ? IconButton(
-              icon: const Icon(Icons.arrow_back),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-            )
-          : IconButton(
-              icon: const Icon(Icons.menu, color: Colors.white),
-              onPressed: () {
-                // Will lead to Search friends page
-              },
-            ),
+      leading: leadingWidget,
       actions: [
         GestureDetector(
           onTap: () {

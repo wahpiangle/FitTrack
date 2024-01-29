@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:group_project/main.dart';
+import 'package:group_project/pages/workout/components/timer/providers/timer_provider.dart';
+import 'package:provider/provider.dart';
 
 class WorkoutHeader extends StatefulWidget {
   const WorkoutHeader({
@@ -21,6 +23,7 @@ class _WorkoutHeaderState extends State<WorkoutHeader> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10.0),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
             alignment: Alignment.topLeft,
@@ -31,6 +34,14 @@ class _WorkoutHeaderState extends State<WorkoutHeader> {
                 objectBox.currentWorkoutSessionService
                     .updateCurrentWorkoutSessionTitle(newText);
               },
+              decoration: InputDecoration(
+                hintText: 'Workout title',
+                hintStyle: TextStyle(
+                  color: Colors.grey[500],
+                  fontWeight: FontWeight.bold,
+                ),
+                border: InputBorder.none,
+              ),
               onTapOutside: (event) {
                 FocusManager.instance.primaryFocus?.unfocus();
               },
@@ -41,7 +52,20 @@ class _WorkoutHeaderState extends State<WorkoutHeader> {
               ),
             ),
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 5),
+          Consumer<TimerProvider>(
+            builder: (context, timerProvider, child) {
+              return Text(
+                "Timer: ${TimerProvider.formatTimerDuration(timerProvider.currentDuration)}",
+                style: const TextStyle(
+                  color: Color(0xFFC1C1C1),
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                ),
+              );
+            },
+          ),
+          const SizedBox(height: 16),
           TextFormField(
             initialValue: objectBox.currentWorkoutSessionService
                 .getCurrentWorkoutSessionNote(),
@@ -59,9 +83,9 @@ class _WorkoutHeaderState extends State<WorkoutHeader> {
               fillColor: const Color(0xFF333333),
               filled: true,
               border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(15.0),
+                borderRadius: BorderRadius.circular(8.0),
               ),
-              contentPadding: const EdgeInsets.all(10.0),
+              contentPadding: const EdgeInsets.all(8.0),
             ),
           ),
           const SizedBox(height: 20),
