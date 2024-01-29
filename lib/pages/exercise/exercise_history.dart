@@ -81,42 +81,54 @@ class _ExerciseHistoryState extends State<ExerciseHistory> {
                           setState(() {
                             selectedPageIndex = 0;
                           });
+                          // Navigator.of(context).pushReplacement(
+                          //   PageRouteBuilder(
+                          //     opaque:
+                          //         false, // Set to false to overlay the existing page
+                          //     pageBuilder: (BuildContext context, _, __) {
+                          //       return Stack(
+                          //         children: [
+                          //           // Existing page content
+                          //           FractionallySizedBox(
+                          //             widthFactor: 1.0,
+                          //             heightFactor: 1.0,
+                          //             child: Container(
+                          //               color: Colors.black.withOpacity(
+                          //                   0.8), // Adjust the opacity as needed
+                          //             ),
+                          //           ),
+                          //           // New page content at the center
+                          //           Positioned.fill(
+                          //             child: Center(
+                          //               child: ClipRRect(
+                          //                 borderRadius:
+                          //                     BorderRadius.circular(10.0),
+                          //                 child: FractionallySizedBox(
+                          //                   widthFactor: 0.9,
+                          //                   heightFactor: 0.8,
+                          //                   child: ExerciseDetailScreen(
+                          //                       widget.exercise),
+                          //                 ),
+                          //               ),
+                          //             ),
+                          //           ),
+                          //         ],
+                          //       );
+                          //     },
+                          //   ),
+                          // );
                           Navigator.of(context).pushReplacement(
                             PageRouteBuilder(
-                              opaque:
-                                  false, // Set to false to overlay the existing page
+                              opaque: false,
                               pageBuilder: (BuildContext context, _, __) {
-                                return Stack(
-                                  children: [
-                                    // Existing page content
-                                    FractionallySizedBox(
-                                      widthFactor: 1.0,
-                                      heightFactor: 1.0,
-                                      child: Container(
-                                        color: Colors.black.withOpacity(
-                                            0.8), // Adjust the opacity as needed
-                                      ),
-                                    ),
-                                    // New page content at the center
-                                    Positioned.fill(
-                                      child: Center(
-                                        child: ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(10.0),
-                                          child: FractionallySizedBox(
-                                            widthFactor: 0.9,
-                                            heightFactor: 0.8,
-                                            child: ExerciseDetailScreen(
-                                                widget.exercise),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
+                                return ExerciseDetailScreen(
+                                  widget.exercise,
+                                  key: PageStorageKey('exerciseDetailScreen'),
                                 );
                               },
                             ),
                           );
+
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: selectedPageIndex == 0
@@ -134,42 +146,55 @@ class _ExerciseHistoryState extends State<ExerciseHistory> {
                           setState(() {
                             selectedPageIndex = 1;
                           });
+                          // Navigator.of(context).pushReplacement(
+                          //   PageRouteBuilder(
+                          //     opaque:
+                          //         false, // Set to false to overlay the existing page
+                          //     pageBuilder: (BuildContext context, _, __) {
+                          //       return Stack(
+                          //         children: [
+                          //           // Existing page content
+                          //           FractionallySizedBox(
+                          //             widthFactor: 1.0,
+                          //             heightFactor: 1.0,
+                          //             child: Container(
+                          //               color: Colors.black.withOpacity(
+                          //                   0.8), // Adjust the opacity as needed
+                          //             ),
+                          //           ),
+                          //           // New page content at the center
+                          //           Positioned.fill(
+                          //             child: Center(
+                          //               child: ClipRRect(
+                          //                 borderRadius:
+                          //                     BorderRadius.circular(10.0),
+                          //                 child: FractionallySizedBox(
+                          //                   widthFactor: 0.9,
+                          //                   heightFactor: 0.8,
+                          //                   child: ExerciseHistory(
+                          //                       widget.exercise),
+                          //                 ),
+                          //               ),
+                          //             ),
+                          //           ),
+                          //         ],
+                          //       );
+                          //     },
+                          //   ),
+                          // );
+
                           Navigator.of(context).pushReplacement(
                             PageRouteBuilder(
-                              opaque:
-                                  false, // Set to false to overlay the existing page
+                              opaque: false,
                               pageBuilder: (BuildContext context, _, __) {
-                                return Stack(
-                                  children: [
-                                    // Existing page content
-                                    FractionallySizedBox(
-                                      widthFactor: 1.0,
-                                      heightFactor: 1.0,
-                                      child: Container(
-                                        color: Colors.black.withOpacity(
-                                            0.8), // Adjust the opacity as needed
-                                      ),
-                                    ),
-                                    // New page content at the center
-                                    Positioned.fill(
-                                      child: Center(
-                                        child: ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(10.0),
-                                          child: FractionallySizedBox(
-                                            widthFactor: 0.9,
-                                            heightFactor: 0.8,
-                                            child: ExerciseHistory(
-                                                widget.exercise),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
+                                return ExerciseHistory(
+                                  widget.exercise,
+                                  key: PageStorageKey('exerciseHistory'),
                                 );
                               },
                             ),
                           );
+
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: selectedPageIndex == 1
@@ -187,38 +212,49 @@ class _ExerciseHistoryState extends State<ExerciseHistory> {
                           setState(() {
                             selectedPageIndex = 2;
                           });
+                          // Navigator.of(context).pushReplacement(
+                          //   PageRouteBuilder(
+                          //     opaque:
+                          //         false, // Set to false to overlay the existing page
+                          //     pageBuilder: (BuildContext context, _, __) {
+                          //       return Stack(
+                          //         children: [
+                          //           // Existing page content
+                          //           FractionallySizedBox(
+                          //             widthFactor: 1.0,
+                          //             heightFactor: 1.0,
+                          //             child: Container(
+                          //               color: Colors.black.withOpacity(
+                          //                   0.8), // Adjust the opacity as needed
+                          //             ),
+                          //           ),
+                          //           // New page content at the center
+                          //           Positioned.fill(
+                          //             child: Center(
+                          //               child: ClipRRect(
+                          //                 borderRadius:
+                          //                     BorderRadius.circular(10.0),
+                          //                 child: FractionallySizedBox(
+                          //                   widthFactor: 0.9,
+                          //                   heightFactor: 0.8,
+                          //                   child: ExerciseCharts(
+                          //                       widget.exercise),
+                          //                 ),
+                          //               ),
+                          //             ),
+                          //           ),
+                          //         ],
+                          //       );
+                          //     },
+                          //   ),
+                          // );
                           Navigator.of(context).pushReplacement(
                             PageRouteBuilder(
-                              opaque:
-                                  false, // Set to false to overlay the existing page
+                              opaque: false,
                               pageBuilder: (BuildContext context, _, __) {
-                                return Stack(
-                                  children: [
-                                    // Existing page content
-                                    FractionallySizedBox(
-                                      widthFactor: 1.0,
-                                      heightFactor: 1.0,
-                                      child: Container(
-                                        color: Colors.black.withOpacity(
-                                            0.8), // Adjust the opacity as needed
-                                      ),
-                                    ),
-                                    // New page content at the center
-                                    Positioned.fill(
-                                      child: Center(
-                                        child: ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(10.0),
-                                          child: FractionallySizedBox(
-                                            widthFactor: 0.9,
-                                            heightFactor: 0.8,
-                                            child:
-                                                ExerciseCharts(widget.exercise),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
+                                return ExerciseCharts(
+                                  widget.exercise,
+                                  key: PageStorageKey('exerciseCharts'),
                                 );
                               },
                             ),
@@ -240,45 +276,56 @@ class _ExerciseHistoryState extends State<ExerciseHistory> {
                           setState(() {
                             selectedPageIndex = 3;
                           });
+                          // Navigator.of(context).pushReplacement(
+                          //   PageRouteBuilder(
+                          //     opaque:
+                          //         false, // Set to false to overlay the existing page
+                          //     pageBuilder: (BuildContext context, _, __) {
+                          //       return Stack(
+                          //         children: [
+                          //           // Existing page content
+                          //           FractionallySizedBox(
+                          //             widthFactor: 1.0,
+                          //             heightFactor: 1.0,
+                          //             child: Container(
+                          //               color: Colors.black.withOpacity(
+                          //                   0.8), // Adjust the opacity as needed
+                          //             ),
+                          //           ),
+                          //           // New page content at the center
+                          //           Positioned.fill(
+                          //             child: Center(
+                          //               child: ClipRRect(
+                          //                 borderRadius:
+                          //                     BorderRadius.circular(10.0),
+                          //                 child: FractionallySizedBox(
+                          //                   widthFactor: 0.9,
+                          //                   heightFactor: 0.8,
+                          //                   child: ExerciseRecords(
+                          //                       widget.exercise),
+                          //                 ),
+                          //               ),
+                          //             ),
+                          //           ),
+                          //         ],
+                          //       );
+                          //     },
+                          //   ),
+                          // );
                           Navigator.of(context).pushReplacement(
                             PageRouteBuilder(
-                              opaque:
-                                  false, // Set to false to overlay the existing page
+                              opaque: false,
                               pageBuilder: (BuildContext context, _, __) {
-                                return Stack(
-                                  children: [
-                                    // Existing page content
-                                    FractionallySizedBox(
-                                      widthFactor: 1.0,
-                                      heightFactor: 1.0,
-                                      child: Container(
-                                        color: Colors.black.withOpacity(
-                                            0.8), // Adjust the opacity as needed
-                                      ),
-                                    ),
-                                    // New page content at the center
-                                    Positioned.fill(
-                                      child: Center(
-                                        child: ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(10.0),
-                                          child: FractionallySizedBox(
-                                            widthFactor: 0.9,
-                                            heightFactor: 0.8,
-                                            child: ExerciseRecords(
-                                                widget.exercise),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
+                                return ExerciseRecords(
+                                  widget.exercise,
+                                  key: PageStorageKey('exerciseRecords'),
                                 );
                               },
                             ),
                           );
                         },
                         style: ElevatedButton.styleFrom(
-                          primary: selectedPageIndex == 3
+                          backgroundColor: selectedPageIndex == 3
                               ? const Color(0xFF555555)
                               : const Color(0xFF333333),
                           shape: RoundedRectangleBorder(
@@ -299,7 +346,7 @@ class _ExerciseHistoryState extends State<ExerciseHistory> {
                           .isEmpty
                       ? const Column(
                           children: [
-                            SizedBox(height: 130.0),
+                            SizedBox(height: 200.0),
                             Text(
                               'Exercise History',
                               style: TextStyle(
