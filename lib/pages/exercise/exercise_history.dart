@@ -337,6 +337,7 @@ class _ExerciseHistoryState extends State<ExerciseHistory> {
                     ],
                   ),
                 ),
+                const SizedBox(height: 10.0),
                 Expanded(
                   child: snapshot.data!
                           .where((workoutSession) =>
