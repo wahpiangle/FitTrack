@@ -169,6 +169,13 @@ class WorkoutScreenState extends State<WorkoutScreen> {
           ),
         ),
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.pushNamed(context, 'post_workout_prompt');
+        },
+        child: const Icon(Icons.history),
+        backgroundColor: const Color(0xFFC1C1C1),
+      ),
     );
   }
 }

@@ -4,7 +4,7 @@ import 'package:group_project/constants/themes/app_colours.dart';
 
 class CameraControls extends StatelessWidget {
   final FlashMode flashMode;
-  final Function toggleCameraLens;
+  final Function(bool) toggleCameraLens;
   final Function toggleCameraFlash;
   final Function takePicture;
 
@@ -67,7 +67,7 @@ class CameraControls extends StatelessWidget {
           flex: 1,
           child: IconButton(
             onPressed: () {
-              toggleCameraLens();
+              toggleCameraLens(true);
             },
             icon: const Icon(
               Icons.flip_camera_ios,

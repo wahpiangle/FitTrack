@@ -1,10 +1,12 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:group_project/constants/themes/app_colours.dart';
 import 'package:group_project/pages/complete_workout/capture_image/components/camera_controls.dart';
+import 'package:group_project/pages/complete_workout/capture_image/components/capturing_loader.dart';
+import 'package:group_project/pages/complete_workout/capture_image/components/first_image_loader.dart';
+import 'package:group_project/pages/complete_workout/capture_image/components/display_image_scren.dart';
 
 class PostWorkoutPrompt extends StatefulWidget {
   final List<CameraDescription> cameras;
@@ -21,6 +23,9 @@ class PostWorkoutPromptState extends State<PostWorkoutPrompt> {
   late CameraController _controller;
   late Future<void> _initializeControllerFuture;
   late FlashMode flashMode;
+  bool isCapturingImage = false;
+  XFile? firstImageState;
+  XFile? secondImageState;
 
   @override
   void initState() {
@@ -30,8 +35,8 @@ class PostWorkoutPromptState extends State<PostWorkoutPrompt> {
       widget.cameras.first,
       ResolutionPreset.medium,
     );
-
     _initializeControllerFuture = _controller.initialize();
+    _controller.setFlashMode(flashMode);
   }
 
   @override
@@ -40,67 +45,80 @@ class PostWorkoutPromptState extends State<PostWorkoutPrompt> {
     super.dispose();
   }
 
-  void toggleCameraLens() {
-    if (widget.cameras.length == 1) {
-      return;
-    }
+  void toggleCameraLens(bool resetState) {
+    final nextCamera =
+        _controller.description.lensDirection == CameraLensDirection.front
+            ? widget.cameras
+                .firstWhere((c) => c.lensDirection == CameraLensDirection.back)
+            : widget.cameras.firstWhere(
+                (c) => c.lensDirection == CameraLensDirection.front,
+                orElse: () => widget.cameras.first);
 
-    final lensDirection = _controller.description.lensDirection;
-    if (lensDirection == CameraLensDirection.front) {
-      setState(() {
-        _controller = CameraController(
-          widget.cameras.firstWhere(
-              (element) => element.lensDirection == CameraLensDirection.back),
-          ResolutionPreset.medium,
-        );
-      });
-    } else {
-      setState(() {
-        _controller = CameraController(
-          widget.cameras.firstWhere(
-              (element) => element.lensDirection == CameraLensDirection.front),
-          ResolutionPreset.medium,
-        );
-      });
-    }
-
+    _controller = CameraController(
+      nextCamera,
+      ResolutionPreset.medium,
+    );
     _initializeControllerFuture = _controller.initialize();
+
+    if (resetState) {
+      setState(() {});
+    }
   }
 
   void toggleCameraFlash() {
     setState(() {
       if (flashMode == FlashMode.off) {
         flashMode = FlashMode.always;
-        _controller.setFlashMode(flashMode);
       } else if (flashMode == FlashMode.always) {
         flashMode = FlashMode.auto;
-        _controller.setFlashMode(flashMode);
-      } else if (flashMode == FlashMode.auto) {
-        flashMode = FlashMode.torch;
-        _controller.setFlashMode(flashMode);
       } else {
         flashMode = FlashMode.off;
-        _controller.setFlashMode(flashMode);
       }
+      _controller.setFlashMode(flashMode);
     });
   }
 
   void takePicture() async {
-    // TODO: take front pic then flip and take back pic
+    setState(() {
+      isCapturingImage = true;
+    });
     await _initializeControllerFuture;
-    final image = await _controller.takePicture();
+
+    final firstImage = await _controller.takePicture();
+    setState(() {
+      firstImageState = firstImage;
+    });
+
+    toggleCameraLens(false);
+    await _initializeControllerFuture;
+
+    final secondImage = await _controller.takePicture();
+    setState(() {
+      secondImageState = secondImage;
+    });
     if (!mounted) return;
-    await Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => DisplayPictureScreen(
-          imagePath: image.path,
-        ),
-      ),
-    );
+
+    setState(() {
+      isCapturingImage = false;
+      _controller = CameraController(
+        widget.cameras.first,
+        ResolutionPreset.medium,
+      );
+      _initializeControllerFuture = _controller.initialize();
+      _controller.setFlashMode(flashMode);
+    });
+  }
+
+  void toggleRetake() {
+    setState(() {
+      firstImageState = null;
+      secondImageState = null;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    print(flashMode);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppColours.primary,
@@ -120,29 +138,21 @@ class PostWorkoutPromptState extends State<PostWorkoutPrompt> {
       body: FutureBuilder<void>(
         future: _initializeControllerFuture,
         builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
-            return Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 20,
-                    vertical: 20,
+          if (firstImageState != null && secondImageState != null) {
+            return Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 20,
+                vertical: 20,
+              ),
+              child: Column(
+                children: [
+                  DisplayImageScreen(
+                    toggleRetake: toggleRetake,
+                    imagePath: firstImageState!.path,
+                    imagePath2: secondImageState!.path,
                   ),
-                  child: SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.65,
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(20),
-                      child: CameraPreview(_controller),
-                    ),
-                  ),
-                ),
-                CameraControls(
-                  flashMode: flashMode,
-                  toggleCameraLens: toggleCameraLens,
-                  takePicture: takePicture,
-                  toggleCameraFlash: toggleCameraFlash,
-                )
-              ],
+                ],
+              ),
             );
           } else {
             return Column(
@@ -154,9 +164,29 @@ class PostWorkoutPromptState extends State<PostWorkoutPrompt> {
                   ),
                   child: SizedBox(
                     height: MediaQuery.of(context).size.height * 0.65,
-                    child: const Center(
-                      child: CircularProgressIndicator(),
-                    ),
+                    child: isCapturingImage
+                        ? firstImageState == null
+                            ? const CapturingLoader()
+                            : FirstImageLoader(
+                                firstImageState: firstImageState!)
+                        : snapshot.connectionState == ConnectionState.done
+                            ? ClipRRect(
+                                borderRadius: BorderRadius.circular(20),
+                                child: CameraPreview(_controller),
+                              )
+                            : Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 20,
+                                  vertical: 20,
+                                ),
+                                child: SizedBox(
+                                  height:
+                                      MediaQuery.of(context).size.height * 0.65,
+                                  child: const Center(
+                                    child: CircularProgressIndicator(),
+                                  ),
+                                ),
+                              ),
                   ),
                 ),
                 CameraControls(
@@ -170,23 +200,6 @@ class PostWorkoutPromptState extends State<PostWorkoutPrompt> {
           }
         },
       ),
-    );
-  }
-}
-
-// A widget that displays the picture taken by the user.
-class DisplayPictureScreen extends StatelessWidget {
-  final String imagePath;
-
-  const DisplayPictureScreen({super.key, required this.imagePath});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Display the Picture')),
-      // The image is stored as a file on the device. Use the `Image.file`
-      // constructor with the given path to display the image.
-      body: Image.file(File(imagePath)),
     );
   }
 }
