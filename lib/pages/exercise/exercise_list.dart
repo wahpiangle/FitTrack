@@ -11,7 +11,7 @@ import 'package:group_project/pages/workout/components/timer/providers/timer_pro
 import 'package:provider/provider.dart';
 
 class ExerciseListScreen extends StatefulWidget {
-  const ExerciseListScreen({super.key});
+  const ExerciseListScreen({Key? key}) : super(key: key);
 
   @override
   ExerciseListScreenState createState() => ExerciseListScreenState();
@@ -19,11 +19,11 @@ class ExerciseListScreen extends StatefulWidget {
 
 class ExerciseListScreenState extends State<ExerciseListScreen> {
   String searchText = '';
-  List<String> selectedCategory = []; // Default to []
+  List<String> selectedCategory = [];
   String selectedBodyPart = '';
   Map<String, List<Exercise>> exerciseGroups = {};
   Stream<List<Exercise>> streamExercises =
-      objectBox.exerciseService.watchAllExercise();
+  objectBox.exerciseService.watchAllExercise();
   final categories = objectBox.exerciseService.getCategories();
 
   @override
@@ -31,7 +31,7 @@ class ExerciseListScreenState extends State<ExerciseListScreen> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       filterExercises('');
-      _handleTimerActive(context); // Add this line to handle timer state
+      _handleTimerActive(context);
     });
   }
 
@@ -70,6 +70,13 @@ class ExerciseListScreenState extends State<ExerciseListScreen> {
       selectedCategory.remove(category);
     });
   }
+
+  void toggleExerciseVisibility(Exercise exercise) {
+    setState(() {
+      exercise.isVisible = !exercise.isVisible;
+    });
+  }
+
   void _handleTimerActive(BuildContext context) {
     TimerProvider? timerProvider =
     Provider.of<TimerProvider>(context, listen: false);
@@ -77,7 +84,7 @@ class ExerciseListScreenState extends State<ExerciseListScreen> {
     void handleTimerStateChanged() {
       if (timerProvider.isTimerRunning &&
           !TimerManager().isTimerActiveScreenOpen) {
-        TimerManager().showTimerBottomSheet(context, []); // Pass an empty exercise list or provide relevant data
+        TimerManager().showTimerBottomSheet(context, []);
       } else if (!timerProvider.isTimerRunning &&
           TimerManager().isTimerActiveScreenOpen) {
         TimerManager().closeTimerBottomSheet(context);
@@ -101,7 +108,7 @@ class ExerciseListScreenState extends State<ExerciseListScreen> {
     return Scaffold(
       body: StreamBuilder(
         stream: streamExercises,
-        builder: (context, snapshot) {
+        builder: (context, AsyncSnapshot<List<Exercise>> snapshot) {
           if (!snapshot.hasData) {
             return Container(
               color: const Color(0xFF1A1A1A),
@@ -115,7 +122,6 @@ class ExerciseListScreenState extends State<ExerciseListScreen> {
             final exerciseBodyPart = exercise.bodyPart.target?.name ?? '';
             final exerciseCategory = exercise.category.target?.name ?? '';
 
-            // Check if the exercise body part or category matches the selected body part or category
             final isBodyPartMatch = selectedBodyPart.isEmpty ||
                 exerciseBodyPart == selectedBodyPart;
             final isCategoryMatch = selectedCategory.isEmpty ||
@@ -152,12 +158,13 @@ class ExerciseListScreenState extends State<ExerciseListScreen> {
                           if (selectedBodyPart.isEmpty &&
                               selectedCategory.isEmpty)
                             FilterLabel(
-                                text: 'All',
-                                isFilterSelected: true,
-                                onTap: () {
-                                  setSelectedBodyPart('');
-                                  selectedCategory.clear();
-                                }),
+                              text: 'All',
+                              isFilterSelected: true,
+                              onTap: () {
+                                setSelectedBodyPart('');
+                                selectedCategory.clear();
+                              },
+                            ),
                         if (selectedBodyPart.isNotEmpty)
                           FilterLabel(
                             text: selectedBodyPart,
@@ -193,7 +200,7 @@ class ExerciseListScreenState extends State<ExerciseListScreen> {
                       itemCount: groupedExercise.length,
                       itemBuilder: (context, index) {
                         final exercises =
-                            groupedExercise.values.elementAt(index);
+                        groupedExercise.values.elementAt(index);
                         final key = groupedExercise.keys.elementAt(index);
 
                         return Column(
@@ -203,17 +210,43 @@ class ExerciseListScreenState extends State<ExerciseListScreen> {
                               margin: const EdgeInsets.symmetric(vertical: 3),
                               child: searchText == ''
                                   ? Text(
-                                      key,
-                                      style: const TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    )
+                                key,
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              )
                                   : Container(),
                             ),
                             for (final exercise in exercises)
-                              ExerciseListItem(
-                                  exercise: exercise, searchText: searchText),
+                              if (exercise.isVisible)
+                                Dismissible(
+                                  key: Key(exercise.id.toString()), // Unique key for each exercise
+                                  direction: DismissDirection.endToStart, // Swipe from right to left
+                                  background: Container(
+                                    color: Colors.red, // Red background when swiping
+                                    alignment: Alignment.centerRight,
+                                    padding: EdgeInsets.only(right: 20.0),
+                                    child: Text(
+                                      'Hide',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 16.0,
+                                      ),
+                                    ),
+                                  ),
+                                  onDismissed: (direction) {
+                                    if (direction == DismissDirection.endToStart) {
+                                      toggleExerciseVisibility(exercise); // Toggle exercise visibility
+                                    }
+                                  },
+                                  child: ExerciseListItem(
+                                    exercise: exercise,
+                                    searchText: searchText,
+                                    onToggleVisibility: () => toggleExerciseVisibility(exercise),
+                                  ),
+                                ),
+
                           ],
                         );
                       },

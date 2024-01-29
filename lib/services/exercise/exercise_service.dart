@@ -49,6 +49,11 @@ class ExerciseService {
     exerciseBox.put(exercise);
   }
 
+  void updateExerciselist( Exercise exercise){
+    exerciseBox.put(exercise);
+
+  }
+
 //categories & bodyParts
   List<Category> getCategories() {
     return categoryBox.getAll();
