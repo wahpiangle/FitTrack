@@ -3,12 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:group_project/pages/auth/edit_password.dart';
 import 'package:group_project/pages/auth/settings_signup.dart';
 import 'package:group_project/pages/components/top_nav_bar.dart';
+import 'package:group_project/pages/settings/timer_details_settings.dart';
 import 'package:provider/provider.dart';
 import 'package:group_project/services/firebase/auth_service.dart';
 import 'package:group_project/services/user_state.dart';
 import 'package:group_project/pages/auth/offline_edit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:io';
+import 'package:group_project/pages/workout/State/timer_sheet_manager.dart';
+import 'package:group_project/pages/workout/components/timer/providers/timer_provider.dart';
+
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -28,7 +32,37 @@ class _SettingsScreenState extends State<SettingsScreen> {
   void initState() {
     super.initState();
     _loadUserData();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+
+      _handleTimerActive(context); // Add this line to handle timer state
+    });
   }
+
+  void _handleTimerActive(BuildContext context) {
+    TimerProvider? timerProvider =
+    Provider.of<TimerProvider>(context, listen: false);
+
+    void handleTimerStateChanged() {
+      if (timerProvider.isTimerRunning &&
+          !TimerManager().isTimerActiveScreenOpen) {
+        TimerManager().showTimerBottomSheet(context, []); // Pass an empty exercise list or provide relevant data
+      } else if (!timerProvider.isTimerRunning &&
+          TimerManager().isTimerActiveScreenOpen) {
+        TimerManager().closeTimerBottomSheet(context);
+      }
+    }
+    void Function()? listener;
+    listener = () {
+      if (mounted) {
+        handleTimerStateChanged();
+      } else {
+        timerProvider.removeListener(listener!);
+      }
+    };
+
+    timerProvider.addListener(listener);
+  }
+
 
   Future<void> _loadUserData() async {
     _prefs = await SharedPreferences.getInstance();
@@ -134,7 +168,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Add a Column for the Profile heading
+
                     const Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -222,22 +256,33 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       title: "Notifications",
                       icon: Icons.notifications,
                       onPressed: () {
-                        // Navigate to the Notifications screen
+
+                      },
+                    ),
+                    ProfileMenuItem(
+                      title: "Timer",
+                      icon: Icons.timer,
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const TimerDetailsSettings(),
+                          ),
+                        );
                       },
                     ),
                     ProfileMenuItem(
                       title: "Help Centre",
                       icon: Icons.info,
                       onPressed: () {
-                        // Navigate to the Privacy Policy screen
+
                       },
                     ),
-                    if ((isAnonymous)) // User logged in anonymous
+                    if ((isAnonymous))
                       ProfileMenuItem(
                         title: "Sign Up / Log In",
                         icon: Icons.person,
                         onPressed: () {
-                          // Navigate to sign-up or login screen
                           Navigator.of(context).push(
                             MaterialPageRoute(
                               builder: (context) => const SettingsSignup(),
@@ -245,12 +290,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           );
                         },
                       )
-                    else if (!isSignInWithGoogle) // User logged in with email and password
+                    else if (!isSignInWithGoogle)
                       ProfileMenuItem(
                         title: "Edit Password",
                         icon: Icons.key_outlined,
                         onPressed: () {
-                          // Navigate to edit password screen
                           Navigator.of(context).push(
                             MaterialPageRoute(
                               builder: (context) => const EditPassword(),
@@ -262,7 +306,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       title: "Terms and Conditions",
                       icon: Icons.gavel,
                       onPressed: () {
-                        // Navigate to the Terms and Conditions screen
+
                       },
                     ),
                     const SizedBox(height: 40),
@@ -285,8 +329,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       if (isAnonymous) {
         _saveUserData(); // Save updated profile image for anonymous users
       } else {
-        // Update profile image in Firebase for authenticated users
-        // (Implement the logic to upload to Firebase here)
+
       }
     });
   }
@@ -395,7 +438,7 @@ class LogoutButton extends StatelessWidget {
         onPressed: () {
           authService.signOut();
           Future.microtask(
-              () => Navigator.of(context).popAndPushNamed('/auth'));
+                  () => Navigator.of(context).popAndPushNamed('/auth'));
         },
         style: TextButton.styleFrom(
           foregroundColor: Colors.red,

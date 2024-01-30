@@ -4,7 +4,7 @@ import 'package:group_project/main.dart';
 import 'package:group_project/models/exercise.dart';
 import 'package:group_project/models/exercises_sets_info.dart';
 import 'package:group_project/models/workout_template.dart';
-import 'package:group_project/pages/workout/workout_templates/components/templates_exercise_tile.dart';
+import 'package:group_project/pages/workout/components/tiles/components/edit_exercise_tile.dart';
 
 class CreateTemplatePage extends StatefulWidget {
   const CreateTemplatePage({
@@ -18,7 +18,7 @@ class CreateTemplatePage extends StatefulWidget {
 class _CreateTemplatePageState extends State<CreateTemplatePage> {
   WorkoutTemplate editingWorkoutTemplate =
       objectBox.workoutTemplateService.getEditingWorkoutTemplate();
-  List<Exercise> exerciseData = objectBox.getAllExercises();
+  List<Exercise> exerciseData = objectBox.exerciseService.getAllExercises();
 
   void selectExercise(Exercise selectedExercise) {
     objectBox.workoutTemplateService
@@ -30,7 +30,7 @@ class _CreateTemplatePageState extends State<CreateTemplatePage> {
   }
 
   void removeSet(int exerciseSetId) {
-    objectBox.removeSetFromExercise(exerciseSetId);
+    objectBox.exerciseService.removeSetFromExercise(exerciseSetId);
     setState(() {
       editingWorkoutTemplate =
           objectBox.workoutTemplateService.getEditingWorkoutTemplate();
@@ -39,7 +39,7 @@ class _CreateTemplatePageState extends State<CreateTemplatePage> {
 
   void addSet(ExercisesSetsInfo exercisesSetsInfo) {
     setState(() {
-      objectBox.addSetToExercise(exercisesSetsInfo);
+      objectBox.exerciseService.addSetToExercise(exercisesSetsInfo);
     });
   }
 
@@ -393,7 +393,7 @@ class _CreateTemplatePageState extends State<CreateTemplatePage> {
               const SizedBox(
                 height: 20,
               ),
-              TemplatesExerciseTile(
+              EditExerciseTile(
                 exerciseData: exerciseData,
                 selectExercise: selectExercise,
                 removeSet: removeSet,

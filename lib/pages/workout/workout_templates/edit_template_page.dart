@@ -4,7 +4,7 @@ import 'package:group_project/main.dart';
 import 'package:group_project/models/exercise.dart';
 import 'package:group_project/models/exercises_sets_info.dart';
 import 'package:group_project/models/workout_template.dart';
-import 'package:group_project/pages/workout/workout_templates/components/templates_exercise_tile.dart';
+import 'package:group_project/pages/workout/components/tiles/components/edit_exercise_tile.dart';
 
 class EditTemplatePage extends StatefulWidget {
   final int workoutTemplateId;
@@ -20,7 +20,7 @@ class EditTemplatePage extends StatefulWidget {
 class _EditTemplatePageState extends State<EditTemplatePage> {
   WorkoutTemplate editingWorkoutTemplate =
       objectBox.workoutTemplateService.getEditingWorkoutTemplate();
-  List<Exercise> exerciseData = objectBox.getAllExercises();
+  List<Exercise> exerciseData = objectBox.exerciseService.getAllExercises();
 
   void _askToRevert() {
     showDialog(
@@ -246,7 +246,7 @@ class _EditTemplatePageState extends State<EditTemplatePage> {
   }
 
   void removeSet(int exerciseSetId) {
-    objectBox.removeSetFromExercise(exerciseSetId);
+    objectBox.exerciseService.removeSetFromExercise(exerciseSetId);
     setState(() {
       editingWorkoutTemplate =
           objectBox.workoutTemplateService.getEditingWorkoutTemplate();
@@ -255,7 +255,7 @@ class _EditTemplatePageState extends State<EditTemplatePage> {
 
   void addSet(ExercisesSetsInfo exercisesSetsInfo) {
     setState(() {
-      objectBox.addSetToExercise(exercisesSetsInfo);
+      objectBox.exerciseService.addSetToExercise(exercisesSetsInfo);
     });
   }
 
@@ -401,8 +401,8 @@ class _EditTemplatePageState extends State<EditTemplatePage> {
               const SizedBox(
                 height: 20,
               ),
-              TemplatesExerciseTile(
-                exerciseData: objectBox.getAllExercises(),
+              EditExerciseTile(
+                exerciseData: objectBox.exerciseService.getAllExercises(),
                 selectExercise: selectExercise,
                 removeSet: removeSet,
                 addSet: addSet,
@@ -410,16 +410,6 @@ class _EditTemplatePageState extends State<EditTemplatePage> {
               )
             ],
           ),
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          objectBox.workoutTemplateService.testEdit();
-        },
-        backgroundColor: AppColours.secondary,
-        child: const Icon(
-          Icons.add,
-          color: Colors.black,
         ),
       ),
     );

@@ -50,7 +50,11 @@ class _SetTileState extends State<SetTile> {
         ),
       ),
       child: Container(
-        color: widget.set.isCompleted ? Colors.green : Colors.transparent,
+        color: widget.setIsCompleted != null
+            ? widget.set.isCompleted
+                ? Colors.green[300]
+                : Colors.transparent
+            : Colors.transparent,
         padding: const EdgeInsets.symmetric(vertical: 10),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -96,7 +100,7 @@ class _SetTileState extends State<SetTile> {
                   ),
                   onChanged: (value) => {
                     widget.set.weight = int.tryParse(value),
-                    objectBox.updateExerciseSet(widget.set),
+                    objectBox.exerciseService.updateExerciseSet(widget.set),
                   },
                 ),
               ),
@@ -131,17 +135,16 @@ class _SetTileState extends State<SetTile> {
                   ),
                   onChanged: (value) => {
                     widget.set.reps = int.tryParse(value),
-                    objectBox.updateExerciseSet(widget.set),
+                    objectBox.exerciseService.updateExerciseSet(widget.set),
                   },
                 ),
               ),
             ),
             const SizedBox(width: 10),
-            widget.setIsCompleted == null
-                ? const SizedBox()
-                : SizedBox(
-                    width: 40,
-                    child: Material(
+            SizedBox(
+              width: 40,
+              child: widget.setIsCompleted != null
+                  ? Material(
                       shape: const RoundedRectangleBorder(
                         borderRadius: BorderRadius.all(
                           Radius.circular(8),
@@ -162,8 +165,17 @@ class _SetTileState extends State<SetTile> {
                           ),
                         ),
                       ),
+                    )
+                  : GestureDetector(
+                      onTap: () {
+                        HapticFeedback.lightImpact();
+                      },
+                      child: const Icon(
+                        Icons.horizontal_rule_rounded,
+                        color: Colors.white,
+                      ),
                     ),
-                  )
+            )
           ],
         ),
       ),

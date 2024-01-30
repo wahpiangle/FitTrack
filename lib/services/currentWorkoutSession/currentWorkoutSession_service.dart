@@ -77,6 +77,9 @@ class CurrentWorkoutSessionService {
         .forEach((exercisesSetsInfo) {
       exercisesSetsInfoBox.remove(exercisesSetsInfo.id);
     });
+
+    currentWorkoutSession.note = '';
+    currentWorkoutSession.title = 'Workout';
     currentWorkoutSessionBox.put(currentWorkoutSession);
   }
 
@@ -110,9 +113,12 @@ class CurrentWorkoutSessionService {
   }
 
   // save to history
-  WorkoutSession saveCurrentWorkoutSession() {
+  WorkoutSession saveCurrentWorkoutSession({required int timeInSeconds}) {
     CurrentWorkoutSession currentWorkoutSession = getCurrentWorkoutSession();
-    WorkoutSession workoutSession = WorkoutSession(date: DateTime.now());
+    WorkoutSession workoutSession = WorkoutSession(
+      date: DateTime.now(),
+      duration: timeInSeconds,
+    );
     workoutSession.exercisesSetsInfo
         .addAll(currentWorkoutSession.exercisesSetsInfo);
     workoutSession.note = currentWorkoutSession.note;

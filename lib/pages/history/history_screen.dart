@@ -1,14 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:group_project/main.dart';
+import 'package:group_project/models/exercise.dart';
 import 'package:group_project/models/workout_session.dart';
 import 'package:group_project/pages/history/components/calendar_button.dart';
 import 'package:group_project/pages/history/components/workout_card.dart';
+import 'package:group_project/pages/workout/State/timer_sheet_manager.dart';
+import 'package:group_project/pages/workout/components/timer/providers/timer_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
 
 class HistoryScreen extends StatefulWidget {
+  final List<Exercise> exerciseData;
+
   const HistoryScreen({
-    super.key,
-  });
+    Key? key,
+    required this.exerciseData,
+  }) : super(key: key);
 
   @override
   State<HistoryScreen> createState() => _HistoryScreenState();
@@ -23,6 +30,52 @@ class _HistoryScreenState extends State<HistoryScreen> {
       preferPosition: AutoScrollPosition.begin,
     );
     await _scrollController.highlight(index);
+
+    // Check if the timer is active and the workout sheet is closed
+    bool isTimerActive =
+        Provider.of<TimerProvider>(context, listen: false).isTimerRunning;
+
+    if (isTimerActive) {
+      // Show the new workout bottom sheet
+      TimerManager().closeTimerBottomSheet(context);
+
+      // Wait for a short duration to allow the timer sheet to close
+      await Future.delayed(const Duration(milliseconds: 10));
+    }
+    // Show the new workout bottom sheet
+    TimerManager().showTimerBottomSheet(context, widget.exerciseData);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _handleTimerActive(context);
+  }
+
+  void _handleTimerActive(BuildContext context) {
+    TimerProvider? timerProvider =
+    Provider.of<TimerProvider>(context, listen: false);
+
+    void handleTimerStateChanged() {
+      if (timerProvider.isTimerRunning &&
+          !TimerManager().isTimerActiveScreenOpen) {
+        TimerManager().showTimerBottomSheet(context, widget.exerciseData);
+      } else if (!timerProvider.isTimerRunning &&
+          TimerManager().isTimerActiveScreenOpen) {
+        TimerManager().closeTimerBottomSheet(context);
+      }
+    }
+
+    void Function()? listener;
+    listener = () {
+      if (mounted) {
+        handleTimerStateChanged();
+      } else {
+        timerProvider.removeListener(listener!);
+      }
+    };
+
+    timerProvider.addListener(listener);
   }
 
   @override
@@ -50,38 +103,39 @@ class _HistoryScreenState extends State<HistoryScreen> {
             } else {
               return snapshot.data!.isEmpty
                   ? const Center(
-                      child: Text(
-                      'No workout sessions yet!',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 20,
-                      ),
-                    ))
+                child: Text(
+                  'No workout sessions yet!',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                  ),
+                ),
+              )
                   : Column(
-                      children: [
-                        CalendarButton(
-                          workoutSessions: snapshot.data!,
-                          scrollToItem: getIndexByWorkoutSession,
-                        ),
-                        Expanded(
-                          child: ListView(
-                            controller: _scrollController,
-                            children: snapshot.data!.map((workoutSession) {
-                              return AutoScrollTag(
-                                key: ValueKey(workoutSession.id),
-                                controller: _scrollController,
-                                index: snapshot.data!.indexWhere((element) =>
-                                    element.id == workoutSession.id),
-                                child: WorkoutCard(
-                                  key: Key(workoutSession.id.toString()),
-                                  workoutSession: workoutSession,
-                                ),
-                              );
-                            }).toList(),
+                children: [
+                  CalendarButton(
+                    workoutSessions: snapshot.data!,
+                    scrollToItem: getIndexByWorkoutSession,
+                  ),
+                  Expanded(
+                    child: ListView(
+                      controller: _scrollController,
+                      children: snapshot.data!.map((workoutSession) {
+                        return AutoScrollTag(
+                          key: ValueKey(workoutSession.id),
+                          controller: _scrollController,
+                          index: snapshot.data!.indexWhere(
+                                  (element) => element.id == workoutSession.id),
+                          child: WorkoutCard(
+                            key: Key(workoutSession.id.toString()),
+                            workoutSession: workoutSession,
                           ),
-                        ),
-                      ],
-                    );
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                ],
+              );
             }
           },
         ),
