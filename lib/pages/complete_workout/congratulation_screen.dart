@@ -47,6 +47,7 @@ class _CongratulationScreenState extends State<CongratulationScreen> {
             Navigator.pushNamed(
               context,
               'post_workout_prompt',
+              arguments: widget.workoutSession,
             );
           });
         }

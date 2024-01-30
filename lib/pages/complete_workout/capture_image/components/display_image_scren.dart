@@ -1,18 +1,23 @@
 import 'dart:io';
 
+import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:group_project/models/workout_session.dart';
+import 'package:group_project/services/firebase/firebase_posts_service.dart';
 
 class DisplayImageScreen extends StatefulWidget {
   final Function toggleRetake;
   final String imagePath;
   final String imagePath2;
+  final WorkoutSession workoutSession;
 
   const DisplayImageScreen({
     super.key,
     required this.toggleRetake,
     required this.imagePath,
     required this.imagePath2,
+    required this.workoutSession,
   });
 
   @override
@@ -123,7 +128,14 @@ class _DisplayImageScreenState extends State<DisplayImageScreen>
           height: 20,
         ),
         TextButton.icon(
-            onPressed: () {},
+            onPressed: () {
+              FirebasePostsService.uploadImage(
+                XFile(widget.imagePath),
+                XFile(widget.imagePath2),
+                widget.workoutSession,
+              );
+              Navigator.pop(context);
+            },
             icon: const Icon(
               Icons.send,
               color: Colors.white,

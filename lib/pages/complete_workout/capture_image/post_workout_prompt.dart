@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:group_project/constants/themes/app_colours.dart';
+import 'package:group_project/models/workout_session.dart';
 import 'package:group_project/pages/complete_workout/capture_image/components/camera_controls.dart';
 import 'package:group_project/pages/complete_workout/capture_image/components/capturing_loader.dart';
 import 'package:group_project/pages/complete_workout/capture_image/components/first_image_loader.dart';
@@ -118,7 +119,8 @@ class PostWorkoutPromptState extends State<PostWorkoutPrompt> {
 
   @override
   Widget build(BuildContext context) {
-    print(flashMode);
+    final workoutSession =
+        (ModalRoute.of(context)?.settings.arguments as WorkoutSession);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppColours.primary,
@@ -150,6 +152,7 @@ class PostWorkoutPromptState extends State<PostWorkoutPrompt> {
                     toggleRetake: toggleRetake,
                     imagePath: firstImageState!.path,
                     imagePath2: secondImageState!.path,
+                    workoutSession: workoutSession,
                   ),
                 ],
               ),

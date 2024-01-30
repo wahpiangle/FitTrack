@@ -100,4 +100,6 @@ class FirebaseWorkoutsService {
           .toList(),
     });
   }
+
+  static void addImageToWorkoutSession() {}
 }
