@@ -6,36 +6,35 @@ import 'package:group_project/models/workout_session.dart';
 class FirebaseWorkoutsService {
   static final FirebaseFirestore db = FirebaseFirestore.instance;
   static final FirebaseAuth auth = FirebaseAuth.instance;
+  static final CollectionReference workoutsCollectionRef =
+      db.collection('workouts');
 
   static void createWorkoutSession(WorkoutSession workoutSession) async {
     final User user = auth.currentUser!;
     if (!user.isAnonymous) {
       final uid = user.uid;
-      final collectionRef = db.collection('workouts');
-      await collectionRef.doc(uid).set({
-        'workoutSessions': FieldValue.arrayUnion(
-          [
-            {
-              'id': workoutSession.id,
-              'date': DateTime.now(),
-              'title': workoutSession.title,
-              'note': workoutSession.note,
-              'imageUrl': workoutSession.imageUrl,
-              'exercisesSetsInfo': workoutSession.exercisesSetsInfo
-                  .map((exercisesSetsInfo) => {
-                        'exercise': exercisesSetsInfo.exercise.targetId,
-                        'exerciseSets': exercisesSetsInfo.exerciseSets
-                            .map((exerciseSet) => {
-                                  'reps': exerciseSet.reps,
-                                  'weight': exerciseSet.weight,
-                                })
-                            .toList(),
-                      })
-                  .toList(),
-            }
-          ],
-        )
-      }, SetOptions(merge: true));
+      await workoutsCollectionRef
+          .doc(uid)
+          .collection('workoutSessions')
+          .doc(workoutSession.id.toString())
+          .set({
+        'date': DateTime.now(),
+        'title': workoutSession.title,
+        'note': workoutSession.note,
+        'duration': workoutSession.duration,
+        'imageUrl': workoutSession.imageUrl,
+        'exercisesSetsInfo': workoutSession.exercisesSetsInfo
+            .map((exercisesSetsInfo) => {
+                  'exercise': exercisesSetsInfo.exercise.targetId,
+                  'exerciseSets': exercisesSetsInfo.exerciseSets
+                      .map((exerciseSet) => {
+                            'reps': exerciseSet.reps,
+                            'weight': exerciseSet.weight,
+                          })
+                      .toList(),
+                })
+            .toList(),
+      });
     }
   }
 
@@ -45,17 +44,11 @@ class FirebaseWorkoutsService {
       return;
     }
     final uid = user.uid;
-    final collectionRef = db.collection('workouts');
-    final workoutSession = await collectionRef
+    await workoutsCollectionRef
         .doc(uid)
-        .get()
-        .then((value) => value.data()!['workoutSessions'])
-        .then((value) => value
-            .where((workoutSession) => workoutSession['id'] == workoutSessionId)
-            .toList());
-    await collectionRef.doc(uid).update({
-      'workoutSessions': FieldValue.arrayRemove(workoutSession),
-    });
+        .collection('workoutSessions')
+        .doc(workoutSessionId.toString())
+        .delete();
   }
 
   static Future<List<dynamic>> getWorkoutSessionsOfUser() async {
@@ -64,11 +57,15 @@ class FirebaseWorkoutsService {
       return [];
     }
     final uid = user.uid;
-    final collectionRef = db.collection('workouts');
-    final List<dynamic> workoutSessions = await collectionRef
+    final List<dynamic> workoutSessions = await workoutsCollectionRef
         .doc(uid)
+        .collection('workoutSessions')
         .get()
-        .then((value) => value.data()!['workoutSessions']);
+        .then((snapshot) => snapshot.docs.map((document) {
+              final data = document.data();
+              data['id'] = document.id;
+              return data;
+            }).toList());
     return workoutSessions;
   }
 
@@ -78,33 +75,29 @@ class FirebaseWorkoutsService {
       return;
     }
     final uid = user.uid;
-    final collectionRef = db.collection('workouts');
     final updatedWorkoutSession =
         objectBox.workoutSessionService.getWorkoutSession(workoutSessionId);
-    await deleteWorkoutSession(workoutSessionId);
-    await collectionRef.doc(uid).update({
-      'workoutSessions': FieldValue.arrayUnion(
-        [
-          {
-            'id': updatedWorkoutSession!.id,
-            'date': updatedWorkoutSession.date,
-            'title': updatedWorkoutSession.title,
-            'note': updatedWorkoutSession.note,
-            'imageUrl': updatedWorkoutSession.imageUrl,
-            'exercisesSetsInfo': updatedWorkoutSession.exercisesSetsInfo
-                .map((exercisesSetsInfo) => {
-                      'exercise': exercisesSetsInfo.exercise.targetId,
-                      'exerciseSets': exercisesSetsInfo.exerciseSets
-                          .map((exerciseSet) => {
-                                'reps': exerciseSet.reps,
-                                'weight': exerciseSet.weight,
-                              })
-                          .toList(),
-                    })
-                .toList(),
-          }
-        ],
-      )
+    await workoutsCollectionRef
+        .doc(uid)
+        .collection('workoutSessions')
+        .doc(workoutSessionId.toString())
+        .update({
+      'date': updatedWorkoutSession!.date,
+      'title': updatedWorkoutSession.title,
+      'note': updatedWorkoutSession.note,
+      'duration': updatedWorkoutSession.duration,
+      'imageUrl': updatedWorkoutSession.imageUrl,
+      'exercisesSetsInfo': updatedWorkoutSession.exercisesSetsInfo
+          .map((exercisesSetsInfo) => {
+                'exercise': exercisesSetsInfo.exercise.targetId,
+                'exerciseSets': exercisesSetsInfo.exerciseSets
+                    .map((exerciseSet) => {
+                          'reps': exerciseSet.reps,
+                          'weight': exerciseSet.weight,
+                        })
+                    .toList(),
+              })
+          .toList(),
     });
   }
 }

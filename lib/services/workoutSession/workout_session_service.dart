@@ -194,9 +194,11 @@ class WorkoutSessionService {
           await FirebaseWorkoutsService.getWorkoutSessionsOfUser();
       for (var workoutSession in workoutSessions) {
         final newWorkoutSession = WorkoutSession(
+          id: int.parse(workoutSession['id']),
           date: workoutSession['date'].toDate(),
           note: workoutSession['note'],
           title: workoutSession['title'],
+          duration: workoutSession['duration'],
           isCurrentEditing: false,
         );
 

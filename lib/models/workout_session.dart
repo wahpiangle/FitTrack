@@ -3,7 +3,7 @@ import 'package:objectbox/objectbox.dart';
 
 @Entity()
 class WorkoutSession {
-  @Id()
+  @Id(assignable: true)
   int id;
   String title;
   String note;
