@@ -4,11 +4,11 @@ import 'package:group_project/pages/workout/components/timer/components/time_pic
 import 'package:group_project/pages/workout/components/timer/providers/rest_timer_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:group_project/pages/components/top_nav_bar.dart';
+import 'package:group_project/pages/workout/components/timer/providers/custom_timer_provider.dart';
+
 
 class TimerDetailsSettings extends StatelessWidget {
-  const TimerDetailsSettings({
-    super.key,
-  });
+  const TimerDetailsSettings({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -22,8 +22,8 @@ class TimerDetailsSettings extends StatelessWidget {
       body: Container(
         color: const Color(0xFF1A1A1A),
         padding: const EdgeInsets.all(16.0),
-        child: Consumer<RestTimerProvider>(
-          builder: (context, restTimerProvider, child) {
+        child: Consumer2<RestTimerProvider, CustomTimerProvider>(
+          builder: (context, restTimerProvider, customTimerProvider, child) {
             return Column(
               children: [
                 Container(
@@ -63,6 +63,7 @@ class TimerDetailsSettings extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 16.0),
+                // Rest Timer Duration
                 Container(
                   height: MediaQuery.of(context).size.height * 0.1,
                   padding: const EdgeInsets.all(16.0),
@@ -94,6 +95,125 @@ class TimerDetailsSettings extends StatelessWidget {
                     ],
                   ),
                 ),
+                const SizedBox(height: 16.0),
+                Container(
+                  height: MediaQuery.of(context).size.height * 0.1,
+                  padding: const EdgeInsets.all(16.0),
+                  decoration: BoxDecoration(
+                    color: Colors.grey[850],
+                    borderRadius: BorderRadius.circular(20.0),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        'Rest Interval',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      DropdownButton<int>(
+                        value: restTimerProvider.selectedTimeInterval,
+                        onChanged: (value) {
+                          if (value != null) {
+                            Scaffold.of(context).setState(() {
+                              restTimerProvider.setSelectedTimeInterval(value);
+                            });
+                          }
+                        },
+                        items: const [
+                          DropdownMenuItem<int>(
+                            value: 5,
+                            child: Text('5 seconds'),
+                          ),
+                          DropdownMenuItem<int>(
+                            value: 10,
+                            child: Text('10 seconds'),
+                          ),
+                          DropdownMenuItem<int>(
+                            value: 30,
+                            child: Text('30 seconds'),
+                          ),
+                          DropdownMenuItem<int>(
+                            value: 60,
+                            child: Text('1 minute'),
+                          ),
+                        ],
+                        style: const TextStyle(
+                          color: Colors.white,
+                        ),
+                        underline: Container(),
+                        icon: const Icon(
+                          Icons.keyboard_arrow_down,
+                          color: Colors.white,
+                        ),
+                        elevation: 8,
+                        dropdownColor: Colors.grey[800],
+                        iconEnabledColor: Colors.green,
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 16.0),
+                Container(
+                  height: MediaQuery.of(context).size.height * 0.1,
+                  padding: const EdgeInsets.all(16.0),
+                  decoration: BoxDecoration(
+                    color: Colors.grey[850],
+                    borderRadius: BorderRadius.circular(20.0),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        'Custom Interval',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      DropdownButton<int>(
+                        value: customTimerProvider.selectedTimeInterval,
+                        onChanged: (value) {
+                          customTimerProvider.setSelectedTimeInterval(value!);
+                        },
+                        items: const [
+                          DropdownMenuItem<int>(
+                            value: 5,
+                            child: Text('5 seconds'),
+                          ),
+                          DropdownMenuItem<int>(
+                            value: 10,
+                            child: Text('10 seconds'),
+                          ),
+                          DropdownMenuItem<int>(
+                            value: 30,
+                            child: Text('30 seconds'),
+                          ),
+                          DropdownMenuItem<int>(
+                            value: 60,
+                            child: Text('1 minute'),
+                          ),
+                        ],
+                        style: const TextStyle(
+                          color: Colors.white,
+                        ),
+                        underline: Container(),
+                        icon: const Icon(
+                          Icons.keyboard_arrow_down,
+                          color: Colors.white,
+                        ),
+                        elevation: 8,
+                        dropdownColor: Colors.grey[800],
+                        iconEnabledColor: Colors.green,
+                      ),
+                    ],
+                  ),
+                ),
+
               ],
             );
           },
@@ -115,3 +235,5 @@ class TimerDetailsSettings extends StatelessWidget {
     );
   }
 }
+
+

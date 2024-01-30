@@ -13,6 +13,7 @@ class CustomTimerProvider with ChangeNotifier {
   bool _isRestTimerRunning = false;
   bool _isDialogShown = false;
   bool _isDialogOpen = false;
+  int selectedTimeInterval = 10;
 
   bool get isRestTimerRunning => _isRestTimerRunning;
   int get customTimerDuration => _customTimerDuration;
@@ -48,6 +49,11 @@ class CustomTimerProvider with ChangeNotifier {
     prefs.setBool('isDialogShown', _isDialogShown);
     prefs.setBool('isDialogOpen', _isDialogOpen);
   }
+
+  void setSelectedTimeInterval(int interval) {
+    selectedTimeInterval = interval;
+  }
+
 
   void showCustomDialog(BuildContext context) {
     _isDialogOpen = true;

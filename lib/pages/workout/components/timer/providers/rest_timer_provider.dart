@@ -14,6 +14,7 @@ class RestTimerProvider with ChangeNotifier {
   bool _isRestTimerRunning = false;
   bool _isDialogShown = false;
   bool _isDialogOpen = false;
+  int selectedTimeInterval = 10;
 
   bool get isRestTimerRunning => _isRestTimerRunning;
   bool get isRestTimerEnabled => _isRestTimerEnabled;
@@ -47,6 +48,12 @@ class RestTimerProvider with ChangeNotifier {
     prefs.setInt('restTimerMinutes', _restTimerMinutes);
     prefs.setInt('restTimerSeconds', _restTimerSeconds);
   }
+
+
+  void setSelectedTimeInterval(int interval) {
+    selectedTimeInterval = interval;
+  }
+
 
   void showRestDialog() {
     //check if the user is opening the rest timer details dialog
