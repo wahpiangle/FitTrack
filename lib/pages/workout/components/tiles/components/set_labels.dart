@@ -25,6 +25,19 @@ class SetLabels extends StatelessWidget {
           ),
         ),
         const SizedBox(width: 20),
+        const SizedBox(
+          width: 60,
+          child: Text(
+            "Previous",
+            style: TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ),
+        const SizedBox(width: 20),
         const Expanded(
           flex: 1,
           child: Center(
