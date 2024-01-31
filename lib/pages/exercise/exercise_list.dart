@@ -11,7 +11,7 @@ import 'package:group_project/pages/workout/components/timer/providers/timer_pro
 import 'package:provider/provider.dart';
 
 class ExerciseListScreen extends StatefulWidget {
-  const ExerciseListScreen({Key? key}) : super(key: key);
+  const ExerciseListScreen({super.key});
 
   @override
   ExerciseListScreenState createState() => ExerciseListScreenState();
@@ -227,14 +227,14 @@ class ExerciseListScreenState extends State<ExerciseListScreen> {
                                 background: Container(
                                 color: Colors.red, // Red background when swiping
                                 alignment: Alignment.centerRight,
-                                padding: EdgeInsets.only(right: 20.0),
-                                child: Text(
+                                padding: const EdgeInsets.only(right: 20.0),
+                                child: const Text(
                                 'Hide',
                                 style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 16.0,
-                                ),
-                                ),
+                                   ),
+                                  ),
                                 ),
                                 // Implement confirmDismiss to control when the item can be dismissed
                                 confirmDismiss: (direction) async {
@@ -243,18 +243,20 @@ class ExerciseListScreenState extends State<ExerciseListScreen> {
                                 context: context,
                                 builder: (BuildContext context) {
                                   return AlertDialog(
-                                    backgroundColor: Color(0xFF1A1A1A), // Set background color to 1A1A1A
+                                    surfaceTintColor: const Color(0xFF1A1A1A),
+                                    backgroundColor: const Color(0xFF1A1A1A), // Set background color to 1A1A1A
                                     title: Text(
                                       "Hide ${exercise.name}",
-                                      style: TextStyle(color: Colors.white), // Set title color to white
+                                      style: const TextStyle(color: Colors.white), // Set title color to white
                                     ),
-                                    content: Column(
+                                    content: const Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       mainAxisSize: MainAxisSize.min, // Set the main axis size to minimum
                                       children: [
                                         Text(
                                           "This exercise will no longer be accessible.",
                                           style: TextStyle(
+                                            fontSize: 14,
                                             fontWeight: FontWeight.bold,
                                             color: Colors.white, // Set text color to white
                                           ),
@@ -262,17 +264,21 @@ class ExerciseListScreenState extends State<ExerciseListScreen> {
                                         SizedBox(height: 8), // Add some space between the sentences
                                         Text(
                                           "Hiding it will not affect any of your previous workouts with this exercise.",
-                                          style: TextStyle(color: Colors.white), // Set text color to white
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                            fontSize: 13,
+                                          ),
+                                          // Set text color to white
                                         ),
                                         SizedBox(height: 15),
                                       ],
                                     ),
-                                    contentPadding: EdgeInsets.fromLTRB(24.0, 20.0, 24.0, 0), // Adjust content padding
+                                    contentPadding: const EdgeInsets.fromLTRB(24.0, 20.0, 24.0, 0), // Adjust content padding
 
                                     actions: [
                                       Container(
                                         width: double.infinity, // Take the full width of the dialog
-                                        padding: EdgeInsets.symmetric(vertical: 1.0), // Add vertical padding
+                                        padding: const EdgeInsets.symmetric(vertical: 1.0), // Add vertical padding
                                         decoration: BoxDecoration(
                                           color: Colors.red, // Red fill color
                                           borderRadius: BorderRadius.circular(10.0), // Rounded corners
@@ -282,28 +288,26 @@ class ExerciseListScreenState extends State<ExerciseListScreen> {
                                             onPressed: () {
                                               Navigator.pop(context, true); // Dismiss the dialog and accept the dismissal
                                             },
-                                            child: Text(
+                                            child: const Text(
                                               "Hide",
                                               style: TextStyle(color: Colors.white), // White text color
                                             ),
                                           ),
                                         ),
                                       ),
-                                      SizedBox(height: 3), // Add some space between buttons and content
+                                      const SizedBox(height: 3), // Add some space between buttons and content
                                       Row(
                                         children: [
                                           Expanded(
                                             child: Container(
                                               decoration: BoxDecoration(
-                                                color: Colors.black, // Black fill color
-                                                border: Border.all(color: Colors.black), // Black border color
                                                 borderRadius: BorderRadius.circular(10.0), // Rounded corners
                                               ),
                                               child: TextButton(
                                                 onPressed: () {
                                                   Navigator.pop(context, false); // Dismiss the dialog and reject the dismissal
                                                 },
-                                                child: Text(
+                                                child: const Text(
                                                   "Cancel",
                                                   style: TextStyle(color: Colors.white), // Set text color to white
                                                 ),
@@ -315,36 +319,32 @@ class ExerciseListScreenState extends State<ExerciseListScreen> {
                                     ],
                                   );
 
-
-
-                                },
-                                );
+                                     },
+                                  );
                                 },
                                 onDismissed: (direction) {
                                 if (direction == DismissDirection.endToStart) {
                                 // Toggle exercise visibility
                                 toggleExerciseVisibility(exercise);
-                                }
+                                  }
                                 },
-                        child: ExerciseListItem(
-                        exercise: exercise,
-                        searchText: searchText,
-                        onToggleVisibility: () => toggleExerciseVisibility(exercise),
+                                child: ExerciseListItem(
+                                exercise: exercise,
+                                searchText: searchText,
+                                onToggleVisibility: () => toggleExerciseVisibility(exercise),
+                                  ),
+                                ),
+                              ],
+                            );
+                          },
                         ),
-                        ),
-
-
-                        ],
-                        );
-                      },
+                      )
+                    ],
                     ),
-                  )
-                ],
-              ),
+                  ),
+                );
+              },
             ),
           );
-        },
-      ),
-    );
-  }
-}
+        }
+      }
