@@ -243,35 +243,80 @@ class ExerciseListScreenState extends State<ExerciseListScreen> {
                                 context: context,
                                 builder: (BuildContext context) {
                                   return AlertDialog(
-                                    title: Text("Hide ${exercise.name}"),
+                                    backgroundColor: Color(0xFF1A1A1A), // Set background color to 1A1A1A
+                                    title: Text(
+                                      "Hide ${exercise.name}",
+                                      style: TextStyle(color: Colors.white), // Set title color to white
+                                    ),
                                     content: Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,
+                                      mainAxisSize: MainAxisSize.min, // Set the main axis size to minimum
                                       children: [
                                         Text(
                                           "This exercise will no longer be accessible.",
-                                          style: TextStyle(fontWeight: FontWeight.bold),
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white, // Set text color to white
+                                          ),
                                         ),
                                         SizedBox(height: 8), // Add some space between the sentences
                                         Text(
                                           "Hiding it will not affect any of your previous workouts with this exercise.",
+                                          style: TextStyle(color: Colors.white), // Set text color to white
                                         ),
+                                        SizedBox(height: 15),
                                       ],
                                     ),
-                                actions: [
-                                TextButton(
-                                onPressed: () {
-                                Navigator.pop(context, false); // Dismiss the dialog and reject the dismissal
-                                },
-                                child: Text("Cancel"),
-                                ),
-                                TextButton(
-                                onPressed: () {
-                                Navigator.pop(context, true); // Dismiss the dialog and accept the dismissal
-                                },
-                                child: Text("Hide"),
-                                ),
-                                ],
-                                );
+                                    contentPadding: EdgeInsets.fromLTRB(24.0, 20.0, 24.0, 0), // Adjust content padding
+
+                                    actions: [
+                                      Container(
+                                        width: double.infinity, // Take the full width of the dialog
+                                        padding: EdgeInsets.symmetric(vertical: 1.0), // Add vertical padding
+                                        decoration: BoxDecoration(
+                                          color: Colors.red, // Red fill color
+                                          borderRadius: BorderRadius.circular(10.0), // Rounded corners
+                                        ),
+                                        child: Center(
+                                          child: TextButton(
+                                            onPressed: () {
+                                              Navigator.pop(context, true); // Dismiss the dialog and accept the dismissal
+                                            },
+                                            child: Text(
+                                              "Hide",
+                                              style: TextStyle(color: Colors.white), // White text color
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(height: 3), // Add some space between buttons and content
+                                      Row(
+                                        children: [
+                                          Expanded(
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                color: Colors.black, // Black fill color
+                                                border: Border.all(color: Colors.black), // Black border color
+                                                borderRadius: BorderRadius.circular(10.0), // Rounded corners
+                                              ),
+                                              child: TextButton(
+                                                onPressed: () {
+                                                  Navigator.pop(context, false); // Dismiss the dialog and reject the dismissal
+                                                },
+                                                child: Text(
+                                                  "Cancel",
+                                                  style: TextStyle(color: Colors.white), // Set text color to white
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  );
+
+
+
                                 },
                                 );
                                 },
