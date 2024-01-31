@@ -34,7 +34,8 @@ class ExerciseService {
   }
 
   List<Exercise> getAllExercises() {
-    return exerciseBox.getAll();
+    // Filter out exercises based on visibility
+    return exerciseBox.getAll().where((exercise) => exercise.isVisible).toList();
   }
 
   void removeExercises() {
@@ -50,6 +51,7 @@ class ExerciseService {
   }
 
   void updateExerciselist( Exercise exercise){
+
     exerciseBox.put(exercise);
 
   }

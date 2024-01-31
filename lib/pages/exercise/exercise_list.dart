@@ -74,6 +74,7 @@ class ExerciseListScreenState extends State<ExerciseListScreen> {
   void toggleExerciseVisibility(Exercise exercise) {
     setState(() {
       exercise.isVisible = !exercise.isVisible;
+      objectBox.exerciseService.updateExerciselist(exercise);
     });
   }
 
