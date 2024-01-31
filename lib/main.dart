@@ -7,6 +7,7 @@ import 'package:group_project/pages/auth/register_screen.dart';
 import 'package:group_project/pages/auth/settings_login.dart';
 import 'package:group_project/pages/auth/settings_signup.dart';
 import 'package:group_project/pages/auth_wrapper.dart';
+import 'package:group_project/pages/complete_workout/capture_image/upload_image_provider.dart';
 import 'package:group_project/pages/complete_workout/congratulation_screen.dart';
 import 'package:group_project/pages/complete_workout/capture_image/post_workout_prompt.dart';
 import 'package:group_project/pages/layout/app_layout.dart';
@@ -72,6 +73,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => UserStateProvider()),
         ChangeNotifierProvider(create: (context) => ProfileImageProvider()),
         ChangeNotifierProvider(create: (context) => CustomTimerProvider()),
+        ChangeNotifierProvider(create: (context) => UploadImageProvider()),
         StreamProvider.value(
           value: AuthService().user,
           initialData: null,

@@ -17,24 +17,26 @@ class FirebaseWorkoutsService {
           .doc(uid)
           .collection('workoutSessions')
           .doc(workoutSession.id.toString())
-          .set({
-        'date': DateTime.now(),
-        'title': workoutSession.title,
-        'note': workoutSession.note,
-        'duration': workoutSession.duration,
-        'imageUrl': workoutSession.imageUrl,
-        'exercisesSetsInfo': workoutSession.exercisesSetsInfo
-            .map((exercisesSetsInfo) => {
-                  'exercise': exercisesSetsInfo.exercise.targetId,
-                  'exerciseSets': exercisesSetsInfo.exerciseSets
-                      .map((exerciseSet) => {
-                            'reps': exerciseSet.reps,
-                            'weight': exerciseSet.weight,
-                          })
-                      .toList(),
-                })
-            .toList(),
-      });
+          .set(
+        {
+          'date': DateTime.now(),
+          'title': workoutSession.title,
+          'note': workoutSession.note,
+          'duration': workoutSession.duration,
+          'imageUrl': workoutSession.imageUrl,
+          'exercisesSetsInfo': workoutSession.exercisesSetsInfo
+              .map((exercisesSetsInfo) => {
+                    'exercise': exercisesSetsInfo.exercise.targetId,
+                    'exerciseSets': exercisesSetsInfo.exerciseSets
+                        .map((exerciseSet) => {
+                              'reps': exerciseSet.reps,
+                              'weight': exerciseSet.weight,
+                            })
+                        .toList(),
+                  })
+              .toList(),
+        },
+      );
     }
   }
 

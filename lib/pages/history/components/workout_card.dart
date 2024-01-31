@@ -70,13 +70,6 @@ class WorkoutCard extends StatelessWidget {
                         fontSize: 14,
                       ),
                     ),
-                    Text(
-                      workoutSession.id.toString(),
-                      style: TextStyle(
-                        color: Colors.grey[500],
-                        fontSize: 14,
-                      ),
-                    )
                   ],
                 ),
               ),

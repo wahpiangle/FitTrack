@@ -3,8 +3,13 @@ import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:group_project/constants/page_enums.dart';
+import 'package:group_project/models/post.dart';
 import 'package:group_project/models/workout_session.dart';
+import 'package:group_project/pages/complete_workout/capture_image/upload_image_provider.dart';
+import 'package:group_project/pages/layout/app_layout.dart';
 import 'package:group_project/services/firebase/firebase_posts_service.dart';
+import 'package:provider/provider.dart';
 
 class DisplayImageScreen extends StatefulWidget {
   final Function toggleRetake;
@@ -128,27 +133,51 @@ class _DisplayImageScreenState extends State<DisplayImageScreen>
           height: 20,
         ),
         TextButton.icon(
-            onPressed: () {
-              FirebasePostsService.uploadImage(
-                XFile(widget.imagePath),
-                XFile(widget.imagePath2),
-                widget.workoutSession,
-              );
-              Navigator.pop(context);
-            },
-            icon: const Icon(
-              Icons.send,
-              color: Colors.white,
-              size: 30,
-            ),
-            label: const Text(
-              'Send',
-              style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-                fontSize: 30,
+          onPressed: () async {
+            if (!mounted) return;
+            Navigator.pop(context);
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) {
+                  return const AppLayout(
+                    currentIndex: Pages.HomePage,
+                  );
+                },
               ),
-            )),
+            );
+            context.read<UploadImageProvider>().toggleIsUploading(true);
+            context.read<UploadImageProvider>().setPost(Post(
+                  caption: '',
+                  firstImageUrl: widget.imagePath,
+                  secondImageUrl: widget.imagePath2,
+                  workoutSessionId: widget.workoutSession.id,
+                ));
+            bool successStatus = await FirebasePostsService.createPost(
+              XFile(widget.imagePath),
+              XFile(widget.imagePath2),
+              widget.workoutSession,
+            );
+            if (!mounted) return;
+            context
+                .read<UploadImageProvider>()
+                .toggleUploadError(!successStatus);
+            context.read<UploadImageProvider>().toggleIsUploading(false);
+          },
+          icon: const Icon(
+            Icons.send,
+            color: Colors.white,
+            size: 30,
+          ),
+          label: const Text(
+            'Send',
+            style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+              fontSize: 30,
+            ),
+          ),
+        ),
       ],
     );
   }
