@@ -222,33 +222,74 @@ class ExerciseListScreenState extends State<ExerciseListScreen> {
                             for (final exercise in exercises)
                               if (exercise.isVisible)
                                 Dismissible(
-                                  key: Key(exercise.id.toString()), // Unique key for each exercise
-                                  direction: DismissDirection.endToStart, // Swipe from right to left
-                                  background: Container(
-                                    color: Colors.red, // Red background when swiping
-                                    alignment: Alignment.centerRight,
-                                    padding: EdgeInsets.only(right: 20.0),
-                                    child: Text(
-                                      'Hide',
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 16.0,
-                                      ),
-                                    ),
-                                  ),
-                                  onDismissed: (direction) {
-                                    if (direction == DismissDirection.endToStart) {
-                                      toggleExerciseVisibility(exercise); // Toggle exercise visibility
-                                    }
-                                  },
-                                  child: ExerciseListItem(
-                                    exercise: exercise,
-                                    searchText: searchText,
-                                    onToggleVisibility: () => toggleExerciseVisibility(exercise),
-                                  ),
+                                key: Key(exercise.id.toString()), // Unique key for each exercise
+                                direction: DismissDirection.endToStart, // Swipe from right to left
+                                background: Container(
+                                color: Colors.red, // Red background when swiping
+                                alignment: Alignment.centerRight,
+                                padding: EdgeInsets.only(right: 20.0),
+                                child: Text(
+                                'Hide',
+                                style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 16.0,
                                 ),
+                                ),
+                                ),
+                                // Implement confirmDismiss to control when the item can be dismissed
+                                confirmDismiss: (direction) async {
+                                // Always allow dismissal
+                                return await showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: Text("Hide ${exercise.name}"),
+                                    content: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          "This exercise will no longer be accessible.",
+                                          style: TextStyle(fontWeight: FontWeight.bold),
+                                        ),
+                                        SizedBox(height: 8), // Add some space between the sentences
+                                        Text(
+                                          "Hiding it will not affect any of your previous workouts with this exercise.",
+                                        ),
+                                      ],
+                                    ),
+                                actions: [
+                                TextButton(
+                                onPressed: () {
+                                Navigator.pop(context, false); // Dismiss the dialog and reject the dismissal
+                                },
+                                child: Text("Cancel"),
+                                ),
+                                TextButton(
+                                onPressed: () {
+                                Navigator.pop(context, true); // Dismiss the dialog and accept the dismissal
+                                },
+                                child: Text("Hide"),
+                                ),
+                                ],
+                                );
+                                },
+                                );
+                                },
+                                onDismissed: (direction) {
+                                if (direction == DismissDirection.endToStart) {
+                                // Toggle exercise visibility
+                                toggleExerciseVisibility(exercise);
+                                }
+                                },
+                        child: ExerciseListItem(
+                        exercise: exercise,
+                        searchText: searchText,
+                        onToggleVisibility: () => toggleExerciseVisibility(exercise),
+                        ),
+                        ),
 
-                          ],
+
+                        ],
                         );
                       },
                     ),
