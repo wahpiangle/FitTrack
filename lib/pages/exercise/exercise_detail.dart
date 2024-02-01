@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:group_project/models/exercise.dart';
-import 'package:group_project/pages/exercise/exercise_records.dart';
-import 'package:group_project/pages/exercise/exercise_charts.dart';
-import 'exercise_history.dart';
+import 'package:group_project/constants/themes/app_colours.dart';
+import 'exercise_navigation_buttons.dart';
 
 class ExerciseDetailScreen extends StatefulWidget {
   final Exercise exercise;
@@ -30,6 +29,7 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
               'Edit',
               style: TextStyle(
                 fontSize: 18,
+                color: AppColours.secondary,
               ),
             ),
           )
@@ -53,119 +53,12 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      selectedPageIndex = 0;
-                    });
-                    Navigator.of(context).pushReplacement(
-                      PageRouteBuilder(
-                        opaque: false,
-                        pageBuilder: (BuildContext context, _, __) {
-                          return ExerciseDetailScreen(
-                            widget.exercise,
-                            key: const PageStorageKey('exerciseDetailScreen'),
-                          );
-                        },
-                      ),
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: selectedPageIndex == 0
-                        ? const Color(0xFF555555)
-                        : const Color(0xFF333333),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8.0),
-                    ),
-                  ),
-                  child: const Text('About'),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      selectedPageIndex = 1;
-                    });
-                    Navigator.of(context).pushReplacement(
-                      PageRouteBuilder(
-                        opaque: false,
-                        pageBuilder: (BuildContext context, _, __) {
-                          return ExerciseHistory(
-                            widget.exercise,
-                            key: const PageStorageKey('exerciseHistory'),
-                          );
-                        },
-                      ),
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: selectedPageIndex == 1
-                        ? const Color(0xFF555555)
-                        : const Color(0xFF333333),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8.0),
-                    ),
-                  ),
-                  child: const Text('History'),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      selectedPageIndex = 2;
-                    });
-                    Navigator.of(context).pushReplacement(
-                      PageRouteBuilder(
-                        opaque: false,
-                        pageBuilder: (BuildContext context, _, __) {
-                          return ExerciseCharts(
-                            widget.exercise,
-                            key: const PageStorageKey('exerciseCharts'),
-                          );
-                        },
-                      ),
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: selectedPageIndex == 2
-                        ? const Color(0xFF555555)
-                        : const Color(0xFF333333),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8.0),
-                    ),
-                  ),
-                  child: const Text('Charts'),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      selectedPageIndex = 3;
-                    });
-                    Navigator.of(context).pushReplacement(
-                      PageRouteBuilder(
-                        opaque: false,
-                        pageBuilder: (BuildContext context, _, __) {
-                          return ExerciseRecords(
-                            widget.exercise,
-                            key: const PageStorageKey('exerciseRecords'),
-                          );
-                        },
-                      ),
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: selectedPageIndex == 3
-                        ? const Color(0xFF555555)
-                        : const Color(0xFF333333),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8.0),
-                    ),
-                  ),
-                  child: const Text('Records'),
-                ),
-              ],
+            const SizedBox(height: 10.0),
+            NavigationButtonsRow(
+              selectedPageIndex: selectedPageIndex,
+              exercise: widget.exercise,
             ),
+            const SizedBox(height: 10.0),
             Card(
               child: Image.asset(
                 widget.exercise.imagePath,
