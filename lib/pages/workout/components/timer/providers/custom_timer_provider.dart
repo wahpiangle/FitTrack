@@ -33,6 +33,8 @@ class CustomTimerProvider with ChangeNotifier {
       _isDialogOpen = prefs.getBool('isDialogOpen') ?? false;
       _customTimerMinutes = prefs.getInt('customTimerMinutes') ?? 0;
       _customTimerSeconds = prefs.getInt('customTimerSeconds') ?? 0;
+      selectedTimeInterval = prefs.getInt('selectedCustomTimeInterval') ?? 10;
+      notifyListeners();
       if (_customCurrentDuration > 0) {
         startCustomTimer(context);
       }
@@ -48,10 +50,16 @@ class CustomTimerProvider with ChangeNotifier {
     prefs.setInt('customTimerSeconds', _customTimerSeconds);
     prefs.setBool('isDialogShown', _isDialogShown);
     prefs.setBool('isDialogOpen', _isDialogOpen);
+    prefs.setInt('selectedCustomTimeInterval', selectedTimeInterval);
   }
 
   void setSelectedTimeInterval(int interval) {
     selectedTimeInterval = interval;
+  }
+
+  void notifySelectedIntervalChanged() {
+    notifyListeners();
+    _saveCustomTimerState();
   }
 
 

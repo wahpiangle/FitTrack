@@ -116,11 +116,10 @@ class TimerDetailsSettings extends StatelessWidget {
                       ),
                       DropdownButton<int>(
                         value: restTimerProvider.selectedTimeInterval,
-                        onChanged: (value) {
+                        onChanged: (value) async {
                           if (value != null) {
-                            Scaffold.of(context).setState(() {
-                              restTimerProvider.setSelectedTimeInterval(value);
-                            });
+                            restTimerProvider.setSelectedTimeInterval(value);
+                            restTimerProvider.notifySelectedIntervalChanged();
                           }
                         },
                         items: const [
@@ -177,8 +176,11 @@ class TimerDetailsSettings extends StatelessWidget {
                       ),
                       DropdownButton<int>(
                         value: customTimerProvider.selectedTimeInterval,
-                        onChanged: (value) {
-                          customTimerProvider.setSelectedTimeInterval(value!);
+                        onChanged: (value) async {
+                          if (value != null) {
+                            customTimerProvider.setSelectedTimeInterval(value);
+                            customTimerProvider.notifySelectedIntervalChanged();
+                          }
                         },
                         items: const [
                           DropdownMenuItem<int>(

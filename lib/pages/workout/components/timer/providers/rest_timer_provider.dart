@@ -33,6 +33,8 @@ class RestTimerProvider with ChangeNotifier {
       _isDialogOpen = prefs.getBool('isDialogOpen') ?? false;
       _restTimerMinutes = prefs.getInt('restTimerMinutes') ?? 0;
       _restTimerSeconds = prefs.getInt('restTimerSeconds') ?? 0;
+      selectedTimeInterval = prefs.getInt('selectedRestTimeInterval') ?? 10;
+      notifyListeners();
       if (_currentDuration > 0) {
         startRestTimer(context);
       }
@@ -47,11 +49,17 @@ class RestTimerProvider with ChangeNotifier {
     prefs.setBool('isDialogOpen', _isDialogOpen);
     prefs.setInt('restTimerMinutes', _restTimerMinutes);
     prefs.setInt('restTimerSeconds', _restTimerSeconds);
+    prefs.setInt('selectedRestTimeInterval', selectedTimeInterval);
   }
 
 
   void setSelectedTimeInterval(int interval) {
     selectedTimeInterval = interval;
+  }
+
+  void notifySelectedIntervalChanged() {
+    notifyListeners();
+    _saveRestTimerState();
   }
 
 
