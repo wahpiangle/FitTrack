@@ -8,7 +8,8 @@ import 'package:group_project/services/firebase/firebase_customexercise_service.
 import 'package:group_project/services/objectbox_service.dart';
 
 class EditExerciseDialog {
-  static Future<String?> editExercise(BuildContext context, ObjectBox objectBox, Exercise exerciseToUpdate) async {
+  static Future<String?> editExercise(BuildContext context, ObjectBox objectBox,
+      Exercise exerciseToUpdate) async {
     String? exerciseName;
     BodyPart selectedBodyPart = bodyPartData[0];
     Category selectedCategory = categoryData[0];
@@ -20,9 +21,9 @@ class EditExerciseDialog {
         return AlertDialog(
           surfaceTintColor: const Color(0xFF1A1A1A),
           backgroundColor: const Color(0xFF1A1A1A),
-          title: const Text(
-            'Edit',
-            style: TextStyle(
+          title: Text(
+            'Edit ${exerciseToUpdate.name}',
+            style: const TextStyle(
               color: Colors.white,
               fontWeight: FontWeight.bold,
             ),
@@ -33,7 +34,10 @@ class EditExerciseDialog {
               child: Column(
                 children: [
                   Container(
-                    width: MediaQuery.of(context).size.width * 0.8,
+                    width: MediaQuery
+                        .of(context)
+                        .size
+                        .width * 0.8,
                     margin: const EdgeInsets.symmetric(vertical: 8.0),
                     child: TextFormField(
                       onChanged: (value) {
@@ -175,8 +179,10 @@ class EditExerciseDialog {
                               selectedCategory,
                               selectedBodyPart,
                             );
-                            FirebaseExercisesService.updateExercise(exerciseToUpdate);
-                            Navigator.pop(context, exerciseName); // Return the new exercise name
+                            FirebaseExercisesService.updateExercise(
+                                exerciseToUpdate);
+                            Navigator.pop(context,
+                                exerciseName); // Return the new exercise name
                           }
                         }
                       },

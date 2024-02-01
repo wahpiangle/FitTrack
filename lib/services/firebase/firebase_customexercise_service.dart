@@ -37,7 +37,7 @@ class FirebaseExercisesService {
       final uid = user.uid;
       final collectionRef = db.collection('exercises');
 
-      try {
+
         final docSnapshot = await collectionRef.doc(uid).get();
         final exercises = docSnapshot.data()?['addednewExercises'] ?? [];
 
@@ -51,13 +51,7 @@ class FirebaseExercisesService {
 
           // Rewrite the entire array with the updated exercise
           await collectionRef.doc(uid).update({'addednewExercises': exercises});
-        } else {
-          print('Exercise not found for update');
         }
-      } catch (error) {
-        print('Error updating exercise in Firestore: $error');
-        throw error;
-      }
     }
   }
 
