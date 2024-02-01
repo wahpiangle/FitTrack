@@ -7,7 +7,7 @@ import 'package:group_project/pages/exercise/components/edit_exercise.dart';
 class ExerciseDetailScreen extends StatefulWidget {
   final Exercise exercise;
 
-  const ExerciseDetailScreen(this.exercise, {Key? key}) : super(key: key);
+  const ExerciseDetailScreen(this.exercise, {super.key});
 
   @override
   State<ExerciseDetailScreen> createState() => _ExerciseDetailScreenState();
@@ -63,7 +63,7 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
                             'Exercise Name: $exerciseName',
                             style: const TextStyle(fontSize: 18, color: Colors.white),
                           ),
-                          SizedBox(width: 4),
+                          const SizedBox(width: 4),
                           IconButton(
                             onPressed: () async {
                               final newExerciseName = await EditExerciseDialog.editExercise(context, objectBox, widget.exercise);
@@ -71,7 +71,7 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
                                 updateExerciseName(newExerciseName);
                               }
                             },
-                            icon: Icon(Icons.edit),
+                            icon: const Icon(Icons.edit),
                             color: Colors.white,
                           ),
                         ],
