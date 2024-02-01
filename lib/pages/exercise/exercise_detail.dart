@@ -5,7 +5,7 @@ import 'package:group_project/models/exercise.dart';
 class ExerciseDetailScreen extends StatefulWidget {
   final Exercise exercise;
 
-  const ExerciseDetailScreen(this.exercise, {super.key});
+  const ExerciseDetailScreen(this.exercise, {Key? key}) : super(key: key);
 
   @override
   State<ExerciseDetailScreen> createState() => _ExerciseDetailScreenState();
@@ -24,17 +24,41 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
               child: Center(
                 child: Column(
                   children: [
-                    Card(
-                      child: Image.asset(widget.exercise.imagePath),
+                    Stack(
+                      alignment: Alignment.bottomCenter, // Aligns the image at the bottom of the Stack
+                      children: [
+                        SizedBox(
+                          width: double.infinity,
+                          child: Card(
+                            child: Image.asset(
+                              widget.exercise.imagePath,
+                              fit: BoxFit.cover, // Ensure the image covers the whole area
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                     Padding(
                       padding: const EdgeInsets.all(16.0),
-                      child: Text(
-                        'Exercise Name: ${widget.exercise.name}',
-                        style:
-                            const TextStyle(fontSize: 18, color: Colors.white),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Exercise Name: ${widget.exercise.name}',
+                            style: const TextStyle(fontSize: 18, color: Colors.white),
+                          ),
+                          SizedBox(width: 4), // Adjust the width as needed
+                          IconButton(
+                            onPressed: () {
+                              // Handle edit button press
+                            },
+                            icon: Icon(Icons.edit),
+                            color: Colors.white,
+                          ),
+                        ],
                       ),
                     ),
+
                   ],
                 ),
               ),
