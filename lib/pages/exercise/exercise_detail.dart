@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:group_project/constants/themes/exercise_list_theme.dart';
+import 'package:group_project/main.dart';
 import 'package:group_project/models/exercise.dart';
+import 'package:group_project/pages/exercise/components/edit_exercise.dart';
 
 class ExerciseDetailScreen extends StatefulWidget {
   final Exercise exercise;
@@ -12,6 +14,20 @@ class ExerciseDetailScreen extends StatefulWidget {
 }
 
 class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
+  String exerciseName = '';
+
+  @override
+  void initState() {
+    super.initState();
+    exerciseName = widget.exercise.name;
+  }
+
+  void updateExerciseName(String newName) {
+    setState(() {
+      exerciseName = newName;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,14 +41,14 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
                 child: Column(
                   children: [
                     Stack(
-                      alignment: Alignment.bottomCenter, // Aligns the image at the bottom of the Stack
+                      alignment: Alignment.bottomCenter,
                       children: [
                         SizedBox(
                           width: double.infinity,
                           child: Card(
                             child: Image.asset(
                               widget.exercise.imagePath,
-                              fit: BoxFit.cover, // Ensure the image covers the whole area
+                              fit: BoxFit.cover,
                             ),
                           ),
                         ),
@@ -44,13 +60,16 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            'Exercise Name: ${widget.exercise.name}',
+                            'Exercise Name: $exerciseName',
                             style: const TextStyle(fontSize: 18, color: Colors.white),
                           ),
-                          SizedBox(width: 4), // Adjust the width as needed
+                          SizedBox(width: 4),
                           IconButton(
-                            onPressed: () {
-                              // Handle edit button press
+                            onPressed: () async {
+                              final newExerciseName = await EditExerciseDialog.editExercise(context, objectBox, widget.exercise);
+                              if (newExerciseName != null) {
+                                updateExerciseName(newExerciseName);
+                              }
                             },
                             icon: Icon(Icons.edit),
                             color: Colors.white,
@@ -58,7 +77,6 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
                         ],
                       ),
                     ),
-
                   ],
                 ),
               ),

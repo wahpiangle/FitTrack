@@ -43,8 +43,14 @@ class ExerciseService {
   }
 
 //custom exercise
-  void addExerciseToList(
-      Exercise exercise, Category category, BodyPart bodyPart) {
+  void addExerciseToList(Exercise exercise, Category category, BodyPart bodyPart) {
+    exercise.category.target = category;
+    exercise.bodyPart.target = bodyPart;
+    exerciseBox.put(exercise);
+  }
+
+  void updateExerciseInList(Exercise exercise, String newName, Category category, BodyPart bodyPart) {
+    exercise.name = newName;
     exercise.category.target = category;
     exercise.bodyPart.target = bodyPart;
     exerciseBox.put(exercise);
@@ -55,6 +61,10 @@ class ExerciseService {
     exerciseBox.put(exercise);
 
   }
+
+
+
+
 
 //categories & bodyParts
   List<Category> getCategories() {
