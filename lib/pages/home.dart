@@ -16,12 +16,12 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
+    final UploadImageProvider uploadImageProvider =
+        Provider.of<UploadImageProvider>(context);
     return Scaffold(
-        body: Container(),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            context.read<UploadImageProvider>().test();
-          },
-        ));
+      body: Column(
+        children: [],
+      ),
+    );
   }
 }
