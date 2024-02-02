@@ -1,3 +1,5 @@
+import 'package:group_project/constants/data/bodypart_data.dart';
+import 'package:group_project/constants/data/category_data.dart';
 import 'package:group_project/constants/data/exercises_data.dart';
 import 'package:group_project/models/body_part.dart';
 import 'package:group_project/models/category.dart';
@@ -68,12 +70,20 @@ class ExerciseService {
       final List<dynamic> addednewExercises = await FirebaseExercisesService.getAllCustomExercises();
 
       for (var exerciseData in addednewExercises) {
-
         final newCustomExercise = Exercise(
           name: exerciseData['name'],
-          categoryId: exerciseData['categoryId'],
-          bodyPartId: exerciseData['bodyPartId'],
         );
+
+        // Set bodyPart.target
+        newCustomExercise.bodyPart.target = bodyPartData.firstWhere((element) {
+          return element.name == exerciseData['bodyPartId'];
+        }, orElse: () => BodyPart(name: '')); // Provide a new instance of Category if not found
+
+        // Set category.target
+        newCustomExercise.category.target = categoryData.firstWhere((element) {
+          return element.name == exerciseData['categoryId'];
+        }, orElse: () => Category(name: '')); // Provide a new instance of Category if not found
+
 
         exerciseBox.put(newCustomExercise);
       }

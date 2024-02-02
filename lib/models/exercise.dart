@@ -23,6 +23,6 @@ class Exercise {
     this.imagePath = '',
     this.halfImagePath = '',
     this.isSelected = false,
-    this.isVisible = true, required categoryId, required bodyPartId,
+    this.isVisible = true,
   });
 }
