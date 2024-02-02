@@ -8,6 +8,8 @@ class ExerciseSet {
   int? weight;
   int? reps;
   bool isCompleted = false;
+  int? recentWeight;
+  int? recentSet;
 
   final exerciseSetInfo = ToOne<ExercisesSetsInfo>();
 
