@@ -113,6 +113,7 @@ class _SetTileState extends State<SetTile> {
                   ),
                   onChanged: (value) => {
                     widget.set.weight = int.tryParse(value),
+                    widget.set.recentWeight = widget.set.weight,
                     objectBox.exerciseService.updateExerciseSet(widget.set),
                   },
                 ),
@@ -148,6 +149,8 @@ class _SetTileState extends State<SetTile> {
                   ),
                   onChanged: (value) => {
                     widget.set.reps = int.tryParse(value),
+                    widget.set.recentReps = widget.set.reps,
+
                     objectBox.exerciseService.updateExerciseSet(widget.set),
                   },
                 ),
