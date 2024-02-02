@@ -30,6 +30,8 @@ class SetTile extends StatefulWidget {
 class _SetTileState extends State<SetTile> {
   @override
   Widget build(BuildContext context) {
+    int? recentWeight = widget.set.recentWeight;
+    int? recentReps = widget.set.recentReps;
     return Dismissible(
       key: Key(widget.set.id.toString()),
       direction: DismissDirection.endToStart,
