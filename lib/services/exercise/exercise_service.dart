@@ -4,6 +4,7 @@ import 'package:group_project/models/category.dart';
 import 'package:group_project/models/exercise.dart';
 import 'package:group_project/models/exercise_set.dart';
 import 'package:group_project/models/exercises_sets_info.dart';
+import 'package:group_project/services/firebase/firebase_customexercise_service.dart';
 import 'package:objectbox/objectbox.dart';
 
 class ExerciseService {
@@ -62,7 +63,27 @@ class ExerciseService {
 
   }
 
+  Future<void> populateDataFromFirebase() async {
+    try {
+      final List<dynamic> addednewExercises = await FirebaseExercisesService.getAllCustomExercises();
 
+      for (var exerciseData in addednewExercises) {
+
+        final newCustomExercise = Exercise(
+          name: exerciseData['name'],
+          categoryId: exerciseData['categoryId'],
+          bodyPartId: exerciseData['bodyPartId'],
+        );
+
+        exerciseBox.put(newCustomExercise);
+      }
+
+      print('Data population from Firebase successful.');
+    } catch (error) {
+      print('Error populating data from Firebase: $error');
+      // Handle the error further based on your application's requirements.
+    }
+  }
 
 
 

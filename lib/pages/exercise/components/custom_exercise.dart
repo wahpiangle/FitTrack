@@ -170,7 +170,7 @@ class CustomExerciseDialog {
                             );
                           } else {
                             Exercise newExercise = Exercise(
-                              name: customExerciseName ?? '',
+                              name: customExerciseName ?? '', categoryId: selectedCategory, bodyPartId: selectedBodyPart,
                             );
 
                             objectBox.exerciseService.addExerciseToList(

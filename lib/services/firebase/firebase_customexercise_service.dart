@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:group_project/models/exercise.dart';
 
 class FirebaseExercisesService {
@@ -21,6 +22,7 @@ class FirebaseExercisesService {
                 'name': exercise.name,
                 'categoryId': exercise.category.targetId,
                 'bodyPartId': exercise.bodyPart.targetId,
+
               },
             ],
           ),
