@@ -10,7 +10,8 @@ class NavigationButtonsRow extends StatelessWidget {
   final int selectedPageIndex;
   final Exercise exercise;
 
-  NavigationButtonsRow({
+  const NavigationButtonsRow({
+    super.key,
     required this.selectedPageIndex,
     required this.exercise,
   });
@@ -27,7 +28,7 @@ class NavigationButtonsRow extends StatelessWidget {
             buttonText: 'About',
             destination: ExerciseDetailScreen(
               exercise,
-              key: PageStorageKey('exerciseDetailScreen'),
+              key: const PageStorageKey('exerciseDetailScreen'),
             ),
           ),
           NavigationButton(
@@ -36,7 +37,7 @@ class NavigationButtonsRow extends StatelessWidget {
             buttonText: 'History',
             destination: ExerciseHistory(
               exercise,
-              key: PageStorageKey('exerciseHistory'),
+              key: const PageStorageKey('exerciseHistory'),
             ),
           ),
           NavigationButton(
@@ -45,7 +46,7 @@ class NavigationButtonsRow extends StatelessWidget {
             buttonText: 'Charts',
             destination: ExerciseCharts(
               exercise,
-              key: PageStorageKey('exerciseCharts'),
+              key: const PageStorageKey('exerciseCharts'),
             ),
           ),
           NavigationButton(
@@ -54,7 +55,7 @@ class NavigationButtonsRow extends StatelessWidget {
             buttonText: 'Records',
             destination: ExerciseRecords(
               exercise,
-              key: PageStorageKey('exerciseRecords'),
+              key: const PageStorageKey('exerciseRecords'),
             ),
           ),
         ],
@@ -69,7 +70,8 @@ class NavigationButton extends StatelessWidget {
   final String buttonText;
   final Widget destination;
 
-  NavigationButton({
+  const NavigationButton({
+    super.key,
     required this.pageIndex,
     required this.selectedPageIndex,
     required this.buttonText,
@@ -101,7 +103,7 @@ class NavigationButton extends StatelessWidget {
       ),
       child: Text(
         buttonText,
-        style: TextStyle(
+        style: const TextStyle(
           color: AppColours.secondary,
         ),
       ),

@@ -65,7 +65,6 @@ class _ExerciseHistoryState extends State<ExerciseHistory> {
       ),
       body: Container(
         constraints: const BoxConstraints.expand(),
-        // padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 30.0),
         child: StreamBuilder<List<WorkoutSession>>(
           stream: objectBox.workoutSessionService.watchWorkoutSession(),
           builder: (context, snapshot) {
@@ -81,56 +80,58 @@ class _ExerciseHistoryState extends State<ExerciseHistory> {
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 30.0),
                     child: snapshot.data!
-                        .where((workoutSession) =>
-                        workoutSession.exercisesSetsInfo.any((info) =>
-                        info.exercise.target?.name == widget.exercise.name))
-                        .isEmpty
+                            .where((workoutSession) =>
+                                workoutSession.exercisesSetsInfo.any((info) =>
+                                    info.exercise.target?.name ==
+                                    widget.exercise.name))
+                            .isEmpty
                         ? const Column(
-                      children: [
-                        SizedBox(height: 200.0),
-                        Text(
-                          'Exercise History',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        SizedBox(height: 10),
-                        Center(
-                          child: Text(
-                            'Previous performance of this exercise will display here - check back later!',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 15,
-                            ),
-                          ),
-                        ),
-                      ],
-                    )
+                            children: [
+                              SizedBox(height: 200.0),
+                              Text(
+                                'Exercise History',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              SizedBox(height: 10),
+                              Center(
+                                child: Text(
+                                  'Previous performance of this exercise will display here - check back later!',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 15,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          )
                         : ListView(
-                      controller: _scrollController,
-                      children: snapshot.data!
-                          .where((workoutSession) =>
-                          workoutSession.exercisesSetsInfo.any((info) =>
-                          info.exercise.target?.name ==
-                              widget.exercise.name))
-                          .map((workoutSession) {
-                        return AutoScrollTag(
-                          key: ValueKey(workoutSession.id),
-                          controller: _scrollController,
-                          index: snapshot.data!.indexWhere(
-                                  (element) => element.id == workoutSession.id),
-                          child: IgnorePointer(
-                            ignoring: true,
-                            child: CompleteWorkoutCard(
-                              key: Key(workoutSession.id.toString()),
-                              workoutSession: workoutSession,
-                            ),
+                            controller: _scrollController,
+                            children: snapshot.data!
+                                .where((workoutSession) => workoutSession
+                                    .exercisesSetsInfo
+                                    .any((info) =>
+                                        info.exercise.target?.name ==
+                                        widget.exercise.name))
+                                .map((workoutSession) {
+                              return AutoScrollTag(
+                                key: ValueKey(workoutSession.id),
+                                controller: _scrollController,
+                                index: snapshot.data!.indexWhere((element) =>
+                                    element.id == workoutSession.id),
+                                child: IgnorePointer(
+                                  ignoring: true,
+                                  child: CompleteWorkoutCard(
+                                    key: Key(workoutSession.id.toString()),
+                                    workoutSession: workoutSession,
+                                  ),
+                                ),
+                              );
+                            }).toList(),
                           ),
-                        );
-                      }).toList(),
-                    ),
                   ),
                 ),
                 const SizedBox(height: 10.0),
