@@ -77,9 +77,11 @@ class _SetTileState extends State<SetTile> {
               flex: 1,
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                child: const Text(
-                  'Previous weight & reps',
-                  style: TextStyle(
+                child: Text(
+                  widget.set.recentWeight != null
+                      ? 'Previous weight: ${widget.set.recentWeight}, reps: ${widget.set.recentReps}'
+                      : 'Previous weight & reps',
+                  style: const TextStyle(
                     fontSize: 12,
                     color: Colors.grey,
                   ),
