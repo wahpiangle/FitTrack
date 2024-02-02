@@ -74,6 +74,19 @@ class _SetTileState extends State<SetTile> {
             Expanded(
               flex: 1,
               child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                child: const Text(
+                  'Previous weight & reps',
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Colors.grey,
+                  ),
+                ),
+              ),
+            ),
+            Expanded(
+              flex: 1,
+              child: Container(
                 decoration: BoxDecoration(
                   color: AppColours.primaryBright,
                   borderRadius: BorderRadius.circular(5),

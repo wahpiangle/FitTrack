@@ -35,7 +35,7 @@ class CustomExerciseDialog {
                   Container(
                     width: MediaQuery.of(context).size.width * 0.8,
                     margin: const EdgeInsets.symmetric(vertical: 8.0),
-                    child: TextFormField(
+                    child:TextFormField(
                       onChanged: (value) {
                         customExerciseName = value;
                       },
