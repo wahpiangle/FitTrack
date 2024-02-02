@@ -80,7 +80,7 @@ class _SetTileState extends State<SetTile> {
                 child: Text(
                   widget.set.recentWeight != null
                       ? 'Previous weight: ${widget.set.recentWeight}, reps: ${widget.set.recentReps}'
-                      : 'Previous weight & reps',
+                      : '-',
                   style: const TextStyle(
                     fontSize: 12,
                     color: Colors.grey,
