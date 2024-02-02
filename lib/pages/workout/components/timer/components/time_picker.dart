@@ -40,6 +40,7 @@ class TimePicker extends StatelessWidget {
           if (restTimerProvider != null) {
             restTimerProvider!.setRestTimerMinutes(minutes);
             restTimerProvider!.setRestTimerSeconds(seconds);
+            restTimerProvider!.updateRestTimerDuration(minutes, seconds);
           } else {
             customTimerProvider!.setCustomTimerMinutes(minutes);
             customTimerProvider!.setCustomTimerSeconds(seconds);

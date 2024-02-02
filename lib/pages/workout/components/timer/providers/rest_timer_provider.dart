@@ -177,10 +177,15 @@ class RestTimerProvider with ChangeNotifier {
     if (_currentDuration < 0) {
       _currentDuration = 1;
     }
-    _restTimerDuration =
-        _currentDuration; // update the rest timer duration after pressing 10s buttons
+    _restTimerDuration = _currentDuration; // update the rest timer duration after pressing 10s buttons
     notifyListeners();
   }
+
+  void updateRestTimerDuration(int minutes, int seconds) {
+    _restTimerDuration = minutes * 60 + seconds;
+    notifyListeners();
+    _saveRestTimerState();
+  }//update rest duration after user choose it in settings
 
   static String formatDuration(int seconds) {
     final minutes = ((seconds % 3600) ~/ 60).toString().padLeft(2, '0');

@@ -131,6 +131,7 @@ class _RestTimerDialogState extends State<RestTimerDialog>
                                 .customCurrentTimerDuration /
                                 widget.customTimerProvider!
                                     .customTimerDuration,
+
                             valueColor: const AlwaysStoppedAnimation<Color>(
                               Color(0xFFB9D499),
                             ),
@@ -168,7 +169,7 @@ class _RestTimerDialogState extends State<RestTimerDialog>
                               foregroundColor: Colors.black,
                               backgroundColor: const Color(0xFFE1F0CF),
                             ),
-                            child: Text('-${widget.restTimerProvider != null ? widget.restTimerProvider!.selectedTimeInterval : widget.customTimerProvider!.selectedTimeInterval}s'),
+                            child: Text('- ${widget.restTimerProvider != null ? widget.restTimerProvider!.selectedTimeInterval : widget.customTimerProvider!.selectedTimeInterval}s'),
                           ),
                           ElevatedButton(
                             onPressed: () {
@@ -194,7 +195,7 @@ class _RestTimerDialogState extends State<RestTimerDialog>
                               foregroundColor: Colors.black,
                               backgroundColor: const Color(0xFFE1F0CF),
                             ),
-                            child: Text('-${widget.restTimerProvider != null ? widget.restTimerProvider!.selectedTimeInterval : widget.customTimerProvider!.selectedTimeInterval}s'),
+                            child: Text('+ ${widget.restTimerProvider != null ? widget.restTimerProvider!.selectedTimeInterval : widget.customTimerProvider!.selectedTimeInterval}s'),
                           ),
                         ],
                       ),
