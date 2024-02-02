@@ -6,11 +6,13 @@ import 'package:group_project/models/current_workout_session.dart';
 import 'package:group_project/models/exercise.dart';
 import 'package:group_project/models/exercise_set.dart';
 import 'package:group_project/models/exercises_sets_info.dart';
+import 'package:group_project/models/post.dart';
 import 'package:group_project/models/workout_session.dart';
 import 'package:group_project/models/workout_template.dart';
 import 'package:group_project/objectbox.g.dart';
 import 'package:group_project/services/currentWorkoutSession/currentWorkoutSession_service.dart';
 import 'package:group_project/services/exercise/exercise_service.dart';
+import 'package:group_project/services/post/post_service.dart';
 import 'package:group_project/services/workoutSession/workout_session_service.dart';
 import 'package:group_project/services/workoutTemplate/workout_template_service.dart';
 import 'package:path/path.dart' as p;
@@ -28,6 +30,7 @@ class ObjectBox {
   late final Box<ExercisesSetsInfo> _exercisesSetsInfoBox;
   late final Box<WorkoutSession> _workoutSessionBox;
   late final Box<WorkoutTemplate> _workoutTemplateBox;
+  late final Box<Post> _postBox;
 
   ObjectBox._create(this.store) {
     _bodyPartBox = Box<BodyPart>(store);
@@ -38,6 +41,7 @@ class ObjectBox {
     _exercisesSetsInfoBox = Box<ExercisesSetsInfo>(store);
     _workoutSessionBox = Box<WorkoutSession>(store);
     _workoutTemplateBox = Box<WorkoutTemplate>(store);
+    _postBox = Box<Post>(store);
 
     //initialization of data into the device
     if (_bodyPartBox.isEmpty()) {
@@ -92,6 +96,10 @@ class ObjectBox {
         bodyPartBox: _bodyPartBox,
         exerciseSetBox: _exerciseSetBox,
         exercisesSetsInfoBox: _exercisesSetsInfoBox,
+      );
+
+  PostService get postService => PostService(
+        postBox: _postBox,
       );
 
 // check history

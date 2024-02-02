@@ -1,9 +1,9 @@
 import 'dart:io';
 
-import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:group_project/constants/page_enums.dart';
+import 'package:group_project/main.dart';
 import 'package:group_project/models/post.dart';
 import 'package:group_project/models/workout_session.dart';
 import 'package:group_project/pages/complete_workout/capture_image/upload_image_provider.dart';
@@ -38,6 +38,37 @@ class _DisplayImageScreenState extends State<DisplayImageScreen>
   final TransformationController _transformationController =
       TransformationController();
   Matrix4 initialControllerValue = Matrix4.identity();
+
+  void submitImage() async {
+    if (!mounted) return;
+    Navigator.pop(context);
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) {
+          return const AppLayout(
+            currentIndex: Pages.HomePage,
+          );
+        },
+      ),
+    );
+    context.read<UploadImageProvider>().toggleIsUploading(true);
+    Post newPost = Post(
+      caption: '',
+      firstImageUrl: widget.imagePath,
+      secondImageUrl: widget.imagePath2,
+      workoutSessionId: widget.workoutSession.id,
+    );
+    objectBox.postService.addPost(
+      newPost,
+    );
+    bool successStatus = await FirebasePostsService.createPost(
+      newPost,
+    );
+    if (!mounted) return;
+    context.read<UploadImageProvider>().toggleUploadError(!successStatus);
+    context.read<UploadImageProvider>().toggleIsUploading(false);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -133,36 +164,8 @@ class _DisplayImageScreenState extends State<DisplayImageScreen>
           height: 20,
         ),
         TextButton.icon(
-          onPressed: () async {
-            if (!mounted) return;
-            Navigator.pop(context);
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                builder: (context) {
-                  return const AppLayout(
-                    currentIndex: Pages.HomePage,
-                  );
-                },
-              ),
-            );
-            context.read<UploadImageProvider>().toggleIsUploading(true);
-            context.read<UploadImageProvider>().setPost(Post(
-                  caption: '',
-                  firstImageUrl: widget.imagePath,
-                  secondImageUrl: widget.imagePath2,
-                  workoutSessionId: widget.workoutSession.id,
-                ));
-            bool successStatus = await FirebasePostsService.createPost(
-              XFile(widget.imagePath),
-              XFile(widget.imagePath2),
-              widget.workoutSession,
-            );
-            if (!mounted) return;
-            context
-                .read<UploadImageProvider>()
-                .toggleUploadError(!successStatus);
-            context.read<UploadImageProvider>().toggleIsUploading(false);
+          onPressed: () {
+            submitImage();
           },
           icon: const Icon(
             Icons.send,
