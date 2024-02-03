@@ -1,7 +1,9 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:group_project/main.dart';
+import 'package:group_project/pages/complete_workout/capture_image/upload_image_provider.dart';
 import 'package:group_project/pages/home/components/display_image_stack.dart';
+import 'package:provider/provider.dart';
 
 class ImageCarousel extends StatefulWidget {
   const ImageCarousel({
@@ -25,13 +27,16 @@ class _ImageCarouselState extends State<ImageCarousel> {
 
   @override
   Widget build(BuildContext context) {
+    final UploadImageProvider uploadImageProvider =
+        Provider.of<UploadImageProvider>(context);
+
     final List<Widget> imageSliders = imageList.map((entry) {
       final firstImage = entry['firstImageUrl']!;
       final secondImage = entry['secondImageUrl']!;
       final index = imageList.indexOf(entry);
 
       return ClipRRect(
-        borderRadius: const BorderRadius.all(Radius.circular(5.0)),
+        borderRadius: const BorderRadius.all(Radius.circular(8.0)),
         child: index == _current
             ? DisplayImageStack(
                 firstImageUrl: firstImage,
@@ -56,7 +61,9 @@ class _ImageCarouselState extends State<ImageCarousel> {
         enlargeCenterPage: true,
         enableInfiniteScroll: false,
         enlargeFactor: 0.3,
-        viewportFraction: 0.4,
+        scrollPhysics: uploadImageProvider.uploadError
+            ? const NeverScrollableScrollPhysics()
+            : null,
         onPageChanged: (index, reason) {
           setState(() {
             _current = index;

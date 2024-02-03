@@ -16,4 +16,9 @@ class UploadImageProvider with ChangeNotifier {
 
   bool get uploading => _uploading;
   bool get uploadError => _uploadError;
+
+  void test() {
+    print(uploadError);
+    print(uploading);
+  }
 }
