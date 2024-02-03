@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:group_project/pages/auth_wrapper.dart';
 import 'package:group_project/pages/history/complete_workout/congratulation_screen.dart';
 import 'package:group_project/pages/auth/email_password_login.dart';
@@ -9,6 +8,7 @@ import 'package:group_project/pages/auth/settings_login.dart';
 import 'package:group_project/pages/auth/settings_signup.dart';
 import 'package:group_project/pages/components/app_layout.dart';
 import 'package:group_project/pages/history/history_screen.dart';
+import 'package:group_project/pages/workout/components/timer/components/phone_notification.dart';
 import 'package:group_project/pages/workout/components/timer/providers/custom_timer_provider.dart';
 import 'package:group_project/pages/workout/components/timer/providers/rest_timer_provider.dart';
 import 'package:group_project/services/firebase/auth_service.dart';
@@ -20,6 +20,7 @@ import 'package:group_project/services/user_state.dart';
 import 'package:group_project/pages/workout/components/timer/providers/timer_provider.dart';
 
 late ObjectBox objectBox;
+late PhoneNotification notificationManager;
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 Future<void> main() async {
@@ -29,8 +30,8 @@ Future<void> main() async {
   );
   objectBox = await ObjectBox.create();
 
-  final restTimerProvider = RestTimerProvider();
-  await restTimerProvider.initializeNotifications();
+  notificationManager = PhoneNotification();
+  await notificationManager.initializeNotifications();
 
   runApp(const MyApp());
 }

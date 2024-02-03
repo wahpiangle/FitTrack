@@ -155,38 +155,7 @@ class RestTimerProvider with ChangeNotifier {
     _saveRestTimerState(); //so that when set is unchecked after hot restart, it will also being updated
   }
 
-  Future<void> initializeNotifications() async {
-    const AndroidInitializationSettings initializationSettingsAndroid =
-    AndroidInitializationSettings('@mipmap/ic_launcher');
-    final InitializationSettings initializationSettings =
-    InitializationSettings(android: initializationSettingsAndroid);
-    await flutterLocalNotificationsPlugin.initialize(
-      initializationSettings,
-    );
-  }
-
-  Future<void> showNotification() async {
-    const AndroidNotificationDetails androidPlatformChannelSpecifics =
-    AndroidNotificationDetails(
-      'your_channel_id',
-      'your_channel_name',
-      importance: Importance.max,
-      priority: Priority.high,
-      ticker: 'ticker',
-    );
-    const NotificationDetails platformChannelSpecifics =
-    NotificationDetails(android: androidPlatformChannelSpecifics);
-
-    await flutterLocalNotificationsPlugin.show(
-      0,
-      'Rest Time Ended',
-      'Your rest time has ended!',
-      platformChannelSpecifics,
-    );
-  }
-
-  Future<void> showRestTimeEndedNotification() async {
-    await showNotification();//local phone notification
+  void showRestTimeEndedNotification(){
     navigatorKey.currentState?.push(
       MaterialPageRoute<void>(
         builder: (BuildContext context) {
@@ -194,6 +163,7 @@ class RestTimerProvider with ChangeNotifier {
         },
       ),
     );
+    notificationManager.showNotification('Rest Time Completed', 'Your rest time has ended! Get back to work! ⏰ 💪');
   }
 
   void resetRestTimer(int newDuration, BuildContext context) {
