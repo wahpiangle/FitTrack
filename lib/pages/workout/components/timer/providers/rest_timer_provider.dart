@@ -1,10 +1,14 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:group_project/pages/workout/components/timer/components/rest_ended_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:group_project/main.dart';
 
 class RestTimerProvider with ChangeNotifier {
+  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+  FlutterLocalNotificationsPlugin();
+
   bool _isRestTimerEnabled = true;
   int _restTimerDuration = 120;
   int _currentDuration = 0;
@@ -151,7 +155,38 @@ class RestTimerProvider with ChangeNotifier {
     _saveRestTimerState(); //so that when set is unchecked after hot restart, it will also being updated
   }
 
-  void showRestTimeEndedNotification() {
+  Future<void> initializeNotifications() async {
+    const AndroidInitializationSettings initializationSettingsAndroid =
+    AndroidInitializationSettings('@mipmap/ic_launcher');
+    final InitializationSettings initializationSettings =
+    InitializationSettings(android: initializationSettingsAndroid);
+    await flutterLocalNotificationsPlugin.initialize(
+      initializationSettings,
+    );
+  }
+
+  Future<void> showNotification() async {
+    const AndroidNotificationDetails androidPlatformChannelSpecifics =
+    AndroidNotificationDetails(
+      'your_channel_id',
+      'your_channel_name',
+      importance: Importance.max,
+      priority: Priority.high,
+      ticker: 'ticker',
+    );
+    const NotificationDetails platformChannelSpecifics =
+    NotificationDetails(android: androidPlatformChannelSpecifics);
+
+    await flutterLocalNotificationsPlugin.show(
+      0,
+      'Rest Time Ended',
+      'Your rest time has ended!',
+      platformChannelSpecifics,
+    );
+  }
+
+  Future<void> showRestTimeEndedNotification() async {
+    await showNotification();//local phone notification
     navigatorKey.currentState?.push(
       MaterialPageRoute<void>(
         builder: (BuildContext context) {

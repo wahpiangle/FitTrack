@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:group_project/pages/auth_wrapper.dart';
 import 'package:group_project/pages/history/complete_workout/congratulation_screen.dart';
 import 'package:group_project/pages/auth/email_password_login.dart';
@@ -27,13 +28,16 @@ Future<void> main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   objectBox = await ObjectBox.create();
+
+  final restTimerProvider = RestTimerProvider();
+  await restTimerProvider.initializeNotifications();
+
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
