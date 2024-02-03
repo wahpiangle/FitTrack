@@ -1,5 +1,3 @@
-import 'package:group_project/constants/data/bodypart_data.dart';
-import 'package:group_project/constants/data/category_data.dart';
 import 'package:group_project/constants/data/exercises_data.dart';
 import 'package:group_project/models/body_part.dart';
 import 'package:group_project/models/category.dart';
@@ -66,35 +64,44 @@ class ExerciseService {
   }
 
   Future<void> populateDataFromFirebase() async {
-    try {
-      final List<dynamic> addednewExercises = await FirebaseExercisesService.getAllCustomExercises();
+
+      final List<dynamic> addednewExercises =
+      await FirebaseExercisesService.getAllCustomExercises();
 
       for (var exerciseData in addednewExercises) {
         final newCustomExercise = Exercise(
           name: exerciseData['name'],
         );
 
-        // Set bodyPart.target
-        newCustomExercise.bodyPart.target = bodyPartData.firstWhere((element) {
-          return element.name == exerciseData['bodyPartId'];
-        }, orElse: () => BodyPart(name: '')); // Provide a new instance of Category if not found
+        final categoryId = exerciseData['categoryId'];
+        final bodyPartId = exerciseData['bodyPartId'];
 
-        // Set category.target
-        newCustomExercise.category.target = categoryData.firstWhere((element) {
-          return element.name == exerciseData['categoryId'];
-        }, orElse: () => Category(name: '')); // Provide a new instance of Category if not found
+        if (categoryId != null && bodyPartId != null) {
+          final category = await getCategoryById(categoryId);
+          final bodyPart = await getBodyPartById(bodyPartId);
 
 
-        exerciseBox.put(newCustomExercise);
-      }
+          // Associate Category and BodyPart with the exercise
+          newCustomExercise.category.target = category;
+          newCustomExercise.bodyPart.target = bodyPart;
 
-      print('Data population from Firebase successful.');
-    } catch (error) {
-      print('Error populating data from Firebase: $error');
-      // Handle the error further based on your application's requirements.
+          exerciseBox.put(newCustomExercise);
+        }
+
     }
   }
 
+
+  Future<Category?> getCategoryById(int id) async {
+      final category = categoryBox.get(id);
+      return category;
+  }
+
+  Future<BodyPart?> getBodyPartById(int id) async {
+      final bodyPart = bodyPartBox.get(id);
+      return bodyPart;
+
+  }
 
 
 //categories & bodyParts

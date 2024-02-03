@@ -60,7 +60,7 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            'Exercise Name: $exerciseName',
+                            '$exerciseName',
                             style: const TextStyle(fontSize: 18, color: Colors.white),
                           ),
                           const SizedBox(width: 4),
