@@ -1,24 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:group_project/constants/upload_enums.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class UploadImageProvider with ChangeNotifier {
-  bool _uploadError = false;
-  bool _uploading = false;
-
-  void toggleIsUploading(bool value) {
-    _uploading = value;
-    notifyListeners();
+  Future<void> setUploadError(bool value) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setBool(UploadEnums.isUploadingError, value);
   }
 
-  void toggleUploadError(bool value) {
-    _uploadError = value;
-    notifyListeners();
+  Future<bool> getUploadError() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getBool(UploadEnums.isUploadingError) ?? false;
   }
 
-  bool get uploading => _uploading;
-  bool get uploadError => _uploadError;
-
-  void test() {
-    print(uploadError);
-    print(uploading);
-  }
+  void test() {}
 }

@@ -37,19 +37,18 @@ class FirebasePostsService {
       } else {
         throw Exception('Second image upload failed');
       }
+    } else {
+      throw Exception('Only 1 image can be uploaded at a time');
     }
-    throw Exception('Image upload failed');
   }
 
   static Future<bool> createPost(Post post) async {
     final User user = auth.currentUser!;
     try {
-      final String firstImageUrl = await uploadImage(XFile(post.firstImageUrl),
-          XFile(post.secondImageUrl), post.workoutSessionId);
+      final String firstImageUrl = await uploadImage(
+          XFile(post.firstImageUrl), null, post.workoutSessionId);
       final String secondImageUrl = await uploadImage(
-          XFile(post.secondImageUrl),
-          XFile(post.firstImageUrl),
-          post.workoutSessionId);
+          XFile(post.secondImageUrl), null, post.workoutSessionId);
       await postsCollectionRef.doc(user.uid).collection('userPosts').add({
         'caption': '',
         'firstImageUrl': firstImageUrl,

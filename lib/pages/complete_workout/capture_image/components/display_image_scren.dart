@@ -9,7 +9,6 @@ import 'package:group_project/models/workout_session.dart';
 import 'package:group_project/pages/complete_workout/capture_image/upload_image_provider.dart';
 import 'package:group_project/pages/layout/app_layout.dart';
 import 'package:group_project/services/firebase/firebase_posts_service.dart';
-import 'package:provider/provider.dart';
 
 class DisplayImageScreen extends StatefulWidget {
   final Function toggleRetake;
@@ -38,6 +37,7 @@ class _DisplayImageScreenState extends State<DisplayImageScreen>
   final TransformationController _transformationController =
       TransformationController();
   Matrix4 initialControllerValue = Matrix4.identity();
+  final UploadImageProvider uploadImageProvider = UploadImageProvider();
 
   void submitImage() async {
     if (!mounted) return;
@@ -52,7 +52,6 @@ class _DisplayImageScreenState extends State<DisplayImageScreen>
         },
       ),
     );
-    context.read<UploadImageProvider>().toggleIsUploading(true);
     Post newPost = Post(
       caption: '',
       firstImageUrl: widget.imagePath,
@@ -65,9 +64,8 @@ class _DisplayImageScreenState extends State<DisplayImageScreen>
     bool successStatus = await FirebasePostsService.createPost(
       newPost,
     );
+    uploadImageProvider.setUploadError(!successStatus);
     if (!mounted) return;
-    context.read<UploadImageProvider>().toggleUploadError(!successStatus);
-    context.read<UploadImageProvider>().toggleIsUploading(false);
   }
 
   @override

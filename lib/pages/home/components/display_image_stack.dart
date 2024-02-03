@@ -1,8 +1,6 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:group_project/pages/complete_workout/capture_image/upload_image_provider.dart';
-import 'package:provider/provider.dart';
+import 'package:group_project/pages/home/components/front_back_image.dart';
 
 class DisplayImageStack extends StatelessWidget {
   final String firstImageUrl;
@@ -15,69 +13,54 @@ class DisplayImageStack extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final UploadImageProvider uploadImageProvider =
-        Provider.of<UploadImageProvider>(context);
-    return GestureDetector(
-      onTap: () {
-        print('ola');
+    return FutureBuilder(
+      future: UploadImageProvider().getUploadError(),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          final bool uploadError = snapshot.data!;
+          return GestureDetector(
+            onTap: () {
+              print('ola');
+            },
+            child: Stack(
+              children: [
+                FrontBackImage(
+                    firstImageUrl: firstImageUrl,
+                    secondImageUrl: secondImageUrl,
+                    uploadError: uploadError),
+                uploadError
+                    ? const Positioned.fill(
+                        child: Align(
+                          alignment: Alignment.center,
+                          child: Icon(
+                            Icons.replay_outlined,
+                            color: Colors.red,
+                            size: 40,
+                          ),
+                        ),
+                      )
+                    : const SizedBox.shrink(),
+              ],
+            ),
+          );
+        } else {
+          return Stack(
+            children: [
+              FrontBackImage(
+                firstImageUrl: firstImageUrl,
+                secondImageUrl: secondImageUrl,
+                isLoading: true,
+              ),
+              const Positioned.fill(
+                child: Align(
+                  alignment: Alignment.center,
+                  child: CircularProgressIndicator(),
+                ),
+              )
+            ],
+          );
+        }
       },
-      child: Stack(
-        children: [
-          ColorFiltered(
-            colorFilter: uploadImageProvider.uploadError
-                ? ColorFilter.mode(
-                    Colors.black.withOpacity(0.5),
-                    BlendMode.darken,
-                  )
-                : const ColorFilter.mode(
-                    Colors.transparent,
-                    BlendMode.srcOver,
-                  ),
-            child: Image.file(
-              File(firstImageUrl),
-              fit: BoxFit.fill,
-            ),
-          ),
-          Container(
-            margin: const EdgeInsets.only(
-              left: 5,
-              top: 5,
-            ),
-            decoration: BoxDecoration(
-              border: Border.all(
-                color: Colors.black,
-              ),
-              borderRadius: BorderRadius.circular(5),
-            ),
-            child: ColorFiltered(
-              colorFilter: uploadImageProvider.uploadError
-                  ? ColorFilter.mode(
-                      Colors.black.withOpacity(0.5),
-                      BlendMode.darken,
-                    )
-                  : const ColorFilter.mode(
-                      Colors.transparent,
-                      BlendMode.srcOver,
-                    ),
-              child: Image.file(
-                File(secondImageUrl),
-                fit: BoxFit.fill,
-                width: 50,
-              ),
-            ),
-          ),
-          const Positioned.fill(
-            child: Align(
-              alignment: Alignment.center,
-              child: Icon(
-                Icons.replay_outlined,
-                color: Colors.red,
-                size: 40,
-              ),
-            ),
-          )
-        ],
-      ),
     );
   }
 }

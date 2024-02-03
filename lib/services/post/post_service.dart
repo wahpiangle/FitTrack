@@ -18,5 +18,6 @@ class PostService {
 
   void test() {
     print(postBox.getAll().length);
+    print(postBox.removeAll());
   }
 }
