@@ -5,11 +5,14 @@ import 'package:group_project/constants/themes/app_colours.dart';
 import 'package:group_project/main.dart';
 import 'package:group_project/models/workout_session.dart';
 import 'package:group_project/pages/history/complete_workout/complete_workout_card.dart';
+import '../history/components/workout_card.dart';
 import 'exercise_navigation_buttons.dart';
+import 'exercise_workoutcard.dart';
 
 class ExerciseHistory extends StatefulWidget {
   final Exercise exercise;
   const ExerciseHistory(this.exercise, {super.key});
+
 
   @override
   State<ExerciseHistory> createState() => _ExerciseHistoryState();
@@ -124,13 +127,17 @@ class _ExerciseHistoryState extends State<ExerciseHistory> {
                                     element.id == workoutSession.id),
                                 child: IgnorePointer(
                                   ignoring: true,
-                                  child: CompleteWorkoutCard(
+                                  child: ExerciseWorkoutCard(
                                     key: Key(workoutSession.id.toString()),
                                     workoutSession: workoutSession,
                                   ),
                                 ),
                               );
                             }).toList(),
+
+
+
+
                           ),
                   ),
                 ),
