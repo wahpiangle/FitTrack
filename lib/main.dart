@@ -82,7 +82,7 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         navigatorKey: navigatorKey,
         debugShowCheckedModeBanner: false,
-        title: 'Flutter Auth',
+        title: 'FitTrack',
         home: const Wrapper(),
         routes: {
           '/auth': (context) => const Wrapper(),
