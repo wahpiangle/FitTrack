@@ -20,20 +20,9 @@ class FrontBackImage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        ColorFiltered(
-          colorFilter: uploadError || isLoading
-              ? ColorFilter.mode(
-                  Colors.black.withOpacity(0.5),
-                  BlendMode.darken,
-                )
-              : const ColorFilter.mode(
-                  Colors.transparent,
-                  BlendMode.srcOver,
-                ),
-          child: Image.file(
-            File(firstImageUrl),
-            fit: BoxFit.fill,
-          ),
+        Image.file(
+          File(firstImageUrl),
+          fit: BoxFit.fill,
         ),
         Container(
           margin: const EdgeInsets.only(
@@ -46,21 +35,10 @@ class FrontBackImage extends StatelessWidget {
             ),
             borderRadius: BorderRadius.circular(5),
           ),
-          child: ColorFiltered(
-            colorFilter: uploadError || isLoading
-                ? ColorFilter.mode(
-                    Colors.black.withOpacity(0.5),
-                    BlendMode.darken,
-                  )
-                : const ColorFilter.mode(
-                    Colors.transparent,
-                    BlendMode.srcOver,
-                  ),
-            child: Image.file(
-              File(secondImageUrl),
-              fit: BoxFit.fill,
-              width: 50,
-            ),
+          child: Image.file(
+            File(secondImageUrl),
+            fit: BoxFit.fill,
+            width: 50,
           ),
         ),
       ],

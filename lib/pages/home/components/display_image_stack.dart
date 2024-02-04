@@ -1,66 +1,80 @@
 import 'package:flutter/material.dart';
 import 'package:group_project/pages/complete_workout/capture_image/upload_image_provider.dart';
 import 'package:group_project/pages/home/components/front_back_image.dart';
+import 'package:provider/provider.dart';
 
 class DisplayImageStack extends StatelessWidget {
   final String firstImageUrl;
   final String secondImageUrl;
+  final int index;
+  final int current;
+
   const DisplayImageStack({
     super.key,
     required this.firstImageUrl,
     required this.secondImageUrl,
+    required this.index,
+    required this.current,
   });
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: UploadImageProvider().getUploadError(),
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          final bool uploadError = snapshot.data!;
-          return GestureDetector(
-            onTap: () {
-              print('ola');
-            },
-            child: Stack(
-              children: [
-                FrontBackImage(
-                    firstImageUrl: firstImageUrl,
-                    secondImageUrl: secondImageUrl,
-                    uploadError: uploadError),
-                uploadError
-                    ? const Positioned.fill(
-                        child: Align(
-                          alignment: Alignment.center,
-                          child: Icon(
-                            Icons.replay_outlined,
-                            color: Colors.red,
-                            size: 40,
-                          ),
-                        ),
-                      )
-                    : const SizedBox.shrink(),
-              ],
-            ),
-          );
-        } else {
-          return Stack(
-            children: [
-              FrontBackImage(
-                firstImageUrl: firstImageUrl,
-                secondImageUrl: secondImageUrl,
-                isLoading: true,
-              ),
-              const Positioned.fill(
-                child: Align(
-                  alignment: Alignment.center,
-                  child: CircularProgressIndicator(),
-                ),
-              )
-            ],
-          );
+    final UploadImageProvider uploadImageProvider =
+        context.watch<UploadImageProvider>();
+    final bool uploading = uploadImageProvider.uploading;
+    final bool uploadError = uploadImageProvider.uploadError;
+    return GestureDetector(
+      onTap: () {
+        if (uploadError) {
+          print('ola');
         }
       },
+      child: Column(
+        children: [
+          Stack(
+            children: [
+              ColorFiltered(
+                colorFilter: uploadError || uploading || index != current
+                    ? ColorFilter.mode(
+                        Colors.black.withOpacity(0.5),
+                        BlendMode.darken,
+                      )
+                    : const ColorFilter.mode(
+                        Colors.transparent,
+                        BlendMode.srcOver,
+                      ),
+                child: FrontBackImage(
+                  firstImageUrl: firstImageUrl,
+                  secondImageUrl: secondImageUrl,
+                  uploadError: uploadError,
+                  isLoading: uploading,
+                ),
+              ),
+              uploadError
+                  ? const Positioned.fill(
+                      child: Align(
+                        alignment: Alignment.center,
+                        child: Icon(
+                          Icons.replay_outlined,
+                          color: Colors.red,
+                          size: 40,
+                        ),
+                      ),
+                    )
+                  : uploading && index == current
+                      ? const Positioned.fill(
+                          child: Align(
+                            alignment: Alignment.center,
+                            child: CircularProgressIndicator(
+                              color: Colors.white,
+                            ),
+                          ),
+                        )
+                      : const SizedBox.shrink(),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }

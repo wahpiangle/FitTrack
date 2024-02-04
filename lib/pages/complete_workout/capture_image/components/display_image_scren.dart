@@ -9,6 +9,7 @@ import 'package:group_project/models/workout_session.dart';
 import 'package:group_project/pages/complete_workout/capture_image/upload_image_provider.dart';
 import 'package:group_project/pages/layout/app_layout.dart';
 import 'package:group_project/services/firebase/firebase_posts_service.dart';
+import 'package:provider/provider.dart';
 
 class DisplayImageScreen extends StatefulWidget {
   final Function toggleRetake;
@@ -37,9 +38,8 @@ class _DisplayImageScreenState extends State<DisplayImageScreen>
   final TransformationController _transformationController =
       TransformationController();
   Matrix4 initialControllerValue = Matrix4.identity();
-  final UploadImageProvider uploadImageProvider = UploadImageProvider();
 
-  void submitImage() async {
+  void submitImage(UploadImageProvider uploadImageProvider) async {
     if (!mounted) return;
     Navigator.pop(context);
     Navigator.pushReplacement(
@@ -57,19 +57,18 @@ class _DisplayImageScreenState extends State<DisplayImageScreen>
       firstImageUrl: widget.imagePath,
       secondImageUrl: widget.imagePath2,
       workoutSessionId: widget.workoutSession.id,
+      date: DateTime.now(),
     );
     objectBox.postService.addPost(
       newPost,
     );
-    bool successStatus = await FirebasePostsService.createPost(
-      newPost,
-    );
-    uploadImageProvider.setUploadError(!successStatus);
-    if (!mounted) return;
+    await FirebasePostsService.createPost(newPost, uploadImageProvider);
   }
 
   @override
   Widget build(BuildContext context) {
+    final UploadImageProvider uploadImageProvider =
+        context.read<UploadImageProvider>();
     return Column(
       children: [
         Stack(
@@ -163,7 +162,7 @@ class _DisplayImageScreenState extends State<DisplayImageScreen>
         ),
         TextButton.icon(
           onPressed: () {
-            submitImage();
+            submitImage(uploadImageProvider);
           },
           icon: const Icon(
             Icons.send,

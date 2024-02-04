@@ -8,7 +8,7 @@ class Post {
   final String caption;
   final String firstImageUrl;
   final String secondImageUrl;
-  final DateTime createdAt = DateTime.now();
+  final DateTime date;
 
   Post({
     this.id = 0,
@@ -16,5 +16,6 @@ class Post {
     required this.caption,
     required this.firstImageUrl,
     required this.secondImageUrl,
+    required this.date,
   });
 }
