@@ -21,7 +21,9 @@ class FirebaseExercisesService {
                 'id': exercise.id,
                 'name': exercise.name,
                 'categoryId': exercise.category.targetId,
+                'categoryName': exercise.category.target?.name,
                 'bodyPartId': exercise.bodyPart.targetId,
+                'bodyPartName':exercise.bodyPart.target?.name,
 
               },
             ],
@@ -49,7 +51,9 @@ class FirebaseExercisesService {
           // Update the exercise details
           exercises[index]['name'] = exercise.name;
           exercises[index]['categoryId'] = exercise.category.targetId;
+          exercises[index]['categoryName']= exercise.category.target?.name;
           exercises[index]['bodyPartId'] = exercise.bodyPart.targetId;
+          exercises[index]['bodyPartName'] = exercise.bodyPart.target?.name;
 
           // Rewrite the entire array with the updated exercise
           await collectionRef.doc(uid).update({'addednewExercises': exercises});

@@ -22,6 +22,8 @@ class ExerciseService {
     required this.exercisesSetsInfoBox,
   });
 
+
+
   //exercises
   Stream<List<Exercise>> watchAllExercise() {
     return exerciseBox
@@ -63,11 +65,17 @@ class ExerciseService {
 
   }
 
-  Future<void> populateDataFromFirebase() async {
+//categories & bodyParts
+  List<Category> getCategories() {
+    return categoryBox.getAll();
+  }
 
+  Future<void> populateDataFromFirebase() async {
+    try {
       final List<dynamic> addednewExercises =
       await FirebaseExercisesService.getAllCustomExercises();
 
+      // Proceed with data population from Firebase
       for (var exerciseData in addednewExercises) {
         final newCustomExercise = Exercise(
           name: exerciseData['name'],
@@ -75,39 +83,30 @@ class ExerciseService {
 
         final categoryId = exerciseData['categoryId'];
         final bodyPartId = exerciseData['bodyPartId'];
+        final categoryName =exerciseData['categoryName'];
+        final bodyPartName =exerciseData['bodyPartName'];
 
-        if (categoryId != null && bodyPartId != null) {
-          final category = await getCategoryById(categoryId);
-          final bodyPart = await getBodyPartById(bodyPartId);
+        print('Category ID: $categoryId, CategoryName:$categoryName, Body Part ID: $bodyPartId, BP Name:$bodyPartName');
 
+        // Fetch the category and body part directly from Firebase data
+        final category = categoryId != null ? Category(id: categoryId, name: categoryName) : null;
+        final bodyPart = bodyPartId != null ? BodyPart(id: bodyPartId, name: bodyPartName) : null;
 
-          // Associate Category and BodyPart with the exercise
-          newCustomExercise.category.target = category;
-          newCustomExercise.bodyPart.target = bodyPart;
+        // Associate Category and BodyPart with the exercise
+        newCustomExercise.category.target = category;
+        newCustomExercise.bodyPart.target = bodyPart;
 
-          exerciseBox.put(newCustomExercise);
-        }
+        // Add exercise to ObjectBox using addExerciseToList method
+        addExerciseToList(newCustomExercise, category!, bodyPart!);
+      }
 
+      print('Data population from Firebase successful.');
+    } catch (error) {
+      print('Error populating data from Firebase: $error');
+      // Handle the error further based on your application's requirements.
     }
   }
 
-
-  Future<Category?> getCategoryById(int id) async {
-      final category = categoryBox.get(id);
-      return category;
-  }
-
-  Future<BodyPart?> getBodyPartById(int id) async {
-      final bodyPart = bodyPartBox.get(id);
-      return bodyPart;
-
-  }
-
-
-//categories & bodyParts
-  List<Category> getCategories() {
-    return categoryBox.getAll();
-  }
 
   void addSetToExercise(ExercisesSetsInfo exercisesSetsInfo) {
     ExerciseSet exerciseSet = ExerciseSet();
