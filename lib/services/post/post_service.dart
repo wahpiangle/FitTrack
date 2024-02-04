@@ -13,6 +13,10 @@ class PostService {
     postBox.put(post);
   }
 
+  Post? getPost(int id) {
+    return postBox.get(id);
+  }
+
   List<Post> getPosts() {
     return postBox.getAll();
   }

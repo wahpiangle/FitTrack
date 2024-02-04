@@ -34,4 +34,11 @@ class UploadImageProvider with ChangeNotifier {
 
   bool get uploading => _uploading;
   bool get uploadError => _uploadError;
+
+  void reset() {
+    _uploading = false;
+    _uploadError = false;
+    notifyListeners();
+    setSharedPreferences();
+  }
 }

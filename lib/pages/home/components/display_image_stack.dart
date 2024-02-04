@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:group_project/main.dart';
 import 'package:group_project/pages/complete_workout/capture_image/upload_image_provider.dart';
 import 'package:group_project/pages/home/components/front_back_image.dart';
+import 'package:group_project/services/firebase/firebase_posts_service.dart';
 import 'package:provider/provider.dart';
 
 class DisplayImageStack extends StatelessWidget {
@@ -8,6 +10,7 @@ class DisplayImageStack extends StatelessWidget {
   final String secondImageUrl;
   final int index;
   final int current;
+  final int postId;
 
   const DisplayImageStack({
     super.key,
@@ -15,6 +18,7 @@ class DisplayImageStack extends StatelessWidget {
     required this.secondImageUrl,
     required this.index,
     required this.current,
+    required this.postId,
   });
 
   @override
@@ -26,7 +30,11 @@ class DisplayImageStack extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         if (uploadError) {
-          print('ola');
+          uploadImageProvider.reset();
+          FirebasePostsService.createPost(
+            objectBox.postService.getPost(postId)!,
+            context.read<UploadImageProvider>(),
+          );
         }
       },
       child: Column(

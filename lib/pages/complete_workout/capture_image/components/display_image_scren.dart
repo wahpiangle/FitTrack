@@ -62,6 +62,7 @@ class _DisplayImageScreenState extends State<DisplayImageScreen>
     objectBox.postService.addPost(
       newPost,
     );
+    uploadImageProvider.reset();
     await FirebasePostsService.createPost(newPost, uploadImageProvider);
   }
 

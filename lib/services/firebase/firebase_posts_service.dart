@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -20,51 +21,58 @@ class FirebasePostsService {
         .ref('images/${user.uid}/firstImage/${post.workoutSessionId}.jpg');
     Reference secondRef = storage
         .ref('images/${user.uid}/secondImage/${post.workoutSessionId}.jpg');
-    Future.delayed(const Duration(seconds: 3));
-    final uploadFirstImageTask = firstRef.putFile(File(post.firstImageUrl));
-    uploadFirstImageTask.snapshotEvents.listen((event) {
-      switch (event.state) {
-        case TaskState.success:
-          uploadImageProvider.setUploadError(false);
-          uploadImageProvider.setIsUploading(false);
-          break;
-        case TaskState.error:
-          uploadImageProvider.setUploadError(true);
-          uploadImageProvider.setIsUploading(false);
-          break;
-        default:
-          uploadImageProvider.setUploadError(false);
-          uploadImageProvider.setIsUploading(true);
-      }
-    });
+    uploadImageProvider.setUploadError(true);
+    try {
+      final uploadFirstImageTask = firstRef.putFile(File(post.firstImageUrl));
+      final uploadSecondImageTask =
+          secondRef.putFile(File(post.secondImageUrl));
 
-    final uploadSecondImageTask = secondRef.putFile(File(post.secondImageUrl));
-    uploadSecondImageTask.snapshotEvents.listen((event) {
-      switch (event.state) {
-        case TaskState.success:
-          uploadImageProvider.setUploadError(false);
-          uploadImageProvider.setIsUploading(false);
-          break;
-        case TaskState.error:
-          uploadImageProvider.setUploadError(true);
-          uploadImageProvider.setIsUploading(false);
-          break;
-        default:
-          uploadImageProvider.setUploadError(false);
-          uploadImageProvider.setIsUploading(true);
+      for (UploadTask task in [uploadFirstImageTask, uploadSecondImageTask]) {
+        Timer(const Duration(seconds: 20), () {
+          // Cancel the upload task if it's still running
+          if (task.snapshot.state == TaskState.running) {
+            task.cancel();
+            uploadImageProvider.setUploadError(true);
+          }
+        });
+        task.snapshotEvents.listen((event) {
+          switch (event.state) {
+            case TaskState.success:
+              uploadImageProvider.setUploadError(false);
+              uploadImageProvider.setIsUploading(false);
+            case TaskState.error:
+              uploadImageProvider.setUploadError(true);
+              uploadImageProvider.setIsUploading(false);
+            case TaskState.running:
+              uploadImageProvider.setUploadError(false);
+              uploadImageProvider.setIsUploading(true);
+            case TaskState.paused:
+              uploadImageProvider.setUploadError(true);
+              uploadImageProvider.setIsUploading(false);
+            case TaskState.canceled:
+              uploadImageProvider.setUploadError(true);
+              uploadImageProvider.setIsUploading(false);
+            default:
+              uploadImageProvider.setUploadError(true);
+              uploadImageProvider.setIsUploading(false);
+          }
+        });
       }
-    });
-    final firstImageUrl = await firstRef.getDownloadURL();
-    final secondImageUrl = await secondRef.getDownloadURL();
-    await postsCollectionRef
-        .doc(user.uid)
-        .collection('userPosts')
-        .doc(post.workoutSessionId.toString())
-        .set({
-      'firstImageUrl': firstImageUrl,
-      'secondImageUrl': secondImageUrl,
-      'workoutSessionId': post.workoutSessionId,
-    });
-    return true;
+      final firstImageUrl = await firstRef.getDownloadURL();
+      final secondImageUrl = await secondRef.getDownloadURL();
+      await postsCollectionRef
+          .doc(user.uid)
+          .collection('userPosts')
+          .doc(post.workoutSessionId.toString())
+          .set({
+        'firstImageUrl': firstImageUrl,
+        'secondImageUrl': secondImageUrl,
+        'workoutSessionId': post.workoutSessionId,
+      });
+      return true;
+    } catch (e) {
+      uploadImageProvider.setUploadError(true);
+      return false;
+    }
   }
 }
