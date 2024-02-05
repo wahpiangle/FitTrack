@@ -124,6 +124,7 @@ class ExerciseService {
     }
   }
 
+
   List<String> getExistingExerciseNames() {
     // Retrieve existing exercises from ObjectBox
     final List<Exercise> existingExercises = exerciseBox.getAll();
