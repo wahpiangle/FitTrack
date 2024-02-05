@@ -24,7 +24,7 @@
     },
     {
       "id": "4:8999125863363426104",
-      "lastPropertyId": "7:5855844984736153863",
+      "lastPropertyId": "8:3113001905839990392",
       "name": "Exercise",
       "properties": [
         {
@@ -68,6 +68,11 @@
           "id": "7:5855844984736153863",
           "name": "halfImagePath",
           "type": 9
+        },
+        {
+          "id": "8:3113001905839990392",
+          "name": "isVisible",
+          "type": 1
         }
       ],
       "relations": [

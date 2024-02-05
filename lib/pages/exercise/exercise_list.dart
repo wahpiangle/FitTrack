@@ -19,11 +19,11 @@ class ExerciseListScreen extends StatefulWidget {
 
 class ExerciseListScreenState extends State<ExerciseListScreen> {
   String searchText = '';
-  List<String> selectedCategory = []; // Default to []
+  List<String> selectedCategory = [];
   String selectedBodyPart = '';
   Map<String, List<Exercise>> exerciseGroups = {};
   Stream<List<Exercise>> streamExercises =
-      objectBox.exerciseService.watchAllExercise();
+  objectBox.exerciseService.watchAllExercise();
   final categories = objectBox.exerciseService.getCategories();
 
   @override
@@ -31,7 +31,7 @@ class ExerciseListScreenState extends State<ExerciseListScreen> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       filterExercises('');
-      _handleTimerActive(context); // Add this line to handle timer state
+      _handleTimerActive(context);
     });
   }
 
@@ -70,6 +70,14 @@ class ExerciseListScreenState extends State<ExerciseListScreen> {
       selectedCategory.remove(category);
     });
   }
+
+  void toggleExerciseVisibility(Exercise exercise) {
+    setState(() {
+      exercise.isVisible = !exercise.isVisible;
+      objectBox.exerciseService.updateExerciselist(exercise);
+    });
+  }
+
   void _handleTimerActive(BuildContext context) {
     TimerProvider? timerProvider =
     Provider.of<TimerProvider>(context, listen: false);
@@ -77,7 +85,7 @@ class ExerciseListScreenState extends State<ExerciseListScreen> {
     void handleTimerStateChanged() {
       if (timerProvider.isTimerRunning &&
           !TimerManager().isTimerActiveScreenOpen) {
-        TimerManager().showTimerBottomSheet(context, []); // Pass an empty exercise list or provide relevant data
+        TimerManager().showTimerBottomSheet(context, []);
       } else if (!timerProvider.isTimerRunning &&
           TimerManager().isTimerActiveScreenOpen) {
         TimerManager().closeTimerBottomSheet(context);
@@ -101,7 +109,7 @@ class ExerciseListScreenState extends State<ExerciseListScreen> {
     return Scaffold(
       body: StreamBuilder(
         stream: streamExercises,
-        builder: (context, snapshot) {
+        builder: (context, AsyncSnapshot<List<Exercise>> snapshot) {
           if (!snapshot.hasData) {
             return Container(
               color: const Color(0xFF1A1A1A),
@@ -115,7 +123,6 @@ class ExerciseListScreenState extends State<ExerciseListScreen> {
             final exerciseBodyPart = exercise.bodyPart.target?.name ?? '';
             final exerciseCategory = exercise.category.target?.name ?? '';
 
-            // Check if the exercise body part or category matches the selected body part or category
             final isBodyPartMatch = selectedBodyPart.isEmpty ||
                 exerciseBodyPart == selectedBodyPart;
             final isCategoryMatch = selectedCategory.isEmpty ||
@@ -152,12 +159,13 @@ class ExerciseListScreenState extends State<ExerciseListScreen> {
                           if (selectedBodyPart.isEmpty &&
                               selectedCategory.isEmpty)
                             FilterLabel(
-                                text: 'All',
-                                isFilterSelected: true,
-                                onTap: () {
-                                  setSelectedBodyPart('');
-                                  selectedCategory.clear();
-                                }),
+                              text: 'All',
+                              isFilterSelected: true,
+                              onTap: () {
+                                setSelectedBodyPart('');
+                                selectedCategory.clear();
+                              },
+                            ),
                         if (selectedBodyPart.isNotEmpty)
                           FilterLabel(
                             text: selectedBodyPart,
@@ -193,7 +201,7 @@ class ExerciseListScreenState extends State<ExerciseListScreen> {
                       itemCount: groupedExercise.length,
                       itemBuilder: (context, index) {
                         final exercises =
-                            groupedExercise.values.elementAt(index);
+                        groupedExercise.values.elementAt(index);
                         final key = groupedExercise.keys.elementAt(index);
 
                         return Column(
@@ -203,28 +211,140 @@ class ExerciseListScreenState extends State<ExerciseListScreen> {
                               margin: const EdgeInsets.symmetric(vertical: 3),
                               child: searchText == ''
                                   ? Text(
-                                      key,
-                                      style: const TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    )
+                                key,
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              )
                                   : Container(),
                             ),
                             for (final exercise in exercises)
-                              ExerciseListItem(
-                                  exercise: exercise, searchText: searchText),
-                          ],
-                        );
-                      },
+                              if (exercise.isVisible)
+                                Dismissible(
+                                key: Key(exercise.id.toString()), // Unique key for each exercise
+                                direction: DismissDirection.endToStart, // Swipe from right to left
+                                background: Container(
+                                color: Colors.red, // Red background when swiping
+                                alignment: Alignment.centerRight,
+                                padding: const EdgeInsets.only(right: 20.0),
+                                child: const Text(
+                                'Hide',
+                                style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 16.0,
+                                   ),
+                                  ),
+                                ),
+                                // Implement confirmDismiss to control when the item can be dismissed
+                                confirmDismiss: (direction) async {
+                                // Always allow dismissal
+                                return await showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    surfaceTintColor: const Color(0xFF1A1A1A),
+                                    backgroundColor: const Color(0xFF1A1A1A), // Set background color to 1A1A1A
+                                    title: Text(
+                                      "Hide ${exercise.name}",
+                                      style: const TextStyle(color: Colors.white), // Set title color to white
+                                    ),
+                                    content: const Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      mainAxisSize: MainAxisSize.min, // Set the main axis size to minimum
+                                      children: [
+                                        Text(
+                                          "This exercise will no longer be accessible.",
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white, // Set text color to white
+                                          ),
+                                        ),
+                                        SizedBox(height: 8), // Add some space between the sentences
+                                        Text(
+                                          "Hiding it will not affect any of your previous workouts with this exercise.",
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                            fontSize: 13,
+                                          ),
+                                          // Set text color to white
+                                        ),
+                                        SizedBox(height: 15),
+                                      ],
+                                    ),
+                                    contentPadding: const EdgeInsets.fromLTRB(24.0, 20.0, 24.0, 0), // Adjust content padding
+
+                                    actions: [
+                                      Container(
+                                        width: double.infinity, // Take the full width of the dialog
+                                        padding: const EdgeInsets.symmetric(vertical: 1.0), // Add vertical padding
+                                        decoration: BoxDecoration(
+                                          color: Colors.red, // Red fill color
+                                          borderRadius: BorderRadius.circular(10.0), // Rounded corners
+                                        ),
+                                        child: Center(
+                                          child: TextButton(
+                                            onPressed: () {
+                                              Navigator.pop(context, true); // Dismiss the dialog and accept the dismissal
+                                            },
+                                            child: const Text(
+                                              "Hide",
+                                              style: TextStyle(color: Colors.white), // White text color
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(height: 3), // Add some space between buttons and content
+                                      Row(
+                                        children: [
+                                          Expanded(
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                borderRadius: BorderRadius.circular(10.0), // Rounded corners
+                                              ),
+                                              child: TextButton(
+                                                onPressed: () {
+                                                  Navigator.pop(context, false); // Dismiss the dialog and reject the dismissal
+                                                },
+                                                child: const Text(
+                                                  "Cancel",
+                                                  style: TextStyle(color: Colors.white), // Set text color to white
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  );
+
+                                     },
+                                  );
+                                },
+                                onDismissed: (direction) {
+                                if (direction == DismissDirection.endToStart) {
+                                // Toggle exercise visibility
+                                toggleExerciseVisibility(exercise);
+                                  }
+                                },
+                                child: ExerciseListItem(
+                                exercise: exercise,
+                                searchText: searchText,
+                                onToggleVisibility: () => toggleExerciseVisibility(exercise),
+                                  ),
+                                ),
+                              ],
+                            );
+                          },
+                        ),
+                      )
+                    ],
                     ),
-                  )
-                ],
-              ),
+                  ),
+                );
+              },
             ),
           );
-        },
-      ),
-    );
-  }
-}
+        }
+      }
