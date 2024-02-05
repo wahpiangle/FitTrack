@@ -75,22 +75,36 @@ class ExerciseService {
       final List<dynamic> addednewExercises =
       await FirebaseExercisesService.getAllCustomExercises();
 
+      // Retrieve existing exercise names from ObjectBox or another storage solution
+      final List<String> existingExerciseNames = getExistingExerciseNames();
+
       // Proceed with data population from Firebase
       for (var exerciseData in addednewExercises) {
+        final exerciseName = exerciseData['name'];
+
+        // Check if exercise name already exists, if so, skip
+        if (existingExerciseNames.contains(exerciseName)) {
+          print('Exercise $exerciseName already exists. Skipping...');
+          continue;
+        }
+
         final newCustomExercise = Exercise(
-          name: exerciseData['name'],
+          name: exerciseName,
         );
 
         final categoryId = exerciseData['categoryId'];
         final bodyPartId = exerciseData['bodyPartId'];
-        final categoryName =exerciseData['categoryName'];
-        final bodyPartName =exerciseData['bodyPartName'];
+        final categoryName = exerciseData['categoryName'];
+        final bodyPartName = exerciseData['bodyPartName'];
 
-        print('Category ID: $categoryId, CategoryName:$categoryName, Body Part ID: $bodyPartId, BP Name:$bodyPartName');
+        print(
+            'Category ID: $categoryId, CategoryName:$categoryName, Body Part ID: $bodyPartId, BP Name:$bodyPartName');
 
         // Fetch the category and body part directly from Firebase data
-        final category = categoryId != null ? Category(id: categoryId, name: categoryName) : null;
-        final bodyPart = bodyPartId != null ? BodyPart(id: bodyPartId, name: bodyPartName) : null;
+        final category =
+        categoryId != null ? Category(id: categoryId, name: categoryName) : null;
+        final bodyPart =
+        bodyPartId != null ? BodyPart(id: bodyPartId, name: bodyPartName) : null;
 
         // Associate Category and BodyPart with the exercise
         newCustomExercise.category.target = category;
@@ -98,6 +112,9 @@ class ExerciseService {
 
         // Add exercise to ObjectBox using addExerciseToList method
         addExerciseToList(newCustomExercise, category!, bodyPart!);
+
+        // Update existingExerciseNames list
+        existingExerciseNames.add(exerciseName);
       }
 
       print('Data population from Firebase successful.');
@@ -107,6 +124,16 @@ class ExerciseService {
     }
   }
 
+  List<String> getExistingExerciseNames() {
+    // Retrieve existing exercises from ObjectBox
+    final List<Exercise> existingExercises = exerciseBox.getAll();
+
+    // Extract exercise names from existing exercises
+    final List<String> existingExerciseNames =
+    existingExercises.map((exercise) => exercise.name).toList();
+
+    return existingExerciseNames;
+  }
 
   void addSetToExercise(ExercisesSetsInfo exercisesSetsInfo) {
     ExerciseSet exerciseSet = ExerciseSet();
