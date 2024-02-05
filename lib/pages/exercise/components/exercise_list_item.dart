@@ -7,9 +7,10 @@ import 'package:group_project/pages/exercise/exercise_detail.dart';
 class ExerciseListItem extends StatelessWidget {
   final Exercise exercise;
   final String searchText;
+  final VoidCallback onToggleVisibility;
 
   const ExerciseListItem(
-      {super.key, required this.exercise, required this.searchText});
+      {super.key, required this.exercise, required this.searchText,required this.onToggleVisibility});
 
   @override
   Widget build(BuildContext context) {

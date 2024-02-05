@@ -139,8 +139,9 @@ class ChooseExerciseState extends State<ChooseExercise> {
 
           final exercises = filteredExercises;
           final filteredData = exercises.where((exercise) {
-            final exerciseBodyPart = exercise.bodyPart.target!.name;
-            final exerciseCategory = exercise.category.target!.name;
+            final exerciseBodyPart = exercise.bodyPart.target?.name ?? '';
+            final exerciseCategory = exercise.category.target?.name ?? '';
+
 
             final isBodyPartMatch = selectedBodyPart.isEmpty ||
                 exerciseBodyPart == selectedBodyPart;

@@ -35,6 +35,7 @@ class AuthService {
           email: email, password: password);
       User? user = result.user;
       objectBox.workoutSessionService.populateDataFromFirebase();
+      objectBox.exerciseService.populateDataFromFirebase();
       return user;
     } catch (e) {
       rethrow;
@@ -100,6 +101,7 @@ class AuthService {
       UserCredential result = await _auth.signInWithCredential(credential);
       User? user = result.user;
       objectBox.workoutSessionService.populateDataFromFirebase();
+      objectBox.exerciseService.populateDataFromFirebase();
       return user;
     } catch (e) {
       rethrow;
