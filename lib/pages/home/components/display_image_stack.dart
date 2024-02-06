@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:group_project/main.dart';
 import 'package:group_project/pages/complete_workout/capture_image/upload_image_provider.dart';
+import 'package:group_project/pages/home/components/display_post_image_screen.dart';
 import 'package:group_project/pages/home/components/front_back_image.dart';
 import 'package:group_project/services/firebase/firebase_posts_service.dart';
 import 'package:provider/provider.dart';
@@ -11,6 +12,7 @@ class DisplayImageStack extends StatelessWidget {
   final int index;
   final int current;
   final int postId;
+  final int workoutSessionId;
 
   const DisplayImageStack({
     super.key,
@@ -19,6 +21,7 @@ class DisplayImageStack extends StatelessWidget {
     required this.index,
     required this.current,
     required this.postId,
+    required this.workoutSessionId,
   });
 
   @override
@@ -36,6 +39,14 @@ class DisplayImageStack extends StatelessWidget {
             context.read<UploadImageProvider>(),
           );
         }
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => DisplayPostImageScreen(
+                imagePath: firstImageUrl,
+                imagePath2: secondImageUrl,
+                workoutSessionId: workoutSessionId),
+          ),
+        );
       },
       child: Column(
         children: [

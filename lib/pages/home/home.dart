@@ -26,6 +26,7 @@ class _HomeState extends State<Home> {
       'firstImageUrl': item.firstImageUrl,
       'secondImageUrl': item.secondImageUrl,
       'postId': item.id,
+      'workoutSessionId': item.workoutSessionId,
     };
   }).toList();
 
@@ -76,6 +77,8 @@ class _HomeState extends State<Home> {
                       final firstImage = imageList[index]['firstImageUrl']!;
                       final secondImage = imageList[index]['secondImageUrl']!;
                       final postId = imageList[index]['postId']!;
+                      final workoutSessionId =
+                          imageList[index]['workoutSessionId']!;
                       return Container(
                         margin: const EdgeInsets.symmetric(
                           horizontal: 5,
@@ -92,6 +95,7 @@ class _HomeState extends State<Home> {
                                 index: index,
                                 current: _current,
                                 postId: postId,
+                                workoutSessionId: workoutSessionId,
                               ),
                             ),
                             uploadImageProvider.uploadError
