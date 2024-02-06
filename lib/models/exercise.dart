@@ -12,7 +12,7 @@ class Exercise {
   String imagePath;
   String halfImagePath;
   bool isSelected;
-
+  bool isVisible;
   final bodyPart = ToOne<BodyPart>();
   final category = ToOne<Category>();
   final exercisesSetsInfo = ToMany<ExercisesSetsInfo>();
@@ -23,5 +23,6 @@ class Exercise {
     this.imagePath = '',
     this.halfImagePath = '',
     this.isSelected = false,
+    this.isVisible = true,
   });
 }
