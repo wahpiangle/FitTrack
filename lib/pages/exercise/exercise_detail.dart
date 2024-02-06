@@ -1,22 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:group_project/models/exercise.dart';
-import 'package:group_project/constants/themes/app_colours.dart';
-import 'exercise_navigation_buttons.dart';
 import 'package:group_project/constants/themes/exercise_list_theme.dart';
 import 'package:group_project/main.dart';
 import 'package:group_project/models/exercise.dart';
 import 'package:group_project/pages/exercise/components/edit_exercise.dart';
+import 'package:flutter/material.dart';
+import 'package:group_project/models/exercise.dart';
+import 'package:group_project/constants/themes/app_colours.dart';
+import 'exercise_navigation_buttons.dart';
+
 class ExerciseDetailScreen extends StatefulWidget {
   final Exercise exercise;
   const ExerciseDetailScreen(this.exercise, {super.key});
-
   @override
   State<ExerciseDetailScreen> createState() => _ExerciseDetailScreenState();
 }
 
 class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
-  int selectedPageIndex = 0;
   String exerciseName = '';
+  int selectedPageIndex = 0;
 
   @override
   void initState() {
@@ -33,7 +34,7 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF1A1A1A),
+      backgroundColor: ExerciseListThemes.appBarBackground,
       appBar: AppBar(
         backgroundColor: const Color(0xFF1A1A1A),
         actions: <Widget>[
@@ -67,30 +68,19 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
         ),
       ),
       body: SingleChildScrollView(
-        child: Column(
+        child: Row(
           children: [
-            const SizedBox(height: 10.0),
-            NavigationButtonsRow(
-              selectedPageIndex: selectedPageIndex,
-              exercise: widget.exercise,
-            ),
-            const SizedBox(height: 10.0),
-            Card(
-              child: Image.asset(
-                widget.exercise.imagePath,
-                fit: BoxFit.contain,
-              ),
-            ),
-            const Padding(
-              padding: EdgeInsets.all(20.0),
-              child: Text(
-                'Instructions',
-                style: TextStyle(fontSize: 18, color: Colors.white),
             Expanded(
               flex: 4,
               child: Center(
                 child: Column(
                   children: [
+                    const SizedBox(height: 10.0),
+                    NavigationButtonsRow(
+                      selectedPageIndex: selectedPageIndex,
+                      exercise: widget.exercise,
+                    ),
+                    const SizedBox(height: 10.0),
                     Stack(
                       alignment: Alignment.bottomCenter,
                       children: [
