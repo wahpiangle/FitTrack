@@ -7,8 +7,13 @@ class WorkoutTemplate {
   int id;
   String title;
   String note;
+
+  @Property(type: PropertyType.date)
   DateTime createdAt;
+
+  @Property(type: PropertyType.date)
   DateTime? lastPerformedAt;
+
   bool isCurrentEditing;
 
   final exercisesSetsInfo = ToMany<ExercisesSetsInfo>();

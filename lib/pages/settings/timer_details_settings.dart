@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:group_project/constants/themes/app_colours.dart';
+import 'package:group_project/pages/layout/top_nav_bar.dart';
 import 'package:group_project/pages/workout/components/timer/components/time_picker.dart';
 import 'package:group_project/pages/workout/components/timer/providers/rest_timer_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:group_project/pages/components/top_nav_bar.dart';
 
 class TimerDetailsSettings extends StatelessWidget {
   const TimerDetailsSettings({

@@ -5,8 +5,8 @@ import 'package:group_project/models/exercise.dart';
 import 'package:group_project/models/exercises_sets_info.dart';
 import 'package:group_project/pages/history/edit_workout/dialogs/revert_dialog.dart';
 import 'package:group_project/pages/history/edit_workout/dialogs/save_dialog.dart';
-import 'package:group_project/pages/workout/components/tiles/components/edit_exercise_tile.dart';
 import 'package:group_project/models/workout_session.dart';
+import 'package:group_project/pages/workout/components/tiles/edit_exercise_tile.dart';
 
 class EditWorkoutScreen extends StatefulWidget {
   final int workoutSessionId;
@@ -25,27 +25,6 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
   WorkoutSession? editingWorkoutSession =
       objectBox.workoutSessionService.getEditingWorkoutSession();
   List<Exercise> exerciseData = objectBox.exerciseService.getAllExercises();
-
-  void _askToRevert() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return const RevertDialog();
-      },
-    );
-  }
-
-  void _askToSave() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return SaveDialog(
-          workoutSessionId: widget.workoutSessionId,
-          fromDetailPage: widget.fromDetailPage,
-        );
-      },
-    );
-  }
 
   void selectExercise(Exercise selectedExercise) {
     objectBox.workoutSessionService
@@ -97,7 +76,12 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
             ),
           ),
           onPressed: () {
-            _askToRevert();
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return const RevertDialog();
+              },
+            );
           },
           icon: const Icon(
             Icons.close,
@@ -120,7 +104,15 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
                 objectBox.workoutSessionService.editingWorkoutSessionHasChanges(
                   widget.workoutSessionId,
                 )
-                    ? _askToSave()
+                    ? showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return SaveDialog(
+                            workoutSessionId: widget.workoutSessionId,
+                            fromDetailPage: widget.fromDetailPage,
+                          );
+                        },
+                      )
                     : ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
                           content: Text(

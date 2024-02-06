@@ -226,7 +226,6 @@ class ChooseExerciseState extends State<ChooseExercise> {
                         final firstLetter =
                             groupedExercises.keys.toList()[index];
                         final groupExercises = groupedExercises[firstLetter]!;
-
                         return Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -336,7 +335,7 @@ class ChooseExerciseState extends State<ChooseExercise> {
                                           ),
                                         ),
                                         subtitle: Text(
-                                          exercise.bodyPart.target!.name,
+                                          exercise.bodyPart.target?.name ?? '',
                                           style: TextStyle(
                                             color: Colors.grey[500],
                                             fontSize: 14,
