@@ -102,12 +102,15 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
                         children: [
                           Text(
                             '$exerciseName',
-                            style: const TextStyle(fontSize: 18, color: Colors.white),
+                            style: const TextStyle(
+                                fontSize: 18, color: Colors.white),
                           ),
                           const SizedBox(width: 4),
                           IconButton(
                             onPressed: () async {
-                              final newExerciseName = await EditExerciseDialog.editExercise(context, objectBox, widget.exercise);
+                              final newExerciseName =
+                                  await EditExerciseDialog.editExercise(
+                                      context, objectBox, widget.exercise);
                               if (newExerciseName != null) {
                                 updateExerciseName(newExerciseName);
                               }
