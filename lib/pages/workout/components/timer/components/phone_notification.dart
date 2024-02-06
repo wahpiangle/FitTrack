@@ -7,7 +7,7 @@ class PhoneNotification {
   Future<void> initializeNotifications() async {
     const AndroidInitializationSettings initializationSettingsAndroid =
     AndroidInitializationSettings('@mipmap/ic_launcher');
-    final InitializationSettings initializationSettings =
+    const InitializationSettings initializationSettings =
     InitializationSettings(android: initializationSettingsAndroid);
     await flutterLocalNotificationsPlugin.initialize(
       initializationSettings,
@@ -17,13 +17,14 @@ class PhoneNotification {
   Future<void> showNotification(String title, String message) async {
     const AndroidNotificationDetails androidPlatformChannelSpecifics =
     AndroidNotificationDetails(
-      'channel_id_rest_timer',
-      'channel_name_rest_timer',
+      'channel_id_timer',
+      'channel_name_timer',
       importance: Importance.max,
       priority: Priority.high,
       ticker: 'ticker',
-      playSound: true,
+      playSound: false,
       sound: RawResourceAndroidNotificationSound('notification_sound'),
+      visibility: NotificationVisibility.public,
     );
     const NotificationDetails platformChannelSpecifics =
     NotificationDetails(android: androidPlatformChannelSpecifics);

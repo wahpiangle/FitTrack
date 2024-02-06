@@ -1,14 +1,10 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:group_project/pages/workout/components/timer/components/rest_ended_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:group_project/main.dart';
 
 class RestTimerProvider with ChangeNotifier {
-  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-  FlutterLocalNotificationsPlugin();
-
   bool _isRestTimerEnabled = true;
   int _restTimerDuration = 120;
   int _currentDuration = 0;
