@@ -38,15 +38,16 @@ class DisplayImageStack extends StatelessWidget {
             objectBox.postService.getPost(postId)!,
             context.read<UploadImageProvider>(),
           );
+        } else {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => DisplayPostImageScreen(
+                  imagePath: firstImageUrl,
+                  imagePath2: secondImageUrl,
+                  workoutSessionId: workoutSessionId),
+            ),
+          );
         }
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => DisplayPostImageScreen(
-                imagePath: firstImageUrl,
-                imagePath2: secondImageUrl,
-                workoutSessionId: workoutSessionId),
-          ),
-        );
       },
       child: Column(
         children: [
