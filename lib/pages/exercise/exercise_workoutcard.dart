@@ -6,9 +6,11 @@ import '../history/complete_workout/complete_history_detail.dart';
 
 class ExerciseWorkoutCard extends StatelessWidget {
   final WorkoutSession workoutSession;
+  final String exerciseName; // New property to hold exercise name
   const ExerciseWorkoutCard({
     super.key,
     required this.workoutSession,
+    required this.exerciseName, // Initialize the exerciseName property
   });
 
   String formatDuration(int totalSeconds) {
@@ -24,6 +26,10 @@ class ExerciseWorkoutCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final filteredSetsInfo = workoutSession.exercisesSetsInfo
+        .where((info) => info.exercise.target?.name == exerciseName)
+        .toList();
+
     return Container(
       margin: const EdgeInsets.symmetric(
         vertical: 10,
@@ -72,38 +78,14 @@ class ExerciseWorkoutCard extends StatelessWidget {
                     ),
                     const SizedBox(height: 5),
                     Text(
-                      DateFormat('dd MMMM yyyy').format(
+                      DateFormat('EEEE, dd MMMM yyyy, kk:mm a').format(
                         workoutSession.date,
                       ),
-                      style: TextStyle(
-                        color: Colors.grey[500],
-                        fontSize: 14,
+                      style: const TextStyle(
+                        color: Colors.grey,
+                        fontSize: 16,
                       ),
                     ),
-
-                    // Padding(
-                    //   padding: const EdgeInsets.symmetric(vertical: 8.0),
-                    //   child: Row(
-                    //     children: [
-                    //       const Icon(
-                    //         Icons.access_time_sharp,
-                    //         color: Colors.white,
-                    //         size: 20,
-                    //       ),
-                    //       const SizedBox(
-                    //         width: 10,
-                    //       ),
-                    //       Text(
-                    //         formatDuration(workoutSession.duration),
-                    //         style: const TextStyle(
-                    //           color: Colors.white,
-                    //           fontSize: 16,
-                    //         ),
-                    //       ),
-                    //     ],
-                    //   ),
-                    // ),
-
                     workoutSession.note == ''
                         ? const SizedBox()
                         : Padding(
@@ -119,32 +101,20 @@ class ExerciseWorkoutCard extends StatelessWidget {
                       ),
                     ),
                     Column(
-                      children: workoutSession.exercisesSetsInfo
+                      children: filteredSetsInfo
                           .map(
                             (exercisesSetInfo) => Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 6.0),
+                            const Padding(
+                              padding: EdgeInsets.symmetric(vertical: 6.0),
                               child: Text(
-                                exercisesSetInfo.exercise.target!.name,
-                                style: const TextStyle(
+                                "Sets Performed",
+                                style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 18,
                                 ),
                               ),
-
-
-                              // child: Text(
-                              //   "Sets performed",
-                              //   style: const TextStyle(
-                              //     color: Colors.white,
-                              //     fontSize: 18,
-                              //   ),
-                              // ),
-
-
-
                             ),
                             Column(
                               children: exercisesSetInfo.exerciseSets
@@ -205,37 +175,6 @@ class ExerciseWorkoutCard extends StatelessWidget {
                   ],
                 ),
               ),
-              // subtitle: ListView.builder(
-              //   shrinkWrap: true,
-              //   itemCount: workoutSession.exercisesSetsInfo.length,
-              //   itemBuilder: (context, index) {
-              //     return Row(
-              //       children: [
-              //         Text(
-              //           "${workoutSession.exercisesSetsInfo[index].exerciseSets.length} × ",
-              //           style: const TextStyle(
-              //             color: Colors.white,
-              //             fontSize: 15,
-              //           ),
-              //         ),
-              //         const SizedBox(width: 10),
-              //         Text(
-              //           workoutSession
-              //               .exercisesSetsInfo[index].exercise.target!.name,
-              //           style: const TextStyle(
-              //             color: Colors.white,
-              //             fontSize: 15,
-              //           ),
-              //         ),
-              //       ],
-              //     );
-              //   },
-              // ),
-
-
-
-
-
             ),
           ),
         ),
