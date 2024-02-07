@@ -1,6 +1,7 @@
 import 'package:group_project/models/exercise.dart';
 import 'package:group_project/models/exercise_set.dart';
 import 'package:group_project/models/exercises_sets_info.dart';
+import 'package:group_project/models/workout_session.dart';
 import 'package:group_project/models/workout_template.dart';
 import 'package:group_project/objectbox.g.dart';
 
@@ -20,8 +21,8 @@ class WorkoutTemplateService {
   Stream<List<WorkoutTemplate>> watchWorkoutTemplates() {
     return workoutTemplateBox
         .query(
-      WorkoutTemplate_.isCurrentEditing.equals(false),
-    )
+          WorkoutTemplate_.isCurrentEditing.equals(false),
+        )
         .order(WorkoutTemplate_.createdAt, flags: Order.descending)
         .watch(triggerImmediately: true)
         .map((query) => query.find());
@@ -57,8 +58,8 @@ class WorkoutTemplateService {
   WorkoutTemplate getEditingWorkoutTemplate() {
     WorkoutTemplate? editingTemplate = workoutTemplateBox
         .query(
-      WorkoutTemplate_.isCurrentEditing.equals(true),
-    )
+          WorkoutTemplate_.isCurrentEditing.equals(true),
+        )
         .build()
         .findFirst();
     if (editingTemplate == null) {
@@ -66,8 +67,8 @@ class WorkoutTemplateService {
           WorkoutTemplate(isCurrentEditing: true, createdAt: DateTime.now()));
       return workoutTemplateBox
           .query(
-        WorkoutTemplate_.isCurrentEditing.equals(true),
-      )
+            WorkoutTemplate_.isCurrentEditing.equals(true),
+          )
           .build()
           .findFirst()!;
     } else {
@@ -192,8 +193,8 @@ class WorkoutTemplateService {
         return true;
       }
       for (int j = 0;
-      j < editingTemplate.exercisesSetsInfo[i].exerciseSets.length;
-      j++) {
+          j < editingTemplate.exercisesSetsInfo[i].exerciseSets.length;
+          j++) {
         if (editingTemplate.exercisesSetsInfo[i].exerciseSets[j].reps !=
             workoutTemplate.exercisesSetsInfo[i].exerciseSets[j].reps) {
           return true;
@@ -205,5 +206,26 @@ class WorkoutTemplateService {
       }
     }
     return false;
+  }
+
+  void createWorkoutTemplateFromWorkoutSession(WorkoutSession workoutSession) {
+    WorkoutTemplate workoutTemplate = WorkoutTemplate(
+      title: workoutSession.title,
+      note: workoutSession.note,
+      createdAt: DateTime.now(),
+    );
+    for (var exercisesSetsInfo in workoutSession.exercisesSetsInfo) {
+      final newExercisesSetsInfo = ExercisesSetsInfo();
+      newExercisesSetsInfo.exercise.target = exercisesSetsInfo.exercise.target;
+      for (var exerciseSet in exercisesSetsInfo.exerciseSets) {
+        final newExerciseSet = ExerciseSet();
+        newExerciseSet.reps = exerciseSet.reps;
+        newExerciseSet.weight = exerciseSet.weight;
+        newExerciseSet.exerciseSetInfo.target = newExercisesSetsInfo;
+        newExercisesSetsInfo.exerciseSets.add(newExerciseSet);
+      }
+      workoutTemplate.exercisesSetsInfo.add(newExercisesSetsInfo);
+    }
+    workoutTemplateBox.put(workoutTemplate);
   }
 }

@@ -139,8 +139,9 @@ class ChooseExerciseState extends State<ChooseExercise> {
 
           final exercises = filteredExercises;
           final filteredData = exercises.where((exercise) {
-            final exerciseBodyPart = exercise.bodyPart.target!.name;
-            final exerciseCategory = exercise.category.target!.name;
+            final exerciseBodyPart = exercise.bodyPart.target?.name ?? '';
+            final exerciseCategory = exercise.category.target?.name ?? '';
+
 
             final isBodyPartMatch = selectedBodyPart.isEmpty ||
                 exerciseBodyPart == selectedBodyPart;
@@ -225,7 +226,6 @@ class ChooseExerciseState extends State<ChooseExercise> {
                         final firstLetter =
                             groupedExercises.keys.toList()[index];
                         final groupExercises = groupedExercises[firstLetter]!;
-
                         return Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -335,7 +335,7 @@ class ChooseExerciseState extends State<ChooseExercise> {
                                           ),
                                         ),
                                         subtitle: Text(
-                                          exercise.bodyPart.target!.name,
+                                          exercise.bodyPart.target?.name ?? '',
                                           style: TextStyle(
                                             color: Colors.grey[500],
                                             fontSize: 14,

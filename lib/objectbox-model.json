@@ -24,7 +24,7 @@
     },
     {
       "id": "4:8999125863363426104",
-      "lastPropertyId": "7:5855844984736153863",
+      "lastPropertyId": "8:3113001905839990392",
       "name": "Exercise",
       "properties": [
         {
@@ -68,6 +68,11 @@
           "id": "7:5855844984736153863",
           "name": "halfImagePath",
           "type": 9
+        },
+        {
+          "id": "8:3113001905839990392",
+          "name": "isVisible",
+          "type": 1
         }
       ],
       "relations": [
@@ -233,14 +238,14 @@
     },
     {
       "id": "11:4929714596174845997",
-      "lastPropertyId": "6:2967866759072202744",
+      "lastPropertyId": "7:8572005245043511818",
       "name": "WorkoutSession",
       "properties": [
         {
           "id": "1:5812914374676179611",
           "name": "id",
           "type": 6,
-          "flags": 1
+          "flags": 129
         },
         {
           "id": "2:8895517690980687532",
@@ -266,6 +271,11 @@
           "id": "6:2967866759072202744",
           "name": "duration",
           "type": 6
+        },
+        {
+          "id": "7:8572005245043511818",
+          "name": "imageUrl",
+          "type": 9
         }
       ],
       "relations": [
@@ -320,9 +330,48 @@
           "targetId": "10:1820858489364473134"
         }
       ]
+    },
+    {
+      "id": "13:8601612346154600758",
+      "lastPropertyId": "6:3300929871779253311",
+      "name": "Post",
+      "properties": [
+        {
+          "id": "1:8794231857076885708",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:4081608693363838663",
+          "name": "workoutSessionId",
+          "type": 6
+        },
+        {
+          "id": "3:6617369470851554964",
+          "name": "caption",
+          "type": 9
+        },
+        {
+          "id": "4:6285305530342402472",
+          "name": "firstImageUrl",
+          "type": 9
+        },
+        {
+          "id": "5:8981690831199530205",
+          "name": "secondImageUrl",
+          "type": 9
+        },
+        {
+          "id": "6:3300929871779253311",
+          "name": "date",
+          "type": 10
+        }
+      ],
+      "relations": []
     }
   ],
-  "lastEntityId": "12:5427692584665969682",
+  "lastEntityId": "13:8601612346154600758",
   "lastIndexId": "10:4380289965132632498",
   "lastRelationId": "9:1639088249226099505",
   "lastSequenceId": "0:0",

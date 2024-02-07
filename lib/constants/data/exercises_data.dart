@@ -31,7 +31,7 @@ List<Exercise> generateExerciseData() {
     Exercise exercise = Exercise(
         name: key,
         imagePath: imageMap[key]!,
-        halfImagePath: halfImageMap[key]!);
+        halfImagePath: halfImageMap[key]!, );
     exercise.bodyPart.target = bodyPartData.firstWhere((element) {
       return element.name == value.keys.first;
     });
