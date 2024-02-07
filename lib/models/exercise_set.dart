@@ -17,5 +17,7 @@ class ExerciseSet {
     this.id = 0,
     this.weight,
     this.reps,
+    this.recentReps,
+    this.recentWeight,
   });
 }

@@ -115,10 +115,12 @@ class _SetTileState extends State<SetTile> {
                       color: Colors.grey,
                     ),
                   ),
-                  onChanged: (value) => {
-                    widget.set.weight = int.tryParse(value),
-                    widget.set.recentWeight = widget.set.weight,
-                    objectBox.exerciseService.updateExerciseSet(widget.set),
+                  onChanged: (value) {
+                    setState(() {
+                      widget.set.weight = int.tryParse(value);
+                      // widget.set.recentWeight = widget.set.weight; // Update recentWeight
+                      objectBox.exerciseService.updateExerciseSet(widget.set);
+                    });
                   },
                 ),
               ),
@@ -151,11 +153,12 @@ class _SetTileState extends State<SetTile> {
                       color: Colors.grey,
                     ),
                   ),
-                  onChanged: (value) => {
-                    widget.set.reps = int.tryParse(value),
-                    widget.set.recentReps = widget.set.reps,
-
-                    objectBox.exerciseService.updateExerciseSet(widget.set),
+                  onChanged: (value) {
+                    setState(() {
+                      widget.set.reps = int.tryParse(value);
+                      // widget.set.recentReps = widget.set.reps; // Update recentReps
+                      objectBox.exerciseService.updateExerciseSet(widget.set);
+                    });
                   },
                 ),
               ),
@@ -175,6 +178,9 @@ class _SetTileState extends State<SetTile> {
                           : AppColours.primaryBright,
                       child: InkWell(
                         onTap: () {
+                          widget.set.recentWeight = widget.set.weight;
+                          widget.set.recentReps = widget.set.reps;
+                          print('now : ${widget.set.recentWeight}, ${widget.set.recentReps}');
                           widget.setIsCompleted!(widget.set.id);
                         },
                         child: const Padding(
