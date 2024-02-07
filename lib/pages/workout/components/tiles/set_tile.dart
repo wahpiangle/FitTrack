@@ -177,9 +177,21 @@ class _SetTileState extends State<SetTile> {
                           : AppColours.primaryBright,
                       child: InkWell(
                         onTap: () {
+                          // update recentWeight and recentReps
                           widget.set.recentWeight = widget.set.weight;
                           widget.set.recentReps = widget.set.reps;
-                          print('now : ${widget.set.recentWeight}, ${widget.set.recentReps}');
+
+                          // call method to update ObjectBox
+                          try {
+                            objectBox.exerciseService.updateRecentWeightAndReps(
+                              widget.set.id,
+                              widget.set.recentWeight!,
+                              widget.set.recentReps!,
+                            );
+                            print('Updated recentWeight and recentReps for ExerciseSet ${widget.set.id}');
+                          } catch (e) {
+                            print('Error updating recentWeight and recentReps: $e');
+                          }
                           widget.setIsCompleted!(widget.set.id);
                         },
                         child: const Padding(
