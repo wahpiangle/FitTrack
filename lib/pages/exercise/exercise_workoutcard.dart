@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:group_project/models/workout_session.dart';
+import 'package:group_project/pages/complete_workout/complete_history_detail.dart';
 import 'package:intl/intl.dart';
 
-import '../history/complete_workout/complete_history_detail.dart';
 
 class ExerciseWorkoutCard extends StatelessWidget {
   final WorkoutSession workoutSession;
