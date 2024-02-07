@@ -4,6 +4,7 @@ import 'package:group_project/models/category.dart';
 import 'package:group_project/models/exercise.dart';
 import 'package:group_project/models/exercise_set.dart';
 import 'package:group_project/models/exercises_sets_info.dart';
+import 'package:group_project/objectbox.g.dart';
 import 'package:group_project/services/firebase/firebase_customexercise_service.dart';
 import 'package:objectbox/objectbox.dart';
 
@@ -180,5 +181,21 @@ class ExerciseService {
       throw Exception('Exercise set with ID $exerciseSetId not found.');
     }
     }
+
+  ExerciseSet? getExerciseSetForExercise(int exerciseId) {
+    try {
+      // Fetch all ExerciseSet entities
+      final exerciseSets = exerciseSetBox.getAll();
+      // Find ExerciseSet with given exerciseId
+      final exerciseSet = exerciseSets.firstWhere(
+            (exerciseSet) => exerciseSet.id == exerciseId,
+      );
+      return exerciseSet;
+    } catch (error) {
+      print('Error fetching ExerciseSet: $error');
+      return null;
+    }
   }
+}
+
 

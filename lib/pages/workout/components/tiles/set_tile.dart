@@ -189,6 +189,7 @@ class _SetTileState extends State<SetTile> {
                               widget.set.recentReps!,
                             );
                             print('Updated recentWeight and recentReps for ExerciseSet ${widget.set.id}');
+                        //    print('${widget.set.recentWeight}');
                           } catch (e) {
                             print('Error updating recentWeight and recentReps: $e');
                           }
