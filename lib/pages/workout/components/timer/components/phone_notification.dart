@@ -17,8 +17,8 @@ class PhoneNotification {
   Future<void> showPhoneNotification(String title, String message) async {
     const AndroidNotificationDetails androidPlatformChannelSpecifics =
     AndroidNotificationDetails(
-      'channel_id_timer',
-      'channel_name_timer',
+      'chan_timer',
+      'chan_name_timer',
       importance: Importance.max,
       priority: Priority.high,
       ticker: 'ticker',
@@ -35,5 +35,13 @@ class PhoneNotification {
       message,
       platformChannelSpecifics,
     );
+  }
+
+  //for Android 13 (API level 33) onwards
+  Future<void> requestNotificationPermission() async {
+    await flutterLocalNotificationsPlugin
+        .resolvePlatformSpecificImplementation<
+        AndroidFlutterLocalNotificationsPlugin>()
+        ?.requestNotificationsPermission();
   }
 }

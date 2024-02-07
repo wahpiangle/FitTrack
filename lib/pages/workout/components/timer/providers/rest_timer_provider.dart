@@ -124,6 +124,7 @@ class RestTimerProvider with ChangeNotifier {
         }
 
         _currentDuration = _restTimerMinutes * 60 + _restTimerSeconds;
+        _restTimerDuration= _restTimerMinutes * 60 + _restTimerSeconds;
         _timer?.cancel();
         _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
           if (_currentDuration <= 0) {

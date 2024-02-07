@@ -32,6 +32,8 @@ Future<void> main() async {
 
   notificationManager = PhoneNotification();
   await notificationManager.initializeNotifications();
+  PhoneNotification phoneNotification = PhoneNotification();
+  await phoneNotification.requestNotificationPermission();
 
   runApp(const MyApp());
 }
