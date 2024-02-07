@@ -29,6 +29,7 @@ class RestTimerProvider with ChangeNotifier {
     SharedPreferences.getInstance().then((prefs) {
       _isRestTimerRunning = prefs.getBool('isRestTimerRunning') ?? false;
       _currentDuration = prefs.getInt('restTimerCurrentDuration') ?? 0;
+      _restTimerDuration = prefs.getInt('restTimerDuration') ?? 0;
       _isDialogShown = prefs.getBool('isDialogShown') ?? false;
       _isDialogOpen = prefs.getBool('isDialogOpen') ?? false;
       _restTimerMinutes = prefs.getInt('restTimerMinutes') ?? 0;
@@ -45,6 +46,7 @@ class RestTimerProvider with ChangeNotifier {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setBool('isRestTimerRunning', _isRestTimerRunning);
     prefs.setInt('restTimerCurrentDuration', _currentDuration);
+    prefs.setInt('restTimerDuration', _restTimerDuration);
     prefs.setBool('isDialogShown', _isDialogShown);
     prefs.setBool('isDialogOpen', _isDialogOpen);
     prefs.setInt('restTimerMinutes', _restTimerMinutes);
@@ -159,7 +161,7 @@ class RestTimerProvider with ChangeNotifier {
         },
       ),
     );
-    notificationManager.showNotification('Rest Time Completed', 'Your rest time has ended! Get back to work! ⏰ 💪');
+    notificationManager.showPhoneNotification('Rest Time Completed', 'Your rest time has ended! Get back to work! ⏰ 💪');
   }
 
   void resetRestTimer(int newDuration, BuildContext context) {

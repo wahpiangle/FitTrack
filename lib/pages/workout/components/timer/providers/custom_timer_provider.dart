@@ -159,7 +159,7 @@ class CustomTimerProvider with ChangeNotifier {
         },
       ),
     );
-    notificationManager.showNotification('Custom Timer Completed', 'Your custom timer has ended! ⏰');
+    notificationManager.showPhoneNotification('Custom Timer Completed', 'Your custom timer has ended! ⏰');
   }
 
   void resetCustomTimer(int newDuration, BuildContext context) {
