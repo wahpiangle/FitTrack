@@ -149,7 +149,7 @@
     },
     {
       "id": "7:3746532471321315396",
-      "lastPropertyId": "5:9138861087088139292",
+      "lastPropertyId": "7:3405313488458173311",
       "name": "ExerciseSet",
       "properties": [
         {
@@ -180,6 +180,16 @@
           "flags": 520,
           "indexId": "4:6650087091303056651",
           "relationTarget": "ExercisesSetsInfo"
+        },
+        {
+          "id": "6:7427081702969933031",
+          "name": "recentWeight",
+          "type": 6
+        },
+        {
+          "id": "7:3405313488458173311",
+          "name": "recentReps",
+          "type": 6
         }
       ],
       "relations": []

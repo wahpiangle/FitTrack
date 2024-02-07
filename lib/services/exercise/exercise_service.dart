@@ -169,4 +169,16 @@ class ExerciseService {
     exercise.isSelected = false;
     exerciseBox.put(exercise);
   }
-}
+
+  void updateRecentWeightAndReps(int exerciseSetId, int recentWeight, int recentReps) {
+    final exerciseSet = exerciseSetBox.get(exerciseSetId);
+    if (exerciseSet != null) {
+      exerciseSet.recentWeight = recentWeight;
+      exerciseSet.recentReps = recentReps;
+      exerciseSetBox.put(exerciseSet);
+    } else {
+      throw Exception('Exercise set with ID $exerciseSetId not found.');
+    }
+    }
+  }
+
