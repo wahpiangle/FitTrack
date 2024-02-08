@@ -45,15 +45,11 @@ class _EditProfilePageState extends State<EditProfilePage> {
     final profileImageProvider = Provider.of<ProfileImageProvider>(context);
 
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: const Color(0xFF1A1A1A),
-        title: const Text(
-          'Edit Profile',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        centerTitle: true,
+      appBar: const TopNavBar(
+        pageIndex: 0,
+        title: 'Edit Profile',
+        user: null,
+        showBackButton: true,
       ),
       body: SingleChildScrollView(
         child: Container(
@@ -183,7 +179,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                                     30.0), // Make it round
                               ),
                             ),
-                            child: const Text('Save Changes',
+                            child: const Text('Save',
                                 style: TextStyle(
                                     color: Colors.black,
                                     fontWeight: FontWeight.bold)),

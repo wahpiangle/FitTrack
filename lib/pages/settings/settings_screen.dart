@@ -175,7 +175,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           child: Text(
                             'Profile',
                             style: TextStyle(
-                              fontSize: 24,
+                              fontSize: 20,
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
                             ),
@@ -216,12 +216,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                 username,
                                 maxLines: 1,
                                 style: const TextStyle(
-                                    fontSize: 24, color: Colors.white),
+                                    fontSize: 20, color: Colors.white),
                               ),
                             ),
                             const SizedBox(height: 12),
                             Container(
-                              width: 150,
+                              width: MediaQuery.of(context).size.width * 0.35,
+                              height:MediaQuery.of(context).size.height * 0.05,
                               decoration: BoxDecoration(
                                 color: const Color(0xFFE1F0CF),
                                 borderRadius: BorderRadius.circular(100),
@@ -239,7 +240,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                   'Edit Profile',
                                   style: TextStyle(
                                     color: Color(0xFF1A1A1A),
-                                    fontSize: 16,
+                                    fontSize: 14,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
@@ -249,7 +250,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 60),
+                    const SizedBox(height: 55),
                     ProfileMenuItem(
                       title: "Notifications",
                       icon: Icons.notifications,
@@ -393,7 +394,7 @@ class ProfileMenuItem extends StatelessWidget {
                           title,
                           style: const TextStyle(
                             color: Colors.white,
-                            fontSize: 18,
+                            fontSize: 15,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -410,7 +411,7 @@ class ProfileMenuItem extends StatelessWidget {
             ),
           ),
         ),
-        const SizedBox(height: 20),
+        const SizedBox(height: 15),
       ],
     );
   }

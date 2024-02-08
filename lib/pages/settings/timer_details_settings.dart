@@ -95,7 +95,7 @@ class TimerDetailsSettings extends StatelessWidget {
         title,
         style: const TextStyle(
           color: Colors.white,
-          fontSize: 20,
+          fontSize: 18,
           fontWeight: FontWeight.bold,
         ),
       ),
@@ -110,7 +110,7 @@ class TimerDetailsSettings extends StatelessWidget {
   }) {
     return Container(
       padding: const EdgeInsets.all(16.0),
-      height: MediaQuery.of(context).size.height * 0.1,
+      height: MediaQuery.of(context).size.height * 0.08,
       decoration: BoxDecoration(
         color: Colors.grey[850],
         borderRadius: BorderRadius.circular(20.0),
@@ -122,17 +122,20 @@ class TimerDetailsSettings extends StatelessWidget {
             title,
             style: const TextStyle(
               color: Colors.white,
-              fontSize: 18,
+              fontSize: 15,
               fontWeight: FontWeight.bold,
             ),
           ),
-          Switch(
-            value: value,
-            onChanged: onChanged,
-            activeTrackColor: AppColours.secondaryDark,
-            activeColor: const Color(0xFFE1F0CF),
-            inactiveThumbColor: const Color(0xFFC1C1C1),
-            inactiveTrackColor: const Color(0xFF4D4D4D),
+          Transform.scale(
+            scale: 0.8,
+            child: Switch(
+              value: value,
+              onChanged: onChanged,
+              activeTrackColor: AppColours.secondaryDark,
+              activeColor: const Color(0xFFE1F0CF),
+              inactiveThumbColor: const Color(0xFFC1C1C1),
+              inactiveTrackColor: const Color(0xFF4D4D4D),
+            ),
           ),
         ],
       ),
@@ -156,7 +159,7 @@ class TimerDetailsSettings extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        height: MediaQuery.of(context).size.height * 0.1,
+        height: MediaQuery.of(context).size.height * 0.08,
         padding: const EdgeInsets.all(16.0),
         decoration: BoxDecoration(
           color: Colors.grey[850],
@@ -169,7 +172,7 @@ class TimerDetailsSettings extends StatelessWidget {
               title,
               style: const TextStyle(
                 color: Colors.white,
-                fontSize: 18,
+                fontSize: 15,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -177,7 +180,7 @@ class TimerDetailsSettings extends StatelessWidget {
               durationText,
               style: const TextStyle(
                 color: Colors.white,
-                fontSize: 15,
+                fontSize: 13,
               ),
             ),
           ],
@@ -193,7 +196,7 @@ class TimerDetailsSettings extends StatelessWidget {
     required ValueChanged<int?> onChanged,
   }) {
     return Container(
-      height: MediaQuery.of(context).size.height * 0.1,
+      height: MediaQuery.of(context).size.height * 0.08,
       padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
         color: Colors.grey[850],
@@ -206,7 +209,7 @@ class TimerDetailsSettings extends StatelessWidget {
             title,
             style: const TextStyle(
               color: Colors.white,
-              fontSize: 18,
+              fontSize: 15,
               fontWeight: FontWeight.bold,
             ),
           ),
