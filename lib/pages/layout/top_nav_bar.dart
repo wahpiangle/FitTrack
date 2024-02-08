@@ -33,7 +33,7 @@ class TopNavBar extends StatelessWidget implements PreferredSizeWidget {
       leadingWidget = IconButton(
         icon: Theme(
           data: ThemeData(iconTheme: IconThemeData(color: Colors.white)),
-          child: const Icon(Icons.arrow_back),
+          child: const Icon(Icons.arrow_back_ios),
         ),
         onPressed: () {
           Navigator.pop(context);

@@ -162,7 +162,7 @@ class _StartNewWorkoutState extends State<StartNewWorkout> {
                 ClipRRect(
                   borderRadius: BorderRadius.circular(8.0),
                   child: FractionallySizedBox(
-                    widthFactor: 0.2,
+                    widthFactor: 0.18,
                     child: LinearProgressIndicator(
                       value: restTimerProvider.currentRestTimerDuration > 0
                           ? restTimerProvider.currentRestTimerDuration /
@@ -182,7 +182,7 @@ class _StartNewWorkoutState extends State<StartNewWorkout> {
                   ClipRRect(
                     borderRadius: BorderRadius.circular(8.0),
                     child: FractionallySizedBox(
-                      widthFactor: 0.45,
+                      widthFactor: 0.40,
                       child: LinearProgressIndicator(
                         value: restTimerProvider.currentRestTimerDuration > 0
                             ? restTimerProvider.currentRestTimerDuration /
@@ -201,7 +201,7 @@ class _StartNewWorkoutState extends State<StartNewWorkout> {
                   ClipRRect(
                     borderRadius: BorderRadius.circular(8.0),
                     child: FractionallySizedBox(
-                      widthFactor: 0.45,
+                      widthFactor: 0.40,
                       child: LinearProgressIndicator(
                         value: customTimerProvider.customCurrentTimerDuration >
                                 0
