@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:group_project/models/exercise.dart';
 import 'package:group_project/pages/exercise/exercise_detail.dart';

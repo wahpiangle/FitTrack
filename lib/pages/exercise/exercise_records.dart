@@ -1,0 +1,86 @@
+import 'package:flutter/material.dart';
+import 'package:group_project/models/exercise.dart';
+import 'package:group_project/constants/themes/app_colours.dart';
+import 'exercise_navigation_buttons.dart';
+
+class ExerciseRecords extends StatefulWidget {
+  final Exercise exercise;
+
+  const ExerciseRecords(this.exercise, {super.key});
+
+  @override
+  State<ExerciseRecords> createState() => _ExerciseRecordsState();
+}
+
+class _ExerciseRecordsState extends State<ExerciseRecords> {
+  int selectedPageIndex = 3;
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: AppColours.primary,
+      appBar: AppBar(
+        backgroundColor: const Color(0xFF1A1A1A),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () {
+              // Add edit functionality here
+            },
+            child: const Text(
+              'Edit',
+              style: TextStyle(
+                fontSize: 18,
+                color: AppColours.secondary,
+              ),
+            ),
+          )
+        ],
+        leading: IconButton(
+          onPressed: () {},
+          icon: IconButton(
+            icon: const Icon(Icons.close_sharp, color: Colors.white),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+        ),
+        title: Center(
+          child: Text(
+            widget.exercise.name,
+            style: const TextStyle(fontSize: 18, color: Colors.white),
+          ),
+        ),
+      ),
+      body: SingleChildScrollView(
+        child: Row(
+          children: [
+            Expanded(
+              flex: 4,
+              child: Center(
+                child: Column(
+                  children: [
+                    const SizedBox(height: 10.0),
+                    NavigationButtonsRow(
+                      selectedPageIndex: selectedPageIndex,
+                      exercise: widget.exercise,
+                    ),
+                    const SizedBox(height: 10.0),
+                    const Align(
+                      alignment: Alignment.centerLeft,
+                      child: Padding(
+                        padding: EdgeInsets.all(20.0),
+                        child: Text(
+                          'Records',
+                          style: TextStyle(fontSize: 18, color: Colors.white),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
