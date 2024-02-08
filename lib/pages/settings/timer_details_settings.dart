@@ -48,7 +48,8 @@ class TimerDetailsSettings extends StatelessWidget {
                 buildContainerWithDuration(
                   context: context,
                   title: 'Rest Duration',
-                  durationText: '${restTimerProvider.restTimerMinutes} min ${restTimerProvider.restTimerSeconds} sec',
+                  restTimerMinutes: restTimerProvider.restTimerMinutes,
+                  restTimerSeconds: restTimerProvider.restTimerSeconds,
                   onTap: () async {
                     await _showScrollRestPicker(context, restTimerProvider);
                   },
@@ -138,13 +139,20 @@ class TimerDetailsSettings extends StatelessWidget {
     );
   }
 
-  //Rest Duration Item
   Widget buildContainerWithDuration({
     required BuildContext context,
     required String title,
-    required String durationText,
+    required int? restTimerMinutes,
+    required int? restTimerSeconds,
     required VoidCallback onTap,
   }) {
+    String durationText;
+    if (restTimerMinutes != null && restTimerSeconds != null) {
+      durationText = '$restTimerMinutes min $restTimerSeconds sec';
+    } else {
+      durationText = 'Select duration'; // Default text when no time is selected
+    }
+
     return GestureDetector(
       onTap: onTap,
       child: Container(
