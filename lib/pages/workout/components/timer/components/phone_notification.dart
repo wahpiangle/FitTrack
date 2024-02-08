@@ -17,14 +17,15 @@ class PhoneNotification {
   Future<void> showPhoneNotification(String title, String message) async {
     const AndroidNotificationDetails androidPlatformChannelSpecifics =
     AndroidNotificationDetails(
-      'chan_timer',
-      'chan_name_timer',
+      'channel_id_timer',
+      'channel_name_timer',
       importance: Importance.max,
       priority: Priority.high,
       ticker: 'ticker',
       playSound: true,
       sound: RawResourceAndroidNotificationSound('notification_sound'),
       visibility: NotificationVisibility.public,
+      fullScreenIntent: true,
     );
     const NotificationDetails platformChannelSpecifics =
     NotificationDetails(android: androidPlatformChannelSpecifics);
