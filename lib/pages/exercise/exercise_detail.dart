@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:group_project/constants/themes/exercise_list_theme.dart';
 import 'package:group_project/main.dart';
 import 'package:group_project/models/exercise.dart';
 import 'package:group_project/pages/exercise/components/edit_exercise.dart';
-import 'package:flutter/material.dart';
-import 'package:group_project/models/exercise.dart';
 import 'package:group_project/constants/themes/app_colours.dart';
 import 'exercise_navigation_buttons.dart';
 
@@ -34,13 +31,17 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: ExerciseListThemes.appBarBackground,
+      backgroundColor: AppColours.primary,
       appBar: AppBar(
         backgroundColor: const Color(0xFF1A1A1A),
         actions: <Widget>[
           TextButton(
-            onPressed: () {
-              //TODO: Add edit functionality here
+            onPressed: () async {
+              final newExerciseName = await EditExerciseDialog.editExercise(
+                  context, objectBox, widget.exercise);
+              if (newExerciseName != null) {
+                updateExerciseName(newExerciseName);
+              }
             },
             child: const Text(
               'Edit',
@@ -104,19 +105,6 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
                             '$exerciseName',
                             style: const TextStyle(
                                 fontSize: 18, color: Colors.white),
-                          ),
-                          const SizedBox(width: 4),
-                          IconButton(
-                            onPressed: () async {
-                              final newExerciseName =
-                                  await EditExerciseDialog.editExercise(
-                                      context, objectBox, widget.exercise);
-                              if (newExerciseName != null) {
-                                updateExerciseName(newExerciseName);
-                              }
-                            },
-                            icon: const Icon(Icons.edit),
-                            color: Colors.white,
                           ),
                         ],
                       ),

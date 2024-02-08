@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:group_project/models/exercise.dart';
 import 'package:group_project/constants/themes/app_colours.dart';
-import '../../constants/themes/exercise_list_theme.dart';
 import 'exercise_navigation_buttons.dart';
 
 class ExerciseCharts extends StatefulWidget {
@@ -18,7 +17,7 @@ class _ExerciseChartsState extends State<ExerciseCharts> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: ExerciseListThemes.appBarBackground,
+      backgroundColor: AppColours.primary,
       appBar: AppBar(
         backgroundColor: const Color(0xFF1A1A1A),
         actions: <Widget>[

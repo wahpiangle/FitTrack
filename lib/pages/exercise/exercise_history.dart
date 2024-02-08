@@ -4,14 +4,12 @@ import 'package:scroll_to_index/scroll_to_index.dart';
 import 'package:group_project/constants/themes/app_colours.dart';
 import 'package:group_project/main.dart';
 import 'package:group_project/models/workout_session.dart';
-import '../../constants/themes/exercise_list_theme.dart';
 import 'exercise_navigation_buttons.dart';
 import 'exercise_workoutcard.dart';
 
 class ExerciseHistory extends StatefulWidget {
   final Exercise exercise;
   const ExerciseHistory(this.exercise, {super.key});
-
 
   @override
   State<ExerciseHistory> createState() => _ExerciseHistoryState();
@@ -32,7 +30,7 @@ class _ExerciseHistoryState extends State<ExerciseHistory> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: ExerciseListThemes.appBarBackground,
+      backgroundColor: AppColours.primary,
       appBar: AppBar(
         backgroundColor: const Color(0xFF1A1A1A),
         actions: <Widget>[
@@ -111,29 +109,30 @@ class _ExerciseHistoryState extends State<ExerciseHistory> {
                             ],
                           )
                         : ListView(
-                      controller: _scrollController,
-                      children: snapshot.data!
-                          .where((workoutSession) =>
-                          workoutSession.exercisesSetsInfo.any((info) =>
-                          info.exercise.target?.name == widget.exercise.name))
-                          .map((workoutSession) {
-                        return AutoScrollTag(
-                          key: ValueKey(workoutSession.id),
-                          controller: _scrollController,
-                          index: snapshot.data!.indexWhere((element) =>
-                          element.id == workoutSession.id),
-                          child: IgnorePointer(
-                            ignoring: true,
-                            child: ExerciseWorkoutCard(
-                              key: Key(workoutSession.id.toString()),
-                              workoutSession: workoutSession,
-                              exerciseName: widget.exercise.name,
-                            ),
+                            controller: _scrollController,
+                            children: snapshot.data!
+                                .where((workoutSession) => workoutSession
+                                    .exercisesSetsInfo
+                                    .any((info) =>
+                                        info.exercise.target?.name ==
+                                        widget.exercise.name))
+                                .map((workoutSession) {
+                              return AutoScrollTag(
+                                key: ValueKey(workoutSession.id),
+                                controller: _scrollController,
+                                index: snapshot.data!.indexWhere((element) =>
+                                    element.id == workoutSession.id),
+                                child: IgnorePointer(
+                                  ignoring: true,
+                                  child: ExerciseWorkoutCard(
+                                    key: Key(workoutSession.id.toString()),
+                                    workoutSession: workoutSession,
+                                    exerciseName: widget.exercise.name,
+                                  ),
+                                ),
+                              );
+                            }).toList(),
                           ),
-                        );
-                      }).toList(),
-                    ),
-
                   ),
                 ),
                 const SizedBox(height: 10.0),
