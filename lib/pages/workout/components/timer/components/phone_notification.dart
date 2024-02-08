@@ -14,19 +14,18 @@ class PhoneNotification {
       initializationSettings,
     );
 
-    // Create a notification channel
     const AndroidNotificationChannel channel = AndroidNotificationChannel(
-      'channel_id_timer_2',
-      'channel_name_timer_2',
+      'channel_id_timer_3',
+      'channel_name_timer_3',
       importance: Importance.max,
       playSound: true,
+      sound: RawResourceAndroidNotificationSound('notification_sound'),
     );
     await flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<
         AndroidFlutterLocalNotificationsPlugin>()
         ?.createNotificationChannel(channel);
 
-    // Check and request notification permissions
     await _requestNotificationPermissions();
   }
 
@@ -41,15 +40,13 @@ class PhoneNotification {
     // Check if notification permission is granted
     final status = await Permission.notification.status;
     if (status.isDenied || status.isPermanentlyDenied) {
-      // Handle the case where the user hasn't granted notification permission
-      // You may show an explanation to the user or navigate them to the settings
       return;
     }
 
     const AndroidNotificationDetails androidPlatformChannelSpecifics =
     AndroidNotificationDetails(
-      'channel_id_timer_2',
-      'channel_name_timer_2',
+      'channel_id_timer_3',
+      'channel_name_timer_3',
       importance: Importance.max,
       priority: Priority.high,
       ticker: 'ticker',
