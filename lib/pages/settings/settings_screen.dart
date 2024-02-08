@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:group_project/pages/auth/edit_password.dart';
 import 'package:group_project/pages/auth/settings_signup.dart';
-import 'package:group_project/pages/components/top_nav_bar.dart';
+import 'package:group_project/pages/layout/top_nav_bar.dart';
 import 'package:group_project/pages/settings/timer_details_settings.dart';
 import 'package:provider/provider.dart';
 import 'package:group_project/services/firebase/auth_service.dart';
@@ -12,7 +12,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:io';
 import 'package:group_project/pages/workout/State/timer_sheet_manager.dart';
 import 'package:group_project/pages/workout/components/timer/providers/timer_provider.dart';
-
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -33,24 +32,25 @@ class _SettingsScreenState extends State<SettingsScreen> {
     super.initState();
     _loadUserData();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-
       _handleTimerActive(context); // Add this line to handle timer state
     });
   }
 
   void _handleTimerActive(BuildContext context) {
     TimerProvider? timerProvider =
-    Provider.of<TimerProvider>(context, listen: false);
+        Provider.of<TimerProvider>(context, listen: false);
 
     void handleTimerStateChanged() {
       if (timerProvider.isTimerRunning &&
           !TimerManager().isTimerActiveScreenOpen) {
-        TimerManager().showTimerBottomSheet(context, []); // Pass an empty exercise list or provide relevant data
+        TimerManager().showTimerBottomSheet(context,
+            []); // Pass an empty exercise list or provide relevant data
       } else if (!timerProvider.isTimerRunning &&
           TimerManager().isTimerActiveScreenOpen) {
         TimerManager().closeTimerBottomSheet(context);
       }
     }
+
     void Function()? listener;
     listener = () {
       if (mounted) {
@@ -62,7 +62,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
     timerProvider.addListener(listener);
   }
-
 
   Future<void> _loadUserData() async {
     _prefs = await SharedPreferences.getInstance();
@@ -168,7 +167,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-
                     const Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -255,9 +253,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     ProfileMenuItem(
                       title: "Notifications",
                       icon: Icons.notifications,
-                      onPressed: () {
-
-                      },
+                      onPressed: () {},
                     ),
                     ProfileMenuItem(
                       title: "Timer",
@@ -274,9 +270,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     ProfileMenuItem(
                       title: "Help Centre",
                       icon: Icons.info,
-                      onPressed: () {
-
-                      },
+                      onPressed: () {},
                     ),
                     if ((isAnonymous))
                       ProfileMenuItem(
@@ -305,9 +299,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     ProfileMenuItem(
                       title: "Terms and Conditions",
                       icon: Icons.gavel,
-                      onPressed: () {
-
-                      },
+                      onPressed: () {},
                     ),
                     const SizedBox(height: 40),
                     LogoutButton(),
@@ -328,9 +320,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       profileImage = newProfileImage;
       if (isAnonymous) {
         _saveUserData(); // Save updated profile image for anonymous users
-      } else {
-
-      }
+      } else {}
     });
   }
 
@@ -438,7 +428,7 @@ class LogoutButton extends StatelessWidget {
         onPressed: () {
           authService.signOut();
           Future.microtask(
-                  () => Navigator.of(context).popAndPushNamed('/auth'));
+              () => Navigator.of(context).popAndPushNamed('/auth'));
         },
         style: TextButton.styleFrom(
           foregroundColor: Colors.red,

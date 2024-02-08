@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:group_project/main.dart';
 import 'package:group_project/models/workout_session.dart';
-import 'package:group_project/pages/history/complete_workout/congratulation_screen.dart';
+import 'package:group_project/pages/complete_workout/congratulation_screen.dart';
 import 'package:group_project/pages/workout/components/timer/providers/rest_timer_provider.dart';
 import 'package:group_project/pages/workout/components/timer/providers/timer_provider.dart';
 import 'package:group_project/services/firebase/firebase_workouts_service.dart';
@@ -59,7 +59,9 @@ class FinishWorkoutDialog extends StatelessWidget {
             Navigator.of(context).push(
               PageRouteBuilder(
                 pageBuilder: (context, animation, secondaryAnimation) {
-                  return const CongratulationScreen();
+                  return CongratulationScreen(
+                    workoutSession: savedWorkout,
+                  );
                 },
                 transitionsBuilder:
                     (context, animation, secondaryAnimation, child) {

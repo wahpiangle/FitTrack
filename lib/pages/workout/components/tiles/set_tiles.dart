@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:group_project/constants/themes/app_colours.dart';
 import 'package:group_project/models/exercise_set.dart';
 import 'package:group_project/models/exercises_sets_info.dart';
-import 'package:group_project/pages/workout/components/tiles/components/set_labels.dart';
-import 'package:group_project/pages/workout/components/tiles/components/set_tile.dart';
+import 'package:group_project/pages/workout/components/tiles/set_labels.dart';
+import 'package:group_project/pages/workout/components/tiles/set_tile.dart';
 
 class SetTiles extends StatefulWidget {
   final ExercisesSetsInfo exercisesSetsInfo;

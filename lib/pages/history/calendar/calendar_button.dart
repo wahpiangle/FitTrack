@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:group_project/constants/themes/app_colours.dart';
 import 'package:group_project/models/workout_session.dart';
-import 'package:group_project/pages/history/components/history_calendar.dart';
+import 'package:group_project/pages/history/calendar/history_calendar.dart';
 
 class CalendarButton extends StatelessWidget {
   final List<WorkoutSession> workoutSessions;
