@@ -17,8 +17,8 @@ class PhoneNotification {
   Future<void> showPhoneNotification(String title, String message) async {
     const AndroidNotificationDetails androidPlatformChannelSpecifics =
     AndroidNotificationDetails(
-      'channel_id_timer',
-      'channel_name_timer',
+      'channel_id_timer_2',
+      'channel_name_timer_2',
       importance: Importance.max,
       priority: Priority.high,
       ticker: 'ticker',
