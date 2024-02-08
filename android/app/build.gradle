@@ -27,7 +27,6 @@ android {
     namespace "com.example.group_project"
     compileSdkVersion flutter.compileSdkVersion
     ndkVersion flutter.ndkVersion
-    compileSdkVersion 33
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -52,7 +51,6 @@ android {
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         multiDexEnabled true
-        targetSdkVersion 33
     }
 
     buildTypes {

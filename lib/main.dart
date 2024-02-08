@@ -24,22 +24,16 @@ import 'package:group_project/services/user_state.dart';
 import 'package:group_project/pages/workout/components/timer/providers/timer_provider.dart';
 
 late ObjectBox objectBox;
-late PhoneNotification notificationManager;
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+late PhoneNotification notificationManager;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
   objectBox = await ObjectBox.create();
-
-  notificationManager = PhoneNotification();
-  await notificationManager.initializeNotifications();
-  PhoneNotification phoneNotification = PhoneNotification();
-  await phoneNotification.requestNotificationPermission();
-
-  runApp(const MyApp());
 
   await FirebaseAppCheck.instance.activate(
     // Default provider for Android is the Play Integrity provider. You can use the "AndroidProvider" enum to choose
@@ -57,6 +51,11 @@ Future<void> main() async {
     appleProvider: AppleProvider.debug,
   );
 
+  notificationManager = PhoneNotification();
+  await notificationManager.initializeNotifications();
+  PhoneNotification phoneNotification = PhoneNotification();
+  await phoneNotification.requestNotificationPermission();
+
   final cameras = await availableCameras();
 
   runApp(MyApp(
@@ -71,6 +70,7 @@ class MyApp extends StatelessWidget {
     required this.cameras,
   });
 
+  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -100,11 +100,11 @@ class MyApp extends StatelessWidget {
           "app_layout": (context) => const AppLayout(),
           "congratulation_screen": (context) => const CongratulationScreen(),
           "history_screen": (context) => const HistoryScreen(
-                exerciseData: [],
-              ),
+            exerciseData: [],
+          ),
           "post_workout_prompt": (context) => PostWorkoutPrompt(
-                cameras: cameras,
-              ),
+            cameras: cameras,
+          ),
         },
         theme: ThemeData(
           bottomNavigationBarTheme: const BottomNavigationBarThemeData(
