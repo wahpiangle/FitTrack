@@ -148,12 +148,12 @@ class _RestTimerDialogState extends State<RestTimerDialog>
                           ),
                           style: const TextStyle(
                             color: Color(0xFFE1F0CF),
-                            fontSize: 64,
+                            fontSize: 54,
                           ),
                         ),
                       ],
                     ),
-                    const SizedBox(height: 40),
+                    const SizedBox(height: 45),
                     Padding(
                       padding: const EdgeInsets.only(bottom: 36.0),
                       child: Row(

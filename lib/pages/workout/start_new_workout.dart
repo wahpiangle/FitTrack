@@ -162,7 +162,7 @@ class _StartNewWorkoutState extends State<StartNewWorkout> {
                 ClipRRect(
                   borderRadius: BorderRadius.circular(8.0),
                   child: FractionallySizedBox(
-                    widthFactor: 0.15,
+                    widthFactor: 0.2,
                     child: LinearProgressIndicator(
                       value: restTimerProvider.currentRestTimerDuration > 0
                           ? restTimerProvider.currentRestTimerDuration /
@@ -182,7 +182,7 @@ class _StartNewWorkoutState extends State<StartNewWorkout> {
                   ClipRRect(
                     borderRadius: BorderRadius.circular(8.0),
                     child: FractionallySizedBox(
-                      widthFactor: 0.35,
+                      widthFactor: 0.45,
                       child: LinearProgressIndicator(
                         value: restTimerProvider.currentRestTimerDuration > 0
                             ? restTimerProvider.currentRestTimerDuration /
@@ -201,7 +201,7 @@ class _StartNewWorkoutState extends State<StartNewWorkout> {
                   ClipRRect(
                     borderRadius: BorderRadius.circular(8.0),
                     child: FractionallySizedBox(
-                      widthFactor: 0.35,
+                      widthFactor: 0.45,
                       child: LinearProgressIndicator(
                         value: customTimerProvider.customCurrentTimerDuration >
                                 0
@@ -229,7 +229,7 @@ class _StartNewWorkoutState extends State<StartNewWorkout> {
                       children: [
                         const Icon(Icons.access_time,
                             color: Colors.white, size: 24),
-                        const SizedBox(width: 4),
+                        const SizedBox(width: 2),
                         Text(
                           " ${RestTimerProvider.formatDuration(restTimerProvider.currentRestTimerDuration)}",
                           style: const TextStyle(
@@ -270,7 +270,7 @@ class _StartNewWorkoutState extends State<StartNewWorkout> {
                       children: [
                         const Icon(Icons.access_time,
                             color: Colors.white, size: 24),
-                        const SizedBox(width: 4),
+                        const SizedBox(width: 2),
                         Text(
                           " ${RestTimerProvider.formatDuration(customTimerProvider.customCurrentTimerDuration)}",
                           style: const TextStyle(
