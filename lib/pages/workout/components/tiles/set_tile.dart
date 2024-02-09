@@ -74,19 +74,43 @@ class _SetTileState extends State<SetTile> {
             const SizedBox(width: 20),
             Expanded(
               flex: 1,
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                child: Text(
-                  widget.set.recentWeight != null
-                      ? 'Previous weight: ${widget.set.recentWeight}, reps: ${widget.set.recentReps}'
-                      : '-',
-                  style: const TextStyle(
-                    fontSize: 12,
-                    color: Colors.grey,
-                  ),
-                ),
+              child: FutureBuilder<ExerciseSet?>(
+                future: objectBox.exerciseService.getExerciseSetForExercise(widget.set.id),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const CircularProgressIndicator(); // Show loading indicator while fetching data
+                  } else if (snapshot.hasError) {
+                    return Text('Error: ${snapshot.error}'); // Show error message if fetching data fails
+                  } else {
+                    final exerciseSet = snapshot.data;
+                    if (exerciseSet != null && exerciseSet.recentWeight != null && exerciseSet.recentReps != null) {
+                      return Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        child: Text(
+                          'Previous weight: ${exerciseSet.recentWeight}, reps: ${exerciseSet.recentReps}',
+                          style: const TextStyle(
+                            fontSize: 12,
+                            color: Colors.grey,
+                          ),
+                        ),
+                      );
+                    } else {
+                      return Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        child: const Text(
+                          '-',
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.grey,
+                          ),
+                        ),
+                      );
+                    }
+                  }
+                },
               ),
             ),
+
             Expanded(
               flex: 1,
               child: Container(
