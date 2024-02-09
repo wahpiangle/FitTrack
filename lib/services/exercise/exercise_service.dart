@@ -182,20 +182,24 @@ class ExerciseService {
     }
     }
 
-  ExerciseSet? getExerciseSetForExercise(int exerciseId) {
+  Future<ExerciseSet?> getExerciseSetForExercise(int exerciseId) async {
     try {
-      // Fetch all ExerciseSet entities
+      // Fetch all ExerciseSet entities from box
       final exerciseSets = exerciseSetBox.getAll();
-      // Find ExerciseSet with given exerciseId
+
+      // Find ExerciseSet with the given exerciseId
       final exerciseSet = exerciseSets.firstWhere(
-            (exerciseSet) => exerciseSet.id == exerciseId,
+            (exerciseSet) => exerciseSet.id == exerciseId, // Adjust the condition as needed
+
       );
+
       return exerciseSet;
     } catch (error) {
       print('Error fetching ExerciseSet: $error');
       return null;
     }
   }
+
 }
 
 
