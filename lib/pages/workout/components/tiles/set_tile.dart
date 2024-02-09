@@ -28,6 +28,25 @@ class SetTile extends StatefulWidget {
 }
 
 class _SetTileState extends State<SetTile> {
+  int? recentWeight;
+  int? recentReps;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchRecentWeightAndReps();
+  }
+
+  Future<void> fetchRecentWeightAndReps() async {
+    final exerciseSet = await objectBox.exerciseService.getExerciseSetForExercise(widget.set.id);
+    if (exerciseSet != null) {
+      setState(() {
+        recentWeight = exerciseSet.recentWeight;
+        recentReps = exerciseSet.recentReps;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
 
@@ -98,7 +117,7 @@ class _SetTileState extends State<SetTile> {
                       return Container(
                         padding: const EdgeInsets.symmetric(horizontal: 8.0),
                         child: const Text(
-                          '-',
+                          'Error',
                           style: TextStyle(
                             fontSize: 12,
                             color: Colors.grey,
@@ -213,7 +232,7 @@ class _SetTileState extends State<SetTile> {
                               widget.set.recentReps!,
                             );
                             print('Updated recentWeight and recentReps for ExerciseSet ${widget.set.id}');
-                        //    print('${widget.set.recentWeight}');
+                         print('recent weight is  now ${widget.set.recentWeight}');
                           } catch (e) {
                             print('Error updating recentWeight and recentReps: $e');
                           }
