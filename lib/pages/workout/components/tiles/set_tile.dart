@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:group_project/constants/themes/app_colours.dart';
@@ -43,7 +44,12 @@ class _SetTileState extends State<SetTile> {
       setState(() {
         recentWeight = exerciseSet.recentWeight;
         recentReps = exerciseSet.recentReps;
+        print('Upon init state $recentWeight, $recentReps');
+        print('id of this exercise is ${exerciseSet.id}');
       });
+    }
+    else {
+      print('exercise set is null');
     }
   }
 
@@ -196,24 +202,31 @@ class _SetTileState extends State<SetTile> {
                           : AppColours.primaryBright,
                       child: InkWell(
                         onTap: () {
-                          // update recentWeight and recentReps
+                          // Update recentWeight and recentReps
                           widget.set.recentWeight = widget.set.weight;
                           widget.set.recentReps = widget.set.reps;
 
-                          // call method to update ObjectBox
+                          // Call method to update ObjectBox
                           try {
                             objectBox.exerciseService.updateRecentWeightAndReps(
                               widget.set.id,
                               widget.set.recentWeight!,
                               widget.set.recentReps!,
                             );
-                            print('Updated recentWeight and recentReps for ExerciseSet ${widget.set.id}');
-                         print('recent weight is  now ${widget.set.recentWeight}');
+
+                            // Update the state after updating recentWeight and recentReps
+                            setState(() {
+                              recentWeight = widget.set.recentWeight;
+                              recentReps = widget.set.recentReps;
+                              print('Updated recentWeight and recentReps for ExerciseSet ${widget.set.id}');
+                              print('Recent weight is now $recentWeight for ${widget.set.id}');
+                            });
                           } catch (e) {
                             print('Error updating recentWeight and recentReps: $e');
                           }
                           widget.setIsCompleted!(widget.set.id);
                         },
+
                         child: const Padding(
                           padding: EdgeInsets.all(8.0),
                           child: Icon(

@@ -13,6 +13,8 @@ class Exercise {
   String halfImagePath;
   bool isSelected;
   bool isVisible;
+  int? recentWeight;
+  int? recentReps;
   final bodyPart = ToOne<BodyPart>();
   final category = ToOne<Category>();
   final exercisesSetsInfo = ToMany<ExercisesSetsInfo>();
@@ -24,5 +26,7 @@ class Exercise {
     this.halfImagePath = '',
     this.isSelected = false,
     this.isVisible = true,
+    this.recentWeight,
+    this.recentReps,
   });
 }
