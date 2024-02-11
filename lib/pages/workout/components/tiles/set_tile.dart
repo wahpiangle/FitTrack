@@ -38,20 +38,43 @@ class _SetTileState extends State<SetTile> {
     fetchRecentWeightAndReps();
   }
 
+  // Future<void> fetchRecentWeightAndReps() async {
+  //   final exerciseSet = await objectBox.exerciseService.getExerciseSetForExercise(widget.set.id);
+  //   if (exerciseSet != null) {
+  //     setState(() {
+  //       recentWeight = exerciseSet.recentWeight;
+  //       recentReps = exerciseSet.recentReps;
+  //       print('Upon init state $recentWeight, $recentReps');
+  //       print('id of this exercise is ${exerciseSet.id}');
+  //     });
+  //   }
+  //   else {
+  //     print('exercise set is null');
+  //   }
+  // }
+
   Future<void> fetchRecentWeightAndReps() async {
-    final exerciseSet = await objectBox.exerciseService.getExerciseSetForExercise(widget.set.id);
-    if (exerciseSet != null) {
-      setState(() {
-        recentWeight = exerciseSet.recentWeight;
-        recentReps = exerciseSet.recentReps;
-        print('Upon init state $recentWeight, $recentReps');
-        print('id of this exercise is ${exerciseSet.id}');
-      });
-    }
-    else {
-      print('exercise set is null');
+    final exercisesSetsInfo = widget.set.exerciseSetInfo.target;
+    if (exercisesSetsInfo != null) {
+      final exercise = exercisesSetsInfo.exercise.target;
+      if (exercise != null) {
+        final recentWeight = objectBox.exerciseService.getRecentWeight(exercise.name);
+        final recentReps = objectBox.exerciseService.getRecentReps(exercise.name);
+        setState(() {
+          this.recentWeight = recentWeight;
+          this.recentReps = recentReps;
+          print('Recent weight for exercise ${exercise.id}: $recentWeight');
+          print('Recent reps for exercise ${exercise.id}: $recentReps');
+        });
+      } else {
+        print('Exercise associated with the exercise set is null.');
+      }
+    } else {
+      print('ExerciseSetsInfo associated with the exercise set is null.');
     }
   }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -201,32 +224,41 @@ class _SetTileState extends State<SetTile> {
                           ? Colors.green[300]
                           : AppColours.primaryBright,
                       child: InkWell(
-                        onTap: () {
+                        onTap: () async {
                           // Update recentWeight and recentReps
                           widget.set.recentWeight = widget.set.weight;
                           widget.set.recentReps = widget.set.reps;
 
-                          // Call method to update ObjectBox
-                          try {
-                            objectBox.exerciseService.updateRecentWeightAndReps(
-                              widget.set.id,
-                              widget.set.recentWeight!,
-                              widget.set.recentReps!,
-                            );
+                          // Get the associated ExercisesSetsInfo
+                          final exercisesSetsInfo = await widget.set.exerciseSetInfo.target;
 
-                            // Update the state after updating recentWeight and recentReps
-                            setState(() {
-                              recentWeight = widget.set.recentWeight;
-                              recentReps = widget.set.recentReps;
-                              print('Updated recentWeight and recentReps for ExerciseSet ${widget.set.id}');
-                              print('Recent weight is now $recentWeight for ${widget.set.id}');
-                            });
-                          } catch (e) {
-                            print('Error updating recentWeight and recentReps: $e');
+                          // Update the recent weight and reps for the associated Exercise
+                          if (exercisesSetsInfo != null) {
+                            final exercise = await exercisesSetsInfo.exercise.target;
+                            if (exercise != null) {
+                              // Call method to update recent weight and reps for the Exercise
+                              try {
+                                objectBox.exerciseService.updateRecentWeightAndReps(
+                                  exercise.name,
+                                  widget.set.recentWeight!,
+                                  widget.set.recentReps!,
+                                );
+
+                                // Update the state after updating recentWeight and recentReps
+                                setState(() {
+                                  recentWeight = widget.set.recentWeight;
+                                  recentReps = widget.set.recentReps;
+                                  print('Updated recentWeight and recentReps for ExerciseSet ${widget.set.id}');
+                                  print('Recent weight is now $recentWeight for ${widget.set.id}');
+                                });
+                              } catch (e) {
+                                print('Error updating recentWeight and recentReps: $e');
+                              }
+                            }
                           }
+
                           widget.setIsCompleted!(widget.set.id);
                         },
-
                         child: const Padding(
                           padding: EdgeInsets.all(8.0),
                           child: Icon(
