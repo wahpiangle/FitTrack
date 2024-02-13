@@ -8,8 +8,18 @@ class PhoneNotification {
   Future<void> initializeNotifications() async {
     const AndroidInitializationSettings initializationSettingsAndroid =
     AndroidInitializationSettings('@mipmap/ic_launcher');
-    const InitializationSettings initializationSettings =
-    InitializationSettings(android: initializationSettingsAndroid);
+    // const IOSInitializationSettings initializationSettingsIOS =
+    // IOSInitializationSettings(
+    //   requestAlertPermission: true,
+    //   requestBadgePermission: true,
+    //   requestSoundPermission: true,
+    //   onDidReceiveLocalNotification:
+    //       (int id, String? title, String? body, String? payload) async {},
+    // );
+    const InitializationSettings initializationSettings = InitializationSettings(
+      android: initializationSettingsAndroid,
+      // iOS: initializationSettingsIOS,
+    );
     await flutterLocalNotificationsPlugin.initialize(
       initializationSettings,
     );
@@ -37,7 +47,6 @@ class PhoneNotification {
   }
 
   Future<void> showPhoneNotification(String title, String message) async {
-    // Check if notification permission is granted
     final status = await Permission.notification.status;
     if (status.isDenied || status.isPermanentlyDenied) {
       return;
@@ -55,8 +64,19 @@ class PhoneNotification {
       visibility: NotificationVisibility.public,
       fullScreenIntent: true,
     );
-    const NotificationDetails platformChannelSpecifics =
-    NotificationDetails(android: androidPlatformChannelSpecifics);
+
+    // const IOSNotificationDetails iosPlatformChannelSpecifics =
+    // IOSNotificationDetails(
+    //   presentAlert: true,
+    //   presentBadge: true,
+    //   presentSound: true,
+    //   sound: 'notification_sound',
+    // );
+
+    const NotificationDetails platformChannelSpecifics = NotificationDetails(
+      android: androidPlatformChannelSpecifics,
+      // iOS: iosPlatformChannelSpecifics,
+    );
 
     await flutterLocalNotificationsPlugin.show(
       0,
