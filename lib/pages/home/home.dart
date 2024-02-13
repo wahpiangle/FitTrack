@@ -26,7 +26,7 @@ class _HomeState extends State<Home> {
       'firstImageUrl': item.firstImageUrl,
       'secondImageUrl': item.secondImageUrl,
       'postId': item.id,
-      'workoutSessionId': item.workoutSessionId,
+      'workoutSessionId': item.workoutSession.targetId,
     };
   }).toList();
 
