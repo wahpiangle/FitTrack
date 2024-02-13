@@ -11,7 +11,7 @@ import 'package:group_project/pages/workout/components/timer/providers/timer_pro
 import 'package:provider/provider.dart';
 
 class ExerciseListScreen extends StatefulWidget {
-  const ExerciseListScreen({super.key});
+  const ExerciseListScreen({Key? key});
 
   @override
   ExerciseListScreenState createState() => ExerciseListScreenState();
@@ -29,7 +29,7 @@ class ExerciseListScreenState extends State<ExerciseListScreen> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance!.addPostFrameCallback((_) {
       filterExercises('');
       _handleTimerActive(context);
     });
@@ -83,7 +83,7 @@ class ExerciseListScreenState extends State<ExerciseListScreen> {
     Provider.of<TimerProvider>(context, listen: false);
 
     void handleTimerStateChanged() {
-      if (timerProvider.isTimerRunning &&
+      if (timerProvider!.isTimerRunning &&
           !TimerManager().isTimerActiveScreenOpen) {
         TimerManager().showTimerBottomSheet(context, []);
       } else if (!timerProvider.isTimerRunning &&
@@ -97,7 +97,7 @@ class ExerciseListScreenState extends State<ExerciseListScreen> {
       if (mounted) {
         handleTimerStateChanged();
       } else {
-        timerProvider.removeListener(listener!);
+        timerProvider!.removeListener(listener!);
       }
     };
 
@@ -204,6 +204,14 @@ class ExerciseListScreenState extends State<ExerciseListScreen> {
                         groupedExercise.values.elementAt(index);
                         final key = groupedExercise.keys.elementAt(index);
 
+                        final visibleExercises = exercises
+                            .where((exercise) => exercise.isVisible)
+                            .toList();
+
+                        if (visibleExercises.isEmpty) {
+                          return Container(); // Return an empty container if there are no visible exercises
+                        }
+
                         return Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -219,132 +227,138 @@ class ExerciseListScreenState extends State<ExerciseListScreen> {
                               )
                                   : Container(),
                             ),
-                            for (final exercise in exercises)
-                              if (exercise.isVisible)
-                                Dismissible(
-                                key: Key(exercise.id.toString()), // Unique key for each exercise
-                                direction: DismissDirection.endToStart, // Swipe from right to left
+                            for (final exercise in visibleExercises)
+                              Dismissible(
+                                key: Key(exercise.id.toString()),
+                                direction: DismissDirection.endToStart,
                                 background: Container(
-                                color: Colors.red, // Red background when swiping
-                                alignment: Alignment.centerRight,
-                                padding: const EdgeInsets.only(right: 20.0),
-                                child: const Text(
-                                'Hide',
-                                style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 16.0,
-                                   ),
+                                  color: Colors.red,
+                                  alignment: Alignment.centerRight,
+                                  padding: const EdgeInsets.only(right: 20.0),
+                                  child: const Text(
+                                    'Hide',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 16.0,
+                                    ),
                                   ),
                                 ),
-                                // Implement confirmDismiss to control when the item can be dismissed
                                 confirmDismiss: (direction) async {
-                                // Always allow dismissal
-                                return await showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return AlertDialog(
-                                    surfaceTintColor: const Color(0xFF1A1A1A),
-                                    backgroundColor: const Color(0xFF1A1A1A), // Set background color to 1A1A1A
-                                    title: Text(
-                                      "Hide ${exercise.name}",
-                                      style: const TextStyle(color: Colors.white), // Set title color to white
-                                    ),
-                                    content: const Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      mainAxisSize: MainAxisSize.min, // Set the main axis size to minimum
-                                      children: [
-                                        Text(
-                                          "This exercise will no longer be accessible.",
-                                          style: TextStyle(
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.white, // Set text color to white
-                                          ),
+                                  return await showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return AlertDialog(
+                                        surfaceTintColor:
+                                        const Color(0xFF1A1A1A),
+                                        backgroundColor:
+                                        const Color(0xFF1A1A1A),
+                                        title: Text(
+                                          "Hide ${exercise.name}",
+                                          style: const TextStyle(
+                                              color: Colors.white),
                                         ),
-                                        SizedBox(height: 8), // Add some space between the sentences
-                                        Text(
-                                          "Hiding it will not affect any of your previous workouts with this exercise.",
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                            fontSize: 13,
-                                          ),
-                                          // Set text color to white
-                                        ),
-                                        SizedBox(height: 15),
-                                      ],
-                                    ),
-                                    contentPadding: const EdgeInsets.fromLTRB(24.0, 20.0, 24.0, 0), // Adjust content padding
-
-                                    actions: [
-                                      Container(
-                                        width: double.infinity, // Take the full width of the dialog
-                                        padding: const EdgeInsets.symmetric(vertical: 1.0), // Add vertical padding
-                                        decoration: BoxDecoration(
-                                          color: Colors.red, // Red fill color
-                                          borderRadius: BorderRadius.circular(10.0), // Rounded corners
-                                        ),
-                                        child: Center(
-                                          child: TextButton(
-                                            onPressed: () {
-                                              Navigator.pop(context, true); // Dismiss the dialog and accept the dismissal
-                                            },
-                                            child: const Text(
-                                              "Hide",
-                                              style: TextStyle(color: Colors.white), // White text color
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      const SizedBox(height: 3), // Add some space between buttons and content
-                                      Row(
-                                        children: [
-                                          Expanded(
-                                            child: Container(
-                                              decoration: BoxDecoration(
-                                                borderRadius: BorderRadius.circular(10.0), // Rounded corners
+                                        content: const Column(
+                                          crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Text(
+                                              "This exercise will no longer be accessible.",
+                                              style: TextStyle(
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.white,
                                               ),
+                                            ),
+                                            SizedBox(height: 8),
+                                            Text(
+                                              "Hiding it will not affect any of your previous workouts with this exercise.",
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 13,
+                                              ),
+                                            ),
+                                            SizedBox(height: 15),
+                                          ],
+                                        ),
+                                        contentPadding: const EdgeInsets.fromLTRB(
+                                            24.0, 20.0, 24.0, 0),
+                                        actions: [
+                                          Container(
+                                            width: double.infinity,
+                                            padding: const EdgeInsets.symmetric(
+                                                vertical: 1.0),
+                                            decoration: BoxDecoration(
+                                              color: Colors.red,
+                                              borderRadius:
+                                              BorderRadius.circular(10.0),
+                                            ),
+                                            child: Center(
                                               child: TextButton(
                                                 onPressed: () {
-                                                  Navigator.pop(context, false); // Dismiss the dialog and reject the dismissal
+                                                  Navigator.pop(context, true);
                                                 },
                                                 child: const Text(
-                                                  "Cancel",
-                                                  style: TextStyle(color: Colors.white), // Set text color to white
+                                                  "Hide",
+                                                  style: TextStyle(
+                                                      color: Colors.white),
                                                 ),
                                               ),
                                             ),
                                           ),
+                                          const SizedBox(height: 3),
+                                          Row(
+                                            children: [
+                                              Expanded(
+                                                child: Container(
+                                                  decoration: BoxDecoration(
+                                                    borderRadius:
+                                                    BorderRadius.circular(
+                                                        10.0),
+                                                  ),
+                                                  child: TextButton(
+                                                    onPressed: () {
+                                                      Navigator.pop(
+                                                          context, false);
+                                                    },
+                                                    child: const Text(
+                                                      "Cancel",
+                                                      style: TextStyle(
+                                                          color: Colors.white),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
                                         ],
-                                      ),
-                                    ],
-                                  );
-
-                                     },
+                                      );
+                                    },
                                   );
                                 },
                                 onDismissed: (direction) {
-                                if (direction == DismissDirection.endToStart) {
-                                // Toggle exercise visibility
-                                toggleExerciseVisibility(exercise);
+                                  if (direction == DismissDirection.endToStart) {
+                                    toggleExerciseVisibility(exercise);
                                   }
                                 },
                                 child: ExerciseListItem(
-                                exercise: exercise,
-                                searchText: searchText,
-                                onToggleVisibility: () => toggleExerciseVisibility(exercise),
-                                  ),
+                                  exercise: exercise,
+                                  searchText: searchText,
+                                  onToggleVisibility: () =>
+                                      toggleExerciseVisibility(exercise),
                                 ),
-                              ],
-                            );
-                          },
-                        ),
-                      )
-                    ],
+                              ),
+                          ],
+                        );
+                      },
                     ),
                   ),
-                );
-              },
+                ],
+              ),
             ),
           );
-        }
-      }
+        },
+      ),
+    );
+  }
+}

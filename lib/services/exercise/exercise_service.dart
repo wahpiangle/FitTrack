@@ -22,8 +22,6 @@ class ExerciseService {
     required this.exercisesSetsInfoBox,
   });
 
-
-
   //exercises
   Stream<List<Exercise>> watchAllExercise() {
     return exerciseBox
@@ -103,15 +101,16 @@ class ExerciseService {
         // Fetch the category and body part directly from Firebase data
         final category =
         categoryId != null ? Category(id: categoryId, name: categoryName) : null;
-        final bodyPart =
-        bodyPartId != null ? BodyPart(id: bodyPartId, name: bodyPartName) : null;
+        final bodyPart = bodyPartId != null
+            ? BodyPart(id: bodyPartId, name: bodyPartName ?? 'Chest')
+            : BodyPart(id: bodyPartId, name:'Chest'); // Assign default body part name
 
         // Associate Category and BodyPart with the exercise
         newCustomExercise.category.target = category;
         newCustomExercise.bodyPart.target = bodyPart;
 
         // Add exercise to ObjectBox using addExerciseToList method
-        addExerciseToList(newCustomExercise, category!, bodyPart!);
+        addExerciseToList(newCustomExercise, category!, bodyPart);
 
         // Update existingExerciseNames list
         existingExerciseNames.add(exerciseName);
@@ -123,6 +122,7 @@ class ExerciseService {
       // Handle the error further based on your application's requirements.
     }
   }
+
 
 
   List<String> getExistingExerciseNames() {
