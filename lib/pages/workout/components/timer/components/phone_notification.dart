@@ -8,17 +8,15 @@ class PhoneNotification {
   Future<void> initializeNotifications() async {
     const AndroidInitializationSettings initializationSettingsAndroid =
     AndroidInitializationSettings('@mipmap/ic_launcher');
-    // const IOSInitializationSettings initializationSettingsIOS =
-    // IOSInitializationSettings(
-    //   requestAlertPermission: true,
-    //   requestBadgePermission: true,
-    //   requestSoundPermission: true,
-    //   onDidReceiveLocalNotification:
-    //       (int id, String? title, String? body, String? payload) async {},
-    // );
+    const DarwinInitializationSettings initializationSettingsDarwin =
+    DarwinInitializationSettings(
+      requestAlertPermission: true,
+      requestBadgePermission: true,
+      requestSoundPermission: true,
+    );
     const InitializationSettings initializationSettings = InitializationSettings(
       android: initializationSettingsAndroid,
-      // iOS: initializationSettingsIOS,
+      iOS: initializationSettingsDarwin,
     );
     await flutterLocalNotificationsPlugin.initialize(
       initializationSettings,
@@ -54,8 +52,8 @@ class PhoneNotification {
 
     const AndroidNotificationDetails androidPlatformChannelSpecifics =
     AndroidNotificationDetails(
-      'channel_id_timer_3',
-      'channel_name_timer_3',
+      'channel_id_timer_4',
+      'channel_name_timer_4',
       importance: Importance.max,
       priority: Priority.high,
       ticker: 'ticker',
@@ -65,17 +63,17 @@ class PhoneNotification {
       fullScreenIntent: true,
     );
 
-    // const IOSNotificationDetails iosPlatformChannelSpecifics =
-    // IOSNotificationDetails(
-    //   presentAlert: true,
-    //   presentBadge: true,
-    //   presentSound: true,
-    //   sound: 'notification_sound',
-    // );
+    const DarwinNotificationDetails darwinPlatformChannelSpecifics =
+    DarwinNotificationDetails(
+      presentAlert: true,
+      presentBadge: true,
+      presentSound: true,
+      sound: 'notification_sound',
+    );
 
     const NotificationDetails platformChannelSpecifics = NotificationDetails(
       android: androidPlatformChannelSpecifics,
-      // iOS: iosPlatformChannelSpecifics,
+      iOS: darwinPlatformChannelSpecifics,
     );
 
     await flutterLocalNotificationsPlugin.show(
@@ -86,3 +84,5 @@ class PhoneNotification {
     );
   }
 }
+
+

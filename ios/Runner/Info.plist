@@ -61,5 +61,14 @@
 		</array>
 	</dict>
 </array>
+
+ <key>UNUserNotificationCenterDelegateClassName</key>
+    <string>$(PRODUCT_MODULE_NAME).NotificationDelegate</string>
+    <key>NSLocalNetworkUsageDescription</key>
+    <string>Allow notifications</string>
+    <key>UIBackgroundModes</key>
+    <array>
+        <string>remote-notification</string>
+    </array>
 </dict>
 </plist>
