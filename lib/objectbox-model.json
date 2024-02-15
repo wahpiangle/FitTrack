@@ -24,7 +24,7 @@
     },
     {
       "id": "4:8999125863363426104",
-      "lastPropertyId": "8:3113001905839990392",
+      "lastPropertyId": "10:3194541295403346512",
       "name": "Exercise",
       "properties": [
         {
@@ -73,6 +73,16 @@
           "id": "8:3113001905839990392",
           "name": "isVisible",
           "type": 1
+        },
+        {
+          "id": "9:8408812403485721622",
+          "name": "recentWeight",
+          "type": 6
+        },
+        {
+          "id": "10:3194541295403346512",
+          "name": "recentReps",
+          "type": 6
         }
       ],
       "relations": [

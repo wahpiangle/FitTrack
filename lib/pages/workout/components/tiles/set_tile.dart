@@ -63,8 +63,8 @@ class _SetTileState extends State<SetTile> {
         setState(() {
           this.recentWeight = recentWeight;
           this.recentReps = recentReps;
-          print('Recent weight for exercise ${exercise.id}: $recentWeight');
-          print('Recent reps for exercise ${exercise.id}: $recentReps');
+          print('Recent weight for exercise ${exercise.name}: $recentWeight');
+          print('Recent reps for exercise ${exercise.name}: $recentReps');
         });
       } else {
         print('Exercise associated with the exercise set is null.');
@@ -248,8 +248,8 @@ class _SetTileState extends State<SetTile> {
                                 setState(() {
                                   recentWeight = widget.set.recentWeight;
                                   recentReps = widget.set.recentReps;
-                                  print('Updated recentWeight and recentReps for ExerciseSet ${widget.set.id}');
-                                  print('Recent weight is now $recentWeight for ${widget.set.id}');
+                                  print('Updated recentWeight and recentReps for Exercise ${exercise.name}');
+                                  print('Recent weight is now $recentWeight for ${exercise.name}');
                                 });
                               } catch (e) {
                                 print('Error updating recentWeight and recentReps: $e');
