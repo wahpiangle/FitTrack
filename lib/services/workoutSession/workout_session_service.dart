@@ -1,6 +1,7 @@
 import 'package:group_project/models/exercise.dart';
 import 'package:group_project/models/exercise_set.dart';
 import 'package:group_project/models/exercises_sets_info.dart';
+import 'package:group_project/models/post.dart';
 import 'package:group_project/models/workout_session.dart';
 import 'package:group_project/objectbox.g.dart';
 import 'package:group_project/services/firebase/firebase_workouts_service.dart';
@@ -10,12 +11,14 @@ class WorkoutSessionService {
   Box<ExercisesSetsInfo> exercisesSetsInfoBox;
   Box<ExerciseSet> exerciseSetBox;
   Box<Exercise> exerciseBox;
+  Box<Post> postBox;
 
   WorkoutSessionService({
     required this.workoutSessionBox,
     required this.exercisesSetsInfoBox,
     required this.exerciseSetBox,
     required this.exerciseBox,
+    required this.postBox,
   });
 
   Stream<List<WorkoutSession>> watchWorkoutSession() {
@@ -44,6 +47,7 @@ class WorkoutSessionService {
       }
       exercisesSetsInfoBox.remove(exercisesSetsInfo.id);
     }
+    postBox.remove(workoutSession.post.targetId);
     workoutSessionBox.remove(workoutSessionId);
   }
 
@@ -219,5 +223,11 @@ class WorkoutSessionService {
         workoutSessionBox.put(newWorkoutSession);
       }
     }
+  }
+
+  void attachPostToWorkoutSession(int workoutSessionId, int postId) {
+    WorkoutSession workoutSession = getWorkoutSession(workoutSessionId)!;
+    workoutSession.post.targetId = postId;
+    workoutSessionBox.put(workoutSession);
   }
 }

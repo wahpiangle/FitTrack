@@ -4,7 +4,9 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:group_project/main.dart';
 import 'package:group_project/models/post.dart';
+import 'package:group_project/models/workout_session.dart';
 import 'package:group_project/pages/complete_workout/capture_image/upload_image_provider.dart';
 
 class FirebasePostsService {
@@ -17,10 +19,10 @@ class FirebasePostsService {
       Post post, UploadImageProvider uploadImageProvider) async {
     final User user = auth.currentUser!;
     uploadImageProvider.setIsUploading(true);
-    Reference firstRef = storage
-        .ref('images/${user.uid}/firstImage/${post.workoutSessionId}.jpg');
-    Reference secondRef = storage
-        .ref('images/${user.uid}/secondImage/${post.workoutSessionId}.jpg');
+    Reference firstRef = storage.ref(
+        'images/${user.uid}/firstImage/${post.workoutSession.targetId}.jpg');
+    Reference secondRef = storage.ref(
+        'images/${user.uid}/secondImage/${post.workoutSession.targetId}.jpg');
     uploadImageProvider.setUploadError(true);
     try {
       final uploadFirstImageTask = firstRef.putFile(File(post.firstImageUrl));
@@ -29,7 +31,6 @@ class FirebasePostsService {
 
       for (UploadTask task in [uploadFirstImageTask, uploadSecondImageTask]) {
         Timer(const Duration(seconds: 20), () {
-          // Cancel the upload task if it's still running
           if (task.snapshot.state == TaskState.running) {
             task.cancel();
             uploadImageProvider.setUploadError(true);
@@ -58,21 +59,36 @@ class FirebasePostsService {
           }
         });
       }
-      final firstImageUrl = await firstRef.getDownloadURL();
-      final secondImageUrl = await secondRef.getDownloadURL();
+      final firstImageUrl = await uploadFirstImageTask.then((res) {
+        return res.ref.getDownloadURL();
+      });
+      final secondImageUrl = await uploadSecondImageTask.then((res) {
+        return res.ref.getDownloadURL();
+      });
       await postsCollectionRef
           .doc(user.uid)
           .collection('userPosts')
-          .doc(post.workoutSessionId.toString())
+          .doc(post.workoutSession.targetId.toString())
           .set({
         'firstImageUrl': firstImageUrl,
         'secondImageUrl': secondImageUrl,
-        'workoutSessionId': post.workoutSessionId,
+        'workoutSessionId': post.workoutSession.targetId,
       });
       return true;
     } catch (e) {
       uploadImageProvider.setUploadError(true);
       return false;
     }
+  }
+
+  static void deletePost(int workoutSessionId) async {
+    final WorkoutSession workoutSession =
+        objectBox.workoutSessionService.getWorkoutSession(workoutSessionId)!;
+    final User user = auth.currentUser!;
+    await postsCollectionRef
+        .doc(user.uid)
+        .collection('userPosts')
+        .doc(workoutSession.post.targetId.toString())
+        .delete();
   }
 }
