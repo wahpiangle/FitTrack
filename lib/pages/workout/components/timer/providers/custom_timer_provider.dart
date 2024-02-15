@@ -13,6 +13,7 @@ class CustomTimerProvider with ChangeNotifier {
   bool _isRestTimerRunning = false;
   bool _isDialogShown = false;
   bool _isDialogOpen = false;
+  int selectedTimeInterval = 10;
 
   bool get isRestTimerRunning => _isRestTimerRunning;
   int get customTimerDuration => _customTimerDuration;
@@ -32,6 +33,8 @@ class CustomTimerProvider with ChangeNotifier {
       _isDialogOpen = prefs.getBool('isDialogOpen') ?? false;
       _customTimerMinutes = prefs.getInt('customTimerMinutes') ?? 0;
       _customTimerSeconds = prefs.getInt('customTimerSeconds') ?? 0;
+      selectedTimeInterval = prefs.getInt('selectedCustomTimeInterval') ?? 10;
+      notifyListeners();
       if (_customCurrentDuration > 0) {
         startCustomTimer(context);
       }
@@ -47,7 +50,18 @@ class CustomTimerProvider with ChangeNotifier {
     prefs.setInt('customTimerSeconds', _customTimerSeconds);
     prefs.setBool('isDialogShown', _isDialogShown);
     prefs.setBool('isDialogOpen', _isDialogOpen);
+    prefs.setInt('selectedCustomTimeInterval', selectedTimeInterval);
   }
+
+  void setSelectedTimeInterval(int interval) {
+    selectedTimeInterval = interval;
+  }
+
+  void notifySelectedIntervalChanged() {
+    notifyListeners();
+    _saveCustomTimerState();
+  }
+
 
   void showCustomDialog(BuildContext context) {
     _isDialogOpen = true;
@@ -145,6 +159,7 @@ class CustomTimerProvider with ChangeNotifier {
         },
       ),
     );
+    notificationManager.showPhoneNotification('Custom Timer Completed', 'Your custom timer has ended! Get back to work! ⏰ 💪');
   }
 
   void resetCustomTimer(int newDuration, BuildContext context) {

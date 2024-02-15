@@ -52,10 +52,12 @@ class CustomTimerPickerDialog extends StatelessWidget {
             ),
             const SizedBox(height: 30),
             Container(
-              height: MediaQuery.of(context).size.height * 0.33,
-              width: MediaQuery.of(context).size.width * 0.7,
+              height: MediaQuery.of(context).size.shortestSide * 0.7,
+              width: MediaQuery.of(context).size.shortestSide * 0.7,
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(150),
+                borderRadius: BorderRadius.circular(
+                  MediaQuery.of(context).size.shortestSide * 0.35,
+                ),
                 border: Border.all(color: AppColours.secondary, width: 5),
               ),
               child: ClipOval(
@@ -67,6 +69,7 @@ class CustomTimerPickerDialog extends StatelessWidget {
                 ),
               ),
             ),
+
             const SizedBox(height: 50),
             SizedBox(
               width: double.infinity,
