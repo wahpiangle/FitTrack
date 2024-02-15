@@ -45,12 +45,14 @@ class _DisplayImageScreenState extends State<DisplayImageScreen> {
       caption: '',
       firstImageUrl: widget.imagePath,
       secondImageUrl: widget.imagePath2,
-      workoutSessionId: widget.workoutSession.id,
       date: DateTime.now(),
     );
+    newPost.workoutSession.target = widget.workoutSession;
     objectBox.postService.addPost(
       newPost,
     );
+    objectBox.workoutSessionService
+        .attachPostToWorkoutSession(widget.workoutSession.id, newPost.id);
     uploadImageProvider.reset();
     await FirebasePostsService.createPost(newPost, uploadImageProvider);
   }
