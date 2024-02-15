@@ -31,27 +31,25 @@ class SetTile extends StatefulWidget {
 class _SetTileState extends State<SetTile> {
   int? recentWeight;
   int? recentReps;
+  late TextEditingController weightController;
+  late TextEditingController repsController;
+
 
   @override
   void initState() {
     super.initState();
     fetchRecentWeightAndReps();
+    weightController = TextEditingController();
+    repsController = TextEditingController();
   }
 
-  // Future<void> fetchRecentWeightAndReps() async {
-  //   final exerciseSet = await objectBox.exerciseService.getExerciseSetForExercise(widget.set.id);
-  //   if (exerciseSet != null) {
-  //     setState(() {
-  //       recentWeight = exerciseSet.recentWeight;
-  //       recentReps = exerciseSet.recentReps;
-  //       print('Upon init state $recentWeight, $recentReps');
-  //       print('id of this exercise is ${exerciseSet.id}');
-  //     });
-  //   }
-  //   else {
-  //     print('exercise set is null');
-  //   }
-  // }
+  @override
+  void dispose() {
+    weightController.dispose();
+    repsController.dispose();
+    super.dispose();
+  }
+
 
   Future<void> fetchRecentWeightAndReps() async {
     final exercisesSetsInfo = widget.set.exerciseSetInfo.target;
@@ -74,7 +72,18 @@ class _SetTileState extends State<SetTile> {
     }
   }
 
+  void onTapPreviousTab() {
+    print('tapped');
+    weightController.text = recentWeight?.toString() ?? '';
+    repsController.text = recentReps?.toString() ?? '';
 
+    setState(() {
+      widget.set.weight = recentWeight;
+      widget.set.reps = recentReps;
+    });
+
+    print('on tap weight is ${widget.set.weight}');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -122,15 +131,33 @@ class _SetTileState extends State<SetTile> {
             const SizedBox(width: 20),
             Expanded(
               flex: 1,
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                child: Text(
-                  recentWeight != null
-                      ? 'Previous weight: $recentWeight, reps: $recentReps'
-                      : '-',
-                  style: const TextStyle(
-                    fontSize: 12,
-                    color: Colors.grey,
+              child: GestureDetector(
+                onTap: () {
+                onTapPreviousTab();
+                },
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  child: TextFormField(
+                    enabled: false,
+                    initialValue: recentWeight != null
+                        ? '${recentWeight}kg x $recentReps'
+                        : '-',
+                    style: const TextStyle(
+                      fontSize: 12,
+                      color: Colors.grey,
+                    ),
+                    decoration: const InputDecoration(
+                      contentPadding: EdgeInsets.all(0),
+                      filled: true,
+                      fillColor: Colors.transparent,
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide.none,
+                      ),
+                      hintText: "0",
+                      hintStyle: TextStyle(
+                        color: Colors.grey,
+                      ),
+                    ),
                   ),
                 ),
               ),
@@ -148,7 +175,8 @@ class _SetTileState extends State<SetTile> {
                     color: Colors.white,
                   ),
                   textAlign: TextAlign.center,
-                  initialValue: "${widget.set.weight ?? ''}",
+                  controller: weightController,
+                  // initialValue: "${widget.set.weight?.toString() ?? ''}",
                   keyboardType: TextInputType.number,
                   decoration: const InputDecoration(
                     contentPadding: EdgeInsets.all(0),
@@ -187,7 +215,8 @@ class _SetTileState extends State<SetTile> {
                   ),
                   textAlign: TextAlign.center,
                   keyboardType: TextInputType.number,
-                  initialValue: "${widget.set.reps ?? ''}",
+                  controller: repsController,
+                  // initialValue: "${widget.set.reps ?? ''}",
                   decoration: const InputDecoration(
                     contentPadding: EdgeInsets.all(0),
                     filled: true,
