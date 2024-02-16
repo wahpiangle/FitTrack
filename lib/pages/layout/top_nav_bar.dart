@@ -5,8 +5,9 @@ import 'dart:io';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:group_project/pages/settings/settings_screen.dart';
 import 'package:group_project/pages/exercise/components/custom_exercise.dart';
+import 'package:group_project/pages/friend/friend_tab.dart';
+import 'package:group_project/main.dart';
 
-import '../../main.dart';
 
 class TopNavBar extends StatelessWidget implements PreferredSizeWidget {
   final User? user;
@@ -51,6 +52,16 @@ class TopNavBar extends StatelessWidget implements PreferredSizeWidget {
             fontWeight: FontWeight.bold,
           ),
         ),
+      );
+    } else if (pageIndex == 0) {
+      leadingWidget = IconButton(
+        icon: const Icon(Icons.person_add_alt_1, color: Colors.white),
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => FriendPage(title: '',)),
+          );
+        },
       );
     } else {
       leadingWidget = IconButton(
