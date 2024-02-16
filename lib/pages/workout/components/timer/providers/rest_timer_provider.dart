@@ -14,6 +14,7 @@ class RestTimerProvider with ChangeNotifier {
   bool _isRestTimerRunning = false;
   bool _isDialogShown = false;
   bool _isDialogOpen = false;
+  int selectedTimeInterval = 10;
 
   bool get isRestTimerRunning => _isRestTimerRunning;
   bool get isRestTimerEnabled => _isRestTimerEnabled;
@@ -28,10 +29,13 @@ class RestTimerProvider with ChangeNotifier {
     SharedPreferences.getInstance().then((prefs) {
       _isRestTimerRunning = prefs.getBool('isRestTimerRunning') ?? false;
       _currentDuration = prefs.getInt('restTimerCurrentDuration') ?? 0;
+      _restTimerDuration = prefs.getInt('restTimerDuration') ?? 0;
       _isDialogShown = prefs.getBool('isDialogShown') ?? false;
       _isDialogOpen = prefs.getBool('isDialogOpen') ?? false;
       _restTimerMinutes = prefs.getInt('restTimerMinutes') ?? 0;
       _restTimerSeconds = prefs.getInt('restTimerSeconds') ?? 0;
+      selectedTimeInterval = prefs.getInt('selectedRestTimeInterval') ?? 10;
+      notifyListeners();
       if (_currentDuration > 0) {
         startRestTimer(context);
       }
@@ -42,11 +46,24 @@ class RestTimerProvider with ChangeNotifier {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setBool('isRestTimerRunning', _isRestTimerRunning);
     prefs.setInt('restTimerCurrentDuration', _currentDuration);
+    prefs.setInt('restTimerDuration', _restTimerDuration);
     prefs.setBool('isDialogShown', _isDialogShown);
     prefs.setBool('isDialogOpen', _isDialogOpen);
     prefs.setInt('restTimerMinutes', _restTimerMinutes);
     prefs.setInt('restTimerSeconds', _restTimerSeconds);
+    prefs.setInt('selectedRestTimeInterval', selectedTimeInterval);
   }
+
+
+  void setSelectedTimeInterval(int interval) {
+    selectedTimeInterval = interval;
+  }
+
+  void notifySelectedIntervalChanged() {
+    notifyListeners();
+    _saveRestTimerState();
+  }
+
 
   void showRestDialog() {
     //check if the user is opening the rest timer details dialog
@@ -107,6 +124,7 @@ class RestTimerProvider with ChangeNotifier {
         }
 
         _currentDuration = _restTimerMinutes * 60 + _restTimerSeconds;
+        _restTimerDuration= _restTimerMinutes * 60 + _restTimerSeconds;
         _timer?.cancel();
         _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
           if (_currentDuration <= 0) {
@@ -136,7 +154,7 @@ class RestTimerProvider with ChangeNotifier {
     _saveRestTimerState(); //so that when set is unchecked after hot restart, it will also being updated
   }
 
-  void showRestTimeEndedNotification() {
+  void showRestTimeEndedNotification(){
     navigatorKey.currentState?.push(
       MaterialPageRoute<void>(
         builder: (BuildContext context) {
@@ -144,6 +162,7 @@ class RestTimerProvider with ChangeNotifier {
         },
       ),
     );
+    notificationManager.showPhoneNotification('Rest Time Completed', 'Your rest time has ended! Get back to work! ⏰ 💪');
   }
 
   void resetRestTimer(int newDuration, BuildContext context) {
@@ -162,10 +181,15 @@ class RestTimerProvider with ChangeNotifier {
     if (_currentDuration < 0) {
       _currentDuration = 1;
     }
-    _restTimerDuration =
-        _currentDuration; // update the rest timer duration after pressing 10s buttons
+    _restTimerDuration = _currentDuration; // update the rest timer duration after pressing 10s buttons
     notifyListeners();
   }
+
+  void updateRestTimerDuration(int minutes, int seconds) {
+    _restTimerDuration = minutes * 60 + seconds;
+    notifyListeners();
+    _saveRestTimerState();
+  }//update rest duration after user choose it in settings
 
   static String formatDuration(int seconds) {
     final minutes = ((seconds % 3600) ~/ 60).toString().padLeft(2, '0');

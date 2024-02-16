@@ -12,11 +12,11 @@ class RestEndedDialog extends StatelessWidget {
       title: const Center(
         child: Text(
           'Rest Time Ended',
-          style: TextStyle(color: Colors.white),
+          style: TextStyle(color: Colors.white, fontSize: 20,),
         ),
       ),
       content: Text(
-        'Your rest time has ended!',
+        'Your rest time has ended !\n⏰ 💪',
         style: TextStyle(
           color: Colors.grey[500],
           fontSize: 16,
