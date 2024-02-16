@@ -72,7 +72,20 @@ class _SetTileState extends State<SetTile> {
     }
   }
 
-  void onTapPreviousTab() {
+  // void onTapPreviousTab() {
+  //   print('tapped');
+  //   weightController.text = recentWeight?.toString() ?? '';
+  //   repsController.text = recentReps?.toString() ?? '';
+  //
+  //   setState(() {
+  //     widget.set.weight = recentWeight;
+  //     widget.set.reps = recentReps;
+  //   });
+  //
+  //   print('on tap weight is ${widget.set.weight}');
+  // }
+
+  void onTapPreviousTab(ExercisesSetsInfo exercisesSetsInfo) {
     print('tapped');
     weightController.text = recentWeight?.toString() ?? '';
     repsController.text = recentReps?.toString() ?? '';
@@ -83,7 +96,13 @@ class _SetTileState extends State<SetTile> {
     });
 
     print('on tap weight is ${widget.set.weight}');
+
+    // Update the weight and reps for exercise set
+    objectBox.exerciseService.updateExerciseSet(widget.set);
   }
+
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -133,8 +152,7 @@ class _SetTileState extends State<SetTile> {
               flex: 1,
               child: GestureDetector(
                 onTap: () {
-                onTapPreviousTab();
-                },
+                  onTapPreviousTab(widget.exercisesSetsInfo);                },
                 child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8.0),
                   child: TextFormField(
