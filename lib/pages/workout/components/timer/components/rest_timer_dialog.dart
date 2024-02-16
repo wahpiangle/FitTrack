@@ -125,12 +125,13 @@ class _RestTimerDialogState extends State<RestTimerDialog>
                           child: CircularProgressIndicator(
                             value: widget.restTimerProvider != null
                                 ? widget.restTimerProvider!
-                                        .currentRestTimerDuration /
-                                    widget.restTimerProvider!.restTimerDuration
+                                .currentRestTimerDuration /
+                                widget.restTimerProvider!.restTimerDuration
                                 : widget.customTimerProvider!
-                                        .customCurrentTimerDuration /
-                                    widget.customTimerProvider!
-                                        .customTimerDuration,
+                                .customCurrentTimerDuration /
+                                widget.customTimerProvider!
+                                    .customTimerDuration,
+
                             valueColor: const AlwaysStoppedAnimation<Color>(
                               Color(0xFFB9D499),
                             ),
@@ -141,18 +142,18 @@ class _RestTimerDialogState extends State<RestTimerDialog>
                           RestTimerProvider.formatDuration(
                             widget.restTimerProvider != null
                                 ? widget
-                                    .restTimerProvider!.currentRestTimerDuration
+                                .restTimerProvider!.currentRestTimerDuration
                                 : widget.customTimerProvider!
-                                    .customCurrentTimerDuration,
+                                .customCurrentTimerDuration,
                           ),
                           style: const TextStyle(
                             color: Color(0xFFE1F0CF),
-                            fontSize: 64,
+                            fontSize: 54,
                           ),
                         ),
                       ],
                     ),
-                    const SizedBox(height: 40),
+                    const SizedBox(height: 45),
                     Padding(
                       padding: const EdgeInsets.only(bottom: 36.0),
                       child: Row(
@@ -161,24 +162,21 @@ class _RestTimerDialogState extends State<RestTimerDialog>
                           ElevatedButton(
                             onPressed: () {
                               widget.restTimerProvider != null
-                                  ? widget.restTimerProvider!
-                                      .adjustRestTime(-widget.changeTimeSeconds)
-                                  : widget.customTimerProvider!
-                                      .adjustCustomTime(
-                                          -widget.changeTimeSeconds);
+                                  ? widget.restTimerProvider?.adjustRestTime(-widget.restTimerProvider!.selectedTimeInterval)
+                                  : widget.customTimerProvider?.adjustCustomTime(-widget.customTimerProvider!.selectedTimeInterval);
                             },
                             style: ElevatedButton.styleFrom(
                               foregroundColor: Colors.black,
                               backgroundColor: const Color(0xFFE1F0CF),
                             ),
-                            child: Text('-${widget.changeTimeSeconds}s'),
+                            child: Text('- ${widget.restTimerProvider != null ? widget.restTimerProvider!.selectedTimeInterval : widget.customTimerProvider!.selectedTimeInterval}s'),
                           ),
                           ElevatedButton(
                             onPressed: () {
                               widget.restTimerProvider != null
                                   ? widget.restTimerProvider!.stopRestTimer()
                                   : widget.customTimerProvider!
-                                      .stopCustomTimer();
+                                  .stopCustomTimer();
                               Navigator.of(context).pop();
                             },
                             style: ElevatedButton.styleFrom(
@@ -190,17 +188,14 @@ class _RestTimerDialogState extends State<RestTimerDialog>
                           ElevatedButton(
                             onPressed: () {
                               widget.restTimerProvider != null
-                                  ? widget.restTimerProvider!
-                                      .adjustRestTime(widget.changeTimeSeconds)
-                                  : widget.customTimerProvider!
-                                      .adjustCustomTime(
-                                          widget.changeTimeSeconds);
+                                  ? widget.restTimerProvider?.adjustRestTime(widget.restTimerProvider!.selectedTimeInterval)
+                                  : widget.customTimerProvider?.adjustCustomTime(widget.customTimerProvider!.selectedTimeInterval);
                             },
                             style: ElevatedButton.styleFrom(
                               foregroundColor: Colors.black,
                               backgroundColor: const Color(0xFFE1F0CF),
                             ),
-                            child: Text('+${widget.changeTimeSeconds}s'),
+                            child: Text('+ ${widget.restTimerProvider != null ? widget.restTimerProvider!.selectedTimeInterval : widget.customTimerProvider!.selectedTimeInterval}s'),
                           ),
                         ],
                       ),

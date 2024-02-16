@@ -12,6 +12,7 @@ import 'package:group_project/pages/complete_workout/congratulation_screen.dart'
 import 'package:group_project/pages/complete_workout/capture_image/post_workout_prompt.dart';
 import 'package:group_project/pages/layout/app_layout.dart';
 import 'package:group_project/pages/history/history_screen.dart';
+import 'package:group_project/pages/workout/components/timer/components/phone_notification.dart';
 import 'package:group_project/pages/workout/components/timer/providers/custom_timer_provider.dart';
 import 'package:group_project/pages/workout/components/timer/providers/rest_timer_provider.dart';
 import 'package:group_project/services/firebase/auth_service.dart';
@@ -24,6 +25,7 @@ import 'package:group_project/pages/workout/components/timer/providers/timer_pro
 
 late ObjectBox objectBox;
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+late PhoneNotification notificationManager;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -48,6 +50,9 @@ Future<void> main() async {
     // 4. App Attest provider with fallback to Device Check provider (App Attest provider is only available on iOS 14.0+, macOS 14.0+)
     appleProvider: AppleProvider.debug,
   );
+
+  notificationManager = PhoneNotification();
+  await notificationManager.initializeNotifications();
 
   final cameras = await availableCameras();
 
@@ -93,11 +98,11 @@ class MyApp extends StatelessWidget {
           "app_layout": (context) => const AppLayout(),
           "congratulation_screen": (context) => const CongratulationScreen(),
           "history_screen": (context) => const HistoryScreen(
-                exerciseData: [],
-              ),
+            exerciseData: [],
+          ),
           "post_workout_prompt": (context) => PostWorkoutPrompt(
-                cameras: cameras,
-              ),
+            cameras: cameras,
+          ),
         },
         theme: ThemeData(
           bottomNavigationBarTheme: const BottomNavigationBarThemeData(
