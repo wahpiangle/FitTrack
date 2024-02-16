@@ -61,8 +61,7 @@ class _SetTileState extends State<SetTile> {
         setState(() {
           this.recentWeight = recentWeight;
           this.recentReps = recentReps;
-          print('Recent weight for exercise ${exercise.name}: $recentWeight');
-          print('Recent reps for exercise ${exercise.name}: $recentReps');
+
         });
       } else {
         print('Exercise associated with the exercise set is null.');
@@ -72,21 +71,9 @@ class _SetTileState extends State<SetTile> {
     }
   }
 
-  // void onTapPreviousTab() {
-  //   print('tapped');
-  //   weightController.text = recentWeight?.toString() ?? '';
-  //   repsController.text = recentReps?.toString() ?? '';
-  //
-  //   setState(() {
-  //     widget.set.weight = recentWeight;
-  //     widget.set.reps = recentReps;
-  //   });
-  //
-  //   print('on tap weight is ${widget.set.weight}');
-  // }
+
 
   void onTapPreviousTab(ExercisesSetsInfo exercisesSetsInfo) {
-    print('tapped');
     weightController.text = recentWeight?.toString() ?? '';
     repsController.text = recentReps?.toString() ?? '';
 
@@ -95,13 +82,9 @@ class _SetTileState extends State<SetTile> {
       widget.set.reps = recentReps;
     });
 
-    print('on tap weight is ${widget.set.weight}');
-
     // Update the weight and reps for exercise set
     objectBox.exerciseService.updateExerciseSet(widget.set);
   }
-
-
 
 
   @override
@@ -194,7 +177,6 @@ class _SetTileState extends State<SetTile> {
                   ),
                   textAlign: TextAlign.center,
                   controller: weightController,
-                  // initialValue: "${widget.set.weight?.toString() ?? ''}",
                   keyboardType: TextInputType.number,
                   decoration: const InputDecoration(
                     contentPadding: EdgeInsets.all(0),
@@ -211,7 +193,6 @@ class _SetTileState extends State<SetTile> {
                   onChanged: (value) {
                     setState(() {
                       widget.set.weight = int.tryParse(value);
-                      // widget.set.recentWeight = widget.set.weight; // Update recentWeight
                       objectBox.exerciseService.updateExerciseSet(widget.set);
                     });
                   },
@@ -250,7 +231,6 @@ class _SetTileState extends State<SetTile> {
                   onChanged: (value) {
                     setState(() {
                       widget.set.reps = int.tryParse(value);
-                      // widget.set.recentReps = widget.set.reps; // Update recentReps
                       objectBox.exerciseService.updateExerciseSet(widget.set);
                     });
                   },

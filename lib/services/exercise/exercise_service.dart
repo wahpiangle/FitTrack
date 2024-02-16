@@ -171,27 +171,7 @@ class ExerciseService {
     exerciseBox.put(exercise);
   }
 
-  // void updateRecentWeightAndReps(int exerciseSetId, int recentWeight, int recentReps) {
-  //   final exerciseSet = exerciseSetBox.get(exerciseSetId);
-  //   if (exerciseSet != null) {
-  //     exerciseSet.recentWeight = recentWeight;
-  //     exerciseSet.recentReps = recentReps;
-  //     exerciseSetBox.put(exerciseSet);
-  //   } else {
-  //     throw Exception('Exercise set with ID $exerciseSetId not found.');
-  //   }
-  //   }
-  ////////////
-  // void updateRecentWeightAndReps(int exerciseId, int? recentWeight, int? recentReps) {
-  //   final exercise = exerciseBox.get(exerciseId);
-  //   if (exercise != null) {
-  //     exercise.recentWeight = recentWeight;
-  //     exercise.recentReps = recentReps;
-  //     exerciseBox.put(exercise);
-  //   } else {
-  //     throw Exception('update/ Exercise with ID $exerciseId not found.');
-  //   }
-  // }
+
 
   // ExerciseService
   void updateRecentWeightAndReps(String exerciseName, int recentWeight, int recentReps) {
@@ -207,23 +187,7 @@ class ExerciseService {
     }
   }
 
-    // Future<ExerciseSet?> getExerciseSetForExercise(int exerciseId) async {
-    //   try {
-    //     // Fetch all ExerciseSet entities from box
-    //     final exerciseSets = exerciseSetBox.getAll();
-    //
-    //     // Find ExerciseSet with the given exerciseId
-    //     final exerciseSet = exerciseSets.firstWhere(
-    //           (exerciseSet) => exerciseSet.id == exerciseId, // Adjust the condition as needed
-    //
-    //     );
-    //
-    //     return exerciseSet;
-    //   } catch (error) {
-    //     print('Error fetching ExerciseSet: $error');
-    //     return null;
-    //   }
-    // }
+
 
     int? getRecentWeight(String exerciseName) {
       try {
