@@ -33,7 +33,7 @@ class CurrentWorkoutSessionService {
       currentWorkoutSessionBox.put(CurrentWorkoutSession());
     }
     CurrentWorkoutSession currentWorkoutSession = getCurrentWorkoutSession();
-    currentWorkoutSession.isActive = true;
+    currentWorkoutSession.workoutTemplate.target = null;
     currentWorkoutSessionBox.put(currentWorkoutSession);
   }
 
@@ -123,6 +123,8 @@ class CurrentWorkoutSessionService {
         .addAll(currentWorkoutSession.exercisesSetsInfo);
     workoutSession.note = currentWorkoutSession.note;
     workoutSession.title = currentWorkoutSession.title;
+    workoutSession.workoutTemplate.targetId =
+        currentWorkoutSession.workoutTemplate.targetId;
     workoutSessionBox.put(workoutSession);
     clearCurrentWorkoutSession();
     return workoutSession;
@@ -132,6 +134,8 @@ class CurrentWorkoutSessionService {
     CurrentWorkoutSession currentWorkoutSession = getCurrentWorkoutSession();
     currentWorkoutSession.title = workoutTemplate.title;
     currentWorkoutSession.note = workoutTemplate.note;
+    currentWorkoutSession.workoutTemplate.targetId = workoutTemplate.id;
+
     // create copy of exercisesSetsInfo from workoutTemplate and add to workoutTemplate
     workoutTemplate.exercisesSetsInfo.forEach((exercisesSetsInfo) {
       final exercisesSetsInfoCopy = ExercisesSetsInfo();

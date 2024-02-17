@@ -104,7 +104,7 @@
     },
     {
       "id": "6:5203651438849109687",
-      "lastPropertyId": "8:2713015387530810136",
+      "lastPropertyId": "9:1587095043543173693",
       "name": "CurrentWorkoutSession",
       "properties": [
         {
@@ -124,19 +124,12 @@
           "type": 9
         },
         {
-          "id": "5:884524525454966511",
-          "name": "isActive",
-          "type": 1
-        },
-        {
-          "id": "6:101613759041641503",
-          "name": "startTime",
-          "type": 6
-        },
-        {
-          "id": "7:4021720971232389252",
-          "name": "duration",
-          "type": 6
+          "id": "9:1587095043543173693",
+          "name": "workoutTemplateId",
+          "type": 11,
+          "flags": 520,
+          "indexId": "14:3436634742231835350",
+          "relationTarget": "WorkoutTemplate"
         }
       ],
       "relations": [
@@ -238,7 +231,7 @@
     },
     {
       "id": "11:4929714596174845997",
-      "lastPropertyId": "8:8765862621053677106",
+      "lastPropertyId": "10:8096014757880930043",
       "name": "WorkoutSession",
       "properties": [
         {
@@ -279,6 +272,14 @@
           "flags": 520,
           "indexId": "12:8230860937383528136",
           "relationTarget": "Post"
+        },
+        {
+          "id": "10:8096014757880930043",
+          "name": "workoutTemplateId",
+          "type": 11,
+          "flags": 520,
+          "indexId": "13:4507678278627410660",
+          "relationTarget": "WorkoutTemplate"
         }
       ],
       "relations": [
@@ -378,7 +379,7 @@
     }
   ],
   "lastEntityId": "13:8601612346154600758",
-  "lastIndexId": "12:8230860937383528136",
+  "lastIndexId": "14:3436634742231835350",
   "lastRelationId": "9:1639088249226099505",
   "lastSequenceId": "0:0",
   "modelVersion": 5,
@@ -405,7 +406,11 @@
     4974240773481281494,
     4558520611782402113,
     2713015387530810136,
-    8572005245043511818
+    8572005245043511818,
+    101613759041641503,
+    4021720971232389252,
+    884524525454966511,
+    8367167583219207883
   ],
   "retiredRelationUids": [
     8318397962555478176,

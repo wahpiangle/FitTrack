@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:group_project/constants/themes/app_colours.dart';
 import 'package:group_project/main.dart';
 import 'package:group_project/models/workout_session.dart';
 import 'package:group_project/pages/complete_workout/congratulation_screen.dart';
@@ -25,69 +26,112 @@ class FinishWorkoutDialog extends StatelessWidget {
       surfaceTintColor: Colors.transparent,
       title: const Text(
         'Finish Workout',
-        style: TextStyle(color: Colors.white),
-      ),
-      content: const Text(
-        'Are you sure that you want to finish workout?',
         style: TextStyle(
-          color: Colors.white,
-          fontSize: 18,
+          color: AppColours.secondary,
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
         ),
+        textAlign: TextAlign.center,
+      ),
+      content: Text(
+        'Are you sure that you want to finish your current workout?',
+        style: TextStyle(
+          color: Colors.grey[500],
+          fontSize: 16,
+        ),
+        textAlign: TextAlign.center,
       ),
       actions: [
-        TextButton(
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-          child: const Text(
-            'Cancel',
-            style: TextStyle(fontSize: 18, color: Colors.red),
-          ),
-        ),
-        TextButton(
-          onPressed: () {
-            WorkoutSession savedWorkout = objectBox.currentWorkoutSessionService
-                .saveCurrentWorkoutSession(
-                    timeInSeconds: timerProvider.currentDuration);
-            restTimerProvider.stopRestTimer();
-            customTimerProvider.stopCustomTimer();
-            timerProvider.stopTimer();
-            timerProvider.resetTimer();
-            Navigator.of(context).pop();
-            Navigator.of(context).pop();
-            FirebaseWorkoutsService.createWorkoutSession(savedWorkout);
-            Navigator.of(context).push(
-              PageRouteBuilder(
-                pageBuilder: (context, animation, secondaryAnimation) {
-                  return CongratulationScreen(
-                    workoutSession: savedWorkout,
-                  );
+        Row(children: [
+          Flexible(
+            flex: 1,
+            child: SizedBox(
+              width: double.infinity,
+              child: TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
                 },
-                transitionsBuilder:
-                    (context, animation, secondaryAnimation, child) {
-                  const begin = 0.0;
-                  const end = 1.0;
-                  const curve = Curves.easeInOut;
-                  var tween = Tween(begin: begin, end: end)
-                      .chain(CurveTween(curve: curve));
-                  var offsetAnimation = animation.drive(tween);
-                  return ScaleTransition(
-                    scale: offsetAnimation,
-                    child: child,
-                  );
-                },
-                transitionDuration: const Duration(milliseconds: 500),
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all<Color>(Colors.red),
+                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                ),
+                child: const Text(
+                  'Cancel',
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
               ),
-            );
-          },
-          child: const Text(
-            'Finish Workout',
-            style: TextStyle(
-              fontSize: 18,
-              color: Colors.blue,
             ),
           ),
-        ),
+          const SizedBox(width: 10),
+          Flexible(
+            flex: 1,
+            child: SizedBox(
+              width: double.infinity,
+              child: TextButton(
+                onPressed: () {
+                  WorkoutSession savedWorkout = objectBox
+                      .currentWorkoutSessionService
+                      .saveCurrentWorkoutSession(
+                          timeInSeconds: timerProvider.currentDuration);
+                  restTimerProvider.stopRestTimer();
+                  customTimerProvider.stopCustomTimer();
+                  timerProvider.stopTimer();
+                  timerProvider.resetTimer();
+                  Navigator.of(context).pop();
+                  Navigator.of(context).pop();
+                  FirebaseWorkoutsService.createWorkoutSession(savedWorkout);
+                  Navigator.of(context).push(
+                    PageRouteBuilder(
+                      pageBuilder: (context, animation, secondaryAnimation) {
+                        return CongratulationScreen(
+                          workoutSession: savedWorkout,
+                        );
+                      },
+                      transitionsBuilder:
+                          (context, animation, secondaryAnimation, child) {
+                        const begin = 0.0;
+                        const end = 1.0;
+                        const curve = Curves.easeInOut;
+                        var tween = Tween(begin: begin, end: end)
+                            .chain(CurveTween(curve: curve));
+                        var offsetAnimation = animation.drive(tween);
+                        return ScaleTransition(
+                          scale: offsetAnimation,
+                          child: child,
+                        );
+                      },
+                      transitionDuration: const Duration(milliseconds: 500),
+                    ),
+                  );
+                },
+                style: ButtonStyle(
+                  backgroundColor:
+                      MaterialStateProperty.all<Color>(AppColours.secondary),
+                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  overlayColor: MaterialStateProperty.all<Color>(
+                    Colors.grey.withOpacity(0.2),
+                  ),
+                ),
+                child: const Text(
+                  'Finish Workout',
+                  style: TextStyle(
+                    color: Colors.black,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ]),
       ],
     );
   }
