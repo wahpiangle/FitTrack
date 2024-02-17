@@ -171,6 +171,7 @@ class CustomExerciseDialog {
                           } else {
                             Exercise newExercise = Exercise(
                               name: customExerciseName ?? '',
+                              isCustom: true,
                             );
 
                             objectBox.exerciseService.addExerciseToList(
