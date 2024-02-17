@@ -1,4 +1,3 @@
-import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:group_project/models/exercise.dart';
@@ -8,9 +7,15 @@ class ExerciseListItem extends StatelessWidget {
   final Exercise exercise;
   final String searchText;
   final VoidCallback onToggleVisibility;
+  final bool isCustom;
 
-  const ExerciseListItem(
-      {super.key, required this.exercise, required this.searchText,required this.onToggleVisibility});
+  const ExerciseListItem({
+    super.key,
+    required this.exercise,
+    required this.searchText,
+    required this.onToggleVisibility,
+    required this.isCustom,
+  });
 
   @override
   Widget build(BuildContext context) {

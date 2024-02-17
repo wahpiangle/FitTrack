@@ -11,7 +11,7 @@ import 'package:group_project/pages/workout/components/timer/providers/timer_pro
 import 'package:provider/provider.dart';
 
 class ExerciseListScreen extends StatefulWidget {
-  const ExerciseListScreen({Key? key});
+  const ExerciseListScreen({super.key});
 
   @override
   ExerciseListScreenState createState() => ExerciseListScreenState();
@@ -29,7 +29,7 @@ class ExerciseListScreenState extends State<ExerciseListScreen> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance!.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       filterExercises('');
       _handleTimerActive(context);
     });
@@ -72,10 +72,15 @@ class ExerciseListScreenState extends State<ExerciseListScreen> {
   }
 
   void toggleExerciseVisibility(Exercise exercise) {
-    setState(() {
-      exercise.isVisible = !exercise.isVisible;
-      objectBox.exerciseService.updateExerciselist(exercise);
-    });
+    // Only allow hiding custom exercises
+    if (exercise.isCustom == true) {
+      setState(() {
+        exercise.isVisible = !exercise.isVisible;
+        objectBox.exerciseService.updateExerciselist(exercise);
+      });
+    } else {
+      // Handle non-custom exercise case, maybe show a message or take some other action
+    }
   }
 
   void _handleTimerActive(BuildContext context) {
@@ -83,7 +88,7 @@ class ExerciseListScreenState extends State<ExerciseListScreen> {
     Provider.of<TimerProvider>(context, listen: false);
 
     void handleTimerStateChanged() {
-      if (timerProvider!.isTimerRunning &&
+      if (timerProvider.isTimerRunning &&
           !TimerManager().isTimerActiveScreenOpen) {
         TimerManager().showTimerBottomSheet(context, []);
       } else if (!timerProvider.isTimerRunning &&
@@ -97,7 +102,7 @@ class ExerciseListScreenState extends State<ExerciseListScreen> {
       if (mounted) {
         handleTimerStateChanged();
       } else {
-        timerProvider!.removeListener(listener!);
+        timerProvider.removeListener(listener!);
       }
     };
 
@@ -244,98 +249,102 @@ class ExerciseListScreenState extends State<ExerciseListScreen> {
                                   ),
                                 ),
                                 confirmDismiss: (direction) async {
-                                  return await showDialog(
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                      return AlertDialog(
-                                        surfaceTintColor:
-                                        const Color(0xFF1A1A1A),
-                                        backgroundColor:
-                                        const Color(0xFF1A1A1A),
-                                        title: Text(
-                                          "Hide ${exercise.name}",
-                                          style: const TextStyle(
-                                              color: Colors.white),
-                                        ),
-                                        content: const Column(
-                                          crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            Text(
-                                              "This exercise will no longer be accessible.",
-                                              style: TextStyle(
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.white,
+                                  if (!exercise.isCustom) {
+                                    // Handle non-custom exercise case, show a message
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text("${exercise.name} can't be hidden"),
+                                        duration: const Duration(seconds: 2),
+                                      ),
+                                    );
+                                    return false; // Return false to prevent dismissing non-custom exercises
+                                  }
+                                  if (exercise.isCustom) {
+                                    return await showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return AlertDialog(
+                                          surfaceTintColor: const Color(0xFF1A1A1A),
+                                          backgroundColor: const Color(0xFF1A1A1A),
+                                          title: Text(
+                                            "Hide ${exercise.name}",
+                                            style: const TextStyle(color: Colors.white),
+                                          ),
+                                          content: const Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              Text(
+                                                "This exercise will no longer be accessible.",
+                                                style: TextStyle(
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.white,
+                                                ),
                                               ),
-                                            ),
-                                            SizedBox(height: 8),
-                                            Text(
-                                              "Hiding it will not affect any of your previous workouts with this exercise.",
-                                              style: TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 13,
+                                              SizedBox(height: 8),
+                                              Text(
+                                                "Hiding it will not affect any of your previous workouts with this exercise.",
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 13,
+                                                ),
                                               ),
-                                            ),
-                                            SizedBox(height: 15),
-                                          ],
-                                        ),
-                                        contentPadding: const EdgeInsets.fromLTRB(
-                                            24.0, 20.0, 24.0, 0),
-                                        actions: [
-                                          Container(
-                                            width: double.infinity,
-                                            padding: const EdgeInsets.symmetric(
-                                                vertical: 1.0),
-                                            decoration: BoxDecoration(
-                                              color: Colors.red,
-                                              borderRadius:
-                                              BorderRadius.circular(10.0),
-                                            ),
-                                            child: Center(
-                                              child: TextButton(
-                                                onPressed: () {
-                                                  Navigator.pop(context, true);
-                                                },
-                                                child: const Text(
-                                                  "Hide",
-                                                  style: TextStyle(
-                                                      color: Colors.white),
+                                              SizedBox(height: 15),
+                                            ],
+                                          ),
+                                          contentPadding: const EdgeInsets.fromLTRB(24.0, 20.0, 24.0, 0),
+                                          actions: [
+                                            Container(
+                                              width: double.infinity,
+                                              padding: const EdgeInsets.symmetric(vertical: 1.0),
+                                              decoration: BoxDecoration(
+                                                color: Colors.red,
+                                                borderRadius: BorderRadius.circular(10.0),
+                                              ),
+                                              child: Center(
+                                                child: TextButton(
+                                                  onPressed: () {
+                                                    Navigator.pop(context, true);
+                                                  },
+                                                  child: const Text(
+                                                    "Hide",
+                                                    style: TextStyle(color: Colors.white),
+                                                  ),
                                                 ),
                                               ),
                                             ),
-                                          ),
-                                          const SizedBox(height: 3),
-                                          Row(
-                                            children: [
-                                              Expanded(
-                                                child: Container(
-                                                  decoration: BoxDecoration(
-                                                    borderRadius:
-                                                    BorderRadius.circular(
-                                                        10.0),
-                                                  ),
-                                                  child: TextButton(
-                                                    onPressed: () {
-                                                      Navigator.pop(
-                                                          context, false);
-                                                    },
-                                                    child: const Text(
-                                                      "Cancel",
-                                                      style: TextStyle(
-                                                          color: Colors.white),
+                                            const SizedBox(height: 3),
+                                            Row(
+                                              children: [
+                                                Expanded(
+                                                  child: Container(
+                                                    decoration: BoxDecoration(
+                                                      borderRadius: BorderRadius.circular(10.0),
+                                                    ),
+                                                    child: TextButton(
+                                                      onPressed: () {
+                                                        Navigator.pop(context, false);
+                                                      },
+                                                      child: const Text(
+                                                        "Cancel",
+                                                        style: TextStyle(color: Colors.white),
+                                                      ),
                                                     ),
                                                   ),
                                                 ),
-                                              ),
-                                            ],
-                                          ),
-                                        ],
-                                      );
-                                    },
-                                  );
+                                              ],
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    );
+                                  } else {
+                                    // Return false to prevent dismissing non-custom exercises
+                                    return false;
+                                  }
                                 },
+
                                 onDismissed: (direction) {
                                   if (direction == DismissDirection.endToStart) {
                                     toggleExerciseVisibility(exercise);
@@ -346,6 +355,7 @@ class ExerciseListScreenState extends State<ExerciseListScreen> {
                                   searchText: searchText,
                                   onToggleVisibility: () =>
                                       toggleExerciseVisibility(exercise),
+                                  isCustom : exercise.isCustom,
                                 ),
                               ),
                           ],
