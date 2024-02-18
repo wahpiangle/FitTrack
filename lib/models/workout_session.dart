@@ -1,5 +1,6 @@
 import 'package:group_project/models/exercises_sets_info.dart';
 import 'package:group_project/models/post.dart';
+import 'package:group_project/models/workout_template.dart';
 import 'package:objectbox/objectbox.dart';
 
 @Entity()
@@ -19,6 +20,7 @@ class WorkoutSession {
   // each exercise can have multiple sets
   final exercisesSetsInfo = ToMany<ExercisesSetsInfo>();
   final post = ToOne<Post>();
+  final workoutTemplate = ToOne<WorkoutTemplate>();
 
   WorkoutSession({
     this.id = 0,

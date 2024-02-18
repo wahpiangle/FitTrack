@@ -47,7 +47,9 @@ class WorkoutSessionService {
       }
       exercisesSetsInfoBox.remove(exercisesSetsInfo.id);
     }
-    postBox.remove(workoutSession.post.targetId);
+    if (workoutSession.post.target != null) {
+      postBox.remove(workoutSession.post.targetId);
+    }
     workoutSessionBox.remove(workoutSessionId);
   }
 
@@ -229,5 +231,44 @@ class WorkoutSessionService {
     WorkoutSession workoutSession = getWorkoutSession(workoutSessionId)!;
     workoutSession.post.targetId = postId;
     workoutSessionBox.put(workoutSession);
+  }
+
+  bool checkWorkoutSessionTemplateChanges(WorkoutSession workoutSession) {
+    if (workoutSession.workoutTemplate.hasValue) {
+      final workoutTemplate = workoutSession.workoutTemplate.target!;
+      if (workoutTemplate.title != workoutSession.title) {
+        return true;
+      }
+      if (workoutTemplate.note != workoutSession.note) {
+        return true;
+      }
+      if (workoutTemplate.exercisesSetsInfo.length !=
+          workoutSession.exercisesSetsInfo.length) {
+        return true;
+      }
+      for (int i = 0; i < workoutTemplate.exercisesSetsInfo.length; i++) {
+        if (workoutTemplate.exercisesSetsInfo[i].exercise.target!.id !=
+            workoutSession.exercisesSetsInfo[i].exercise.target!.id) {
+          return true;
+        }
+        if (workoutTemplate.exercisesSetsInfo[i].exerciseSets.length !=
+            workoutSession.exercisesSetsInfo[i].exerciseSets.length) {
+          return true;
+        }
+        for (int j = 0;
+            j < workoutTemplate.exercisesSetsInfo[i].exerciseSets.length;
+            j++) {
+          if (workoutTemplate.exercisesSetsInfo[i].exerciseSets[j].reps !=
+              workoutSession.exercisesSetsInfo[i].exerciseSets[j].reps) {
+            return true;
+          }
+          if (workoutTemplate.exercisesSetsInfo[i].exerciseSets[j].weight !=
+              workoutSession.exercisesSetsInfo[i].exerciseSets[j].weight) {
+            return true;
+          }
+        }
+      }
+    }
+    return false;
   }
 }
