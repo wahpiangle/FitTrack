@@ -48,85 +48,77 @@ class _HomeState extends State<Home> {
     final UploadImageProvider uploadImageProvider =
         context.watch<UploadImageProvider>();
     return Scaffold(
-        backgroundColor: AppColours.primary,
-        body: Container(
-          margin: const EdgeInsets.symmetric(
-            horizontal: 10,
-          ),
-          child: Column(
-            children: [
-              Container(
-                margin: const EdgeInsets.only(
-                  bottom: 10,
-                ),
-                child: CarouselSlider.builder(
-                    itemCount: imageList.length,
-                    options: CarouselOptions(
-                      aspectRatio: 0.9,
-                      enlargeCenterPage: true,
-                      enableInfiniteScroll: false,
-                      enlargeFactor: 0.1,
-                      viewportFraction: 0.45,
-                      onPageChanged: (index, reason) {
-                        setState(() {
-                          _current = index;
-                        });
-                      },
-                    ),
-                    itemBuilder: (context, index, realIndex) {
-                      final firstImage = imageList[index]['firstImageUrl']!;
-                      final secondImage = imageList[index]['secondImageUrl']!;
-                      final postId = imageList[index]['postId']!;
-                      final workoutSessionId =
-                          imageList[index]['workoutSessionId']!;
-                      return Container(
-                        margin: const EdgeInsets.symmetric(
-                          horizontal: 5,
-                        ),
-                        child: Column(
-                          children: [
-                            ClipRRect(
-                              borderRadius: const BorderRadius.all(
-                                Radius.circular(8.0),
-                              ),
-                              child: DisplayImageStack(
-                                firstImageUrl: firstImage,
-                                secondImageUrl: secondImage,
-                                index: index,
-                                current: _current,
-                                postId: postId,
-                                workoutSessionId: workoutSessionId,
-                              ),
-                            ),
-                            uploadImageProvider.uploadError
-                                ? const Text(
-                                    'There was an error uploading your workout. Please try again.',
-                                    style: TextStyle(color: Colors.red),
-                                    textAlign: TextAlign.center,
-                                  )
-                                : const Text(
-                                    // todo: allow user to add a caption to their post
-                                    'Add a caption',
-                                    style: TextStyle(color: Colors.white),
-                                    textAlign: TextAlign.center,
-                                  ),
-                          ],
-                        ),
-                      );
-                    }),
-              ),
-              // TODO: Display friend's posts
-            ],
-          ),
+      backgroundColor: AppColours.primary,
+      body: Container(
+        margin: const EdgeInsets.symmetric(
+          horizontal: 10,
         ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            print(uploadImageProvider.uploadError);
-            print(uploadImageProvider.uploading);
-            objectBox.postService.test();
-            uploadImageProvider.reset();
-          },
-          child: const Icon(Icons.add),
-        ));
+        child: Column(
+          children: [
+            Container(
+              margin: const EdgeInsets.only(
+                bottom: 10,
+              ),
+              child: CarouselSlider.builder(
+                  itemCount: imageList.length,
+                  options: CarouselOptions(
+                    aspectRatio: 0.9,
+                    enlargeCenterPage: true,
+                    enableInfiniteScroll: false,
+                    enlargeFactor: 0.1,
+                    viewportFraction: 0.45,
+                    onPageChanged: (index, reason) {
+                      setState(() {
+                        _current = index;
+                      });
+                    },
+                  ),
+                  itemBuilder: (context, index, realIndex) {
+                    final firstImage = imageList[index]['firstImageUrl']!;
+                    final secondImage = imageList[index]['secondImageUrl']!;
+                    final postId = imageList[index]['postId']!;
+                    final workoutSessionId =
+                        imageList[index]['workoutSessionId']!;
+                    return Container(
+                      margin: const EdgeInsets.symmetric(
+                        horizontal: 5,
+                      ),
+                      child: Column(
+                        children: [
+                          ClipRRect(
+                            borderRadius: const BorderRadius.all(
+                              Radius.circular(8.0),
+                            ),
+                            child: DisplayImageStack(
+                              firstImageUrl: firstImage,
+                              secondImageUrl: secondImage,
+                              index: index,
+                              current: _current,
+                              postId: postId,
+                              workoutSessionId: workoutSessionId,
+                            ),
+                          ),
+                          uploadImageProvider.uploadError
+                              ? const Text(
+                                  'There was an error uploading your workout. Please try again.',
+                                  style: TextStyle(color: Colors.red),
+                                  textAlign: TextAlign.center,
+                                )
+                              : const Text(
+                                  // todo: allow user to add a caption to their post
+                                  'Add a caption',
+                                  style: TextStyle(color: Colors.white),
+                                  textAlign: TextAlign.center,
+                                ),
+                        ],
+                      ),
+                    );
+                  }),
+            ),
+            // TODO: Display friend's posts
+          ],
+        ),
+      ),
+    );
   }
 }

@@ -58,14 +58,24 @@ class _CongratulationScreenState extends State<CongratulationScreen> {
           backgroundColor: const Color(0xFF1A1A1A),
           leading: IconButton(
             onPressed: () {
-              showDialog(
-                context: context,
-                builder: (BuildContext ctx) {
-                  return TemplateDialog(
-                    workoutSession: widget.workoutSession!,
-                  );
-                },
+              bool workoutTemplateHasChanges = objectBox.workoutSessionService
+                  .checkWorkoutSessionTemplateChanges(
+                widget.workoutSession!,
               );
+              bool hasWorkoutTemplate =
+                  widget.workoutSession!.workoutTemplate.hasValue;
+              if (workoutTemplateHasChanges || !hasWorkoutTemplate) {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext ctx) {
+                    return TemplateDialog(
+                      workoutSession: widget.workoutSession!,
+                    );
+                  },
+                );
+              } else {
+                Navigator.pop(context);
+              }
             },
             icon: const Icon(Icons.close_sharp, color: Colors.white),
           ),
