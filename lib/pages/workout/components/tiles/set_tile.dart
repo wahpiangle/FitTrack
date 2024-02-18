@@ -33,6 +33,7 @@ class _SetTileState extends State<SetTile> {
   int? recentReps;
   late TextEditingController weightController;
   late TextEditingController repsController;
+  bool _isHovered = false;
 
 
   @override
@@ -133,32 +134,24 @@ class _SetTileState extends State<SetTile> {
             const SizedBox(width: 20),
             Expanded(
               flex: 1,
-              child: GestureDetector(
+              child: InkWell(
                 onTap: () {
-                  onTapPreviousTab(widget.exercisesSetsInfo);                },
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                  child: TextFormField(
-                    enabled: false,
-                    initialValue: recentWeight != null
-                        ? '${recentWeight}kg x $recentReps'
-                        : '-',
-                    style: const TextStyle(
-                      fontSize: 12,
-                      color: Colors.grey,
-                    ),
-                    decoration: const InputDecoration(
-                      contentPadding: EdgeInsets.all(0),
-                      filled: true,
-                      fillColor: Colors.transparent,
-                      border: OutlineInputBorder(
-                        borderSide: BorderSide.none,
-                      ),
-                      hintText: "0",
-                      hintStyle: TextStyle(
-                        color: Colors.grey,
-                      ),
-                    ),
+                onTapPreviousTab(widget.exercisesSetsInfo);
+              },
+                onHover: (val) {
+                  setState(() {
+                    _isHovered = true;
+                    print('hovering');
+                  });
+                },
+
+                child: Text(
+                  recentWeight != null
+                      ? '${recentWeight}kg x $recentReps'
+                      : '-',
+                  style: TextStyle(
+                    fontSize: _isHovered ? 20 : 13,
+                    color: Colors.grey,
                   ),
                 ),
               ),
