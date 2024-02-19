@@ -5,6 +5,8 @@ import 'package:group_project/constants/themes/app_colours.dart';
 import 'package:group_project/main.dart';
 import 'package:group_project/models/exercise_set.dart';
 import 'package:group_project/models/exercises_sets_info.dart';
+import 'dart:math';
+
 
 class SetTile extends StatefulWidget {
   final ExerciseSet set;
@@ -28,11 +30,19 @@ class SetTile extends StatefulWidget {
   State<SetTile> createState() => _SetTileState();
 }
 
-class _SetTileState extends State<SetTile> {
+class _SetTileState extends State<SetTile> with TickerProviderStateMixin {
   int? recentWeight;
   int? recentReps;
   late TextEditingController weightController;
   late TextEditingController repsController;
+
+  late final AnimationController _controller = AnimationController(
+    vsync: this, // Replace with your TickerProvider
+    duration: const Duration(milliseconds: 500),
+  );
+
+  double shakeOffset = 1.0;
+
 
 
   @override
@@ -136,18 +146,33 @@ class _SetTileState extends State<SetTile> {
               child: GestureDetector(
                 onTap: () {
                   onTapPreviousTab(widget.exercisesSetsInfo);
+                  _controller.forward(from: 0.0);
                 },
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                  child: Text(
-                    recentWeight != null ? '${recentWeight}kg x $recentReps' : '-',
-                    style: const TextStyle(
-                      fontSize: 15,
-                      color: Colors.grey,
+                child: AnimatedBuilder(
+                  animation: _controller,
+                  builder: (context, child) {
+                    return Transform.translate(
+                      offset: Offset(
+                        // Use CurveTween with SineCurve
+                        CurveTween(curve: SineCurve()).transform(_controller.value) * shakeOffset,
+                        0.0,
+                      ),
+                      child: child,
+                    );
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: Text(
+                      recentWeight != null ? '${recentWeight}kg x $recentReps' : '-',
+                      style: const TextStyle(
+                        fontSize: 15,
+                        color: Colors.grey,
+                      ),
                     ),
                   ),
                 ),
               ),
+
             ),
             Expanded(
               flex: 1,
@@ -297,3 +322,16 @@ class _SetTileState extends State<SetTile> {
     );
   }
 }
+
+class SineCurve extends Curve {
+  const SineCurve({this.count = 3});
+  final double count;
+
+  @override
+  double transformInternal(double t) {
+    return sin(count * 2 * pi * t);
+  }
+}
+
+
+
