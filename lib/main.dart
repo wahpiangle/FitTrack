@@ -53,7 +53,6 @@ Future<void> main() async {
 
   notificationManager = PhoneNotification();
   await notificationManager.initializeNotifications();
-
   final cameras = await availableCameras();
 
   runApp(MyApp(
