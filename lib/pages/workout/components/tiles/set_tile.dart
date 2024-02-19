@@ -135,29 +135,15 @@ class _SetTileState extends State<SetTile> {
               flex: 1,
               child: GestureDetector(
                 onTap: () {
-                  onTapPreviousTab(widget.exercisesSetsInfo);                },
+                  onTapPreviousTab(widget.exercisesSetsInfo);
+                },
                 child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                  child: TextFormField(
-                    enabled: false,
-                    initialValue: recentWeight != null
-                        ? '${recentWeight}kg x $recentReps'
-                        : '-',
+                  child: Text(
+                    recentWeight != null ? '${recentWeight}kg x $recentReps' : '-',
                     style: const TextStyle(
-                      fontSize: 12,
+                      fontSize: 15,
                       color: Colors.grey,
-                    ),
-                    decoration: const InputDecoration(
-                      contentPadding: EdgeInsets.all(0),
-                      filled: true,
-                      fillColor: Colors.transparent,
-                      border: OutlineInputBorder(
-                        borderSide: BorderSide.none,
-                      ),
-                      hintText: "0",
-                      hintStyle: TextStyle(
-                        color: Colors.grey,
-                      ),
                     ),
                   ),
                 ),
