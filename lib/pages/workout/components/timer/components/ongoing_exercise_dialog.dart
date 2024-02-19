@@ -9,14 +9,10 @@ import 'package:group_project/pages/workout/components/timer/providers/rest_time
 import 'package:group_project/pages/workout/components/timer/providers/timer_provider.dart';
 import 'package:provider/provider.dart';
 
-import 'package:group_project/models/exercise_set.dart';
-
-
 class OngoingExerciseDialog extends StatelessWidget {
   final void Function() handleResumeWorkout;
   final bool? startFromTemplate;
   final WorkoutTemplate? workoutTemplateData;
-
 
   const OngoingExerciseDialog({
     super.key,

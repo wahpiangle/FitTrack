@@ -6,7 +6,6 @@ import 'package:group_project/models/exercise_set.dart';
 import 'package:group_project/models/exercises_sets_info.dart';
 import 'package:group_project/objectbox.g.dart';
 import 'package:group_project/services/firebase/firebase_customexercise_service.dart';
-import 'package:objectbox/objectbox.dart';
 
 class ExerciseService {
   Box<Exercise> exerciseBox;
@@ -37,7 +36,10 @@ class ExerciseService {
 
   List<Exercise> getAllExercises() {
     // Filter out exercises based on visibility
-    return exerciseBox.getAll().where((exercise) => exercise.isVisible).toList();
+    return exerciseBox
+        .getAll()
+        .where((exercise) => exercise.isVisible)
+        .toList();
   }
 
   void removeExercises() {
@@ -45,24 +47,24 @@ class ExerciseService {
   }
 
 //custom exercise
-  void addExerciseToList(Exercise exercise, Category category, BodyPart bodyPart) {
+  void addExerciseToList(
+      Exercise exercise, Category category, BodyPart bodyPart) {
     exercise.isCustom = true;
     exercise.category.target = category;
     exercise.bodyPart.target = bodyPart;
     exerciseBox.put(exercise);
   }
 
-  void updateExerciseInList(Exercise exercise, String newName, Category category, BodyPart bodyPart) {
+  void updateExerciseInList(
+      Exercise exercise, String newName, Category category, BodyPart bodyPart) {
     exercise.name = newName;
     exercise.category.target = category;
     exercise.bodyPart.target = bodyPart;
     exerciseBox.put(exercise);
   }
 
-  void updateExerciselist( Exercise exercise){
-
+  void updateExerciselist(Exercise exercise) {
     exerciseBox.put(exercise);
-
   }
 
 //categories & bodyParts
@@ -73,7 +75,7 @@ class ExerciseService {
   Future<void> populateDataFromFirebase() async {
     try {
       final List<dynamic> addednewExercises =
-      await FirebaseExercisesService.getAllCustomExercises();
+          await FirebaseExercisesService.getAllCustomExercises();
 
       // Retrieve existing exercise names from ObjectBox or another storage solution
       final List<String> existingExerciseNames = getExistingExerciseNames();
@@ -97,13 +99,14 @@ class ExerciseService {
         final categoryName = exerciseData['categoryName'];
         final bodyPartName = exerciseData['bodyPartName'];
 
-
         // Fetch the category and body part directly from Firebase data
-        final category =
-        categoryId != null ? Category(id: categoryId, name: categoryName) : null;
+        final category = categoryId != null
+            ? Category(id: categoryId, name: categoryName)
+            : null;
         final bodyPart = bodyPartId != null
             ? BodyPart(id: bodyPartId, name: bodyPartName ?? 'Chest')
-            : BodyPart(id: bodyPartId, name:'Chest'); // Assign default body part name
+            : BodyPart(
+                id: bodyPartId, name: 'Chest'); // Assign default body part name
 
         // Associate Category and BodyPart with the exercise
         newCustomExercise.category.target = category;
@@ -115,13 +118,10 @@ class ExerciseService {
         // Update existingExerciseNames list
         existingExerciseNames.add(exerciseName);
       }
-
     } catch (error) {
       // Handle the error further based on your application's requirements.
     }
   }
-
-
 
   List<String> getExistingExerciseNames() {
     // Retrieve existing exercises from ObjectBox
@@ -129,7 +129,7 @@ class ExerciseService {
 
     // Extract exercise names from existing exercises
     final List<String> existingExerciseNames =
-    existingExercises.map((exercise) => exercise.name).toList();
+        existingExercises.map((exercise) => exercise.name).toList();
 
     return existingExerciseNames;
   }
@@ -168,51 +168,42 @@ class ExerciseService {
     exerciseBox.put(exercise);
   }
 
-
-
   // ExerciseService
-  void updateRecentWeightAndReps(String exerciseName, int recentWeight, int recentReps) {
+  void updateRecentWeightAndReps(
+      String exerciseName, int recentWeight, int recentReps) {
     final exercises = exerciseBox.getAll();
-    final exercise = exercises.firstWhere((exercise) =>
-    exercise.name == exerciseName);
-    if (exercise != null) {
-      exercise.recentWeight = recentWeight;
-      exercise.recentReps = recentReps;
-      exerciseBox.put(exercise);
-    } else {
-      throw Exception('Exercise with name $exerciseName not found.');
-    }
+    final exercise =
+        exercises.firstWhere((exercise) => exercise.name == exerciseName);
+    exercise.recentWeight = recentWeight;
+    exercise.recentReps = recentReps;
+    exerciseBox.put(exercise);
   }
 
-
-
-    int? getRecentWeight(String exerciseName) {
-      try {
-        final exerciseQuery = exerciseBox.query(
-            Exercise_.name.equals(exerciseName)).build();
-        final exercise = exerciseQuery.findFirst();
-        if (exercise != null) {
-          return exercise.recentWeight;
-        }
-      } catch (error) {
-        print('Error fetching recent weight for exercise: $error');
+  int? getRecentWeight(String exerciseName) {
+    try {
+      final exerciseQuery =
+          exerciseBox.query(Exercise_.name.equals(exerciseName)).build();
+      final exercise = exerciseQuery.findFirst();
+      if (exercise != null) {
+        return exercise.recentWeight;
       }
-      return null;
+    } catch (error) {
+      print('Error fetching recent weight for exercise: $error');
     }
+    return null;
+  }
 
-    int? getRecentReps(String exerciseName) {
-      try {
-        final exerciseQuery = exerciseBox.query(
-            Exercise_.name.equals(exerciseName)).build();
-        final exercise = exerciseQuery.findFirst();
-        if (exercise != null) {
-          return exercise.recentReps;
-        }
-      } catch (error) {
-        print('Error fetching recent reps for exercise: $error');
+  int? getRecentReps(String exerciseName) {
+    try {
+      final exerciseQuery =
+          exerciseBox.query(Exercise_.name.equals(exerciseName)).build();
+      final exercise = exerciseQuery.findFirst();
+      if (exercise != null) {
+        return exercise.recentReps;
       }
-      return null;
+    } catch (error) {
+      print('Error fetching recent reps for exercise: $error');
     }
+    return null;
+  }
 }
-
-

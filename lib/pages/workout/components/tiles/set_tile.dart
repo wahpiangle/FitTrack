@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:group_project/constants/themes/app_colours.dart';
@@ -6,7 +5,6 @@ import 'package:group_project/main.dart';
 import 'package:group_project/models/exercise_set.dart';
 import 'package:group_project/models/exercises_sets_info.dart';
 import 'dart:math';
-
 
 class SetTile extends StatefulWidget {
   final ExerciseSet set;
@@ -44,8 +42,6 @@ class _SetTileState extends State<SetTile> with TickerProviderStateMixin {
 
   double shakeOffset = 1.0;
 
-
-
   @override
   void initState() {
     super.initState();
@@ -61,18 +57,18 @@ class _SetTileState extends State<SetTile> with TickerProviderStateMixin {
     super.dispose();
   }
 
-
   Future<void> fetchRecentWeightAndReps() async {
     final exercisesSetsInfo = widget.set.exerciseSetInfo.target;
     if (exercisesSetsInfo != null) {
       final exercise = exercisesSetsInfo.exercise.target;
       if (exercise != null) {
-        final recentWeight = objectBox.exerciseService.getRecentWeight(exercise.name);
-        final recentReps = objectBox.exerciseService.getRecentReps(exercise.name);
+        final recentWeight =
+            objectBox.exerciseService.getRecentWeight(exercise.name);
+        final recentReps =
+            objectBox.exerciseService.getRecentReps(exercise.name);
         setState(() {
           this.recentWeight = recentWeight;
           this.recentReps = recentReps;
-
         });
       } else {
         print('Exercise associated with the exercise set is null.');
@@ -81,8 +77,6 @@ class _SetTileState extends State<SetTile> with TickerProviderStateMixin {
       print('ExerciseSetsInfo associated with the exercise set is null.');
     }
   }
-
-
 
   void onTapPreviousTab(ExercisesSetsInfo exercisesSetsInfo) {
     weightController.text = recentWeight?.toString() ?? '';
@@ -97,10 +91,8 @@ class _SetTileState extends State<SetTile> with TickerProviderStateMixin {
     objectBox.exerciseService.updateExerciseSet(widget.set);
   }
 
-
   @override
   Widget build(BuildContext context) {
-
     return Dismissible(
       key: Key(widget.set.id.toString()),
       direction: DismissDirection.endToStart,
@@ -141,10 +133,10 @@ class _SetTileState extends State<SetTile> with TickerProviderStateMixin {
                 ),
               ),
             ),
-            const SizedBox(width: 20),
+            const SizedBox(width: 10),
             Expanded(
               flex: 1,
-              child: InkWell(
+              child: GestureDetector(
                 onTap: () {
                   onTapPreviousTab(widget.exercisesSetsInfo);
                   _controller.forward(from: 0.0);
@@ -158,8 +150,9 @@ class _SetTileState extends State<SetTile> with TickerProviderStateMixin {
                   builder: (context, child) {
                     return Transform.translate(
                       offset: Offset(
-                        // Use CurveTween with SineCurve
-                        CurveTween(curve: SineCurve()).transform(_controller.value) * shakeOffset,
+                        CurveTween(curve: const SineCurve())
+                                .transform(_controller.value) *
+                            shakeOffset,
                         0.0,
                       ),
                       child: child,
@@ -168,17 +161,21 @@ class _SetTileState extends State<SetTile> with TickerProviderStateMixin {
                   child: Container(
                     padding: const EdgeInsets.symmetric(horizontal: 8.0),
                     child: Text(
-                      recentWeight != null ? '${recentWeight}kg x $recentReps' : '-',
-                      style:  TextStyle(
+                      recentWeight != null
+                          ? '${recentWeight}kg x $recentReps'
+                          : '-',
+                      style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.bold,
-                        color: isTapped ? Colors.grey : Colors.white
+                        color: isTapped ? Colors.grey : Colors.white,
                       ),
+                      textAlign: TextAlign.center,
                     ),
                   ),
                 ),
               ),
             ),
+            const SizedBox(width: 10),
             Expanded(
               flex: 1,
               child: Container(
@@ -273,30 +270,26 @@ class _SetTileState extends State<SetTile> with TickerProviderStateMixin {
                           widget.set.recentReps = widget.set.reps;
 
                           // Get the associated ExercisesSetsInfo
-                          final exercisesSetsInfo = await widget.set.exerciseSetInfo.target;
+                          final exercisesSetsInfo =
+                              widget.set.exerciseSetInfo.target;
 
                           // Update the recent weight and reps for the associated Exercise
                           if (exercisesSetsInfo != null) {
-                            final exercise = await exercisesSetsInfo.exercise.target;
+                            final exercise = exercisesSetsInfo.exercise.target;
                             if (exercise != null) {
                               // Call method to update recent weight and reps for the Exercise
-                              try {
-                                objectBox.exerciseService.updateRecentWeightAndReps(
-                                  exercise.name,
-                                  widget.set.recentWeight!,
-                                  widget.set.recentReps!,
-                                );
+                              objectBox.exerciseService
+                                  .updateRecentWeightAndReps(
+                                exercise.name,
+                                widget.set.recentWeight!,
+                                widget.set.recentReps!,
+                              );
 
-                                // Update the state after updating recentWeight and recentReps
-                                setState(() {
-                                  recentWeight = widget.set.recentWeight;
-                                  recentReps = widget.set.recentReps;
-                                  print('Updated recentWeight and recentReps for Exercise ${exercise.name}');
-                                  print('Recent weight is now $recentWeight for ${exercise.name}');
-                                });
-                              } catch (e) {
-                                print('Error updating recentWeight and recentReps: $e');
-                              }
+                              // Update the state after updating recentWeight and recentReps
+                              setState(() {
+                                recentWeight = widget.set.recentWeight;
+                                recentReps = widget.set.recentReps;
+                              });
                             }
                           }
 
@@ -337,6 +330,3 @@ class SineCurve extends Curve {
     return sin(count * 2 * pi * t);
   }
 }
-
-
-
