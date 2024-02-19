@@ -5,7 +5,7 @@ import 'package:group_project/constants/themes/app_colours.dart';
 import 'package:group_project/pages/friend/current_friend.dart';
 import 'package:group_project/pages/friend/friend_request.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:contacts_service/contacts_service.dart';
+import 'package:flutter_contacts/flutter_contacts.dart';
 
 class FriendPage extends StatefulWidget {
   FriendPage({Key? key, required this.title}) : super(key: key);
@@ -15,24 +15,22 @@ class FriendPage extends StatefulWidget {
   _FriendPageState createState() => _FriendPageState();
 }
 
-
 class _FriendPageState extends State<FriendPage> with SingleTickerProviderStateMixin {
   late int currentPage;
   late TabController tabController;
   final List<Color> colors = [AppColours.secondaryDark, AppColours.secondaryDark, AppColours.secondaryDark];
+  List<Contact> contacts = [];
 
   @override
   void initState() {
     currentPage = 0;
     tabController = TabController(length: 3, vsync: this);
-    tabController.animation!.addListener(
-          () {
-        final value = tabController.animation!.value.round();
-        if (value != currentPage && mounted) {
-          changePage(value);
-        }
-      },
-    );
+    tabController.animation!.addListener(() {
+      final value = tabController.animation!.value.round();
+      if (value != currentPage && mounted) {
+        changePage(value);
+      }
+    });
     super.initState();
     _checkAndRequestContactPermission();
   }
@@ -50,22 +48,13 @@ class _FriendPageState extends State<FriendPage> with SingleTickerProviderStateM
     print('Contact Permission Status: ${result}');
     if (result.isGranted) {
       await _getContacts();
-    } else {
-      print('Permission denied');
-    }
-  }
-
-  Future<void> _getContacts() async {
-    List<Contact> contacts = await ContactsService.getContacts();
-    print('Contacts: $contacts');
-    if (contacts.isEmpty) {
-      // Show a message when no contacts are found
+    } else if (result.isPermanentlyDenied) {
       showDialog(
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Text('No Contacts Found'),
-            content: Text('There are no contacts in your list.'),
+            title: Text('Permission Required'),
+            content: Text('Contacts permission is required to use this feature. Please grant the permission in settings.'),
             actions: [
               TextButton(
                 onPressed: () {
@@ -80,6 +69,19 @@ class _FriendPageState extends State<FriendPage> with SingleTickerProviderStateM
     }
   }
 
+  Future<void> _getContacts() async {
+    List<Contact> fetchedContacts = await FlutterContacts.getContacts(withProperties: true);
+    setState(() {
+      contacts = fetchedContacts;
+    });
+  }
+
+  Future<void> _checkContactsPermissionAndFetch() async {
+    var status = await Permission.contacts.status;
+    if (status.isGranted) {
+      await _getContacts();
+    }
+  }
 
   void changePage(int newPage) {
     setState(() {
@@ -95,6 +97,8 @@ class _FriendPageState extends State<FriendPage> with SingleTickerProviderStateM
 
   @override
   Widget build(BuildContext context) {
+    _checkContactsPermissionAndFetch();
+
     final Color unselectedColor = colors[currentPage].computeLuminance() < 0.2 ? Colors.black : Colors.white;
     return SafeArea(
       child: Scaffold(
@@ -217,7 +221,7 @@ class _FriendPageState extends State<FriendPage> with SingleTickerProviderStateM
             dragStartBehavior: DragStartBehavior.down,
             physics: const BouncingScrollPhysics(),
             children: [
-              FriendSuggestionsTab(controller: controller, color: Colors.green),
+              FriendSuggestionsTab(controller: controller, color: Colors.green, contacts: contacts),
               CurrentFriendsTab(),
               FriendRequestsTab(),
             ],
@@ -229,13 +233,12 @@ class _FriendPageState extends State<FriendPage> with SingleTickerProviderStateM
 }
 
 class FriendSuggestionsTab extends StatelessWidget {
-  const FriendSuggestionsTab({Key? key, required ScrollController controller, required MaterialColor color}) : super(key: key);
+  const FriendSuggestionsTab({Key? key, required ScrollController controller, required MaterialColor color, required this.contacts}) : super(key: key);
 
+  final List<Contact> contacts;
 
   @override
   Widget build(BuildContext context) {
-    List<Contact> contacts = []; // Initialize it or get it from your data
-
     return Center(
       child: contacts.isEmpty
           ? Text('No contact found')
@@ -244,7 +247,7 @@ class FriendSuggestionsTab extends StatelessWidget {
         itemBuilder: (context, index) {
           // Display your contact items here
           return ListTile(
-            title: Text(contacts[index].displayName ?? ''),
+            title: Text(contacts[index].displayName),
             // Add more contact information as needed
           );
         },
@@ -252,4 +255,3 @@ class FriendSuggestionsTab extends StatelessWidget {
     );
   }
 }
-
