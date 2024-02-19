@@ -35,6 +35,7 @@ class _SetTileState extends State<SetTile> with TickerProviderStateMixin {
   int? recentReps;
   late TextEditingController weightController;
   late TextEditingController repsController;
+  bool isTapped = false;
 
   late final AnimationController _controller = AnimationController(
     vsync: this, // Replace with your TickerProvider
@@ -143,10 +144,14 @@ class _SetTileState extends State<SetTile> with TickerProviderStateMixin {
             const SizedBox(width: 20),
             Expanded(
               flex: 1,
-              child: GestureDetector(
+              child: InkWell(
                 onTap: () {
                   onTapPreviousTab(widget.exercisesSetsInfo);
                   _controller.forward(from: 0.0);
+
+                  setState(() {
+                    isTapped = true;
+                  });
                 },
                 child: AnimatedBuilder(
                   animation: _controller,
@@ -164,15 +169,15 @@ class _SetTileState extends State<SetTile> with TickerProviderStateMixin {
                     padding: const EdgeInsets.symmetric(horizontal: 8.0),
                     child: Text(
                       recentWeight != null ? '${recentWeight}kg x $recentReps' : '-',
-                      style: const TextStyle(
-                        fontSize: 15,
-                        color: Colors.grey,
+                      style:  TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                        color: isTapped ? Colors.grey : Colors.white
                       ),
                     ),
                   ),
                 ),
               ),
-
             ),
             Expanded(
               flex: 1,
