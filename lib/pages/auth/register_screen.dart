@@ -23,12 +23,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFF1A1A1A),
-      // const Color(0xFF1A1A1C),
       appBar: AppBar(
         backgroundColor: const Color(0xFF1A1A1A),
         centerTitle: true,
         elevation: 0.0,
         title: const Text('Register'),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
       ),
       body: Container(
         padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 50.0),
@@ -108,7 +113,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         );
                         await _auth.registerWithEmailAndPassword(
                             email, password);
-                        Future.microtask(() => Navigator.of(context).pop());
+                        Future.microtask(() => Navigator.pop(context));
                         Future.microtask(() => Navigator.pop(context));
                         errorMessage = '';
                       } on FirebaseAuthException catch (error) {
