@@ -208,9 +208,10 @@ class WorkoutTemplateService {
     return false;
   }
 
-  void createWorkoutTemplateFromWorkoutSession(WorkoutSession workoutSession) {
+  void createWorkoutTemplateFromWorkoutSession(WorkoutSession workoutSession,
+      [String? newTitle]) {
     WorkoutTemplate workoutTemplate = WorkoutTemplate(
-      title: workoutSession.title,
+      title: newTitle ?? workoutSession.title,
       note: workoutSession.note,
       createdAt: DateTime.now(),
     );
