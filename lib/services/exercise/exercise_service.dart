@@ -169,16 +169,25 @@ class ExerciseService {
   }
 
 
+  void updateSetNumber(ExerciseSet exerciseSet, int newIndex){
+    exerciseSet.setNumber = newIndex;
+    exerciseSetBox.put(exerciseSet);
+    print('Update setNumber of Exercise Set $exerciseSet to become ${exerciseSet.setNumber}');
 
+  }
   // ExerciseService
-  void updateRecentWeightAndReps(String exerciseName, int recentWeight, int recentReps) {
+  void updateRecentWeightAndReps(String exerciseName, int recentWeight, int recentReps, int setIndex) {
     final exercises = exerciseBox.getAll();
-    final exercise = exercises.firstWhere((exercise) =>
-    exercise.name == exerciseName);
-    if (exercise != null) {
-      exercise.recentWeight = recentWeight;
-      exercise.recentReps = recentReps;
-      exerciseBox.put(exercise);
+    final exerciseSets = exerciseSetBox.getAll();
+
+    final exercise = exercises.firstWhere((exercise) => exercise.name == exerciseName);
+    final exerciseSet = exerciseSets.firstWhere((exerciseSet) =>
+    exerciseSet.exercise.target?.name == exercise.name && exerciseSet.setNumber == setIndex);
+
+    if (exerciseSet != null) {
+      exerciseSet.recentWeight = recentWeight;
+      exerciseSet.recentReps = recentReps;
+      exerciseSetBox.put(exerciseSet as ExerciseSet);
     } else {
       throw Exception('Exercise with name $exerciseName not found.');
     }
