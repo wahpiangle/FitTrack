@@ -194,34 +194,40 @@ class ExerciseService {
   }
 
 
+  // ExerciseService
+  int? getRecentWeight(String exerciseName, int setIndex) {
+    final exercises = exerciseBox.getAll();
+    final exerciseSets = exerciseSetBox.getAll();
 
-    int? getRecentWeight(String exerciseName) {
-      try {
-        final exerciseQuery = exerciseBox.query(
-            Exercise_.name.equals(exerciseName)).build();
-        final exercise = exerciseQuery.findFirst();
-        if (exercise != null) {
-          return exercise.recentWeight;
-        }
-      } catch (error) {
-        print('Error fetching recent weight for exercise: $error');
-      }
-      return null;
-    }
+    final exercise = exercises.firstWhere((exercise) => exercise.name == exerciseName);
+    final exerciseSet = exerciseSets.firstWhere((exerciseSet) =>
+    exerciseSet.exercise.target?.name == exercise.name && exerciseSet.setNumber == setIndex);
 
-    int? getRecentReps(String exerciseName) {
-      try {
-        final exerciseQuery = exerciseBox.query(
-            Exercise_.name.equals(exerciseName)).build();
-        final exercise = exerciseQuery.findFirst();
-        if (exercise != null) {
-          return exercise.recentReps;
-        }
-      } catch (error) {
-        print('Error fetching recent reps for exercise: $error');
-      }
-      return null;
+    if (exerciseSet != null) {
+      final recentWeight = exerciseSet.recentWeight;
+      return recentWeight;
+    } else {
+      throw Exception('Exercise with name $exerciseName not found.');
     }
+  }
+
+  // ExerciseService
+  int? getRecentReps(String exerciseName, int setIndex) {
+    final exercises = exerciseBox.getAll();
+    final exerciseSets = exerciseSetBox.getAll();
+
+    final exercise = exercises.firstWhere((exercise) => exercise.name == exerciseName);
+    final exerciseSet = exerciseSets.firstWhere((exerciseSet) =>
+    exerciseSet.exercise.target?.name == exercise.name && exerciseSet.setNumber == setIndex);
+
+    if (exerciseSet != null) {
+      final recentReps = exerciseSet.recentReps;
+      return recentReps;
+    } else {
+      throw Exception('Exercise with name $exerciseName not found.');
+    }
+  }
+
 }
 
 
