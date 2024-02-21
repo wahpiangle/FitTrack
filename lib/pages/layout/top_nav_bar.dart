@@ -75,9 +75,11 @@ class TopNavBar extends StatelessWidget implements PreferredSizeWidget {
         fit: BoxFit.fitWidth,
         child: Text(
           title,
-          style: const TextStyle(
+          style: TextStyle(
             fontWeight: FontWeight.bold,
             color: Colors.white,
+            fontFamily: pageIndex == 0 ? 'Dancing Script' : null,
+            fontSize : pageIndex == 0 ? 30 : null,
           ),
         ),
       ),
