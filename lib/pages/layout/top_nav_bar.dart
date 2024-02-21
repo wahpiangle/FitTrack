@@ -52,7 +52,15 @@ class TopNavBar extends StatelessWidget implements PreferredSizeWidget {
           ),
         ),
       );
-    } else {
+    }  else if (pageIndex == 0) {
+      leadingWidget = IconButton(
+        icon: const Icon(Icons.person_add_outlined, color: Colors.white), // Set icon color to white
+        onPressed: () {
+          // Connect to add friends page
+        },
+      );
+    }
+    else {
       leadingWidget = IconButton(
         icon: const Icon(Icons.menu, color: Colors.white),
         onPressed: () {
