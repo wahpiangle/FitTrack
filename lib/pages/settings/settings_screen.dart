@@ -1,7 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:group_project/pages/auth/edit_password.dart';
-import 'package:group_project/pages/auth/settings_signup.dart';
 import 'package:group_project/pages/layout/top_nav_bar.dart';
 import 'package:group_project/pages/settings/timer_details_settings.dart';
 import 'package:provider/provider.dart';
@@ -222,7 +221,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             const SizedBox(height: 12),
                             Container(
                               width: MediaQuery.of(context).size.width * 0.35,
-                              height:MediaQuery.of(context).size.height * 0.05,
+                              height: MediaQuery.of(context).size.height * 0.05,
                               decoration: BoxDecoration(
                                 color: const Color(0xFFE1F0CF),
                                 borderRadius: BorderRadius.circular(100),
@@ -231,8 +230,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                 onPressed: () {
                                   // Check if the user is logged in or not
                                   if (isLoggedIn) {
-                                    _editProfile(context);
-                                  } else {
                                     _editProfile(context);
                                   }
                                 },
@@ -273,19 +270,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       icon: Icons.info,
                       onPressed: () {},
                     ),
-                    if ((isAnonymous))
-                      ProfileMenuItem(
-                        title: "Sign Up / Log In",
-                        icon: Icons.person,
-                        onPressed: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => const SettingsSignup(),
-                            ),
-                          );
-                        },
-                      )
-                    else if (!isSignInWithGoogle)
+                    if (!isSignInWithGoogle)
                       ProfileMenuItem(
                         title: "Edit Password",
                         icon: Icons.key_outlined,
