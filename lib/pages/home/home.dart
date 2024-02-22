@@ -65,62 +65,7 @@ class _HomeState extends State<Home> {
               SizedBox(height: 20),
               // Display user info if there are images
               if (hasImages)
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        CircleAvatar(
-                          backgroundImage:
-                          AssetImage('assets/icons/defaultimage.jpg'),
-                          radius: 20,
-                        ),
-                        SizedBox(width: 10),
-                        Text(
-                          'User_123456789',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
-                    PopupMenuButton(
-                      color:  const Color(0xFF1A1A1A), // Set the background color of the dropdown menu
-                      itemBuilder: (BuildContext context) => [
-                        PopupMenuItem(
-                          child: Text(
-                            'Delete',
-                            style: TextStyle(color: Colors.white), // Set the text color
-                          ),
-                          value: 'delete',
-                        ),
-                        PopupMenuItem(
-                          child: Text(
-                            'Report Post',
-                            style: TextStyle(color: Colors.red), // Set the text color
-                          ),
-                          value: 'report',
-                        ),
-                      ],
-                      onSelected: (value) {
-                        // Handle item selection here
-                        if (value == 'delete') {
-                          // Perform delete action
-                        } else if (value == 'report') {
-                          // Perform report action
-                        }
-                      },
-                      icon: Icon(
-                        Icons.more_vert,
-                        color: Colors.white,
-                      ),
-                    ),
 
-
-                  ],
-                ),
               SizedBox(height: 2), // Reduce the vertical space here
               // Add some space between user info and carousel
               SizedBox(
