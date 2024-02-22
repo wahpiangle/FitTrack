@@ -198,27 +198,41 @@ class ExerciseService {
 
 
   Future<void> updateRecentWeightAndReps(int exerciseId, int setNumber, int weight, int reps) async {
-    // 1. Get the ExerciseSet object
-    final exerciseSet = exerciseSet.firstWhere(
+    // Get ExerciseSet object
+    final exerciseSet = exerciseSetBox.getAll();
+
+    final exerciseSet = exerciseSets.firstWhere(
           (es) => es.exercise.target?.id == exerciseId && es.setNumber == setNumber,
       orElse: () => null,
     );
 
     if (exerciseSet != null) {
-      // 2. Update recentWeight and recentReps
+      // Update recentWeight and recentReps
       exerciseSet.recentWeight = weight;
       exerciseSet.recentReps = reps;
-
-      // 3. Put the updated ExerciseSet object back into the box
-      await exerciseSetBox.put(exerciseSet);
+      await exerciseSetBox.put(exerciseSet as ExerciseSet);
     } else {
-      // Handle the case where the ExerciseSet is not found (optional)
       print("ExerciseSet not found for exerciseId: $exerciseId and setNumber: $setNumber");
     }
   }
 
 
-  // ExerciseService
+  int? getRecentWeight(String exerciseName, int setIndex) {
+    final exercises = exerciseBox.getAll();
+    final exerciseSets = exerciseSetBox.getAll();
+
+    final exercise = exercises.firstWhere((exercise) => exercise.name == exerciseName);
+    final exerciseSet = exerciseSets.firstWhere((exerciseSet) =>
+    exerciseSet.exercise.target?.name == exercise.name && exerciseSet.setNumber == setIndex);
+
+    if (exerciseSet != null) {
+      final recentWeight = exerciseSet.recentWeight;
+      return recentWeight;
+    } else {
+      throw Exception('Exercise with name $exerciseName not found.');
+    }
+  }
+
   int? getRecentReps(String exerciseName, int setIndex) {
     final exercises = exerciseBox.getAll();
     final exerciseSets = exerciseSetBox.getAll();
