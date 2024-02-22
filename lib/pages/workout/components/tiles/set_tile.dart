@@ -38,7 +38,7 @@ class _SetTileState extends State<SetTile> with TickerProviderStateMixin {
   bool isTapped = false;
 
   late final AnimationController _controller = AnimationController(
-    vsync: this, // Replace with your TickerProvider
+    vsync: this,
     duration: const Duration(milliseconds: 500),
   );
 

@@ -175,46 +175,28 @@ class ExerciseService {
     print('Update setNumber of Exercise Set $exerciseSet to become ${exerciseSet.setNumber}');
 
   }
-//   // ExerciseService
-//   void updateRecentWeightAndReps(String exerciseName, int recentWeight, int recentReps, int setIndex) {
-//     final exercises = exerciseBox.getAll();
-//     final exerciseSets = exerciseSetBox.getAll();
-// print('hey');
-//     final exercise = exercises.firstWhere((exercise) => exercise.name == exerciseName);
-//     final exerciseSet = exerciseSets.firstWhere((exerciseSet) =>
-//     exerciseSet.exercise.target?.name == exercise.name && exerciseSet.setNumber == setIndex);
-//
-//     print('name we are matching: ${exercise.name}');
-//     print('set number we are matching: ${exerciseSet.setNumber}');
-//
-//     if (exerciseSet != null) {
-//       exerciseSet.recentWeight = recentWeight;
-//       exerciseSet.recentReps = recentReps;
-//       exerciseSetBox.put(exerciseSet);
-//     } else {
-//       throw Exception('ExerciseSet with name $exerciseName and setIndex $setIndex not found.');
-//     }
-//   }
+  // ExerciseService
+  void updateRecentWeightAndReps(int exerciseId, int recentWeight, int recentReps, int setIndex) {
+    final exercises = exerciseBox.getAll();
+    final exerciseSets = exerciseSetBox.getAll();
+print('hey');
+    final exercise = exercises.firstWhere((exercise) => exercise.id == exerciseId);
+    final exerciseSet = exerciseSets.firstWhere((exerciseSet) =>
+    exerciseSet.exercise.target?.id == exercise.id && exerciseSet.setNumber == setIndex);
 
-
-  Future<void> updateRecentWeightAndReps(int exerciseId, int setNumber, int weight, int reps) async {
-    // Get ExerciseSet object
-    final exerciseSet = exerciseSetBox.getAll();
-
-    final exerciseSet = exerciseSets.firstWhere(
-          (es) => es.exercise.target?.id == exerciseId && es.setNumber == setNumber,
-      orElse: () => null,
-    );
+    print('name we are matching: ${exercise.id}');
+    print('set number we are matching: ${exerciseSet.setNumber}');
 
     if (exerciseSet != null) {
-      // Update recentWeight and recentReps
-      exerciseSet.recentWeight = weight;
-      exerciseSet.recentReps = reps;
-      await exerciseSetBox.put(exerciseSet as ExerciseSet);
+      exerciseSet.recentWeight = recentWeight;
+      exerciseSet.recentReps = recentReps;
+      exerciseSetBox.put(exerciseSet);
     } else {
-      print("ExerciseSet not found for exerciseId: $exerciseId and setNumber: $setNumber");
+      throw Exception('ExerciseSet with name $exerciseId and setIndex $setIndex not found.');
     }
   }
+
+
 
 
   int? getRecentWeight(String exerciseName, int setIndex) {
