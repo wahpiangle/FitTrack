@@ -14,14 +14,16 @@ class DisplayImageScreen extends StatefulWidget {
   final String imagePath;
   final String imagePath2;
   final WorkoutSession workoutSession;
+  final DateTime pictureTakenTime; // Add this variable
 
   const DisplayImageScreen({
-    super.key,
+    Key? key,
     required this.toggleRetake,
     required this.imagePath,
     required this.imagePath2,
     required this.workoutSession,
-  });
+    required this.pictureTakenTime, // Initialize the variable
+  }) : super(key: key);
 
   @override
   State<DisplayImageScreen> createState() => _DisplayImageScreenState();
@@ -60,13 +62,25 @@ class _DisplayImageScreenState extends State<DisplayImageScreen> {
   @override
   Widget build(BuildContext context) {
     final UploadImageProvider uploadImageProvider =
-        context.read<UploadImageProvider>();
+    context.read<UploadImageProvider>();
     return Column(
       children: [
         InteractiveImageViewer(
           toggleRetake: widget.toggleRetake,
           imagePath: widget.imagePath,
           imagePath2: widget.imagePath2,
+        ),
+        const SizedBox(
+          height: 20,
+        ),
+        // Display the captured time here
+        Text(
+          'Captured Time: ${widget.pictureTakenTime.toString()}',
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
+          ),
         ),
         const SizedBox(
           height: 20,

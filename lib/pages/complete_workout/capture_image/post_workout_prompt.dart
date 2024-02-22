@@ -27,6 +27,8 @@ class PostWorkoutPromptState extends State<PostWorkoutPrompt> {
   bool isCapturingImage = false;
   XFile? firstImageState;
   XFile? secondImageState;
+  DateTime? pictureTakenTime;
+
 
   @override
   void initState() {
@@ -84,6 +86,9 @@ class PostWorkoutPromptState extends State<PostWorkoutPrompt> {
       isCapturingImage = true;
     });
     await _initializeControllerFuture;
+
+    // Capture the current time
+    pictureTakenTime = DateTime.now();
 
     final firstImage = await _controller.takePicture();
     setState(() {
@@ -153,6 +158,7 @@ class PostWorkoutPromptState extends State<PostWorkoutPrompt> {
                     imagePath: firstImageState!.path,
                     imagePath2: secondImageState!.path,
                     workoutSession: workoutSession,
+                    pictureTakenTime: pictureTakenTime ?? DateTime.now(), // Pass the captured time
                   ),
                 ],
               ),
