@@ -72,10 +72,14 @@ class FriendPageState extends State<FriendPage> with SingleTickerProviderStateMi
 
   Future<void> _getContacts() async {
     List<Contact> fetchedContacts = await FlutterContacts.getContacts(withProperties: true);
-    setState(() {
-      contacts = fetchedContacts;
-    });
+
+    if (mounted) {
+      setState(() {
+        contacts = fetchedContacts;
+      });
+    }
   }
+
 
   Future<void> _checkContactsPermissionAndFetch() async {
     var status = await Permission.contacts.status;
