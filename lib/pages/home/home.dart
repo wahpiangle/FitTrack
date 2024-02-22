@@ -73,9 +73,9 @@ class _HomeState extends State<Home> {
           margin: const EdgeInsets.symmetric(horizontal: 10),
           child: Column(
             children: [
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               if (hasImages)
-                SizedBox(height: 2), // Reduce the vertical space here
+                const SizedBox(height: 2), // Reduce the vertical space here
               SizedBox(
                 child: CarouselSlider.builder(
                   itemCount: imageList.length,
@@ -132,9 +132,9 @@ class _HomeState extends State<Home> {
                             child: TextField(
                               showCursor: false,
                               textAlign: TextAlign.center,
-                              style: TextStyle(color: Colors.white),
+                              style: const TextStyle(color: Colors.white),
                               enableInteractiveSelection: false,
-                              decoration: InputDecoration(
+                              decoration: const InputDecoration(
                                 alignLabelWithHint: true,
                                 hintText: 'Add a caption..',
                                 hintStyle: TextStyle(color: Colors.grey),

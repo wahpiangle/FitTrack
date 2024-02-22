@@ -105,7 +105,6 @@ class FirebasePostsService {
 
       return true;
     } catch (e) {
-      print('Error saving caption: $e');
       return false;
     }
   }
@@ -113,7 +112,6 @@ class FirebasePostsService {
   static Future<String> getCaption(int workoutSessionId) async {
     try {
       final User user = auth.currentUser!;
-      print('Fetching caption for workout session ID: $workoutSessionId');
 
       final docSnapshot = await postsCollectionRef
           .doc(user.uid)
@@ -123,14 +121,11 @@ class FirebasePostsService {
 
       if (docSnapshot.exists) {
         final caption = docSnapshot.data()?['caption'] ?? '';
-        print('Caption fetched successfully: $caption');
         return caption; // Return the caption if it exists
       } else {
-        print('Document with ID $workoutSessionId does not exist.');
         return ''; // Return an empty string if the document doesn't exist
       }
     } catch (e) {
-      print('Error fetching caption: $e');
       return ''; // Return an empty string if an error occurs
     }
   }
