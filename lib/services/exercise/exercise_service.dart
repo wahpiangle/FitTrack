@@ -175,45 +175,48 @@ class ExerciseService {
     print('Update setNumber of Exercise Set $exerciseSet to become ${exerciseSet.setNumber}');
 
   }
-  // ExerciseService
-  void updateRecentWeightAndReps(String exerciseName, int recentWeight, int recentReps, int setIndex) {
-    final exercises = exerciseBox.getAll();
-    final exerciseSets = exerciseSetBox.getAll();
-print('hey');
-    final exercise = exercises.firstWhere((exercise) => exercise.name == exerciseName);
-    final exerciseSet = exerciseSets.firstWhere((exerciseSet) =>
-    exerciseSet.exercise.target?.name == exercise.name && exerciseSet.setNumber == setIndex);
+//   // ExerciseService
+//   void updateRecentWeightAndReps(String exerciseName, int recentWeight, int recentReps, int setIndex) {
+//     final exercises = exerciseBox.getAll();
+//     final exerciseSets = exerciseSetBox.getAll();
+// print('hey');
+//     final exercise = exercises.firstWhere((exercise) => exercise.name == exerciseName);
+//     final exerciseSet = exerciseSets.firstWhere((exerciseSet) =>
+//     exerciseSet.exercise.target?.name == exercise.name && exerciseSet.setNumber == setIndex);
+//
+//     print('name we are matching: ${exercise.name}');
+//     print('set number we are matching: ${exerciseSet.setNumber}');
+//
+//     if (exerciseSet != null) {
+//       exerciseSet.recentWeight = recentWeight;
+//       exerciseSet.recentReps = recentReps;
+//       exerciseSetBox.put(exerciseSet);
+//     } else {
+//       throw Exception('ExerciseSet with name $exerciseName and setIndex $setIndex not found.');
+//     }
+//   }
 
-    print('name we are matching: ${exercise.name}');
-    print('set number we are matching: ${exerciseSet.setNumber}');
+
+  Future<void> updateRecentWeightAndReps(int exerciseId, int setNumber, int weight, int reps) async {
+    // 1. Get the ExerciseSet object
+    final exerciseSet = exerciseSet.firstWhere(
+          (es) => es.exercise.target?.id == exerciseId && es.setNumber == setNumber,
+      orElse: () => null,
+    );
 
     if (exerciseSet != null) {
-      exerciseSet.recentWeight = recentWeight;
-      exerciseSet.recentReps = recentReps;
-      exerciseSetBox.put(exerciseSet);
+      // 2. Update recentWeight and recentReps
+      exerciseSet.recentWeight = weight;
+      exerciseSet.recentReps = reps;
+
+      // 3. Put the updated ExerciseSet object back into the box
+      await exerciseSetBox.put(exerciseSet);
     } else {
-      throw Exception('ExerciseSet with name $exerciseName and setIndex $setIndex not found.');
+      // Handle the case where the ExerciseSet is not found (optional)
+      print("ExerciseSet not found for exerciseId: $exerciseId and setNumber: $setNumber");
     }
   }
 
-
-
-  // ExerciseService
-  int? getRecentWeight(String exerciseName, int setIndex) {
-    final exercises = exerciseBox.getAll();
-    final exerciseSets = exerciseSetBox.getAll();
-
-    final exercise = exercises.firstWhere((exercise) => exercise.name == exerciseName);
-    final exerciseSet = exerciseSets.firstWhere((exerciseSet) =>
-    exerciseSet.exercise.target?.name == exercise.name && exerciseSet.setNumber == setIndex);
-
-    if (exerciseSet != null) {
-      final recentWeight = exerciseSet.recentWeight;
-      return recentWeight;
-    } else {
-      throw Exception('Exercise with name $exerciseName not found.');
-    }
-  }
 
   // ExerciseService
   int? getRecentReps(String exerciseName, int setIndex) {
