@@ -50,7 +50,6 @@ class _SetTileState extends State<SetTile> with TickerProviderStateMixin {
   void initState() {
     super.initState();
     fetchRecentWeightAndReps();
-    objectBox.exerciseService.updateSetNumber(widget.set, widget.setIndex);
     weightController = TextEditingController();
     repsController = TextEditingController();
   }
