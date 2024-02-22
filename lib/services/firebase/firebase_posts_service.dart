@@ -91,4 +91,49 @@ class FirebasePostsService {
         .doc(workoutSession.post.targetId.toString())
         .delete();
   }
+
+  static Future<bool> saveCaption(int workoutSessionId, String caption) async {
+    try {
+      final User user = auth.currentUser!;
+
+      // Update the caption for the specified workout session
+      await postsCollectionRef
+          .doc(user.uid)
+          .collection('userPosts')
+          .doc(workoutSessionId.toString())  // Use workoutSessionId directly
+          .update({'caption': caption});
+
+      return true;
+    } catch (e) {
+      print('Error saving caption: $e');
+      return false;
+    }
+  }
+
+  static Future<String> getCaption(int workoutSessionId) async {
+    try {
+      final User user = auth.currentUser!;
+      print('Fetching caption for workout session ID: $workoutSessionId');
+
+      final docSnapshot = await postsCollectionRef
+          .doc(user.uid)
+          .collection('userPosts')
+          .doc(workoutSessionId.toString())
+          .get();
+
+      if (docSnapshot.exists) {
+        final caption = docSnapshot.data()?['caption'] ?? '';
+        print('Caption fetched successfully: $caption');
+        return caption; // Return the caption if it exists
+      } else {
+        print('Document with ID $workoutSessionId does not exist.');
+        return ''; // Return an empty string if the document doesn't exist
+      }
+    } catch (e) {
+      print('Error fetching caption: $e');
+      return ''; // Return an empty string if an error occurs
+    }
+  }
+
+
 }

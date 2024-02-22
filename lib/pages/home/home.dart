@@ -5,6 +5,7 @@ import 'package:group_project/main.dart';
 import 'package:group_project/pages/complete_workout/capture_image/upload_image_provider.dart';
 import 'package:group_project/pages/home/components/display_image_stack.dart';
 import 'package:group_project/constants/themes/app_colours.dart';
+import 'package:group_project/services/firebase/firebase_posts_service.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 class Home extends StatefulWidget {
@@ -18,6 +19,7 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   late final bool? showCursor;
+  String caption = ''; // Define caption variable
   int _current = 0;
   final List<Map<String, dynamic>> imageList = objectBox.postService
       .getActivePosts()
@@ -36,6 +38,8 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
+    // Fetch the caption for the initial workout session
+    fetchCaption(imageList[_current]['workoutSessionId']);
     context.read<UploadImageProvider>().getSharedPreferences();
     SharedPreferences.getInstance().then((prefs) {
       if (prefs.getBool(UploadEnums.isUploading) == true) {
@@ -43,31 +47,35 @@ class _HomeState extends State<Home> {
         context.read<UploadImageProvider>().setUploadError(true);
         context.read<UploadImageProvider>().setIsUploading(false);
       }
+    });
+  }
 
+
+  void fetchCaption(int workoutSessionId) async {
+    // Fetch the caption using the provided workout session ID
+    String fetchedCaption = await FirebasePostsService.getCaption(
+        workoutSessionId);
+    setState(() {
+      caption = fetchedCaption;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final UploadImageProvider uploadImageProvider =
-    context.watch<UploadImageProvider>();
+    final UploadImageProvider uploadImageProvider = context.watch<
+        UploadImageProvider>();
     bool hasImages = imageList.isNotEmpty; // Check if there are images
 
     return Scaffold(
       backgroundColor: AppColours.primary,
       body: SingleChildScrollView(
         child: Container(
-          margin: const EdgeInsets.symmetric(
-            horizontal: 10,
-          ),
+          margin: const EdgeInsets.symmetric(horizontal: 10),
           child: Column(
             children: [
               SizedBox(height: 20),
-              // Display user info if there are images
               if (hasImages)
-
-              SizedBox(height: 2), // Reduce the vertical space here
-              // Add some space between user info and carousel
+                SizedBox(height: 2), // Reduce the vertical space here
               SizedBox(
                 child: CarouselSlider.builder(
                   itemCount: imageList.length,
@@ -80,6 +88,8 @@ class _HomeState extends State<Home> {
                     onPageChanged: (index, reason) {
                       setState(() {
                         _current = index;
+                        // Fetch caption for the current workout session ID
+                        fetchCaption(imageList[index]['workoutSessionId']);
                       });
                     },
                   ),
@@ -87,15 +97,14 @@ class _HomeState extends State<Home> {
                     final firstImage = imageList[index]['firstImageUrl']!;
                     final secondImage = imageList[index]['secondImageUrl']!;
                     final postId = imageList[index]['postId']!;
-                    final workoutSessionId =
-                    imageList[index]['workoutSessionId']!;
+                    final workoutSessionId = imageList[index]['workoutSessionId']!;
                     return Container(
                       margin: const EdgeInsets.symmetric(horizontal: 5),
                       child: Column(
                         children: [
                           ClipRRect(
-                            borderRadius:
-                            const BorderRadius.all(Radius.circular(8.0)),
+                            borderRadius: const BorderRadius.all(
+                                Radius.circular(8.0)),
                             child: DisplayImageStack(
                               firstImageUrl: firstImage,
                               secondImageUrl: secondImage,
@@ -113,7 +122,8 @@ class _HomeState extends State<Home> {
                           )
                               : Container(
                             width: 300,
-                            padding: const EdgeInsets.symmetric(horizontal: 1, vertical: 1),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 1, vertical: 1),
                             decoration: BoxDecoration(
                               color: Colors.transparent,
                               border: Border.all(color: Colors.transparent),
@@ -123,15 +133,19 @@ class _HomeState extends State<Home> {
                               showCursor: false,
                               textAlign: TextAlign.center,
                               style: TextStyle(color: Colors.white),
-                              enableInteractiveSelection: false, // Disables cursor and text selection
+                              enableInteractiveSelection: false,
                               decoration: InputDecoration(
-                                alignLabelWithHint: true, // Align the label with the hint
+                                alignLabelWithHint: true,
                                 hintText: 'Add a caption..',
                                 hintStyle: TextStyle(color: Colors.grey),
                                 border: InputBorder.none,
-                                contentPadding: EdgeInsets.only(left: 16), // Adjust left padding
+                                contentPadding: EdgeInsets.only(left: 16),
                               ),
-                              // Add your caption input logic here
+                              onChanged: (caption) {
+                                FirebasePostsService.saveCaption(
+                                    workoutSessionId, caption);
+                              },
+                              controller: TextEditingController(text: caption),
                             ),
                           ),
                         ],
@@ -140,7 +154,6 @@ class _HomeState extends State<Home> {
                   },
                 ),
               ),
-              // TODO: Display friend's posts
             ],
           ),
         ),
