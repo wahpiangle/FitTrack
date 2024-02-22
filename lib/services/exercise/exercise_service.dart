@@ -179,19 +179,23 @@ class ExerciseService {
   void updateRecentWeightAndReps(String exerciseName, int recentWeight, int recentReps, int setIndex) {
     final exercises = exerciseBox.getAll();
     final exerciseSets = exerciseSetBox.getAll();
-
+print('hey');
     final exercise = exercises.firstWhere((exercise) => exercise.name == exerciseName);
     final exerciseSet = exerciseSets.firstWhere((exerciseSet) =>
     exerciseSet.exercise.target?.name == exercise.name && exerciseSet.setNumber == setIndex);
 
+    print('name we are matching: ${exercise.name}');
+    print('set number we are matching: ${exerciseSet.setNumber}');
+
     if (exerciseSet != null) {
       exerciseSet.recentWeight = recentWeight;
       exerciseSet.recentReps = recentReps;
-      exerciseSetBox.put(exerciseSet as ExerciseSet);
+      exerciseSetBox.put(exerciseSet);
     } else {
-      throw Exception('Exercise with name $exerciseName not found.');
+      throw Exception('ExerciseSet with name $exerciseName and setIndex $setIndex not found.');
     }
   }
+
 
 
   // ExerciseService
