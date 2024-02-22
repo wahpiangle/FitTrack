@@ -17,6 +17,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  late final bool? showCursor;
   int _current = 0;
   final List<Map<String, dynamic>> imageList = objectBox.postService
       .getActivePosts()
@@ -150,52 +151,18 @@ class _HomeState extends State<Home> {
                               borderRadius: BorderRadius.circular(8),
                             ),
                             child: TextField(
+                              showCursor: false,
                               textAlign: TextAlign.center,
                               style: TextStyle(color: Colors.white),
                               enableInteractiveSelection: false, // Disables cursor and text selection
                               decoration: InputDecoration(
                                 alignLabelWithHint: true, // Align the label with the hint
-                                hintText: 'Add a caption',
+                                hintText: 'Add a caption..',
                                 hintStyle: TextStyle(color: Colors.grey),
                                 border: InputBorder.none,
                                 contentPadding: EdgeInsets.only(left: 16), // Adjust left padding
                               ),
                               // Add your caption input logic here
-                            ),
-
-                          ),
-
-                          Container(
-                            width: 300,
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 2, vertical: 2),
-                            decoration: BoxDecoration(
-                              color: Color(0xFF333333),
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  flex: 4,
-                                  child: TextField(
-                                    style: TextStyle(color: Colors.white),
-                                    decoration: InputDecoration(
-                                      prefix: SizedBox(width: 10),
-                                      hintText: 'Add a comment...',
-                                      hintStyle: TextStyle(color: Colors.grey),
-                                      border: InputBorder.none,
-                                    ),
-                                    // Handle comment logic
-                                  ),
-                                ),
-                                IconButton(
-                                  onPressed: () {
-                                    // Handle submit comment
-                                  },
-                                  icon: Icon(Icons.send),
-                                  color: Colors.white,
-                                ),
-                              ],
                             ),
                           ),
                         ],
