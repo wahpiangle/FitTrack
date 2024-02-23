@@ -63,7 +63,7 @@ class SearchHelper {
                 widthFactor: 0.2,
                 heightFactor: 0.6,
                 child: isCurrentUserFriend
-                    ? Container()
+                    ? Container() // If the user is a friend, show an empty container (hidden)
                     : ElevatedButton(
                   onPressed: () {
                     if (searchedUsers[index]['UID'] != null) {
@@ -93,10 +93,22 @@ class SearchHelper {
     final currentUserUid = FirebaseAuth.instance.currentUser?.uid;
 
     if (currentUserUid != null) {
+      // Update the current user's document to include the friend as a friend
+      final currentUserRef = FirebaseFirestore.instance.collection('users').doc(currentUserUid);
+
+      final currentUserDoc = await currentUserRef.get();
+      if (currentUserDoc.exists) {
+        await currentUserRef.set({
+          'friends': FieldValue.arrayUnion([friendUid])
+        }, SetOptions(merge: true));
+      } else {
+        print('Warning: Current user document does not exist for UID: $currentUserUid');
+      }
+
       // Update the friend's document to include the current user as a friend
       final friendRef = FirebaseFirestore.instance.collection('users').doc(friendUid);
-
       final friendDoc = await friendRef.get();
+
       if (friendDoc.exists) {
         await friendRef.set({
           'friends': FieldValue.arrayUnion([currentUserUid])
@@ -106,7 +118,6 @@ class SearchHelper {
       }
     }
   }
-
 
 
   static Widget buildUserProfileImage(String? photoUrl) {
