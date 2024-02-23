@@ -23,8 +23,7 @@ class FirebaseExercisesService {
                 'categoryId': exercise.category.targetId,
                 'categoryName': exercise.category.target?.name,
                 'bodyPartId': exercise.bodyPart.targetId,
-                'bodyPartName':exercise.bodyPart.target?.name,
-
+                'bodyPartName': exercise.bodyPart.target?.name,
               },
             ],
           ),
@@ -41,30 +40,28 @@ class FirebaseExercisesService {
       final uid = user.uid;
       final collectionRef = db.collection('exercises');
 
+      final docSnapshot = await collectionRef.doc(uid).get();
+      final exercises = docSnapshot.data()?['addednewExercises'] ?? [];
 
-        final docSnapshot = await collectionRef.doc(uid).get();
-        final exercises = docSnapshot.data()?['addednewExercises'] ?? [];
+      // Find the index of the exercise to update
+      final index = exercises.indexWhere((ex) => ex['id'] == exercise.id);
+      if (index != -1) {
+        // Update the exercise details
+        exercises[index]['name'] = exercise.name;
+        exercises[index]['categoryId'] = exercise.category.targetId;
+        exercises[index]['categoryName'] = exercise.category.target?.name;
+        exercises[index]['bodyPartId'] = exercise.bodyPart.targetId;
+        exercises[index]['bodyPartName'] = exercise.bodyPart.target?.name;
 
-        // Find the index of the exercise to update
-        final index = exercises.indexWhere((ex) => ex['id'] == exercise.id);
-        if (index != -1) {
-          // Update the exercise details
-          exercises[index]['name'] = exercise.name;
-          exercises[index]['categoryId'] = exercise.category.targetId;
-          exercises[index]['categoryName']= exercise.category.target?.name;
-          exercises[index]['bodyPartId'] = exercise.bodyPart.targetId;
-          exercises[index]['bodyPartName'] = exercise.bodyPart.target?.name;
-
-          // Rewrite the entire array with the updated exercise
-          await collectionRef.doc(uid).update({'addednewExercises': exercises});
-        }
+        // Rewrite the entire array with the updated exercise
+        await collectionRef.doc(uid).update({'addednewExercises': exercises});
+      }
     }
   }
 
-
   static Future<List<dynamic>> getAllCustomExercises() async {
     final User user = auth.currentUser!;
-    if (!user.isAnonymous) {
+    if (!user.isAnonymous || !user.emailVerified) {
       final uid = user.uid;
       final collectionRef = db.collection('exercises');
 

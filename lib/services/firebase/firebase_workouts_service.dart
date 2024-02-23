@@ -55,7 +55,7 @@ class FirebaseWorkoutsService {
 
   static Future<List<dynamic>> getWorkoutSessionsOfUser() async {
     final User user = auth.currentUser!;
-    if (user.isAnonymous) {
+    if (user.isAnonymous || !user.emailVerified) {
       return [];
     }
     final uid = user.uid;

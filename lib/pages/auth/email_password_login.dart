@@ -24,11 +24,16 @@ class _EmailPasswordLoginState extends State<EmailPasswordLogin> {
     return Scaffold(
       backgroundColor: const Color(0xFF1A1A1A),
       appBar: AppBar(
-        backgroundColor: const Color(0xFF1A1A1A),
-        elevation: 0.0,
-        title: const Text('Login'),
-        centerTitle: true,
-      ),
+          backgroundColor: const Color(0xFF1A1A1A),
+          elevation: 0.0,
+          title: const Text('Login'),
+          centerTitle: true,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back, color: Colors.white),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          )),
       body: Container(
         constraints: const BoxConstraints.expand(),
         padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 50.0),

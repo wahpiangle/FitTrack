@@ -191,39 +191,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ),
               const SizedBox(height: 20),
-              Center(
-                child: TextButton(
-                  onPressed: () async {
-                    showDialog(
-                      context: context,
-                      builder: (context) {
-                        return const Center(child: CircularProgressIndicator());
-                      },
-                    );
-                    await _auth.signInAnon();
-                    Future.microtask(() => Navigator.of(context).pop());
-                  },
-                  style: ButtonStyle(
-                    shape: MaterialStateProperty.all(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                    ),
-                  ),
-                  child: const Padding(
-                    padding: EdgeInsets.fromLTRB(30, 12, 30, 12),
-                    child: Text(
-                      'Continue as Guest',
-                      style: TextStyle(
-                          decoration: TextDecoration.underline,
-                          color: Colors.white,
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 20),
               const Align(
                 alignment: Alignment.center,
                 child: Text(
