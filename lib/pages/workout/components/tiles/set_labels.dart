@@ -24,9 +24,9 @@ class SetLabels extends StatelessWidget {
             textAlign: TextAlign.center,
           ),
         ),
-        const SizedBox(width: 20),
-        const SizedBox(
-          width: 60,
+        const SizedBox(width: 10),
+        const Expanded(
+          flex: 1,
           child: Text(
             "Previous",
             style: TextStyle(
@@ -37,7 +37,7 @@ class SetLabels extends StatelessWidget {
             textAlign: TextAlign.center,
           ),
         ),
-        const SizedBox(width: 20),
+        const SizedBox(width: 10),
         const Expanded(
           flex: 1,
           child: Center(
