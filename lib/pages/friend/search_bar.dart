@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:group_project/constants/themes/app_colours.dart';
@@ -35,22 +36,50 @@ class SearchHelper {
       child: Container(
         color: Colors.black,
         child: searchedUsers.isEmpty
-            ? Center(
+            ? const Center(
           child: Text(
             'No result',
-            style: const TextStyle(color: Colors.white),
+            style: TextStyle(color: Colors.white),
           ),
         )
             : ListView.separated(
           itemCount: searchedUsers.length,
-          separatorBuilder: (context, index) => const Divider(color: Colors.white, thickness: 0.5),
+          separatorBuilder: (context, index) =>
+          const Divider(color: Colors.white, thickness: 0.5),
           itemBuilder: (context, index) {
+            bool isCurrentUserFriend =
+                (searchedUsers[index]['friends'] as List<dynamic>?)
+                    ?.contains(FirebaseAuth.instance.currentUser?.uid) ?? false;
+
             return ListTile(
               leading: buildUserProfileImage(searchedUsers[index]['photoUrl']),
               title: Text(
                 searchedUsers[index]['name'] ?? '',
                 style: const TextStyle(
                   color: Colors.white,
+                ),
+              ),
+              trailing: FractionallySizedBox(
+                widthFactor: 0.2,
+                heightFactor: 0.6,
+                child: isCurrentUserFriend
+                    ? Container() // If the user is a friend, show an empty container (hidden)
+                    : ElevatedButton(
+                  onPressed: () {
+                    if (searchedUsers[index]['UID'] != null) {
+                      addFriend(searchedUsers[index]['UID']);
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColours.secondary,
+                    padding: EdgeInsets.all(8),
+                    textStyle: const TextStyle(fontSize: 12),
+                  ),
+                  child: const Text(
+                    'Add',
+                    style: TextStyle(
+                        color: Colors.black, fontWeight: FontWeight.bold),
+                  ),
                 ),
               ),
             );
@@ -60,11 +89,31 @@ class SearchHelper {
     );
   }
 
+  static void addFriend(String friendUid) async {
+    final currentUserUid = FirebaseAuth.instance.currentUser?.uid;
+
+    if (currentUserUid != null) {
+      // Update the friend's document to include the current user as a friend
+      final friendRef = FirebaseFirestore.instance.collection('users').doc(friendUid);
+
+      final friendDoc = await friendRef.get();
+      if (friendDoc.exists) {
+        await friendRef.set({
+          'friends': FieldValue.arrayUnion([currentUserUid])
+        }, SetOptions(merge: true));
+      } else {
+        print('Warning: Friend document does not exist for UID: $friendUid');
+      }
+    }
+  }
+
+
+
   static Widget buildUserProfileImage(String? photoUrl) {
     return CircleAvatar(
       backgroundImage: photoUrl != null
-          ? NetworkImage(photoUrl)  // Load image from Firestore
-          : const AssetImage('assets/icons/defaultimage.jpg') as ImageProvider,  // Use placeholder/default image
+          ? NetworkImage(photoUrl)
+          : const AssetImage('assets/icons/defaultimage.jpg') as ImageProvider,
     );
   }
 
