@@ -5,8 +5,6 @@ import 'search_bar.dart';
 class FriendSuggestionsTab extends StatefulWidget {
   const FriendSuggestionsTab({
     Key? key,
-    required ScrollController controller,
-    required MaterialColor color,
     required this.contacts,
   }) : super(key: key);
 

@@ -8,7 +8,6 @@ import 'package:group_project/pages/friend/friend_suggestion.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
 
-
 class FriendPage extends StatefulWidget {
   const FriendPage({super.key, required this.title});
   final String title;
@@ -79,7 +78,6 @@ class FriendPageState extends State<FriendPage> with SingleTickerProviderStateMi
       });
     }
   }
-
 
   Future<void> _checkContactsPermissionAndFetch() async {
     var status = await Permission.contacts.status;
@@ -152,7 +150,7 @@ class FriendPageState extends State<FriendPage> with SingleTickerProviderStateMi
           curve: Curves.decelerate,
           showIcon: true,
           width: MediaQuery.of(context).size.width * 0.8,
-          barColor: colors[currentPage].computeLuminance() > 0.2 ? AppColours.primaryBright : Colors.black,
+          barColor: colors[currentPage].computeLuminance() > 0.2 ? AppColours.primaryBright : Colors.white,
           start: 2,
           end: 0,
           offset: 10,
@@ -169,68 +167,63 @@ class FriendPageState extends State<FriendPage> with SingleTickerProviderStateMi
             dragStartBehavior: DragStartBehavior.down,
             physics: const BouncingScrollPhysics(),
             children: [
-              FriendSuggestionsTab(controller: controller, color: Colors.green, contacts: contacts),
+              FriendSuggestionsTab(contacts: contacts),
               const CurrentFriendsTab(),
               const FriendRequestsTab(),
             ],
           ),
-          child: TabBar(
-            indicatorPadding: const EdgeInsets.fromLTRB(12, 0, 12, 0),
-            controller: tabController,
-            indicator: UnderlineTabIndicator(
-              borderSide: BorderSide(
-                color: currentPage == 0 ? colors[0] : currentPage == 1 ? colors[1] : currentPage == 2 ? colors[2] : unselectedColor,
-                width: 4,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              CustomTab(
+                text: "Friend Suggestion",
+                color: currentPage == 0 ? colors[0] : unselectedColor,
+                onTap: () {
+                  tabController.animateTo(0);
+                },
               ),
-              insets: const EdgeInsets.fromLTRB(16, 0, 16, 8),
-           ),
-            tabs: [
-              SizedBox(
-                height: 55,
-                width: 40,
-                child: Center(
-                  child: IconButton(
-                    icon: Icon(
-                      Icons.home,
-                      color: currentPage == 0 ? colors[0] : unselectedColor,
-                    ),
-                    onPressed: () {
-                      tabController.animateTo(0);
-                    },
-                  ),
-                ),
+              CustomTab(
+                text: "Current Friend",
+                color: currentPage == 1 ? colors[1] : unselectedColor,
+                onTap: () {
+                  tabController.animateTo(1);
+                },
               ),
-              SizedBox(
-                height: 55,
-                width: 40,
-                child: Center(
-                  child: IconButton(
-                    icon: Icon(
-                      Icons.search,
-                      color: currentPage == 1 ? colors[1] : unselectedColor,
-                    ),
-                    onPressed: () {
-                      tabController.animateTo(1);
-                    },
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: 55,
-                width: 40,
-                child: Center(
-                  child: IconButton(
-                    icon: Icon(
-                      Icons.add,
-                      color: currentPage == 2 ? colors[2] : unselectedColor,
-                    ),
-                    onPressed: () {
-                      tabController.animateTo(2);
-                    },
-                  ),
-                ),
+              CustomTab(
+                text: "Friend Request",
+                color: currentPage == 2 ? colors[2] : unselectedColor,
+                onTap: () {
+                  tabController.animateTo(2);
+                },
               ),
             ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class CustomTab extends StatelessWidget {
+  final String text;
+  final Color color;
+  final VoidCallback onTap;
+
+  const CustomTab({super.key, required this.text, required this.color, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      child: SizedBox(
+        height: 55,
+        width: 100,
+        child: Center(
+          child: Text(
+            text,
+            style: TextStyle(
+              color: color,
+            ),
           ),
         ),
       ),
