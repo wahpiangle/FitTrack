@@ -63,7 +63,7 @@ class SearchHelper {
                 widthFactor: 0.2,
                 heightFactor: 0.6,
                 child: isCurrentUserFriend
-                    ? Container() // If the user is a friend, show an empty container (hidden)
+                    ? Container()
                     : ElevatedButton(
                   onPressed: () {
                     if (searchedUsers[index]['UID'] != null) {

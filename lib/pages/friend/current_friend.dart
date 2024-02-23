@@ -33,8 +33,10 @@ class CurrentFriendsTabState extends State<CurrentFriendsTab> {
 
       if (userDoc.exists) {
         final friends = userDoc.data()?['friends'] as List<dynamic>? ?? [];
-        // Fetch friend details from Firestore
-        await fetchFriendDetails(friends);
+
+        if (friends.isNotEmpty) {
+          await fetchFriendDetails(friends);
+        }
       }
     }
   }
