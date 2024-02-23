@@ -22,9 +22,50 @@ class SearchHelper {
         .get();
 
     final List<Map<String, dynamic>> combinedResults =
-    [...usernameSnapshot.docs, ...phoneSnapshot.docs].map((doc) => doc.data() as Map<String, dynamic>).toList();
-    print('Search Results: $combinedResults');
+    [...usernameSnapshot.docs, ...phoneSnapshot.docs].map((doc) => doc.data()).toList();
     onSearch(combinedResults);
+  }
+
+  static Widget buildSearchedUsersListView(List<Map<String, dynamic>> searchedUsers) {
+    return Positioned(
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      child: Container(
+        color: Colors.black,
+        child: searchedUsers.isEmpty
+            ? Center(
+          child: Text(
+            'No result',
+            style: const TextStyle(color: Colors.white),
+          ),
+        )
+            : ListView.separated(
+          itemCount: searchedUsers.length,
+          separatorBuilder: (context, index) => const Divider(color: Colors.white, thickness: 0.5),
+          itemBuilder: (context, index) {
+            return ListTile(
+              leading: buildUserProfileImage(searchedUsers[index]['photoUrl']),
+              title: Text(
+                searchedUsers[index]['name'] ?? '',
+                style: const TextStyle(
+                  color: Colors.white,
+                ),
+              ),
+            );
+          },
+        ),
+      ),
+    );
+  }
+
+  static Widget buildUserProfileImage(String? photoUrl) {
+    return CircleAvatar(
+      backgroundImage: photoUrl != null
+          ? NetworkImage(photoUrl)  // Load image from Firestore
+          : const AssetImage('assets/icons/defaultimage.jpg') as ImageProvider,  // Use placeholder/default image
+    );
   }
 
   static void cancelSearch({
@@ -41,7 +82,7 @@ class FriendSearchBar extends StatelessWidget {
   final Function(List<Map<String, dynamic>>) onSearch;
   final Function() onCancel;
 
-  const FriendSearchBar({
+  const FriendSearchBar({super.key,
     required this.controller,
     required this.onSearch,
     required this.onCancel,
@@ -56,7 +97,7 @@ class FriendSearchBar extends StatelessWidget {
         children: [
           TextField(
             controller: controller,
-            style: TextStyle(color: Colors.white),
+            style: const TextStyle(color: Colors.white),
             onChanged: (query) {
               SearchHelper.searchUsers(
                 controller: controller,
@@ -64,7 +105,7 @@ class FriendSearchBar extends StatelessWidget {
                 onCancel: onCancel,
               );
             },
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
               hintText: 'Search by username or phone number',
               hintStyle: TextStyle(color: Colors.white),
               fillColor: AppColours.primaryBright,
