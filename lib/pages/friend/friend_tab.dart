@@ -176,21 +176,21 @@ class FriendPageState extends State<FriendPage> with SingleTickerProviderStateMi
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               CustomTab(
-                text: "Friend Suggestion",
+                text: "Suggestions",
                 color: currentPage == 0 ? colors[0] : unselectedColor,
                 onTap: () {
                   tabController.animateTo(0);
                 },
               ),
               CustomTab(
-                text: "Current Friend",
+                text: "Friends",
                 color: currentPage == 1 ? colors[1] : unselectedColor,
                 onTap: () {
                   tabController.animateTo(1);
                 },
               ),
               CustomTab(
-                text: "Friend Request",
+                text: "Requests",
                 color: currentPage == 2 ? colors[2] : unselectedColor,
                 onTap: () {
                   tabController.animateTo(2);
@@ -216,7 +216,7 @@ class CustomTab extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       child: SizedBox(
-        height: 55,
+        height: 40,
         width: 100,
         child: Center(
           child: Text(

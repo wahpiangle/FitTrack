@@ -4,9 +4,9 @@ import 'search_bar.dart';
 
 class FriendSuggestionsTab extends StatefulWidget {
   const FriendSuggestionsTab({
-    Key? key,
+    super.key,
     required this.contacts,
-  }) : super(key: key);
+  });
 
   final List<Contact> contacts;
 
@@ -84,11 +84,17 @@ class FriendSuggestionsTabState extends State<FriendSuggestionsTab> {
           itemCount: searchedUsers.length,
           itemBuilder: (context, index) {
             return ListTile(
-              title: Text(searchedUsers[index]['displayName'] ?? '', style: const TextStyle(color: Colors.white)),
+              title: Text(
+                searchedUsers[index]['name'] ?? '',
+                style: const TextStyle(
+                  color: Colors.white,
+                ),
+              ),
             );
           },
         ),
       ),
     );
   }
+
 }

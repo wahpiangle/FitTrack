@@ -2,16 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:group_project/constants/themes/app_colours.dart';
 
+
 class SearchHelper {
   static void searchUsers({
     required TextEditingController controller,
     required Function(List<Map<String, dynamic>>) onSearch,
     required Function() onCancel,
   }) async {
-    final snapshot = await FirebaseFirestore.instance
+    final usernameSnapshot = await FirebaseFirestore.instance
         .collection('users')
-        .where('username', isGreaterThanOrEqualTo: controller.text.toLowerCase())
-        .where('username', isLessThan: '${controller.text.toLowerCase()}z')
+        .where('name', isGreaterThanOrEqualTo: controller.text.toLowerCase())
+        .where('name', isLessThan: '${controller.text.toLowerCase()}z')
         .get();
 
     final phoneSnapshot = await FirebaseFirestore.instance
@@ -21,8 +22,8 @@ class SearchHelper {
         .get();
 
     final List<Map<String, dynamic>> combinedResults =
-    [...snapshot.docs, ...phoneSnapshot.docs].map((doc) => doc.data()).toList();
-
+    [...usernameSnapshot.docs, ...phoneSnapshot.docs].map((doc) => doc.data() as Map<String, dynamic>).toList();
+    print('Search Results: $combinedResults');
     onSearch(combinedResults);
   }
 
@@ -63,7 +64,7 @@ class FriendSearchBar extends StatelessWidget {
                 onCancel: onCancel,
               );
             },
-            decoration: const InputDecoration(
+            decoration: InputDecoration(
               hintText: 'Search by username or phone number',
               hintStyle: TextStyle(color: Colors.white),
               fillColor: AppColours.primaryBright,
