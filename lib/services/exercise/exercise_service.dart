@@ -191,29 +191,15 @@ class ExerciseService {
 //     }
 //   }
 
-  void updateRecentWeightAndRepsForSet1(int exerciseId, int recentWeight, int recentReps, int setIndex) {
-    // Retrieve the ExercisesSetsInfo object for the given exerciseId
-    final exercisesSetsInfo = exercisesSetsInfoBox.query().equal(ExercisesSetsInfo_.exerciseId, exerciseId).build().findFirst();
+  void updateRecentWeightAndReps(ExerciseSet exerciseSet, int recentWeight, int recentReps) {
 
-    // Check if the ExercisesSetsInfo object exists
-    if (exercisesSetsInfo != null) {
-      // Retrieve the ExerciseSet object with setIndex = 1
-      final exerciseSet = exercisesSetsInfo.exerciseSets.firstWhere((set) => set.setIndex == setIndex, orElse: () => null);
+    print('updating recent weight and reps');
+    exerciseSet.recentWeight = recentWeight;
+    exerciseSet.recentReps = recentReps;
+    exerciseSetBox.put(exerciseSet);
+    print('${exerciseSet.recentWeight}');
 
-      // Check if the ExerciseSet object exists
-      if (exerciseSet != null) {
-        // Update the recentWeight and recentReps properties
-        exerciseSet.recentWeight = recentWeight;
-        exerciseSet.recentReps = recentReps;
 
-        // Save the updated ExerciseSet object back to the database
-        exerciseSetBox.put(exerciseSet);
-      } else {
-        print('ExerciseSet with setIndex $setIndex not found for exerciseId: $exerciseId');
-      }
-    } else {
-      print('ExercisesSetsInfo not found for exerciseId: $exerciseId');
-    }
   }
 
 

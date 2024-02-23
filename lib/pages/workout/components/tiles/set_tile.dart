@@ -282,10 +282,9 @@ class _SetTileState extends State<SetTile> with TickerProviderStateMixin {
                               // Call method to update recent weight and reps for the Exercise
                               try {
                                 objectBox.exerciseService.updateRecentWeightAndReps(
-                                  exercise.id,
+                                  widget.set,
                                   widget.set.recentWeight!,
                                   widget.set.recentReps!,
-                                  widget.setIndex
                                 );
 
                                 // Update the state after updating recentWeight and recentReps
