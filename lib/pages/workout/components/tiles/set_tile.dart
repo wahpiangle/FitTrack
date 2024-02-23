@@ -270,9 +270,7 @@ class _SetTileState extends State<SetTile> with TickerProviderStateMixin {
                           : AppColours.primaryBright,
                       child: InkWell(
                         onTap: () async {
-                          // Update recentWeight and recentReps
-                          widget.set.recentWeight = widget.set.weight;
-                          widget.set.recentReps = widget.set.reps;
+
 
 
                           // Get the associated ExercisesSetsInfo
@@ -287,15 +285,15 @@ class _SetTileState extends State<SetTile> with TickerProviderStateMixin {
                                 objectBox.exerciseService
                                     .updateRecentWeightAndReps(
                                   widget.set,
-                                  widget.set.recentWeight!,
-                                  widget.set.recentReps!,
+                                  widget.set.weight!,
+                                  widget.set.reps!,
                                 );
 
                                 // Update the state after updating recentWeight and recentReps
-                                setState(() {
-                                  recentWeight = widget.set.recentWeight;
-                                  recentReps = widget.set.recentReps;
-                                });
+                                // setState(() {
+                                //   recentWeight = widget.set.recentWeight;
+                                //   recentReps = widget.set.recentReps;
+                                // });
                               }
                             }
                             widget.setIsCompleted!(widget.set.id);
