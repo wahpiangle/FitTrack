@@ -50,8 +50,11 @@ class _SetTileState extends State<SetTile> with TickerProviderStateMixin {
   void initState() {
     super.initState();
     fetchRecentWeightAndReps();
+    print('Set index of set ${widget.setIndex}');
+    print('${this.recentWeight}');
     weightController = TextEditingController();
     repsController = TextEditingController();
+
   }
 
   @override
@@ -68,11 +71,11 @@ class _SetTileState extends State<SetTile> with TickerProviderStateMixin {
       final exercise = exercisesSetsInfo.exercise.target;
       if (exercise != null) {
         final recentWeight = objectBox.exerciseService.getRecentWeight(exercise.id, widget.setIndex);
+        print('$recentWeight in fetchRecentWeightAndReps');
         final recentReps = objectBox.exerciseService.getRecentReps(exercise.id, widget.setIndex);
         setState(() {
           this.recentWeight = recentWeight;
           this.recentReps = recentReps;
-
         });
       } else {
         print('Exercise associated with the exercise set is null.');
@@ -271,6 +274,7 @@ class _SetTileState extends State<SetTile> with TickerProviderStateMixin {
                           // Update recentWeight and recentReps
                           widget.set.recentWeight = widget.set.weight;
                           widget.set.recentReps = widget.set.reps;
+
 
                           // Get the associated ExercisesSetsInfo
                           final exercisesSetsInfo = await widget.set.exerciseSetInfo.target;
