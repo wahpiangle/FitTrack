@@ -67,8 +67,8 @@ class _SetTileState extends State<SetTile> with TickerProviderStateMixin {
     if (exercisesSetsInfo != null) {
       final exercise = exercisesSetsInfo.exercise.target;
       if (exercise != null) {
-        final recentWeight = objectBox.exerciseService.getRecentWeight(exercise.name, widget.setIndex);
-        final recentReps = objectBox.exerciseService.getRecentReps(exercise.name, widget.setIndex);
+        final recentWeight = objectBox.exerciseService.getRecentWeight(exercise.id, widget.setIndex);
+        final recentReps = objectBox.exerciseService.getRecentReps(exercise.id, widget.setIndex);
         setState(() {
           this.recentWeight = recentWeight;
           this.recentReps = recentReps;

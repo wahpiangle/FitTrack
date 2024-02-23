@@ -169,28 +169,6 @@ class ExerciseService {
   }
 
 
-
-  // ExerciseService
-//   void updateRecentWeightAndReps(int exerciseId, int recentWeight, int recentReps, int setIndex) {
-//     final exercises = exerciseBox.getAll();
-//     final exerciseSets = exerciseSetBox.getAll();
-// print('hey');
-//     final exercise = exercises.firstWhere((exercise) => exercise.id == exerciseId);
-//     final exerciseSet = exerciseSets.firstWhere((exerciseSet) =>
-//     exerciseSet.exercise.target?.id == exercise.id && exerciseSet.setNumber == setIndex);
-//
-//     print('name we are matching: ${exercise.id}');
-//     print('set number we are matching: ${exerciseSet.setNumber}');
-//
-//     if (exerciseSet != null) {
-//       exerciseSet.recentWeight = recentWeight;
-//       exerciseSet.recentReps = recentReps;
-//       exerciseSetBox.put(exerciseSet);
-//     } else {
-//       throw Exception('ExerciseSet with name $exerciseId and setIndex $setIndex not found.');
-//     }
-//   }
-
   void updateRecentWeightAndReps(ExerciseSet exerciseSet, int recentWeight, int recentReps) {
 
     print('updating recent weight and reps');
@@ -198,42 +176,53 @@ class ExerciseService {
     exerciseSet.recentReps = recentReps;
     exerciseSetBox.put(exerciseSet);
     print('${exerciseSet.recentWeight}');
+    print('${exerciseSet.id}');
 
 
   }
 
 
+  int? getRecentWeight(int exerciseId, int setIndex) {
+    // Retrieve all ExerciseSetsInfo objects from the database
+    final allExerciseSetInfos = exercisesSetsInfoBox.getAll();
 
-  int? getRecentWeight(String exerciseName, int setIndex) {
-    final exercises = exerciseBox.getAll();
-    final exerciseSets = exerciseSetBox.getAll();
-
-    final exercise = exercises.firstWhere((exercise) => exercise.name == exerciseName);
-    final exerciseSet = exerciseSets.firstWhere((exerciseSet) =>
-    exerciseSet.exercise.target?.name == exercise.name && exerciseSet.setIndex == setIndex);
-
-    if (exerciseSet != null) {
-      final recentWeight = exerciseSet.recentWeight;
-      return recentWeight;
-    } else {
-      throw Exception('Exercise with name $exerciseName not found.');
+    // Iterate through each ExerciseSetsInfo object
+    for (final exerciseSetInfo in allExerciseSetInfos) {
+      // Retrieve the associated Exercise object for the ExerciseSetsInfo
+      final exercise = exerciseSetInfo.exercise.target;
+      if (exercise != null && exercise.id == exerciseId) {
+        // Retrieve the ExerciseSet object at the given set index
+        final exerciseSet = exerciseSetInfo.exerciseSets[setIndex];
+        if (exerciseSet != null) {
+          // Update the recent weight and recent reps for the ExerciseSet
+          final recentWeight = exerciseSet.recentWeight ;
+          return recentWeight; // Exit the loop once a match is found
+        }
+      }
     }
+    print('No match found for exerciseId: $exerciseId and setIndex: $setIndex');
   }
 
-  int? getRecentReps(String exerciseName, int setIndex) {
-    final exercises = exerciseBox.getAll();
-    final exerciseSets = exerciseSetBox.getAll();
 
-    final exercise = exercises.firstWhere((exercise) => exercise.name == exerciseName);
-    final exerciseSet = exerciseSets.firstWhere((exerciseSet) =>
-    exerciseSet.exercise.target?.name == exercise.name && exerciseSet.setIndex == setIndex);
+  int? getRecentReps(int exerciseId, int setIndex) {
+    // Retrieve all ExerciseSetsInfo objects from the database
+    final allExerciseSetInfos = exercisesSetsInfoBox.getAll();
 
-    if (exerciseSet != null) {
-      final recentReps = exerciseSet.recentReps;
-      return recentReps;
-    } else {
-      throw Exception('Exercise with name $exerciseName not found.');
+    // Iterate through each ExerciseSetsInfo object
+    for (final exerciseSetInfo in allExerciseSetInfos) {
+      // Retrieve the associated Exercise object for the ExerciseSetsInfo
+      final exercise = exerciseSetInfo.exercise.target;
+      if (exercise != null && exercise.id == exerciseId) {
+        // Retrieve the ExerciseSet object at the given set index
+        final exerciseSet = exerciseSetInfo.exerciseSets[setIndex];
+        if (exerciseSet != null) {
+          // Update the recent weight and recent reps for the ExerciseSet
+          final recentReps = exerciseSet.recentReps ;
+          return recentReps; // Exit the loop once a match is found
+        }
+      }
     }
+    print('No match found for exerciseId: $exerciseId and setIndex: $setIndex');
   }
 
 }
