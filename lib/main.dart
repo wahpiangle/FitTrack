@@ -4,8 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:group_project/pages/auth/email_password_login.dart';
 import 'package:group_project/pages/auth/register_screen.dart';
-import 'package:group_project/pages/auth/settings_login.dart';
-import 'package:group_project/pages/auth/settings_signup.dart';
 import 'package:group_project/pages/auth_wrapper.dart';
 import 'package:group_project/pages/complete_workout/capture_image/upload_image_provider.dart';
 import 'package:group_project/pages/complete_workout/congratulation_screen.dart';
@@ -92,16 +90,14 @@ class MyApp extends StatelessWidget {
           '/auth': (context) => const Wrapper(),
           "login": (context) => const EmailPasswordLogin(),
           "register": (context) => const RegisterScreen(),
-          "settings_login": (context) => const SettingsLogin(),
-          "settings_signup": (context) => const SettingsSignup(),
           "app_layout": (context) => const AppLayout(),
           "congratulation_screen": (context) => const CongratulationScreen(),
           "history_screen": (context) => const HistoryScreen(
-            exerciseData: [],
-          ),
+                exerciseData: [],
+              ),
           "post_workout_prompt": (context) => PostWorkoutPrompt(
-            cameras: cameras,
-          ),
+                cameras: cameras,
+              ),
         },
         theme: ThemeData(
           bottomNavigationBarTheme: const BottomNavigationBarThemeData(
