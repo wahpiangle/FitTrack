@@ -49,9 +49,8 @@ class _SetTileState extends State<SetTile> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    fetchRecentWeightAndReps();
+    fetchRecentWeightAndReps(widget.setIndex);
     print('Set index of set ${widget.setIndex}');
-    print('${this.recentWeight}');
     weightController = TextEditingController();
     repsController = TextEditingController();
 
@@ -65,14 +64,16 @@ class _SetTileState extends State<SetTile> with TickerProviderStateMixin {
   }
 
 
-  Future<void> fetchRecentWeightAndReps() async {
+  Future<void> fetchRecentWeightAndReps(int setIndex) async {
     final exercisesSetsInfo = widget.set.exerciseSetInfo.target;
     if (exercisesSetsInfo != null) {
+      print('hi');
       final exercise = exercisesSetsInfo.exercise.target;
       if (exercise != null) {
-        final recentWeight = objectBox.exerciseService.getRecentWeight(exercise.id, widget.setIndex);
+        print('hi 2');
+        final recentWeight = await objectBox.exerciseService.getRecentWeight(exercise.id, setIndex);
         print('$recentWeight in fetchRecentWeightAndReps');
-        final recentReps = objectBox.exerciseService.getRecentReps(exercise.id, widget.setIndex);
+        final recentReps = await objectBox.exerciseService.getRecentReps(exercise.id, setIndex);
         setState(() {
           this.recentWeight = recentWeight;
           this.recentReps = recentReps;
@@ -84,6 +85,7 @@ class _SetTileState extends State<SetTile> with TickerProviderStateMixin {
       print('ExerciseSetsInfo associated with the exercise set is null.');
     }
   }
+
 
 
 
@@ -171,7 +173,7 @@ class _SetTileState extends State<SetTile> with TickerProviderStateMixin {
                   child: Container(
                     padding: const EdgeInsets.symmetric(horizontal: 8.0),
                     child: Text(
-                      recentWeight != null ? '${recentWeight}kg x $recentReps' : '-',
+                      recentWeight != null ? '${this.recentWeight}kg x ${this.recentReps}' : '-',
                       style:  TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.bold,

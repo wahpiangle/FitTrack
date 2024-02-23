@@ -243,20 +243,32 @@ class ExerciseService {
 
 
   int? getRecentReps(int exerciseId, int setIndex) {
+    print('fetching');
     // Retrieve all ExerciseSetsInfo objects from the database
     final allExerciseSetInfos = exercisesSetsInfoBox.getAll();
 
     // Iterate through each ExerciseSetsInfo object
     for (final exerciseSetInfo in allExerciseSetInfos) {
       // Retrieve the associated Exercise object for the ExerciseSetsInfo
+      print('one');
       final exercise = exerciseSetInfo.exercise.target;
       if (exercise != null && exercise.id == exerciseId) {
-        // Retrieve the ExerciseSet object at the given set index
-        final exerciseSet = exerciseSetInfo.exerciseSets[setIndex];
-        if (exerciseSet != null) {
-          // Update the recent weight and recent reps for the ExerciseSet
-          final recentReps = exerciseSet.recentReps ;
-          return recentReps; // Exit the loop once a match is found
+        // Initialize a counter
+        print('two');
+        int counter = 0;
+        // Iterate through each ExerciseSet object in the exerciseSets list
+        for (final exerciseSet in exerciseSetInfo.exerciseSets) {
+          // Check if the counter matches the setIndex
+          if (counter == setIndex) {
+
+            print("three");
+            // Return the ExerciseSet object at the given setIndex
+            final recentReps = exerciseSet.recentReps;
+            print("in exercise service recent reps is $recentReps");
+            return recentReps;
+          }
+          // Increment the counter
+          counter++;
         }
       }
     }
