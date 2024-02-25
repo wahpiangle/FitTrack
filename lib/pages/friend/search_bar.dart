@@ -44,47 +44,12 @@ class SearchHelper {
         )
             : ListView.separated(
           itemCount: searchedUsers.length,
-          separatorBuilder: (context, index) =>
-          const Divider(color: Colors.white, thickness: 0.5),
+          separatorBuilder: (context, index) => const Divider(color: Colors.white, thickness: 0.5),
           itemBuilder: (context, index) {
-            bool isCurrentUserFriend =
-                (searchedUsers[index]['friends'] as List<dynamic>?)
-                    ?.contains(FirebaseAuth.instance.currentUser?.uid) ?? false;
-
-            return ListTile(
-              leading: buildUserProfileImage(searchedUsers[index]['photoUrl']),
-              title: Text(
-                searchedUsers[index]['name'] ?? '',
-                style: const TextStyle(
-                  color: Colors.white,
-                ),
-              ),
-              trailing: FractionallySizedBox(
-                widthFactor: 0.2,
-                heightFactor: 0.6,
-                child: isCurrentUserFriend
-                    ? Container() // If the user is a friend, show an empty container (hidden)
-                    : ElevatedButton(
-                  onPressed: () {
-                    if (searchedUsers[index]['UID'] != null) {
-                      addFriend(searchedUsers[index]['UID']);
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColours.secondary,
-                    padding: EdgeInsets.all(8),
-                    textStyle: const TextStyle(fontSize: 12),
-                  ),
-                  child: const Text(
-                    'Add',
-                    style: TextStyle(
-                        color: Colors.black, fontWeight: FontWeight.bold),
-                  ),
-                ),
-              ),
-            );
+            return SearchUserTile(user: searchedUsers[index]);
           },
         ),
+
       ),
     );
   }
@@ -183,6 +148,71 @@ class FriendSearchBar extends StatelessWidget {
               },
             ),
         ],
+      ),
+    );
+  }
+}
+
+class SearchUserTile extends StatefulWidget {
+  final Map<String, dynamic> user;
+
+  const SearchUserTile({Key? key, required this.user}) : super(key: key);
+
+  @override
+  _SearchUserTileState createState() => _SearchUserTileState();
+}
+
+class _SearchUserTileState extends State<SearchUserTile> {
+  bool friendRequestSent = false;
+
+  @override
+  Widget build(BuildContext context) {
+    bool isCurrentUserFriend =
+        (widget.user['friends'] as List<dynamic>?)?.contains(FirebaseAuth.instance.currentUser?.uid) ?? false;
+
+    return ListTile(
+      leading: SearchHelper.buildUserProfileImage(widget.user['photoUrl']),
+      title: Text(
+        widget.user['name'] ?? '',
+        style: const TextStyle(
+          color: Colors.white,
+        ),
+      ),
+      trailing: FractionallySizedBox(
+        widthFactor: 0.22,
+        heightFactor: 0.6,
+        child: isCurrentUserFriend
+            ? Container() // If the user is a friend, show an empty container (hidden)
+            : ElevatedButton(
+          onPressed: () {
+            if (!friendRequestSent && widget.user['UID'] != null) {
+              setState(() {
+                friendRequestSent = true;
+              });
+
+              SearchHelper.addFriend(widget.user['UID']);
+            }
+          },
+          style: ElevatedButton.styleFrom(
+            backgroundColor: friendRequestSent ? AppColours.secondaryLight : AppColours.secondary,
+            padding: EdgeInsets.all(8),
+            textStyle: const TextStyle(fontSize: 11),
+          ),
+          child: AnimatedSwitcher(
+            duration: const Duration(milliseconds: 300),
+            child: friendRequestSent
+                ? const Text(
+              'Requested',
+              key: Key('requestedText'),
+              style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+            )
+                : const Text(
+              'Add',
+              key: Key('addText'),
+              style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+            ),
+          ),
+        ),
       ),
     );
   }
