@@ -73,12 +73,12 @@ class FriendRequestsTabState extends State<FriendRequestsTab> {
       future: FirebaseFirestore.instance.collection('users').doc(currentUserUid).get(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return CircularProgressIndicator(); // or a loading indicator
+          return const CircularProgressIndicator();
         }
 
-        final requests = (snapshot.data?.data() as Map<String, dynamic>?)?['requests'] as List<dynamic>?;
+        final requests = (snapshot.data?.data() as Map<String, dynamic>?)?['requestReceived'] as List<dynamic>?;
         if (requests == null || requests.isEmpty) {
-          return SizedBox.shrink(); // No friend requests
+          return const SizedBox.shrink();
         }
 
         return ListView.builder(
@@ -102,7 +102,7 @@ class FriendRequestsTabState extends State<FriendRequestsTab> {
 class FriendRequestTile extends StatelessWidget {
   final String friendUid;
 
-  const FriendRequestTile({Key? key, required this.friendUid}) : super(key: key);
+  const FriendRequestTile({super.key, required this.friendUid});
 
   @override
   Widget build(BuildContext context) {
@@ -111,19 +111,19 @@ class FriendRequestTile extends StatelessWidget {
         future: FirebaseFirestore.instance.collection('users').doc(friendUid).get(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return CircularProgressIndicator(); // or a loading indicator
+            return const CircularProgressIndicator();
           }
 
           final userData = snapshot.data?.data() as Map<String, dynamic>?;
 
           if (userData == null) {
-            return SizedBox.shrink(); // User not found
+            return const SizedBox.shrink();
           }
 
           return Row(
             children: [
               SearchHelper.buildUserProfileImage(userData['photoUrl']),
-              SizedBox(width: 16),
+              const SizedBox(width: 16),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -134,13 +134,32 @@ class FriendRequestTile extends StatelessWidget {
                     ),
                   ),
                   ElevatedButton(
-                    onPressed: () {
-                      // Implement the logic to accept the friend request
-                      // You can call a method to add the user as a friend here
+                    onPressed: () async {
+                      final currentUserUid = FirebaseAuth.instance.currentUser?.uid;
+
+                      // Update the friend's 'friends' field
+                      await FirebaseFirestore.instance.collection('users').doc(friendUid).update({
+                        'friends': FieldValue.arrayUnion([currentUserUid])
+                      });
+
+                      // Update the current user's 'friends' field
+                      await FirebaseFirestore.instance.collection('users').doc(currentUserUid).update({
+                        'friends': FieldValue.arrayUnion([friendUid])
+                      });
+
+                      // Remove the friend request from 'requestReceived' in the current user's document
+                      await FirebaseFirestore.instance.collection('users').doc(currentUserUid).update({
+                        'requestReceived': FieldValue.arrayRemove([friendUid])
+                      });
+
+                      // Remove the friend request from 'requestSent' in the friend's document
+                      await FirebaseFirestore.instance.collection('users').doc(friendUid).update({
+                        'requestSent': FieldValue.arrayRemove([currentUserUid])
+                      });
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColours.primary,
-                      padding: EdgeInsets.all(8),
+                      backgroundColor: AppColours.secondaryLight,
+                      padding: const EdgeInsets.all(8),
                       textStyle: const TextStyle(fontSize: 11),
                     ),
                     child: const Text(
@@ -148,6 +167,7 @@ class FriendRequestTile extends StatelessWidget {
                       style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
                     ),
                   ),
+
                 ],
               ),
             ],

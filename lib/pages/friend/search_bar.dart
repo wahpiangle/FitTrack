@@ -148,13 +148,13 @@ class FriendSearchBar extends StatelessWidget {
 class SearchUserTile extends StatefulWidget {
   final Map<String, dynamic> user;
 
-  const SearchUserTile({Key? key, required this.user}) : super(key: key);
+  const SearchUserTile({super.key, required this.user});
 
   @override
-  _SearchUserTileState createState() => _SearchUserTileState();
+  SearchUserTileState createState() => SearchUserTileState();
 }
 
-class _SearchUserTileState extends State<SearchUserTile> {
+class SearchUserTileState extends State<SearchUserTile> {
   bool friendRequestSent = false;
 
   @override
@@ -174,7 +174,7 @@ class _SearchUserTileState extends State<SearchUserTile> {
         widthFactor: 0.22,
         heightFactor: 0.6,
         child: isCurrentUserFriend
-            ? Container() // If the user is a friend, show an empty container (hidden)
+            ? Container()
             : ElevatedButton(
           onPressed: () {
             if (!friendRequestSent && widget.user['UID'] != null) {
@@ -187,7 +187,7 @@ class _SearchUserTileState extends State<SearchUserTile> {
           },
           style: ElevatedButton.styleFrom(
             backgroundColor: friendRequestSent ? AppColours.secondaryLight : AppColours.secondary,
-            padding: EdgeInsets.all(8),
+            padding: const EdgeInsets.all(8),
             textStyle: const TextStyle(fontSize: 11),
           ),
           child: AnimatedSwitcher(
