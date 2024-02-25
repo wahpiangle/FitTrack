@@ -56,33 +56,32 @@ class SearchHelper {
 
   static void addFriend(String friendUid) async {
     final currentUserUid = FirebaseAuth.instance.currentUser?.uid;
+// Update your Firestore 'friends' table
+    final friendsRef = FirebaseFirestore.instance.collection('friends').doc(currentUserUid);
+
+    await friendsRef.set({
+      'friends': [], // Existing field
+      'requests': [], // New field to store incoming requests
+      'sentRequests': [], // New field to store sent requests
+    }, SetOptions(merge: true));
 
     if (currentUserUid != null) {
-      // Update the current user's document to include the friend as a friend
-      final currentUserRef = FirebaseFirestore.instance.collection('users').doc(currentUserUid);
+      // Send friend request to the other user
+      final friendRef = FirebaseFirestore.instance.collection('friends').doc(friendUid);
 
-      final currentUserDoc = await currentUserRef.get();
-      if (currentUserDoc.exists) {
-        await currentUserRef.set({
-          'friends': FieldValue.arrayUnion([friendUid])
-        }, SetOptions(merge: true));
-      } else {
-        print('Warning: Current user document does not exist for UID: $currentUserUid');
-      }
+      await friendRef.set({
+        'requests': FieldValue.arrayUnion([currentUserUid])
+      }, SetOptions(merge: true));
 
-      // Update the friend's document to include the current user as a friend
-      final friendRef = FirebaseFirestore.instance.collection('users').doc(friendUid);
-      final friendDoc = await friendRef.get();
+      // Update the current user's document to include the sent request
+      final currentUserRef = FirebaseFirestore.instance.collection('friends').doc(currentUserUid);
 
-      if (friendDoc.exists) {
-        await friendRef.set({
-          'friends': FieldValue.arrayUnion([currentUserUid])
-        }, SetOptions(merge: true));
-      } else {
-        print('Warning: Friend document does not exist for UID: $friendUid');
-      }
+      await currentUserRef.set({
+        'sentRequests': FieldValue.arrayUnion([friendUid])
+      }, SetOptions(merge: true));
     }
   }
+
 
 
   static Widget buildUserProfileImage(String? photoUrl) {
