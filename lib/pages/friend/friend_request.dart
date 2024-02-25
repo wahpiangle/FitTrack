@@ -70,7 +70,7 @@ class FriendRequestsTabState extends State<FriendRequestsTab> {
   Widget buildFriendRequestsList() {
     final currentUserUid = FirebaseAuth.instance.currentUser?.uid;
     return FutureBuilder<DocumentSnapshot>(
-      future: FirebaseFirestore.instance.collection('friends').doc(currentUserUid).get(),
+      future: FirebaseFirestore.instance.collection('users').doc(currentUserUid).get(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return CircularProgressIndicator(); // or a loading indicator

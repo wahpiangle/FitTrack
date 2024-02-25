@@ -56,31 +56,24 @@ class SearchHelper {
 
   static void addFriend(String friendUid) async {
     final currentUserUid = FirebaseAuth.instance.currentUser?.uid;
-// Update your Firestore 'friends' table
-    final friendsRef = FirebaseFirestore.instance.collection('friends').doc(currentUserUid);
-
-    await friendsRef.set({
-      'friends': [], // Existing field
-      'requests': [], // New field to store incoming requests
-      'sentRequests': [], // New field to store sent requests
-    }, SetOptions(merge: true));
 
     if (currentUserUid != null) {
       // Send friend request to the other user
-      final friendRef = FirebaseFirestore.instance.collection('friends').doc(friendUid);
+      final friendRef = FirebaseFirestore.instance.collection('users').doc(friendUid);
 
       await friendRef.set({
-        'requests': FieldValue.arrayUnion([currentUserUid])
+        'requestReceived': FieldValue.arrayUnion([currentUserUid])
       }, SetOptions(merge: true));
 
       // Update the current user's document to include the sent request
-      final currentUserRef = FirebaseFirestore.instance.collection('friends').doc(currentUserUid);
+      final currentUserRef = FirebaseFirestore.instance.collection('users').doc(currentUserUid);
 
       await currentUserRef.set({
-        'sentRequests': FieldValue.arrayUnion([friendUid])
+        'requestSent': FieldValue.arrayUnion([friendUid])
       }, SetOptions(merge: true));
     }
   }
+
 
 
 
