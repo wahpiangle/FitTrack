@@ -12,8 +12,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class Home extends StatefulWidget {
   const Home({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   State<Home> createState() => _HomeState();
@@ -163,7 +163,7 @@ class _HomeState extends State<Home> {
                                   shape: BoxShape.circle,
                                   border: Border.all(color: Colors.grey),
                                 ),
-                                child: Icon(Icons.favorite, color: Colors.grey),
+                                child: const Icon(Icons.favorite, color: Colors.grey),
                               ),
                               // Inside your itemBuilder method where you build the comment icon
                               Container(
@@ -186,7 +186,7 @@ class _HomeState extends State<Home> {
                                       ),
                                     );
                                   },
-                                  child: Icon(Icons.comment, color: Colors.grey),
+                                  child: const Icon(Icons.comment, color: Colors.grey),
                                 ),
                               ),
 
@@ -214,7 +214,7 @@ class _HomeState extends State<Home> {
                   height: 140,
                   // Padding added
                   width: double.infinity,
-                  child: Column(
+                  child: const Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [

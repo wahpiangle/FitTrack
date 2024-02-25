@@ -5,9 +5,8 @@ import 'dart:io';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:group_project/pages/settings/settings_screen.dart';
 import 'package:group_project/pages/exercise/components/custom_exercise.dart';
-import 'package:group_project/pages/friend/friend_tab.dart';
-import 'package:group_project/main.dart';
 
+import '../../main.dart';
 
 class TopNavBar extends StatelessWidget implements PreferredSizeWidget {
   final User? user;
@@ -53,17 +52,15 @@ class TopNavBar extends StatelessWidget implements PreferredSizeWidget {
           ),
         ),
       );
-    } else if (pageIndex == 0) {
+    }  else if (pageIndex == 0) {
       leadingWidget = IconButton(
-        icon: const Icon(Icons.person_add_alt_1, color: Colors.white),
+        icon: const Icon(Icons.person_add_outlined, color: Colors.white), // Set icon color to white
         onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => FriendPage(title: '',)),
-          );
+          // Connect to add friends page
         },
       );
-    } else {
+    }
+    else {
       leadingWidget = IconButton(
         icon: const Icon(Icons.menu, color: Colors.white),
         onPressed: () {
@@ -78,9 +75,11 @@ class TopNavBar extends StatelessWidget implements PreferredSizeWidget {
         fit: BoxFit.fitWidth,
         child: Text(
           title,
-          style: const TextStyle(
+          style: TextStyle(
             fontWeight: FontWeight.bold,
             color: Colors.white,
+            fontFamily: pageIndex == 0 ? 'Dancing Script' : null,
+            fontSize : pageIndex == 0 ? 30 : null,
           ),
         ),
       ),
@@ -103,16 +102,16 @@ class TopNavBar extends StatelessWidget implements PreferredSizeWidget {
                 height: 40,
                 child: ClipOval(
                   child: (profileImage.isEmpty ||
-                          profileImage == 'assets/icons/defaultimage.jpg')
+                      profileImage == 'assets/icons/defaultimage.jpg')
                       ? const CircleAvatar(
-                          radius: 50,
-                          backgroundImage:
-                              AssetImage('assets/icons/defaultimage.jpg'),
-                        )
+                    radius: 50,
+                    backgroundImage:
+                    AssetImage('assets/icons/defaultimage.jpg'),
+                  )
                       : CircleAvatar(
-                          radius: 50,
-                          backgroundImage: FileImage(File(profileImage)),
-                        ),
+                    radius: 50,
+                    backgroundImage: FileImage(File(profileImage)),
+                  ),
                 ),
               ),
             ),
