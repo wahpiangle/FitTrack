@@ -1,7 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:group_project/constants/upload_enums.dart';
-import 'package:group_project/main.dart';
 import 'package:group_project/pages/complete_workout/capture_image/upload_image_provider.dart';
 import 'package:group_project/pages/home/components/display_image_stack.dart';
 import 'package:group_project/constants/themes/app_colours.dart';
@@ -9,7 +9,6 @@ import 'package:group_project/pages/home/components/display_post_image_screen.da
 import 'package:group_project/services/firebase/firebase_posts_service.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 
 class Home extends StatefulWidget {
   const Home({
@@ -24,27 +23,14 @@ class _HomeState extends State<Home> {
   late final bool? showCursor;
   String caption = ''; // Define caption variable
   int _current = 0;
-  final List<Map<String, dynamic>> imageList = objectBox.postService
-      .getActivePosts()
-      .asMap()
-      .entries
-      .map((entry) {
-    final item = entry.value;
-    return {
-      'firstImageUrl': item.firstImageUrl,
-      'secondImageUrl': item.secondImageUrl,
-      'postId': item.id,
-      'workoutSessionId': item.workoutSession.targetId,
-    };
-  }).toList();
+  List<Map<String, dynamic>> imageList = []; // Initialize as an empty list
 
   bool isBannerVisible = true; // Add a boolean variable to manage banner visibility
 
   @override
   void initState() {
     super.initState();
-    // Fetch the caption for the initial workout session
-    fetchCaption(imageList[_current]['workoutSessionId']);
+    fetchUserPosts(); // Fetch user-specific posts when the widget initializes
     context.read<UploadImageProvider>().getSharedPreferences();
     SharedPreferences.getInstance().then((prefs) {
       if (prefs.getBool(UploadEnums.isUploading) == true) {
@@ -55,10 +41,31 @@ class _HomeState extends State<Home> {
     });
   }
 
+  void fetchUserPosts() async {
+    final currentUserUid = FirebaseAuth.instance.currentUser?.uid;
+    if (currentUserUid != null) {
+      const workoutSessionId = 123; // Replace with the workout session ID you want to fetch
+      final userPost = await FirebasePostsService.getPostById(currentUserUid, workoutSessionId);
+      setState(() {
+        if (userPost != null) {
+          // Convert the Post object to a Map<String, dynamic>
+          final userPostMap = {
+            'firstImageUrl': userPost.firstImageUrl,
+            'secondImageUrl': userPost.secondImageUrl,
+            // Add other fields as needed
+          };
+          imageList = [userPostMap]; // Assign a list containing the fetched post
+        } else {
+          imageList = []; // If no post is found, reset the list
+        }
+      });
+    }
+  }//TODO ADD USER ID INTO POSTS
+
+
   void fetchCaption(int workoutSessionId) async {
     // Fetch the caption using the provided workout session ID
-    String fetchedCaption = await FirebasePostsService.getCaption(
-        workoutSessionId);
+    String fetchedCaption = await FirebasePostsService.getCaption(workoutSessionId);
     setState(() {
       caption = fetchedCaption;
     });
@@ -66,8 +73,7 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    final UploadImageProvider uploadImageProvider = context.watch<
-        UploadImageProvider>();
+    final UploadImageProvider uploadImageProvider = context.watch<UploadImageProvider>();
     bool hasImages = imageList.isNotEmpty; // Check if there are images
 
     return Scaffold(
@@ -127,12 +133,10 @@ class _HomeState extends State<Home> {
                           )
                               : Container(
                             width: 100,
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 1, vertical: 1),
+                            padding: const EdgeInsets.symmetric(horizontal: 1, vertical: 1),
                             decoration: BoxDecoration(
                               color: Colors.transparent,
-                              border:
-                              Border.all(color: Colors.transparent),
+                              border: Border.all(color: Colors.transparent),
                               borderRadius: BorderRadius.circular(8),
                             ),
                             child: TextField(
@@ -148,11 +152,9 @@ class _HomeState extends State<Home> {
                                 contentPadding: EdgeInsets.only(left: 16),
                               ),
                               onChanged: (caption) {
-                                FirebasePostsService.saveCaption(
-                                    workoutSessionId, caption);
+                                FirebasePostsService.saveCaption(workoutSessionId, caption);
                               },
-                              controller:
-                              TextEditingController(text: caption),
+                              controller: TextEditingController(text: caption),
                             ),
                           ),
                           // Add Row widget for icons
@@ -192,7 +194,6 @@ class _HomeState extends State<Home> {
                                   child: const Icon(Icons.comment, color: Colors.grey),
                                 ),
                               ),
-
                             ],
                           ),
                         ],

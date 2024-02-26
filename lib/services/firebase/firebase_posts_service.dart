@@ -130,5 +130,39 @@ class FirebasePostsService {
     }
   }
 
+  static Future<Post?> getPostById(String userId, int workoutSessionId) async {
+    try {
+      final docSnapshot = await postsCollectionRef
+          .doc(userId) // Use the provided user ID
+          .collection('userPosts')
+          .doc(workoutSessionId.toString())
+          .get();
+
+      if (docSnapshot.exists) {
+        final data = docSnapshot.data();
+        if (data != null) {
+          final firstImageUrl = data['firstImageUrl'] as String;
+          final secondImageUrl = data['secondImageUrl'] as String;
+          final caption = data['caption'] as String; // Retrieve caption
+          final dateStr = data['date'] as String; // Retrieve date as String
+
+          // Parse the string representation of the date into a DateTime object
+          final date = DateTime.parse(dateStr);
+
+          return Post(
+            firstImageUrl: firstImageUrl,
+            secondImageUrl: secondImageUrl,
+            caption: caption,
+            date: date,
+          );
+        }
+      }
+      return null; // Return null if the document doesn't exist or if there's an error
+    } catch (e) {
+      return null; // Return null if an error occurs
+    }
+  }
+
+
 
 }
