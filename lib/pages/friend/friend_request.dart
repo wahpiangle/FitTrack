@@ -51,11 +51,17 @@ class FriendRequestsTabState extends State<FriendRequestsTab> {
     return Expanded(
       child: Stack(
         children: [
-          const Center(
-            child: Text(
-              'Friend Request',
-              style: TextStyle(
-                color: Colors.white,
+          const Align(
+            alignment: Alignment.topLeft,
+            child: Padding(
+              padding: EdgeInsets.all(16.0),
+              child: Text(
+                'Friend Request',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
           ),
@@ -67,28 +73,32 @@ class FriendRequestsTabState extends State<FriendRequestsTab> {
     );
   }
 
+
   Widget buildFriendRequestsList() {
     final currentUserUid = FirebaseAuth.instance.currentUser?.uid;
-    return FutureBuilder<DocumentSnapshot>(
-      future: FirebaseFirestore.instance.collection('users').doc(currentUserUid).get(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const CircularProgressIndicator();
-        }
+    return Padding(
+      padding: const EdgeInsets.only(top: 50),
+      child: FutureBuilder<DocumentSnapshot>(
+        future: FirebaseFirestore.instance.collection('users').doc(currentUserUid).get(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const CircularProgressIndicator();
+          }
 
-        final requests = (snapshot.data?.data() as Map<String, dynamic>?)?['requestReceived'] as List<dynamic>?;
-        if (requests == null || requests.isEmpty) {
-          return const SizedBox.shrink();
-        }
+          final requests = (snapshot.data?.data() as Map<String, dynamic>?)?['requestReceived'] as List<dynamic>?;
+          if (requests == null || requests.isEmpty) {
+            return const SizedBox.shrink();
+          }
 
-        return ListView.builder(
-          itemCount: requests.length,
-          itemBuilder: (context, index) {
-            final friendUid = requests[index];
-            return FriendRequestTile(friendUid: friendUid);
-          },
-        );
-      },
+          return ListView.builder(
+            itemCount: requests.length,
+            itemBuilder: (context, index) {
+              final friendUid = requests[index];
+              return FriendRequestTile(friendUid: friendUid);
+            },
+          );
+        },
+      ),
     );
   }
 
@@ -121,54 +131,58 @@ class FriendRequestTile extends StatelessWidget {
           }
 
           return Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              SearchHelper.buildUserProfileImage(userData['photoUrl']),
-              const SizedBox(width: 16),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    userData['name'] ?? '',
-                    style: const TextStyle(
-                      color: Colors.white,
+              Expanded(
+                child: Row(
+                  children: [
+                    SearchHelper.buildUserProfileImage(userData['photoUrl']),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            userData['name'] ?? '',
+                            style: const TextStyle(
+                              color: Colors.white,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                  ElevatedButton(
-                    onPressed: () async {
-                      final currentUserUid = FirebaseAuth.instance.currentUser?.uid;
+                  ],
+                ),
+              ),
+              ElevatedButton(
+                onPressed: () async {
+                  final currentUserUid = FirebaseAuth.instance.currentUser?.uid;
 
-                      // Update the friend's 'friends' field
-                      await FirebaseFirestore.instance.collection('users').doc(friendUid).update({
-                        'friends': FieldValue.arrayUnion([currentUserUid])
-                      });
+                  await FirebaseFirestore.instance.collection('users').doc(friendUid).update({
+                    'friends': FieldValue.arrayUnion([currentUserUid])
+                  });
 
-                      // Update the current user's 'friends' field
-                      await FirebaseFirestore.instance.collection('users').doc(currentUserUid).update({
-                        'friends': FieldValue.arrayUnion([friendUid])
-                      });
+                  await FirebaseFirestore.instance.collection('users').doc(currentUserUid).update({
+                    'friends': FieldValue.arrayUnion([friendUid])
+                  });
 
-                      // Remove the friend request from 'requestReceived' in the current user's document
-                      await FirebaseFirestore.instance.collection('users').doc(currentUserUid).update({
-                        'requestReceived': FieldValue.arrayRemove([friendUid])
-                      });
+                  await FirebaseFirestore.instance.collection('users').doc(currentUserUid).update({
+                    'requestReceived': FieldValue.arrayRemove([friendUid])
+                  });
 
-                      // Remove the friend request from 'requestSent' in the friend's document
-                      await FirebaseFirestore.instance.collection('users').doc(friendUid).update({
-                        'requestSent': FieldValue.arrayRemove([currentUserUid])
-                      });
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColours.secondaryLight,
-                      padding: const EdgeInsets.all(8),
-                      textStyle: const TextStyle(fontSize: 11),
-                    ),
-                    child: const Text(
-                      'Accept',
-                      style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-
-                ],
+                  await FirebaseFirestore.instance.collection('users').doc(friendUid).update({
+                    'requestSent': FieldValue.arrayRemove([currentUserUid])
+                  });
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColours.secondaryLight,
+                  padding: const EdgeInsets.all(8),
+                  textStyle: const TextStyle(fontSize: 11),
+                ),
+                child: const Text(
+                  'Accept',
+                  style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+                ),
               ),
             ],
           );
@@ -177,3 +191,4 @@ class FriendRequestTile extends StatelessWidget {
     );
   }
 }
+

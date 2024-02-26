@@ -44,18 +44,18 @@ class CurrentFriendsTabState extends State<CurrentFriendsTab> {
   Future<void> fetchFriendDetails(List<dynamic> friendUids) async {
     final friendsQuery = await FirebaseFirestore.instance
         .collection('users')
-        .where('UID', whereIn: friendUids)
+        .where(FieldPath.documentId, whereIn: friendUids)
         .get();
 
     if (friendsQuery.docs.isNotEmpty) {
       setState(() {
-        currentFriends =
-            friendsQuery.docs.map((doc) => doc.data()).toList();
+        currentFriends = friendsQuery.docs.map((doc) => doc.data()).toList();
       });
     } else {
       print('No friend details found for UIDs: $friendUids');
     }
   }
+
 
 
   @override

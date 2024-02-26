@@ -26,7 +26,7 @@ class SearchHelper {
     final List<Map<String, dynamic>> combinedResults =
     [...usernameSnapshot.docs, ...phoneSnapshot.docs].map((doc) {
       Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-      data['UID'] = doc.id; // Add the UID (document ID) to the data
+      data['UID'] = doc.id;
       return data;
     }).toList();
 
