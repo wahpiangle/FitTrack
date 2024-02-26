@@ -78,7 +78,7 @@ class FriendRequestsTabState extends State<FriendRequestsTab> {
   Widget buildFriendRequestsList() {
     final currentUserUid = FirebaseAuth.instance.currentUser?.uid;
     return Padding(
-      padding: const EdgeInsets.only(top: 50),
+      padding: const EdgeInsets.only(top: 60),
       child: FutureBuilder<DocumentSnapshot>(
         future: FirebaseFirestore.instance.collection('users').doc(currentUserUid).get(),
         builder: (context, snapshot) {

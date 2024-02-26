@@ -57,7 +57,6 @@ class CurrentFriendsTabState extends State<CurrentFriendsTab> {
   }
 
 
-
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -117,25 +116,26 @@ class CurrentFriendsTabState extends State<CurrentFriendsTab> {
 
 
   Widget buildCurrentFriendsListView() {
-    return ListView.separated(
-      itemCount: currentFriends.length,
-      separatorBuilder: (context, index) =>
-      const Divider(color: Colors.white, thickness: 0.5),
-      itemBuilder: (context, index) {
-        return Padding(
-          padding: const EdgeInsets.only(top: 50),
-          child: ListTile(
+    return Padding(
+      padding: const EdgeInsets.only(top: 60),
+      child: ListView.separated(
+        itemCount: currentFriends.length,
+        separatorBuilder: (context, index) =>
+        const Divider(color: Colors.transparent, thickness: 0.2),
+        itemBuilder: (context, index) {
+          return ListTile(
             leading:
-            SearchHelper.buildUserProfileImage(currentFriends[index]['photoUrl']),
+            SearchHelper.buildUserProfileImage(
+                currentFriends[index]['photoUrl']),
             title: Text(
               currentFriends[index]['name'] ?? '',
               style: const TextStyle(
                 color: Colors.white,
               ),
             ),
-          ),
-        );
-      },
+          );
+        },
+      ),
     );
   }
 }

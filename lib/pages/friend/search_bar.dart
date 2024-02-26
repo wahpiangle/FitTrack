@@ -87,6 +87,7 @@ class SearchHelper {
 
   static Widget buildUserProfileImage(String? photoUrl) {
     return CircleAvatar(
+      radius: 23,
       backgroundImage: photoUrl != null
           ? NetworkImage(photoUrl)
           : const AssetImage('assets/icons/defaultimage.jpg') as ImageProvider,
