@@ -271,8 +271,6 @@ class _SetTileState extends State<SetTile> with TickerProviderStateMixin {
                       child: InkWell(
                         onTap: () async {
 
-
-
                           // Get the associated ExercisesSetsInfo
                           final exercisesSetsInfo =
                               widget.set.exerciseSetInfo.target;

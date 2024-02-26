@@ -4,6 +4,7 @@ import 'package:group_project/models/category.dart';
 import 'package:group_project/models/exercise.dart';
 import 'package:group_project/models/exercise_set.dart';
 import 'package:group_project/models/exercises_sets_info.dart';
+import 'package:group_project/models/workout_session.dart';
 import 'package:group_project/objectbox.g.dart';
 import 'package:group_project/services/firebase/firebase_customexercise_service.dart';
 
@@ -13,6 +14,7 @@ class ExerciseService {
   Box<BodyPart> bodyPartBox;
   Box<ExerciseSet> exerciseSetBox;
   Box<ExercisesSetsInfo> exercisesSetsInfoBox;
+  Box<WorkoutSession> workoutSessionBox;
 
   ExerciseService({
     required this.exerciseBox,
@@ -20,6 +22,7 @@ class ExerciseService {
     required this.bodyPartBox,
     required this.exerciseSetBox,
     required this.exercisesSetsInfoBox,
+    required this.workoutSessionBox
   });
 
   //exercises
@@ -182,27 +185,26 @@ class ExerciseService {
 
   }
 
-
   int? getRecentWeight(int exerciseId, int setIndex) {
     print('fetching');
-    // Retrieve all ExerciseSetsInfo objects from the database
-    final allExerciseSetInfos = exercisesSetsInfoBox.getAll();
+    final allWorkoutSessions = workoutSessionBox.getAll();
+
+    // Sort WorkoutSession objects in descending order
+    allWorkoutSessions.sort((a, b) => b.date.compareTo(a.date));
+    // Retrieve most recent WorkoutSession object
+    final mostRecentWorkoutSession = allWorkoutSessions.first;
+    final exerciseSetsInfo = mostRecentWorkoutSession.exercisesSetsInfo;
 
     // Iterate through each ExerciseSetsInfo object
-    for (final exerciseSetInfo in allExerciseSetInfos) {
+    for (final exerciseSetInfo in exerciseSetsInfo) {
       // Retrieve the associated Exercise object for the ExerciseSetsInfo
-      print('one');
       final exercise = exerciseSetInfo.exercise.target;
       if (exercise != null && exercise.id == exerciseId) {
-        // Initialize a counter
-        print('two');
         int counter = 0;
         // Iterate through each ExerciseSet object in the exerciseSets list
         for (final exerciseSet in exerciseSetInfo.exerciseSets) {
           // Check if the counter matches the setIndex
           if (counter == setIndex) {
-
-            print("three");
             // Return the ExerciseSet object at the given setIndex
             final recentWeight = exerciseSet.recentWeight;
             print("in exercise service recent weight is $recentWeight");
@@ -220,35 +222,25 @@ class ExerciseService {
 
   int? getRecentReps(int exerciseId, int setIndex) {
     print('fetching');
-    // Retrieve all ExerciseSetsInfo objects from the database
-    final allExerciseSetInfos = exercisesSetsInfoBox.getAll();
+    final allWorkoutSessions = workoutSessionBox.getAll();
+    allWorkoutSessions.sort((a, b) => b.date.compareTo(a.date));
+    final mostRecentWorkoutSession = allWorkoutSessions.first;
+    final exerciseSetsInfo = mostRecentWorkoutSession.exercisesSetsInfo;
 
-    // Iterate through each ExerciseSetsInfo object
-    for (final exerciseSetInfo in allExerciseSetInfos) {
-      // Retrieve the associated Exercise object for the ExerciseSetsInfo
-      print('one');
+    for (final exerciseSetInfo in exerciseSetsInfo) {
       final exercise = exerciseSetInfo.exercise.target;
       if (exercise != null && exercise.id == exerciseId) {
-        // Initialize a counter
-        print('two');
         int counter = 0;
-        // Iterate through each ExerciseSet object in the exerciseSets list
         for (final exerciseSet in exerciseSetInfo.exerciseSets) {
-          // Check if the counter matches the setIndex
           if (counter == setIndex) {
-
-            print("three");
-            // Return the ExerciseSet object at the given setIndex
             final recentReps = exerciseSet.recentReps;
             print("in exercise service recent reps is $recentReps");
             return recentReps;
           }
-          // Increment the counter
           counter++;
         }
       }
     }
     print('No match found for exerciseId: $exerciseId and setIndex: $setIndex');
   }
-
 }
