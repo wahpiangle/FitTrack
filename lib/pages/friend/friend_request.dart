@@ -2,7 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:group_project/constants/themes/app_colours.dart';
-import 'search_bar.dart';
+import 'package:group_project/pages/friend/search/search_helper.dart';
+import 'search/friend_search_bar.dart';
 
 class FriendRequestsTab extends StatefulWidget {
   const FriendRequestsTab({
@@ -105,7 +106,7 @@ class FriendRequestsTabState extends State<FriendRequestsTab> {
 
 
   Widget buildSearchedUsersListView() {
-    return  SearchHelper.buildSearchedUsersListView(searchedUsers);
+    return  SearchHelper.buildSearchResultsListView(searchedUsers);
   }
 }
 
@@ -134,7 +135,7 @@ class FriendRequestTile extends StatelessWidget {
               Expanded(
                 child: Row(
                   children: [
-                    SearchHelper.buildUserProfileImage(userData['photoUrl']),
+                    ImageDisplay.buildUserProfileImage(userData['photoUrl']),
                     const SizedBox(width: 16),
                     Expanded(
                       child: Column(

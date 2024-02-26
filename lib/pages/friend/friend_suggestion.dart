@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
-import 'search_bar.dart';
+import 'package:group_project/pages/friend/search/search_helper.dart';
+import 'search/friend_search_bar.dart';
 
 class FriendSuggestionsTab extends StatefulWidget {
   const FriendSuggestionsTab({
@@ -88,7 +89,7 @@ class FriendSuggestionsTabState extends State<FriendSuggestionsTab> {
   }
 
   Widget buildSearchedUsersListView() {
-    return SearchHelper.buildSearchedUsersListView(searchedUsers);
+    return SearchHelper.buildSearchResultsListView(searchedUsers);
   }
 
 }

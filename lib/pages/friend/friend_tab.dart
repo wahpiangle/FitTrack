@@ -19,7 +19,7 @@ class FriendPage extends StatefulWidget {
 class FriendPageState extends State<FriendPage> with SingleTickerProviderStateMixin {
   late int currentPage;
   late TabController tabController;
-  final List<Color> colors = [AppColours.secondaryDark, AppColours.secondaryDark, AppColours.secondaryDark];
+  final List<Color> colors = [AppColours.secondary, AppColours.secondary, AppColours.secondary];
   List<Contact> contacts = [];
 
   @override
