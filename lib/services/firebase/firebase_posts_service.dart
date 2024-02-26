@@ -77,10 +77,43 @@ class FirebasePostsService {
         'secondImageUrl': secondImageUrl,
         'workoutSessionId': post.workoutSession.targetId,
       });
+
       return true;
     } catch (e) {
       uploadImageProvider.setUploadError(true);
       return false;
+    }
+  }
+
+  static Future<List<Post>> getPostsByUserId(String userId) async {
+    try {
+      final QuerySnapshot<Map<String, dynamic>> querySnapshot =
+      await postsCollectionRef
+          .doc(userId)
+          .collection('userPosts')
+          .get();
+
+      List<Post> posts = [];
+
+      for (QueryDocumentSnapshot<Map<String, dynamic>> doc in querySnapshot.docs) {
+        DateTime? postDate;
+        if (doc.data()['date'] != null) {
+          Timestamp timestamp = doc.data()['date'];
+          postDate = timestamp.toDate();
+        }
+
+        Post post = Post(
+          firstImageUrl: doc.data()['firstImageUrl'] ?? '',
+          secondImageUrl: doc.data()['secondImageUrl'] ?? '',
+          caption: doc.data()['caption'] ?? '',
+          date: postDate,
+        );
+        posts.add(post);
+      }
+
+      return posts;
+    } catch (e) {
+      return []; // Return an empty list if an error occurs
     }
   }
 
@@ -133,6 +166,7 @@ class FirebasePostsService {
       return ''; // Return an empty string if an error occurs
     }
   }
+
 
 
 }

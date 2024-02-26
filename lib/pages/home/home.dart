@@ -88,7 +88,7 @@ class _HomeState extends State<Home> {
                     enlargeCenterPage: true,
                     enableInfiniteScroll: false,
                     enlargeFactor: 0.2,
-                    viewportFraction: 0.6,
+                    viewportFraction: 0.45,
                     onPageChanged: (index, reason) {
                       setState(() {
                         _current = index;

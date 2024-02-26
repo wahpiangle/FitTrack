@@ -8,7 +8,7 @@ class Post {
   final String caption;
   final String firstImageUrl;
   final String secondImageUrl;
-  final DateTime date;
+  final DateTime? date;
 
   final workoutSession = ToOne<WorkoutSession>();
 
