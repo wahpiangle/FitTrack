@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:group_project/constants/themes/app_colours.dart';
 import 'package:group_project/pages/auth/edit_password.dart';
-import 'package:group_project/pages/layout/profile_image_provider.dart';
 import 'package:group_project/pages/settings/components/logout_button.dart';
 import 'package:group_project/pages/settings/components/profile_menu_item.dart';
 import 'package:group_project/pages/settings/timer_details_settings.dart';
@@ -23,11 +23,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
   late String username = '';
   late String profileImage = '';
   User? currentUser = AuthService().getCurrentUser();
-  bool isSignInWithGoogle = AuthService().isSignInWithGoogle();
+  late bool isSignInWithGoogle;
 
   @override
   void initState() {
     super.initState();
+    isSignInWithGoogle =
+        currentUser?.providerData.first.providerId == 'google.com';
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _handleTimerActive(context); // Add this line to handle timer state
       _loadUserData();
@@ -63,12 +65,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   void _loadUserData() {
     setState(() {
-      if (!isSignInWithGoogle) {
-        username = currentUser?.displayName ?? '';
-        profileImage = currentUser?.photoURL ?? '';
-        Provider.of<ProfileImageProvider>(context, listen: false)
-            .updateProfileImage(profileImage);
-      }
+      username = currentUser?.displayName ?? '';
+      profileImage = currentUser?.photoURL ?? '';
+      // Provider.of<ProfileImageProvider>(context, listen: false)
+      //     .updateProfileImage(profileImage);
     });
   }
 
@@ -135,30 +135,30 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               ),
                             ),
                             const SizedBox(height: 12),
-                            Container(
-                              width: MediaQuery.of(context).size.width * 0.35,
-                              height: MediaQuery.of(context).size.height * 0.05,
-                              decoration: BoxDecoration(
-                                color: const Color(0xFFE1F0CF),
-                                borderRadius: BorderRadius.circular(100),
+                            TextButton(
+                              style: TextButton.styleFrom(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 30, vertical: 10),
+                                backgroundColor: AppColours.secondary,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
                               ),
-                              child: TextButton(
-                                onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => EditProfilePage(
-                                            username: username,
-                                            profileImage: profileImage)),
-                                  );
-                                },
-                                child: const Text(
-                                  'Edit Profile',
-                                  style: TextStyle(
-                                    color: Color(0xFF1A1A1A),
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => EditProfilePage(
+                                          username: username,
+                                          profileImage: profileImage)),
+                                );
+                              },
+                              child: const Text(
+                                'Edit Profile',
+                                style: TextStyle(
+                                  color: Color(0xFF1A1A1A),
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
                                 ),
                               ),
                             ),

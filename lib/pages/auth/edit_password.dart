@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:group_project/constants/themes/app_colours.dart';
 
 class EditPassword extends StatefulWidget {
   const EditPassword({super.key});
@@ -9,12 +10,10 @@ class EditPassword extends StatefulWidget {
 }
 
 class _EditPasswordState extends State<EditPassword> {
-
   final _formKey = GlobalKey<FormState>();
   var newPassword = "";
   final newPasswordController = TextEditingController();
   String errorMessage = "";
-
 
   @override
   void dispose() {
@@ -23,16 +22,13 @@ class _EditPasswordState extends State<EditPassword> {
   }
 
   final currentUser = FirebaseAuth.instance.currentUser;
-  changePassword() async{
-    try{
+  changePassword() async {
+    try {
       await currentUser!.updatePassword(newPassword);
-    }catch(error){
+    } catch (error) {
       rethrow;
     }
   }
-
-  @override
-
 
   @override
   Widget build(BuildContext context) {
@@ -57,26 +53,29 @@ class _EditPasswordState extends State<EditPassword> {
                     color: Colors.white,
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
-                  )
-              ),
+                  )),
               const SizedBox(height: 10.0),
               TextFormField(
+                obscureText: true,
                 style: const TextStyle(color: Colors.white),
                 decoration: const InputDecoration(
                   hintText: '******',
-                  hintStyle: TextStyle(color: Colors.white),
+                  hintStyle: TextStyle(color: Colors.grey),
                   enabledBorder: UnderlineInputBorder(
-                    borderSide:
-                    BorderSide(color: Colors.grey,),
+                    borderSide: BorderSide(
+                      color: Colors.grey,
+                    ),
                   ),
                   focusedBorder: UnderlineInputBorder(
-                    borderSide:
-                    BorderSide(color: Colors.white,),
+                    borderSide: BorderSide(
+                      color: Colors.white,
+                    ),
                   ),
                 ),
                 controller: newPasswordController,
-                validator: (val) =>
-                val!.length < 6 ? 'Please enter a password 6 characters long' : null,
+                validator: (val) => val!.length < 6
+                    ? 'Please enter a password that is at least 6 characters long'
+                    : null,
               ),
               const SizedBox(height: 30.0),
               Column(
@@ -89,19 +88,25 @@ class _EditPasswordState extends State<EditPassword> {
                             Navigator.pop(context);
                           },
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.grey, // Change button color
+                            backgroundColor: AppColours.primaryBright,
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(30.0), // Make it round
+                              borderRadius: BorderRadius.circular(30.0),
                             ),
                           ),
-                          child: const Text('Cancel',style: TextStyle(color:Colors.black,fontWeight: FontWeight.bold)),
+                          child: const Text(
+                            'Cancel',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                         ),
                       ),
-                      const SizedBox(width: 20), // Add space between the buttons
+                      const SizedBox(width: 20),
                       Expanded(
                         child: ElevatedButton(
                           onPressed: () {
-                            if (_formKey.currentState!.validate()){
+                            if (_formKey.currentState!.validate()) {
                               try {
                                 setState(() {
                                   newPassword = newPasswordController.text;
@@ -111,21 +116,23 @@ class _EditPasswordState extends State<EditPassword> {
                               } on FirebaseAuthException catch (error) {
                                 errorMessage = error.message!;
                               }
-                              setState(() {});
                             }
                           },
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFFE1F0CF), // Change button color
+                            backgroundColor:
+                                const Color(0xFFE1F0CF), // Change button color
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(30.0), // Make it round
+                              borderRadius:
+                                  BorderRadius.circular(30.0), // Make it round
                             ),
                           ),
-                          child: const Text('Save Changes', style: TextStyle(color:Colors.black,fontWeight: FontWeight.bold)),
+                          child: const Text('Save Changes',
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold)),
                         ),
                       ),
-
                     ],
-
                   ),
                 ],
               ),

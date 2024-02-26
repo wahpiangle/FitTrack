@@ -60,30 +60,6 @@ class AuthService {
     return _auth.currentUser;
   }
 
-  bool isSignInWithGoogle() {
-    return _auth.currentUser?.providerData.first.providerId == 'google.com';
-  }
-
-  Future<void> updateUserProfile({
-    required String displayName,
-    String? photoURL,
-  }) async {
-    try {
-      User? user = getCurrentUser();
-
-      if (user != null) {
-        // await user.updateProfile(displayName: displayName, photoURL: photoURL);
-        await user.updateDisplayName(displayName);
-        await user.updatePhotoURL(photoURL);
-        await user.reload();
-        user = getCurrentUser();
-      }
-    } catch (e) {
-      print(e.toString());
-      rethrow;
-    }
-  }
-
   //sign in with Google
   Future signInWithGoogle() async {
     try {
