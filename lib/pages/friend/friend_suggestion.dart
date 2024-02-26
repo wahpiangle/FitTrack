@@ -49,6 +49,20 @@ class FriendSuggestionsTabState extends State<FriendSuggestionsTab> {
     return Expanded(
       child: Stack(
         children: [
+          const Align(
+            alignment: Alignment.topLeft,
+            child: Padding(
+              padding: EdgeInsets.all(16.0),
+              child: Text(
+                'Suggestions',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ),
           Center(
             child: widget.contacts.isEmpty
                 ? const Text('No contact found', style: TextStyle(color: Colors.white))
@@ -60,6 +74,7 @@ class FriendSuggestionsTabState extends State<FriendSuggestionsTab> {
       ),
     );
   }
+
 
   Widget buildContactsListView() {
     return ListView.builder(

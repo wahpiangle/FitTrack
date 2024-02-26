@@ -92,11 +92,17 @@ class CurrentFriendsTabState extends State<CurrentFriendsTab> {
     return Expanded(
       child: Stack(
         children: [
-          const Center(
-            child: Text(
-              'Current Friends',
-              style: TextStyle(
-                color: Colors.white,
+          const Align(
+            alignment: Alignment.topLeft,
+            child: Padding(
+              padding: EdgeInsets.all(16.0),
+              child: Text(
+                'Current Friends',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
           ),
@@ -109,19 +115,23 @@ class CurrentFriendsTabState extends State<CurrentFriendsTab> {
     );
   }
 
+
   Widget buildCurrentFriendsListView() {
     return ListView.separated(
       itemCount: currentFriends.length,
       separatorBuilder: (context, index) =>
       const Divider(color: Colors.white, thickness: 0.5),
       itemBuilder: (context, index) {
-        return ListTile(
-          leading:
-          SearchHelper.buildUserProfileImage(currentFriends[index]['photoUrl']),
-          title: Text(
-            currentFriends[index]['name'] ?? '',
-            style: const TextStyle(
-              color: Colors.white,
+        return Padding(
+          padding: const EdgeInsets.only(top: 50),
+          child: ListTile(
+            leading:
+            SearchHelper.buildUserProfileImage(currentFriends[index]['photoUrl']),
+            title: Text(
+              currentFriends[index]['name'] ?? '',
+              style: const TextStyle(
+                color: Colors.white,
+              ),
             ),
           ),
         );

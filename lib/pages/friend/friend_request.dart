@@ -67,6 +67,7 @@ class FriendRequestsTabState extends State<FriendRequestsTab> {
           ),
           if (_searchController.text.isNotEmpty)
             buildSearchedUsersListView(),
+          if (_searchController.text.isEmpty)
           buildFriendRequestsList(),
         ],
       ),
@@ -123,13 +124,10 @@ class FriendRequestTile extends StatelessWidget {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const CircularProgressIndicator();
           }
-
           final userData = snapshot.data?.data() as Map<String, dynamic>?;
-
           if (userData == null) {
             return const SizedBox.shrink();
           }
-
           return Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
