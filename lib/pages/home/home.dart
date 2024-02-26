@@ -37,6 +37,8 @@ class _HomeState extends State<Home> {
     };
   }).toList();
 
+  bool isBannerVisible = true; // Add a boolean variable to manage banner visibility
+
   @override
   void initState() {
     super.initState();
@@ -197,54 +199,7 @@ class _HomeState extends State<Home> {
                     );
                   },
                 ),
-                // Adjusted SizedBox height to 20 pixels
-                const SizedBox(height: 20),
-                // Additional border with adjusted top margin
-                Container(
-                  margin: const EdgeInsets.only(top: 1),
-                  // Adjust the top margin here
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF333333),
-                    // Border fill color
-                    border: Border.all(color: const Color(0xFF333333)),
-                    // Border color
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  padding: const EdgeInsets.all(10),
-                  height: 140,
-                  // Padding added
-                  width: double.infinity,
-                  child: const Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Post up to 3 posts per day !',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontFamily: 'Dancing Script',
-                          // Specify the font family
-                          fontSize: 30,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        textAlign: TextAlign
-                            .center, // Align text within the center
-                      ),
-                      Text(
-                        'Start a new workout now \n 📸✨',
-                        style: TextStyle(
-                          color: Colors.grey,
-                          fontFamily: 'Dancing Script',
-                          // Specify the font family
-                          fontSize: 25,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        textAlign: TextAlign
-                            .center, // Align text within the center
-                      ),
-                    ],
-                  ),
-                ),
+
               ],
             ),
           ),
