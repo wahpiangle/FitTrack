@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:group_project/pages/layout/profile_image_provider.dart';
 import 'package:group_project/pages/layout/top_nav_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';

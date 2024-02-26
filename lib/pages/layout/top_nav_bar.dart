@@ -1,12 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:group_project/main.dart';
 import 'package:provider/provider.dart';
 import 'dart:io';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:group_project/pages/settings/settings_screen.dart';
+import 'package:group_project/pages/layout/profile_image_provider.dart';
 import 'package:group_project/pages/exercise/components/custom_exercise.dart';
-
-import '../../main.dart';
 
 class TopNavBar extends StatelessWidget implements PreferredSizeWidget {
   final User? user;
@@ -32,7 +30,7 @@ class TopNavBar extends StatelessWidget implements PreferredSizeWidget {
     if (showBackButton) {
       leadingWidget = IconButton(
         icon: Theme(
-          data: ThemeData(iconTheme: IconThemeData(color: Colors.white)),
+          data: ThemeData(iconTheme: const IconThemeData(color: Colors.white)),
           child: const Icon(Icons.arrow_back_ios),
         ),
         onPressed: () {
@@ -76,32 +74,20 @@ class TopNavBar extends StatelessWidget implements PreferredSizeWidget {
       centerTitle: true,
       leading: leadingWidget,
       actions: [
-        GestureDetector(
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => SettingsScreen()),
-            );
-          },
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(50),
-              child: SizedBox(
-                width: 40,
-                height: 40,
-                child: ClipOval(
-                  child: (profileImage.isEmpty ||
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(50),
+            child: SizedBox(
+              width: 40,
+              height: 40,
+              child: ClipOval(
+                child: CircleAvatar(
+                  radius: 50,
+                  backgroundImage: (profileImage.isEmpty ||
                           profileImage == 'assets/icons/defaultimage.jpg')
-                      ? const CircleAvatar(
-                          radius: 50,
-                          backgroundImage:
-                              AssetImage('assets/icons/defaultimage.jpg'),
-                        )
-                      : CircleAvatar(
-                          radius: 50,
-                          backgroundImage: FileImage(File(profileImage)),
-                        ),
+                      ? const AssetImage('assets/icons/defaultimage.jpg')
+                      : FileImage(File(profileImage)) as ImageProvider<Object>?,
                 ),
               ),
             ),
@@ -113,30 +99,4 @@ class TopNavBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
-}
-
-class ProfileImageProvider extends ChangeNotifier {
-  late String _profileImage;
-
-  ProfileImageProvider() {
-    _profileImage = ''; // Fetch the stored profile image on app start
-    _loadProfileImage();
-  }
-
-  String get profileImage => _profileImage;
-
-  Future<void> _loadProfileImage() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    _profileImage =
-        prefs.getString('profile_image') ?? ''; // Load the stored image path
-    notifyListeners();
-  }
-
-  Future<void> updateProfileImage(String newImage) async {
-    _profileImage = newImage;
-    notifyListeners();
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString(
-        'profile_image', newImage); // Save the updated image path
-  }
 }

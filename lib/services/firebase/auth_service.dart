@@ -60,6 +60,10 @@ class AuthService {
     return _auth.currentUser;
   }
 
+  bool isSignInWithGoogle() {
+    return _auth.currentUser?.providerData.first.providerId == 'google.com';
+  }
+
   Future<void> updateUserProfile({
     required String displayName,
     String? photoURL,
