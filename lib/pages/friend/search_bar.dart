@@ -12,8 +12,9 @@ class SearchHelper {
   }) async {
     final usernameSnapshot = await FirebaseFirestore.instance
         .collection('users')
-        .where('name', isGreaterThanOrEqualTo: controller.text.toLowerCase())
-        .where('name', isLessThan: '${controller.text.toLowerCase()}z')
+        .orderBy('name')
+        .startAt([controller.text])
+        .endAt(['${controller.text}z'])
         .get();
 
     final phoneSnapshot = await FirebaseFirestore.instance
@@ -31,6 +32,7 @@ class SearchHelper {
 
     onSearch(combinedResults);
   }
+
 
 
   static Widget buildSearchedUsersListView(List<Map<String, dynamic>> searchedUsers) {
