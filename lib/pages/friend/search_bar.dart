@@ -23,9 +23,15 @@ class SearchHelper {
         .get();
 
     final List<Map<String, dynamic>> combinedResults =
-    [...usernameSnapshot.docs, ...phoneSnapshot.docs].map((doc) => doc.data()).toList();
+    [...usernameSnapshot.docs, ...phoneSnapshot.docs].map((doc) {
+      Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+      data['UID'] = doc.id; // Add the UID (document ID) to the data
+      return data;
+    }).toList();
+
     onSearch(combinedResults);
   }
+
 
   static Widget buildSearchedUsersListView(List<Map<String, dynamic>> searchedUsers) {
     return Positioned(
