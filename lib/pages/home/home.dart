@@ -10,6 +10,7 @@ import 'package:group_project/services/firebase/firebase_posts_service.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+
 class Home extends StatefulWidget {
   const Home({
     super.key,
@@ -199,7 +200,6 @@ class _HomeState extends State<Home> {
                     );
                   },
                 ),
-
               ],
             ),
           ),
