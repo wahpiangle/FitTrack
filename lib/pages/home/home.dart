@@ -231,7 +231,7 @@ class _HomeState extends State<Home> {
                             .center, // Align text within the center
                       ),
                       Text(
-                        'Start a new workout now \n 📸✨🚀',
+                        'Start a new workout now \n 📸✨',
                         style: TextStyle(
                           color: Colors.grey,
                           fontFamily: 'Dancing Script',

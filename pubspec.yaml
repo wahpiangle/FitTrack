@@ -103,9 +103,10 @@ flutter:
     - assets/exercises/
     - assets/exercises/half/
   fonts:
-    - family: Digital
+    - family: Dancing Script
       fonts:
-        - asset: assets/fonts/DS-DIGI.TTF
+        - asset: assets/fonts/DS.ttf
+
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
