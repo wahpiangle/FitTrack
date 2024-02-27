@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:group_project/constants/upload_enums.dart';
@@ -40,8 +41,7 @@ class _HomeState extends State<Home> {
     };
   }).toList();
   late Stream<Post> friendsPostStream = Stream.empty(); // Initialize with an empty stream
-
-
+  FirebaseFriendsPost firebaseFriendsPost = FirebaseFriendsPost();
 
   @override
   void initState() {
@@ -214,36 +214,41 @@ class _HomeState extends State<Home> {
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
                       final post = snapshot.data!;
-                      return Container(
-                        margin: const EdgeInsets.all(5),
-                        padding: const EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          border: Border.all(color: Colors.grey),
-                        ),
-                        child: Column(
-                          children: [
-                            Text(post.caption),
-                            Image.network(
-                              post.firstImageUrl,
-                              width: 100,
-                              height: 100,
-                              fit: BoxFit.cover,
+                      return Column(
+                        children: [
+                          Container(
+                            margin: const EdgeInsets.all(5),
+                            padding: const EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              border: Border.all(color: Colors.grey),
                             ),
-                            Image.network(
-                              post.secondImageUrl,
-                              width: 100,
-                              height: 100,
-                              fit: BoxFit.cover,
+                            child: Column(
+                              children: [
+                                Text(post.caption),
+                                Image.network(
+                                  post.firstImageUrl,
+                                  width: 100,
+                                  height: 100,
+                                  fit: BoxFit.cover,
+                                ),
+                                Image.network(
+                                  post.secondImageUrl,
+                                  width: 100,
+                                  height: 100,
+                                  fit: BoxFit.cover,
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       );
                     } else {
                       return const SizedBox();
                     }
                   },
                 ),
+
 
               ],
             ),
