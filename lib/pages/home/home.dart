@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:group_project/constants/upload_enums.dart';
 import 'package:group_project/main.dart';
+import 'package:group_project/models/post.dart';
 import 'package:group_project/pages/complete_workout/capture_image/upload_image_provider.dart';
 import 'package:group_project/pages/home/components/display_image_stack.dart';
 import 'package:group_project/constants/themes/app_colours.dart';
 import 'package:group_project/pages/home/components/display_post_image_screen.dart';
+import 'package:group_project/services/firebase/firebase_friends_post.dart';
 import 'package:group_project/services/firebase/firebase_posts_service.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -37,8 +39,9 @@ class _HomeState extends State<Home> {
       'workoutSessionId': item.workoutSession.targetId,
     };
   }).toList();
+  late Stream<Post> friendsPostStream = Stream.empty(); // Initialize with an empty stream
 
-  bool isBannerVisible = true; // Add a boolean variable to manage banner visibility
+
 
   @override
   void initState() {
@@ -52,6 +55,12 @@ class _HomeState extends State<Home> {
         context.read<UploadImageProvider>().setUploadError(true);
         context.read<UploadImageProvider>().setIsUploading(false);
       }
+    });
+
+    FirebaseFriendsPost().initFriendsPostStream().then((stream) {
+      setState(() {
+        friendsPostStream = stream;
+      });
     });
   }
 
@@ -200,6 +209,42 @@ class _HomeState extends State<Home> {
                     );
                   },
                 ),
+                StreamBuilder<Post>(
+                  stream: friendsPostStream,
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      final post = snapshot.data!;
+                      return Container(
+                        margin: const EdgeInsets.all(5),
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(color: Colors.grey),
+                        ),
+                        child: Column(
+                          children: [
+                            Text(post.caption),
+                            Image.network(
+                              post.firstImageUrl,
+                              width: 100,
+                              height: 100,
+                              fit: BoxFit.cover,
+                            ),
+                            Image.network(
+                              post.secondImageUrl,
+                              width: 100,
+                              height: 100,
+                              fit: BoxFit.cover,
+                            ),
+                          ],
+                        ),
+                      );
+                    } else {
+                      return const SizedBox();
+                    }
+                  },
+                ),
+
               ],
             ),
           ),

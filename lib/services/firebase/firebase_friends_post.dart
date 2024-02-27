@@ -22,12 +22,11 @@ class PostStream {
 class FirebaseFriendsPost {
   late Stream<Post> friendsPostStream; // Change the type to Stream<Post>
 
-  Future<void> initFriendsPostStream() async {
+  Future<Stream<Post>> initFriendsPostStream() async {
     final currentUserUid = FirebaseAuth.instance.currentUser?.uid;
 
     if (currentUserUid != null) {
       try {
-        final friendIds = await getFriendsIds(currentUserUid);
 
         // Use friendIds to fetch friend posts using FirebasePostsService
         List<Post> posts = await FirebasePostsService.getPostsByUserId(currentUserUid);
@@ -45,20 +44,24 @@ class FirebaseFriendsPost {
         friendsPostStream = postStream.stream;
 
         print('Friend posts stream initialized successfully');
+
+        // Return the stream
+        return friendsPostStream;
       } catch (e) {
         print('Error initializing friendsPostStream: $e');
         // Handle the error as per your application's requirements
         // For now, let's assign an empty stream to avoid null errors
         friendsPostStream = Stream.empty();
+        return friendsPostStream;
       }
     } else {
       print('Current user is null');
       // Handle the case where the current user is null
       // For now, let's assign an empty stream to avoid null errors
       friendsPostStream = Stream.empty();
+      return friendsPostStream;
     }
   }
-
 
 
   Future<List<String>> getFriendsIds(String currentUserUid) async {
