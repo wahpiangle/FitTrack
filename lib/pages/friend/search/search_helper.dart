@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:group_project/services/firebase/firebase_friends_service.dart';
 import 'package:group_project/pages/friend/search/search_bar_result.dart';
-
+import 'package:easy_debounce/easy_debounce.dart';
 
 class SearchHelper {
   static void performSearch({
@@ -9,8 +9,14 @@ class SearchHelper {
     required Function(List<Map<String, dynamic>>) onSearch,
     required Function() onCancel,
   }) async {
-    final results = await FirebaseFriendsService.searchUsers(controller.text);
-    onSearch(results);
+    EasyDebounce.debounce(
+      'searchDebouncer',
+      const Duration(milliseconds: 500),//to reduce firebase search queries
+          () async {
+            final results = await FirebaseFriendsService.searchUsers(controller.text);
+            onSearch(results);
+      },
+    );
   }
 
   static void cancelSearch({
