@@ -7,10 +7,12 @@ import 'package:group_project/pages/complete_workout/capture_image/upload_image_
 import 'package:group_project/pages/home/components/display_image_stack.dart';
 import 'package:group_project/constants/themes/app_colours.dart';
 import 'package:group_project/pages/home/components/display_post_image_screen.dart';
+import 'package:group_project/pages/home/components/friends_post.dart';
 import 'package:group_project/services/firebase/firebase_friends_post.dart';
 import 'package:group_project/services/firebase/firebase_posts_service.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -23,7 +25,8 @@ class _HomeState extends State<Home> {
   late final bool? showCursor;
   String caption = ''; // Define caption variable
   int _current = 0;
-  late Stream<Post> friendsPostStream = Stream.empty(); // Initialize with an empty stream
+  late Stream<Post> friendsPostStream = Stream
+      .empty(); // Initialize with an empty stream
   FirebaseFriendsPost firebaseFriendsPost = FirebaseFriendsPost();
 
   late final List<Map<String, dynamic>> imageList; // Define imageList variable
@@ -71,7 +74,8 @@ class _HomeState extends State<Home> {
 
   void fetchCaption(int workoutSessionId) async {
     // Fetch the caption using the provided workout session ID
-    String fetchedCaption = await FirebasePostsService.getCaption(workoutSessionId);
+    String fetchedCaption = await FirebasePostsService.getCaption(
+        workoutSessionId);
     setState(() {
       caption = fetchedCaption;
     });
@@ -79,7 +83,8 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    final UploadImageProvider uploadImageProvider = context.watch<UploadImageProvider>();
+    final UploadImageProvider uploadImageProvider =
+    context.watch<UploadImageProvider>();
     bool hasImages = imageList.isNotEmpty; // Check if there are images
 
     return Scaffold(
@@ -112,7 +117,8 @@ class _HomeState extends State<Home> {
                     final firstImage = imageList[index]['firstImageUrl']!;
                     final secondImage = imageList[index]['secondImageUrl']!;
                     final postId = imageList[index]['postId']!;
-                    final workoutSessionId = imageList[index]['workoutSessionId']!;
+                    final workoutSessionId =
+                    imageList[index]['workoutSessionId']!;
                     return Container(
                       margin: const EdgeInsets.symmetric(horizontal: 5),
                       child: Column(
@@ -142,13 +148,15 @@ class _HomeState extends State<Home> {
                                 horizontal: 1, vertical: 1),
                             decoration: BoxDecoration(
                               color: Colors.transparent,
-                              border: Border.all(color: Colors.transparent),
+                              border:
+                              Border.all(color: Colors.transparent),
                               borderRadius: BorderRadius.circular(8),
                             ),
                             child: TextField(
                               showCursor: false,
                               textAlign: TextAlign.center,
-                              style: const TextStyle(color: Colors.white),
+                              style:
+                              const TextStyle(color: Colors.white),
                               enableInteractiveSelection: false,
                               decoration: const InputDecoration(
                                 alignLabelWithHint: true,
@@ -158,9 +166,11 @@ class _HomeState extends State<Home> {
                                 contentPadding: EdgeInsets.only(left: 16),
                               ),
                               onChanged: (caption) {
-                                FirebasePostsService.saveCaption(workoutSessionId, caption);
+                                FirebasePostsService.saveCaption(
+                                    workoutSessionId, caption);
                               },
-                              controller: TextEditingController(text: caption),
+                              controller:
+                              TextEditingController(text: caption),
                             ),
                           ),
                           // Add Row widget for icons
@@ -174,7 +184,8 @@ class _HomeState extends State<Home> {
                                   shape: BoxShape.circle,
                                   border: Border.all(color: Colors.grey),
                                 ),
-                                child: const Icon(Icons.favorite, color: Colors.grey),
+                                child: const Icon(Icons.favorite,
+                                    color: Colors.grey),
                               ),
                               Container(
                                 margin: const EdgeInsets.all(5),
@@ -188,15 +199,20 @@ class _HomeState extends State<Home> {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (context) => DisplayPostImageScreen(
-                                          imagePath: imageList[index]['firstImageUrl'],
-                                          imagePath2: imageList[index]['secondImageUrl'],
-                                          workoutSessionId: imageList[index]['workoutSessionId'],
-                                        ),
+                                        builder: (context) =>
+                                            DisplayPostImageScreen(
+                                              imagePath:
+                                              imageList[index]['firstImageUrl'],
+                                              imagePath2: imageList[index]
+                                              ['secondImageUrl'],
+                                              workoutSessionId: imageList[index]
+                                              ['workoutSessionId'],
+                                            ),
                                       ),
                                     );
                                   },
-                                  child: const Icon(Icons.comment, color: Colors.grey),
+                                  child: const Icon(Icons.comment,
+                                      color: Colors.grey),
                                 ),
                               ),
                             ],
@@ -207,73 +223,7 @@ class _HomeState extends State<Home> {
                   },
                 ),
                 // Carousel for Friends' Posts
-                CarouselSlider.builder(
-                  itemCount: 1, // Display friends' posts
-                  options: CarouselOptions(
-                    aspectRatio: 0.9, // Maintain the same aspect ratio as user's posts
-                    enlargeCenterPage: true,
-                    enableInfiniteScroll: false,
-                    enlargeFactor: 0.2,
-                    viewportFraction: 0.45,
-                  ),
-                  itemBuilder: (context, index, realIndex) {
-                    return StreamBuilder<Post>(
-                      stream: friendsPostStream,
-                      builder: (context, snapshot) {
-                        if (snapshot.hasData) {
-                          final post = snapshot.data!;
-                          return Container(
-                            margin: const EdgeInsets.all(5),
-                            padding: const EdgeInsets.all(8),
-                            width: double.infinity,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  post.caption,
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                const SizedBox(height: 10),
-                                Stack(
-                                  children: [
-                                    ClipRRect(
-                                      borderRadius: BorderRadius.circular(8.0),
-                                      child: Image.network(
-                                        post.firstImageUrl,
-                                        fit: BoxFit.cover,
-                                        width: double.infinity,
-                                        height: MediaQuery.of(context).size.width * 0.9 * 0.9 * 1,
-                                      ),
-                                    ),
-                                    Positioned(
-                                      top: 20,
-                                      left: 20,
-                                      child: ClipRRect(
-                                        borderRadius: BorderRadius.circular(8.0),
-                                        child: Image.network(
-                                          post.secondImageUrl,
-                                          fit: BoxFit.cover,
-                                          width: MediaQuery.of(context).size.width * 0.9 * 0.5 * 0.45,
-                                          height: MediaQuery.of(context).size.width * 0.9 * 0.5 * 0.45,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          );
-                        } else {
-                          return const SizedBox();
-                        }
-                      },
-                    );
-                  },
-                ),
+                FriendsPostCarousel(), // Use the new component
               ],
             ),
           ),
