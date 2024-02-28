@@ -49,13 +49,5 @@ class SearchHelper {
 }
 
 
-class ImageDisplay {
-  static Widget buildUserProfileImage(String? photoUrl) {
-    return CircleAvatar(
-      radius: 22,
-      backgroundImage: photoUrl != null
-          ? NetworkImage(photoUrl)
-          : const AssetImage('assets/icons/defaultimage.jpg') as ImageProvider,
-    );
-  }
-}
+
+

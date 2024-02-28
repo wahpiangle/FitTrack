@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:group_project/constants/themes/app_colours.dart';
 import 'package:group_project/pages/friend/search/search_helper.dart';
+import 'package:group_project/pages/friend/search/user_image_display.dart';
 import 'search/friend_search_bar.dart';
 
 class FriendRequestsTab extends StatefulWidget {

@@ -1,8 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:group_project/constants/themes/app_colours.dart';
+import 'package:group_project/pages/friend/search/user_image_display.dart';
 import 'package:group_project/services/firebase/firebase_friends_service.dart';
-import 'search_helper.dart';
 
 class SearchBarResult extends StatefulWidget {
   final Map<String, dynamic> user;

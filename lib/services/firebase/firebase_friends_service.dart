@@ -3,27 +3,37 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 class FirebaseFriendsService {
   static Future<List<Map<String, dynamic>>> searchUsers(String searchText) async {
+    searchText = searchText.toLowerCase();
+
     final usernameSnapshot = await FirebaseFirestore.instance
         .collection('users')
         .orderBy('name')
-        .startAt([searchText])
-        .endAt(['${searchText}z'])
         .get();
 
     final phoneSnapshot = await FirebaseFirestore.instance
         .collection('users')
         .where('phoneNumber', isGreaterThanOrEqualTo: searchText)
-        .where('phoneNumber', isLessThan: '${searchText}z')
         .get();
 
-    return [
-      ...usernameSnapshot.docs,
-      ...phoneSnapshot.docs,
-    ].map((doc) {
+    final List<Map<String, dynamic>> results = [];
+
+    for (var doc in usernameSnapshot.docs) {
       Map<String, dynamic> data = doc.data();
-      data['UID'] = doc.id;
-      return data;
-    }).toList();
+      final lowercaseName = data['name'].toLowerCase();
+      if (lowercaseName.contains(searchText)) {
+        data['UID'] = doc.id;
+        results.add(data);
+      }
+    }
+
+    return [
+      ...results,
+      ...phoneSnapshot.docs.map((doc) {
+        Map<String, dynamic> data = doc.data();
+        data['UID'] = doc.id;
+        return data;
+      }).toList(),
+    ];
   }
 
   static void addFriend(String friendUid) async {
@@ -37,7 +47,6 @@ class FirebaseFriendsService {
         'requestReceived': FieldValue.arrayUnion([currentUserUid])
       }, SetOptions(merge: true));
 
-      // Update the current user's document to include the sent request
       final currentUserRef = FirebaseFirestore.instance.collection('users').doc(currentUserUid);
 
       await currentUserRef.set({
