@@ -6,7 +6,7 @@ import 'package:group_project/pages/friend/current_friend.dart';
 import 'package:group_project/pages/friend/friend_request.dart';
 import 'package:group_project/pages/friend/friend_suggestion.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:flutter_contacts/flutter_contacts.dart';
+
 
 class FriendPage extends StatefulWidget {
   const FriendPage({super.key, required this.title});
@@ -20,7 +20,6 @@ class FriendPageState extends State<FriendPage> with SingleTickerProviderStateMi
   late int currentPage;
   late TabController tabController;
   final List<Color> colors = [AppColours.secondary, AppColours.secondary, AppColours.secondary];
-  List<Contact> contacts = [];
 
   @override
   void initState() {
@@ -33,58 +32,10 @@ class FriendPageState extends State<FriendPage> with SingleTickerProviderStateMi
       }
     });
     super.initState();
-    _checkAndRequestContactPermission();
+
   }
 
-  Future<void> _checkAndRequestContactPermission() async {
-    var status = await Permission.contacts.status;
 
-    if (!status.isGranted) {
-      await _requestContactsPermission();
-    }
-  }
-
-  Future<void> _requestContactsPermission() async {
-    var result = await Permission.contacts.request();
-    if (result.isGranted) {
-      await _getContacts();
-    } else if (result.isPermanentlyDenied) {
-      showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: const Text('Permission Required'),
-            content: const Text('Contacts permission is required to use this feature. Please grant the permission in settings.'),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: const Text('OK'),
-              ),
-            ],
-          );
-        },
-      );
-    }
-  }
-
-  Future<void> _getContacts() async {
-    List<Contact> fetchedContacts = await FlutterContacts.getContacts(withProperties: true);
-
-    if (mounted) {
-      setState(() {
-        contacts = fetchedContacts;
-      });
-    }
-  }
-
-  Future<void> _checkContactsPermissionAndFetch() async {
-    var status = await Permission.contacts.status;
-    if (status.isGranted) {
-      await _getContacts();
-    }
-  }
 
   void changePage(int newPage) {
     setState(() {
@@ -100,7 +51,6 @@ class FriendPageState extends State<FriendPage> with SingleTickerProviderStateMi
 
   @override
   Widget build(BuildContext context) {
-    _checkContactsPermissionAndFetch();
 
     final Color unselectedColor = colors[currentPage].computeLuminance() < 0.2 ? Colors.black : Colors.white;
     return SafeArea(
@@ -167,7 +117,7 @@ class FriendPageState extends State<FriendPage> with SingleTickerProviderStateMi
             dragStartBehavior: DragStartBehavior.down,
             physics: const BouncingScrollPhysics(),
             children: [
-              FriendSuggestionsTab(contacts: contacts),
+              FriendSuggestionsTab(),
               const CurrentFriendsTab(),
               const FriendRequestsTab(),
             ],

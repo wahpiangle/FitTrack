@@ -32,7 +32,7 @@ class FriendSearchBar extends StatelessWidget {
               );
             },
             decoration: const InputDecoration(
-              hintText: 'Search by username or phone number',
+              hintText: 'Search by username',
               hintStyle: TextStyle(color: Colors.white),
               fillColor: AppColours.primaryBright,
               filled: true,

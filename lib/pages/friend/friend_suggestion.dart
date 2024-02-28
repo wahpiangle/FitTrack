@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:group_project/pages/friend/search/search_helper.dart';
 import 'search/friend_search_bar.dart';
 
 class FriendSuggestionsTab extends StatefulWidget {
   const FriendSuggestionsTab({
     super.key,
-    required this.contacts,
   });
 
-  final List<Contact> contacts;
 
   @override
   FriendSuggestionsTabState createState() => FriendSuggestionsTabState();
@@ -65,26 +62,12 @@ class FriendSuggestionsTabState extends State<FriendSuggestionsTab> {
             ),
           ),
           Center(
-            child: widget.contacts.isEmpty
-                ? const Text('No contact found', style: TextStyle(color: Colors.white))
-                : buildContactsListView(),
+             child: Text('No contact found', style: TextStyle(color: Colors.white))
           ),
           if (_searchController.text.isNotEmpty)
             buildSearchedUsersListView(),
         ],
       ),
-    );
-  }
-
-
-  Widget buildContactsListView() {
-    return ListView.builder(
-      itemCount: widget.contacts.length,
-      itemBuilder: (context, index) {
-        return ListTile(
-          title: Text(widget.contacts[index].displayName, style: const TextStyle(color: Colors.white)),
-        );
-      },
     );
   }
 

@@ -69,7 +69,5 @@
     <array>
         <string>remote-notification</string>
     </array>
-  <key>NSContactsUsageDescription</key>
-  <string>This app requires access to your contacts to manage your friends list.</string>
 </dict>
 </plist>

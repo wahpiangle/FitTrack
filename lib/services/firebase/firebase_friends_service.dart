@@ -10,10 +10,6 @@ class FirebaseFriendsService {
         .orderBy('name')
         .get();
 
-    final phoneSnapshot = await FirebaseFirestore.instance
-        .collection('users')
-        .where('phoneNumber', isGreaterThanOrEqualTo: searchText)
-        .get();
 
     final List<Map<String, dynamic>> results = [];
 
@@ -27,12 +23,7 @@ class FirebaseFriendsService {
     }
 
     return [
-      ...results,
-      ...phoneSnapshot.docs.map((doc) {
-        Map<String, dynamic> data = doc.data();
-        data['UID'] = doc.id;
-        return data;
-      }).toList(),
+      ...results.toList(),
     ];
   }
 
