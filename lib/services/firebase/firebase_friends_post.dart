@@ -27,17 +27,21 @@ class FirebaseFriendsPost {
 
     if (currentUserUid != null) {
       try {
+        List<String> friendIds = await getFriendsIds(currentUserUid);
+        List<Post> friendPosts = [];
 
-        // Use friendIds to fetch friend posts using FirebasePostsService
-        List<Post> posts = await FirebasePostsService.getPostsByUserId(currentUserUid);
+        for (String friendId in friendIds) {
+          List<Post> posts = await FirebasePostsService.getPostsByUserId(friendId);
+          friendPosts.addAll(posts);
+        }
 
         // Create a PostStream instance
         PostStream postStream = PostStream();
 
         // Add each post to the stream
-        for (Post post in posts) {
+        for (Post post in friendPosts) {
           postStream.addPost(post);
-          print('Post added to stream: $post'); // Print the post added to the stream
+          print('Post added to stream: ${post.id}');
         }
 
         // Assign the stream to friendsPostStream
@@ -49,15 +53,11 @@ class FirebaseFriendsPost {
         return friendsPostStream;
       } catch (e) {
         print('Error initializing friendsPostStream: $e');
-        // Handle the error as per your application's requirements
-        // For now, let's assign an empty stream to avoid null errors
         friendsPostStream = Stream.empty();
         return friendsPostStream;
       }
     } else {
       print('Current user is null');
-      // Handle the case where the current user is null
-      // For now, let's assign an empty stream to avoid null errors
       friendsPostStream = Stream.empty();
       return friendsPostStream;
     }
@@ -91,6 +91,4 @@ class FirebaseFriendsPost {
 
     return friendIds;
   }
-
-
 }

@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:group_project/constants/upload_enums.dart';
@@ -13,11 +12,8 @@ import 'package:group_project/services/firebase/firebase_posts_service.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-
 class Home extends StatefulWidget {
-  const Home({
-    super.key,
-  });
+  const Home({Key? key}) : super(key: key);
 
   @override
   State<Home> createState() => _HomeState();
@@ -27,25 +23,31 @@ class _HomeState extends State<Home> {
   late final bool? showCursor;
   String caption = ''; // Define caption variable
   int _current = 0;
-  final List<Map<String, dynamic>> imageList = objectBox.postService
-      .getActivePosts()
-      .asMap()
-      .entries
-      .map((entry) {
-    final item = entry.value;
-    return {
-      'firstImageUrl': item.firstImageUrl,
-      'secondImageUrl': item.secondImageUrl,
-      'postId': item.id,
-      'workoutSessionId': item.workoutSession.targetId,
-    };
-  }).toList();
   late Stream<Post> friendsPostStream = Stream.empty(); // Initialize with an empty stream
   FirebaseFriendsPost firebaseFriendsPost = FirebaseFriendsPost();
+
+  late final List<Map<String, dynamic>> imageList; // Define imageList variable
 
   @override
   void initState() {
     super.initState();
+    // Initialize imageList with the appropriate data
+    imageList = objectBox.postService
+        .getActivePosts()
+        .asMap()
+        .entries
+        .map((entry) {
+      final item = entry.value;
+      return {
+        'firstImageUrl': item.firstImageUrl,
+        'secondImageUrl': item.secondImageUrl,
+        'postId': item.id,
+        'workoutSessionId': item.workoutSession.targetId,
+      };
+    }).toList();
+
+    fetchFriendsPosts(); // Fetch friends' posts
+
     // Fetch the caption for the initial workout session
     fetchCaption(imageList[_current]['workoutSessionId']);
     context.read<UploadImageProvider>().getSharedPreferences();
@@ -56,7 +58,10 @@ class _HomeState extends State<Home> {
         context.read<UploadImageProvider>().setIsUploading(false);
       }
     });
+  }
 
+
+  void fetchFriendsPosts() async {
     FirebaseFriendsPost().initFriendsPostStream().then((stream) {
       setState(() {
         friendsPostStream = stream;
@@ -66,8 +71,7 @@ class _HomeState extends State<Home> {
 
   void fetchCaption(int workoutSessionId) async {
     // Fetch the caption using the provided workout session ID
-    String fetchedCaption = await FirebasePostsService.getCaption(
-        workoutSessionId);
+    String fetchedCaption = await FirebasePostsService.getCaption(workoutSessionId);
     setState(() {
       caption = fetchedCaption;
     });
@@ -75,8 +79,7 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    final UploadImageProvider uploadImageProvider = context.watch<
-        UploadImageProvider>();
+    final UploadImageProvider uploadImageProvider = context.watch<UploadImageProvider>();
     bool hasImages = imageList.isNotEmpty; // Check if there are images
 
     return Scaffold(
@@ -89,7 +92,7 @@ class _HomeState extends State<Home> {
               children: [
                 const SizedBox(height: 5),
                 if (hasImages) const SizedBox(height: 1),
-                // Reduce the vertical space here
+                // Carousel for User's Posts
                 CarouselSlider.builder(
                   itemCount: imageList.length,
                   options: CarouselOptions(
@@ -101,7 +104,6 @@ class _HomeState extends State<Home> {
                     onPageChanged: (index, reason) {
                       setState(() {
                         _current = index;
-                        // Fetch caption for the current workout session ID
                         fetchCaption(imageList[index]['workoutSessionId']);
                       });
                     },
@@ -140,8 +142,7 @@ class _HomeState extends State<Home> {
                                 horizontal: 1, vertical: 1),
                             decoration: BoxDecoration(
                               color: Colors.transparent,
-                              border:
-                              Border.all(color: Colors.transparent),
+                              border: Border.all(color: Colors.transparent),
                               borderRadius: BorderRadius.circular(8),
                             ),
                             child: TextField(
@@ -157,11 +158,9 @@ class _HomeState extends State<Home> {
                                 contentPadding: EdgeInsets.only(left: 16),
                               ),
                               onChanged: (caption) {
-                                FirebasePostsService.saveCaption(
-                                    workoutSessionId, caption);
+                                FirebasePostsService.saveCaption(workoutSessionId, caption);
                               },
-                              controller:
-                              TextEditingController(text: caption),
+                              controller: TextEditingController(text: caption),
                             ),
                           ),
                           // Add Row widget for icons
@@ -177,7 +176,6 @@ class _HomeState extends State<Home> {
                                 ),
                                 child: const Icon(Icons.favorite, color: Colors.grey),
                               ),
-                              // Inside your itemBuilder method where you build the comment icon
                               Container(
                                 margin: const EdgeInsets.all(5),
                                 padding: const EdgeInsets.all(8),
@@ -201,7 +199,6 @@ class _HomeState extends State<Home> {
                                   child: const Icon(Icons.comment, color: Colors.grey),
                                 ),
                               ),
-
                             ],
                           ),
                         ],
@@ -209,47 +206,74 @@ class _HomeState extends State<Home> {
                     );
                   },
                 ),
-                StreamBuilder<Post>(
-                  stream: friendsPostStream,
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData) {
-                      final post = snapshot.data!;
-                      return Column(
-                        children: [
-                          Container(
+                // Carousel for Friends' Posts
+                CarouselSlider.builder(
+                  itemCount: 1, // Display friends' posts
+                  options: CarouselOptions(
+                    aspectRatio: 0.9, // Maintain the same aspect ratio as user's posts
+                    enlargeCenterPage: true,
+                    enableInfiniteScroll: false,
+                    enlargeFactor: 0.2,
+                    viewportFraction: 0.45,
+                  ),
+                  itemBuilder: (context, index, realIndex) {
+                    return StreamBuilder<Post>(
+                      stream: friendsPostStream,
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          final post = snapshot.data!;
+                          return Container(
                             margin: const EdgeInsets.all(5),
                             padding: const EdgeInsets.all(8),
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              border: Border.all(color: Colors.grey),
-                            ),
+                            width: double.infinity,
                             child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(post.caption),
-                                Image.network(
-                                  post.firstImageUrl,
-                                  width: 100,
-                                  height: 100,
-                                  fit: BoxFit.cover,
+                                Text(
+                                  post.caption,
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
-                                Image.network(
-                                  post.secondImageUrl,
-                                  width: 100,
-                                  height: 100,
-                                  fit: BoxFit.cover,
+                                const SizedBox(height: 10),
+                                Stack(
+                                  children: [
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(8.0),
+                                      child: Image.network(
+                                        post.firstImageUrl,
+                                        fit: BoxFit.cover,
+                                        width: double.infinity,
+                                        height: MediaQuery.of(context).size.width * 0.9 * 0.9 * 1,
+                                      ),
+                                    ),
+                                    Positioned(
+                                      top: 20,
+                                      left: 20,
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(8.0),
+                                        child: Image.network(
+                                          post.secondImageUrl,
+                                          fit: BoxFit.cover,
+                                          width: MediaQuery.of(context).size.width * 0.9 * 0.5 * 0.45,
+                                          height: MediaQuery.of(context).size.width * 0.9 * 0.5 * 0.45,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ],
                             ),
-                          ),
-                        ],
-                      );
-                    } else {
-                      return const SizedBox();
-                    }
+                          );
+                        } else {
+                          return const SizedBox();
+                        }
+                      },
+                    );
                   },
                 ),
-
-
               ],
             ),
           ),
