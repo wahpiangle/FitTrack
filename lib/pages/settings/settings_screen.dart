@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:group_project/constants/themes/app_colours.dart';
@@ -5,10 +8,10 @@ import 'package:group_project/pages/auth/edit_password.dart';
 import 'package:group_project/pages/settings/components/logout_button.dart';
 import 'package:group_project/pages/settings/components/profile_menu_item.dart';
 import 'package:group_project/pages/settings/timer_details_settings.dart';
+import 'package:group_project/services/firebase/firebase_user_service.dart';
 import 'package:provider/provider.dart';
 import 'package:group_project/services/firebase/auth_service.dart';
-import 'package:group_project/pages/auth/offline_edit.dart';
-import 'dart:io';
+import 'package:group_project/pages/settings/edit_profile_page.dart';
 import 'package:group_project/pages/workout/State/timer_sheet_manager.dart';
 import 'package:group_project/pages/workout/components/timer/providers/timer_provider.dart';
 
@@ -21,9 +24,10 @@ class SettingsScreen extends StatefulWidget {
 
 class _SettingsScreenState extends State<SettingsScreen> {
   late String username = '';
-  late String profileImage = '';
+  String profileImage = '';
   User? currentUser = AuthService().getCurrentUser();
   late bool isSignInWithGoogle;
+  bool isFileImage = false;
 
   @override
   void initState() {
@@ -63,12 +67,24 @@ class _SettingsScreenState extends State<SettingsScreen> {
     timerProvider.addListener(listener);
   }
 
-  void _loadUserData() {
+  Future<void> _loadUserData() async {
+    FirebaseUserService.getUsername().then((value) {
+      setState(() {
+        username = value;
+      });
+    });
+    FirebaseUserService.getProfilePicture().then((value) {
+      setState(() {
+        profileImage = value;
+      });
+    });
+  }
+
+  void setUserInfo(String name, String image) {
     setState(() {
-      username = currentUser?.displayName ?? '';
-      profileImage = currentUser?.photoURL ?? '';
-      // Provider.of<ProfileImageProvider>(context, listen: false)
-      //     .updateProfileImage(profileImage);
+      isFileImage = true;
+      username = name;
+      profileImage = image;
     });
   }
 
@@ -105,22 +121,41 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     ),
                     Row(
                       children: [
-                        SizedBox(
-                          width: 100,
-                          height: 100,
-                          child: ClipOval(
-                            child: CircleAvatar(
-                              radius: 50,
-                              backgroundImage: (profileImage.isEmpty ||
-                                      profileImage ==
-                                          'assets/icons/defaultimage.jpg')
-                                  ? const AssetImage(
-                                      'assets/icons/defaultimage.jpg')
-                                  : FileImage(File(profileImage))
-                                      as ImageProvider<Object>?,
-                            ),
-                          ),
-                        ),
+                        profileImage == ""
+                            ? const SizedBox(
+                                width: 100,
+                                height: 100,
+                                child: CircularProgressIndicator(
+                                  backgroundColor: AppColours.secondary,
+                                ))
+                            : isFileImage
+                                ? CircleAvatar(
+                                    radius: 50,
+                                    backgroundImage:
+                                        FileImage(File(profileImage)),
+                                  )
+                                : SizedBox(
+                                    width: 100,
+                                    height: 100,
+                                    child: CachedNetworkImage(
+                                      imageUrl: profileImage,
+                                      imageBuilder: (context, imageProvider) =>
+                                          CircleAvatar(
+                                        radius: 120,
+                                        backgroundImage: imageProvider,
+                                      ),
+                                      placeholder: (context, url) =>
+                                          const CircularProgressIndicator(
+                                        backgroundColor: AppColours.secondary,
+                                      ),
+                                      errorWidget: (context, url, error) =>
+                                          const CircleAvatar(
+                                        radius: 120,
+                                        backgroundImage: AssetImage(
+                                            'assets/icons/defaultimage.jpg'),
+                                      ),
+                                    ),
+                                  ),
                         const SizedBox(width: 20),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -148,9 +183,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => EditProfilePage(
-                                          username: username,
-                                          profileImage: profileImage)),
+                                    builder: (context) => EditProfilePage(
+                                      username: username,
+                                      profileImage: profileImage,
+                                      setUserInfo: setUserInfo,
+                                    ),
+                                  ),
                                 );
                               },
                               child: const Text(

@@ -1,27 +1,36 @@
-import 'package:flutter/material.dart';
-import 'package:group_project/pages/layout/profile_image_provider.dart';
-import 'package:group_project/pages/layout/top_nav_bar.dart';
-import 'package:provider/provider.dart';
-import 'package:image_picker/image_picker.dart';
 import 'dart:io';
+
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/material.dart';
+import 'package:group_project/constants/themes/app_colours.dart';
+import 'package:group_project/pages/layout/top_nav_bar.dart';
+import 'package:group_project/pages/settings/components/image_picker_options.dart';
+import 'package:group_project/services/firebase/firebase_user_service.dart';
+import 'package:image_picker/image_picker.dart';
 
 class EditProfilePage extends StatefulWidget {
   final String username;
   final String profileImage;
+  final void Function(String name, String image) setUserInfo;
 
-  const EditProfilePage(
-      {super.key, required this.username, required this.profileImage});
+  const EditProfilePage({
+    super.key,
+    required this.username,
+    required this.profileImage,
+    required this.setUserInfo,
+  });
 
   @override
-  _EditProfilePageState createState() => _EditProfilePageState();
+  EditProfilePageState createState() => EditProfilePageState();
 }
 
-class _EditProfilePageState extends State<EditProfilePage> {
+class EditProfilePageState extends State<EditProfilePage> {
   late TextEditingController usernameController;
   late String profileImage;
   final ImagePicker _picker = ImagePicker();
   final int maxUsernameLength = 15;
   bool showWarning = false;
+  bool isFileImage = false;
 
   @override
   void initState() {
@@ -34,17 +43,14 @@ class _EditProfilePageState extends State<EditProfilePage> {
     final pickedFile = await _picker.pickImage(source: source);
     if (pickedFile != null) {
       setState(() {
-        profileImage = pickedFile.path; // Save image path
+        isFileImage = true;
+        profileImage = pickedFile.path;
       });
-      Provider.of<ProfileImageProvider>(context, listen: false)
-          .updateProfileImage(profileImage);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final profileImageProvider = Provider.of<ProfileImageProvider>(context);
-
     return Scaffold(
       appBar: const TopNavBar(
         pageIndex: 0,
@@ -54,8 +60,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
       ),
       body: SingleChildScrollView(
         child: Container(
-          color:
-              const Color(0xFF1A1A1A), // Change the background color to black
+          color: AppColours.primary,
           alignment: Alignment.center,
           child: Padding(
             padding: const EdgeInsets.all(40.0),
@@ -74,18 +79,48 @@ class _EditProfilePageState extends State<EditProfilePage> {
                         ),
                       ),
                       child: GestureDetector(
-                        onTap: () => _showPickImageOptions(context),
-                        child: (profileImage.isEmpty ||
-                                profileImage == 'assets/icons/defaultimage.jpg')
+                        onTap: () => {
+                          showModalBottomSheet(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return ImagePickerOptions(
+                                pickImage: _pickImage,
+                              );
+                            },
+                          )
+                        },
+                        child: (profileImage == '')
                             ? const CircleAvatar(
                                 radius: 120,
                                 backgroundImage:
                                     AssetImage('assets/icons/defaultimage.jpg'),
                               )
-                            : CircleAvatar(
-                                radius: 120,
-                                backgroundImage: FileImage(File(profileImage)),
-                              ),
+                            : isFileImage
+                                ? CircleAvatar(
+                                    radius: 120,
+                                    backgroundImage:
+                                        FileImage(File(profileImage)),
+                                  )
+                                : SizedBox(
+                                    width: 240,
+                                    height: 240,
+                                    child: CachedNetworkImage(
+                                      imageUrl: profileImage,
+                                      imageBuilder: (context, imageProvider) =>
+                                          CircleAvatar(
+                                        radius: 120,
+                                        backgroundImage: imageProvider,
+                                      ),
+                                      placeholder: (context, url) =>
+                                          const CircularProgressIndicator(),
+                                      errorWidget: (context, url, error) =>
+                                          const CircleAvatar(
+                                        radius: 120,
+                                        backgroundImage: AssetImage(
+                                            'assets/icons/defaultimage.jpg'),
+                                      ),
+                                    ),
+                                  ),
                       ),
                     ),
                   ],
@@ -135,11 +170,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
                               Navigator.pop(context);
                             },
                             style: ElevatedButton.styleFrom(
-                              backgroundColor:
-                                  Colors.grey, // Change button color
+                              backgroundColor: Colors.grey,
                               shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(
-                                    30.0), // Make it round
+                                borderRadius: BorderRadius.circular(30.0),
                               ),
                             ),
                             child: const Text('Cancel',
@@ -148,9 +181,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                                     fontWeight: FontWeight.bold)),
                           ),
                         ),
-                        const SizedBox(
-                            width: 20), // Add space between the buttons
-
+                        const SizedBox(width: 20),
                         Expanded(
                           child: ElevatedButton(
                             onPressed: () {
@@ -160,16 +191,13 @@ class _EditProfilePageState extends State<EditProfilePage> {
                                   showWarning = true;
                                 });
                               } else {
-                                // Process the username here
-                                Navigator.pop(
-                                  context,
-                                  {
-                                    'username': usernameController.text,
-                                    'profileImage': profileImage,
-                                  },
-                                );
-                                profileImageProvider
-                                    .updateProfileImage(profileImage);
+                                widget.setUserInfo(
+                                    usernameController.text, profileImage);
+                                FirebaseUserService.updateUsername(
+                                    usernameController.text);
+                                FirebaseUserService.storeProfilePicture(
+                                    profileImage);
+                                Navigator.pop(context);
                               }
                             },
                             style: ElevatedButton.styleFrom(
@@ -196,54 +224,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
           ),
         ),
       ),
-    );
-  }
-
-  void _showPickImageOptions(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      builder: (BuildContext builder) {
-        return Container(
-          height: 220,
-          padding: const EdgeInsets.all(20),
-          color: Colors.grey[850], // Set the background color to grey
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                const Text('Choose an option',
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20)),
-                const SizedBox(height: 20),
-                Expanded(
-                  child: ListView(
-                    children: [
-                      ListTile(
-                        title: const Text('Pick from Gallery',
-                            style: TextStyle(color: Colors.white)),
-                        onTap: () {
-                          _pickImage(ImageSource.gallery);
-                          Navigator.pop(context);
-                        },
-                      ),
-                      ListTile(
-                        title: const Text('Take a Picture',
-                            style: TextStyle(color: Colors.white)),
-                        onTap: () {
-                          _pickImage(ImageSource.camera);
-                          Navigator.pop(context);
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
     );
   }
 }
