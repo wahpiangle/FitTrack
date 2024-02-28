@@ -64,6 +64,8 @@ class FirebaseFriendsPost {
   }
 
 
+
+
   Future<List<String>> getFriendsIds(String currentUserUid) async {
     List<String> friendIds = [];
 
