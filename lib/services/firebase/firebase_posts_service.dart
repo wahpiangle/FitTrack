@@ -169,6 +169,7 @@ class FirebasePostsService {
     }
   }
 
+
   static Future<String?> getUserName(String userId) async {
     try {
       final DocumentSnapshot<Map<String, dynamic>> userSnapshot =
@@ -183,6 +184,22 @@ class FirebasePostsService {
     } catch (e) {
       return null; // Return null if an error occurs
     }
+  }
+
+  // Method to get current user's posts
+  static Future<List<Post>> getCurrentUserPosts() async {
+    final currentUserUid = FirebaseAuth.instance.currentUser?.uid;
+    List<Post> currentUserPosts = [];
+
+    if (currentUserUid != null) {
+      try {
+        currentUserPosts = await FirebasePostsService.getPostsByUserId(currentUserUid);
+      } catch (e) {
+        // Handle the error as per your application's requirements
+      }
+    }
+
+    return currentUserPosts;
   }
 
 
