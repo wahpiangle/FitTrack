@@ -27,9 +27,9 @@ class PostStream {
 }
 
 class FirebaseFriendsPost {
-  late Stream<FriendPostPair> friendsPostStream; // Change the type to Stream<FriendPostPair>
+  late Stream<List<FriendPostPair>> friendsPostStream;
 
-  Future<Stream<FriendPostPair>> initFriendsPostStream() async {
+  Future<Stream<List<FriendPostPair>>> initFriendsPostStream() async {
     final currentUserUid = FirebaseAuth.instance.currentUser?.uid;
 
     if (currentUserUid != null) {
@@ -37,31 +37,26 @@ class FirebaseFriendsPost {
         List<String> friendIds = await getFriendsIds(currentUserUid);
         List<FriendPostPair> friendPostPairs = [];
 
+        // Use a set to track unique posts
+        Set<String> uniquePosts = Set();
+
         for (String friendId in friendIds) {
           List<Post> posts = await FirebasePostsService.getPostsByUserId(friendId);
           String? friendName = await FirebasePostsService.getUserName(friendId);
 
-          // Pair each post with the friend's name
           for (Post post in posts) {
-            friendPostPairs.add(FriendPostPair(post, friendName!));
+            // Generate a unique identifier for the post
+            String postIdentifier = '${post.id}_${friendId}';
+
+            // Check if the post is already in the set, if not, add it to the list
+            if (!uniquePosts.contains(postIdentifier)) {
+              uniquePosts.add(postIdentifier);
+              friendPostPairs.add(FriendPostPair(post, friendName!));
+            }
           }
         }
 
-        // Create a PostStream instance
-        PostStream postStream = PostStream();
-
-        // Add each post with friend name to the stream
-        for (FriendPostPair postPair in friendPostPairs) {
-          postStream.addPostWithFriendName(postPair);
-          print('Post added to stream: ${postPair.post.id}');
-        }
-
-        // Assign the stream to friendsPostStream
-        friendsPostStream = postStream.stream;
-
-        print('Friend posts stream initialized successfully');
-
-        // Return the stream
+        friendsPostStream = Stream.value(friendPostPairs);
         return friendsPostStream;
       } catch (e) {
         print('Error initializing friendsPostStream: $e');
@@ -74,6 +69,7 @@ class FirebaseFriendsPost {
       return friendsPostStream;
     }
   }
+
 
   Future<List<String>> getFriendsIds(String currentUserUid) async {
     List<String> friendIds = [];
@@ -103,3 +99,4 @@ class FirebaseFriendsPost {
     return friendIds;
   }
 }
+

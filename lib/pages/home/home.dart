@@ -23,17 +23,17 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   late final bool? showCursor;
-  String caption = ''; // Define caption variable
+  String caption = '';
   int _current = 0;
-  late Stream<FriendPostPair> friendsPostStream; // Initialize with an empty stream
+  late Stream<List<FriendPostPair>> friendsPostStream;
   FirebaseFriendsPost firebaseFriendsPost = FirebaseFriendsPost();
 
-  late final List<Map<String, dynamic>> imageList; // Define imageList variable
+  late final List<Map<String, dynamic>> imageList;
 
   @override
   void initState() {
     super.initState();
-    // Initialize imageList with the appropriate data
+
     imageList = objectBox.postService
         .getActivePosts()
         .asMap()
@@ -48,14 +48,12 @@ class _HomeState extends State<Home> {
       };
     }).toList();
 
-    fetchFriendsPosts(); // Fetch friends' posts
+    fetchFriendsPosts();
 
-    // Fetch the caption for the initial workout session
     fetchCaption(imageList[_current]['workoutSessionId']);
     context.read<UploadImageProvider>().getSharedPreferences();
     SharedPreferences.getInstance().then((prefs) {
       if (prefs.getBool(UploadEnums.isUploading) == true) {
-        // Handle the case where the app was force quit during upload
         context.read<UploadImageProvider>().setUploadError(true);
         context.read<UploadImageProvider>().setIsUploading(false);
       }
@@ -71,7 +69,6 @@ class _HomeState extends State<Home> {
   }
 
   void fetchCaption(int workoutSessionId) async {
-    // Fetch the caption using the provided workout session ID
     String fetchedCaption = await FirebasePostsService.getCaption(
         workoutSessionId);
     setState(() {
@@ -83,7 +80,7 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     final UploadImageProvider uploadImageProvider =
     context.watch<UploadImageProvider>();
-    bool hasImages = imageList.isNotEmpty; // Check if there are images
+    bool hasImages = imageList.isNotEmpty;
 
     return Scaffold(
       backgroundColor: AppColours.primary,
@@ -95,7 +92,6 @@ class _HomeState extends State<Home> {
               children: [
                 const SizedBox(height: 5),
                 if (hasImages) const SizedBox(height: 1),
-                // Carousel for User's Posts
                 CarouselSlider.builder(
                   itemCount: imageList.length,
                   options: CarouselOptions(
@@ -165,10 +161,10 @@ class _HomeState extends State<Home> {
                                 FirebasePostsService.saveCaption(
                                     workoutSessionId, caption);
                               },
-                              controller: TextEditingController(text: caption),
+                              controller:
+                              TextEditingController(text: caption),
                             ),
                           ),
-                          // Add Row widget for icons
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -196,12 +192,9 @@ class _HomeState extends State<Home> {
                                       MaterialPageRoute(
                                         builder: (context) =>
                                             DisplayPostImageScreen(
-                                              imagePath:
-                                              imageList[index]['firstImageUrl'],
-                                              imagePath2:
-                                              imageList[index]['secondImageUrl'],
-                                              workoutSessionId:
-                                              imageList[index]['workoutSessionId'],
+                                              imagePath: imageList[index]['firstImageUrl'],
+                                              imagePath2: imageList[index]['secondImageUrl'],
+                                              workoutSessionId: imageList[index]['workoutSessionId'],
                                             ),
                                       ),
                                     );
@@ -217,8 +210,8 @@ class _HomeState extends State<Home> {
                     );
                   },
                 ),
-                // Carousel for Friends' Posts
-                FriendsPostCarousel(), // Use the new component
+                // Adding Friends' Posts Carousel
+                FriendsPostCarousel(),
               ],
             ),
           ),
