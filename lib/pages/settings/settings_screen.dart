@@ -80,12 +80,24 @@ class _SettingsScreenState extends State<SettingsScreen> {
     });
   }
 
-  void setUserInfo(String name, String image) {
-    setState(() {
-      isFileImage = true;
-      username = name;
-      profileImage = image;
-    });
+  void setUserInfo(String name, String image) async {
+    if (name == username && image == profileImage) {
+      return;
+    } else {
+      if (image != profileImage) {
+        setState(() {
+          isFileImage = true;
+          profileImage = image;
+        });
+        await FirebaseUserService.storeProfilePicture(image);
+      }
+      if (name != username) {
+        await FirebaseUserService.updateUsername(username);
+        setState(() {
+          username = name;
+        });
+      }
+    }
   }
 
   @override

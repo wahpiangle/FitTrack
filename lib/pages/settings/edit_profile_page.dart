@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:group_project/constants/themes/app_colours.dart';
 import 'package:group_project/pages/layout/top_nav_bar.dart';
 import 'package:group_project/pages/settings/components/image_picker_options.dart';
-import 'package:group_project/services/firebase/firebase_user_service.dart';
 import 'package:image_picker/image_picker.dart';
 
 class EditProfilePage extends StatefulWidget {
@@ -193,10 +192,6 @@ class EditProfilePageState extends State<EditProfilePage> {
                               } else {
                                 widget.setUserInfo(
                                     usernameController.text, profileImage);
-                                FirebaseUserService.updateUsername(
-                                    usernameController.text);
-                                FirebaseUserService.storeProfilePicture(
-                                    profileImage);
                                 Navigator.pop(context);
                               }
                             },
