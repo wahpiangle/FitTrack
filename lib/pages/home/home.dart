@@ -236,7 +236,7 @@ class _HomeState extends State<Home> {
                       ),
                       SizedBox(height: 8), // Add space between the icon and the text
                       Text(
-                        'Start a Workout to add a post!',
+                        'Start a Workout & Add a post!',
                         style: TextStyle(
                           fontFamily: 'Dancing Script',
                           color: Colors.grey,
