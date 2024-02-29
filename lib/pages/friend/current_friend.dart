@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:group_project/pages/friend/search/search_helper.dart';
 import 'package:group_project/pages/friend/search/user_image_display.dart';
+import 'package:group_project/services/firebase/firebase_friends_service.dart';
 import 'search/friend_search_bar.dart';
 
 class CurrentFriendsTab extends StatefulWidget {
@@ -43,7 +44,15 @@ class CurrentFriendsTabState extends State<CurrentFriendsTab> {
 
     if (friendsQuery.docs.isNotEmpty) {
       setState(() {
-        currentFriends = friendsQuery.docs.map((doc) => doc.data()).toList();
+        currentFriends = friendsQuery.docs.map((doc) {
+          final Map<String, dynamic> data = doc.data();
+          final List<String> friends = List<String>.from(data['friends'] ?? []);
+          return {
+            'UID': doc.id,
+            ...data,
+            'friends': friends,
+          };
+        }).toList();
       });
     } else {
       print('No friend details found for UIDs: $friendUids');
@@ -122,9 +131,31 @@ class CurrentFriendsTabState extends State<CurrentFriendsTab> {
                 color: Colors.white,
               ),
             ),
+            trailing: FractionallySizedBox(
+              widthFactor: 0.21,
+              heightFactor: 0.6,
+              child: ElevatedButton(
+                onPressed: () {
+                  FirebaseFriendsService.removeFriend(currentFriends[index]['UID']);
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor:Colors.redAccent,
+                  padding: const EdgeInsets.all(8),
+                  textStyle: const TextStyle(fontSize: 11),
+                ),
+                child: const Text(
+                    'Remove',
+                    key: Key('requestedText'),
+                    style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+                ),
+              ),
+            ),
           );
         },
       ),
     );
   }
+
+
+
 }

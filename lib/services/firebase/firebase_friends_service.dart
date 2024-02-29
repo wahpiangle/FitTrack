@@ -83,4 +83,20 @@ class FirebaseFriendsService {
     return [];
   }
 
+  static void removeFriend(String friendUid) async {
+    final currentUserUid = FirebaseAuth.instance.currentUser?.uid;
+
+    if (currentUserUid != null) {
+      final currentUserRef = FirebaseFirestore.instance.collection('users').doc(currentUserUid);
+      final friendRef = FirebaseFirestore.instance.collection('users').doc(friendUid);
+
+      await currentUserRef.update({
+        'friends': FieldValue.arrayRemove([friendUid]),
+      });
+
+      await friendRef.update({
+        'friends': FieldValue.arrayRemove([currentUserUid]),
+      });
+    }
+  }
 }
