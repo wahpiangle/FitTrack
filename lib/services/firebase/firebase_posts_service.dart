@@ -14,6 +14,7 @@ class FirebasePostsService {
   static final FirebaseAuth auth = FirebaseAuth.instance;
   static final FirebaseStorage storage = FirebaseStorage.instance;
   static final postsCollectionRef = db.collection('posts');
+  static final usersCollectionRef = db.collection('users');
 
 
   static Future<bool> createPost(
@@ -167,6 +168,8 @@ class FirebasePostsService {
       return []; // Return an empty list if an error occurs
     }
   }
+
+
 
 
 

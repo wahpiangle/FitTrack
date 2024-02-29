@@ -4,7 +4,8 @@ import 'package:group_project/services/firebase/firebase_friends_post.dart';
 import 'package:group_project/services/firebase/firebase_posts_service.dart';
 
 class FriendsPostCarousel extends StatefulWidget {
-  const FriendsPostCarousel({Key? key}) : super(key: key);
+  const FriendsPostCarousel
+      ({Key? key}) : super(key: key);
 
   @override
   State<FriendsPostCarousel> createState() => _FriendsPostCarouselState();
@@ -13,6 +14,7 @@ class FriendsPostCarousel extends StatefulWidget {
 class _FriendsPostCarouselState extends State<FriendsPostCarousel> {
   Stream<Post>? friendsPostStream;
   String caption = ''; // Define caption variable
+  String userName = ''; // Define userName variable
 
   @override
   void initState() {
@@ -37,6 +39,7 @@ class _FriendsPostCarouselState extends State<FriendsPostCarousel> {
       caption = fetchedCaption;
     });
   }
+
 
   @override
   Widget build(BuildContext context) {
