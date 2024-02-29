@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:group_project/pages/friend/search/search_helper.dart';
+import 'package:group_project/services/firebase/firebase_friends_service.dart';
 import 'search/friend_search_bar.dart';
 
 class FriendSuggestionsTab extends StatefulWidget {
   const FriendSuggestionsTab({
     super.key,
   });
-
 
   @override
   FriendSuggestionsTabState createState() => FriendSuggestionsTabState();
@@ -15,6 +15,20 @@ class FriendSuggestionsTab extends StatefulWidget {
 class FriendSuggestionsTabState extends State<FriendSuggestionsTab> {
   final TextEditingController _searchController = TextEditingController();
   List<Map<String, dynamic>> searchedUsers = [];
+  List<Map<String, dynamic>> friendSuggestions = [];
+
+  @override
+  void initState() {
+    super.initState();
+    loadFriendSuggestions();
+  }
+
+  Future<void> loadFriendSuggestions() async {
+    final suggestions = await FirebaseFriendsService.getFriendSuggestions();
+    setState(() {
+      friendSuggestions = suggestions;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -61,14 +75,21 @@ class FriendSuggestionsTabState extends State<FriendSuggestionsTab> {
               ),
             ),
           ),
-          Center(
-             child: Text('No contact found', style: TextStyle(color: Colors.white))
-          ),
-          if (_searchController.text.isNotEmpty)
+          if (friendSuggestions.isNotEmpty)
+            buildFriendSuggestionsListView(),
+          if (searchedUsers.isNotEmpty)
             buildSearchedUsersListView(),
+          if (friendSuggestions.isEmpty && searchedUsers.isEmpty)
+            Center(
+              child: Text('No contact found', style: TextStyle(color: Colors.white)),
+            ),
         ],
       ),
     );
+  }
+
+  Widget buildFriendSuggestionsListView() {
+    return SearchHelper.buildSearchResultsListView(friendSuggestions);
   }
 
   Widget buildSearchedUsersListView() {

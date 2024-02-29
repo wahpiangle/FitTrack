@@ -46,4 +46,43 @@ class FirebaseFriendsService {
     }
   }
 
+  static Future<List<Map<String, dynamic>>> getFriendSuggestions() async {
+    final currentUserUid = FirebaseAuth.instance.currentUser?.uid;
+
+    if (currentUserUid != null) {
+      final currentUserRef = FirebaseFirestore.instance.collection('users').doc(currentUserUid);
+
+      final currentUserFriendsSnapshot = await currentUserRef.get();
+      final currentUserFriends = currentUserFriendsSnapshot.data()?['friends'] ?? [];
+
+      final suggestions = <Map<String, dynamic>>[];
+
+      for (final friendUid in currentUserFriends) {
+        final friendRef = FirebaseFirestore.instance.collection('users').doc(friendUid);
+        final friendSnapshot = await friendRef.get();
+        final friendFriends = friendSnapshot.data()?['friends'] ?? [];
+
+        for (final suggestedFriendUid in friendFriends) {
+          // Exclude the current user and their existing friends
+          if (suggestedFriendUid != currentUserUid && !currentUserFriends.contains(suggestedFriendUid)) {
+            final suggestedFriendRef = FirebaseFirestore.instance.collection('users').doc(suggestedFriendUid);
+            final suggestedFriendSnapshot = await suggestedFriendRef.get();
+            final suggestedFriendData = suggestedFriendSnapshot.data();
+
+            if (suggestedFriendData != null) {
+              suggestions.add({
+                'UID': suggestedFriendUid,
+                ...suggestedFriendData,
+              });
+            }
+          }
+        }
+      }
+
+      return suggestions;
+    }
+
+    return [];
+  }
+
 }
