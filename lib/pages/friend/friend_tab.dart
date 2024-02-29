@@ -1,12 +1,12 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_floating_bottom_bar/flutter_floating_bottom_bar.dart';
+import 'package:group_project/constants/page_enums.dart';
 import 'package:group_project/constants/themes/app_colours.dart';
 import 'package:group_project/pages/friend/current_friend.dart';
 import 'package:group_project/pages/friend/friend_request.dart';
 import 'package:group_project/pages/friend/friend_suggestion.dart';
-import 'package:permission_handler/permission_handler.dart';
-
+import 'package:group_project/pages/layout/app_layout.dart';
 
 class FriendPage extends StatefulWidget {
   const FriendPage({super.key, required this.title});
@@ -77,7 +77,29 @@ class FriendPageState extends State<FriendPage> with SingleTickerProviderStateMi
                 child: const Icon(Icons.arrow_forward_ios),
               ),
               onPressed: () {
-                Navigator.pop(context);
+                if (!mounted) return;
+                Navigator.pushReplacement(
+                  context,
+                  PageRouteBuilder(
+                    pageBuilder: (context, animation1, animation2) => const AppLayout(
+                      currentIndex: Pages.HomePage,
+                    ),
+                    transitionsBuilder: (context, animation1, animation2, child) {
+                      const begin = Offset(0.2, 0.0);
+                      const end = Offset(0.0, 0.0);
+                      const curve = Curves.easeIn;
+
+                      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+                      var offsetAnimation = animation1.drive(tween);
+
+                      return SlideTransition(
+                        position: offsetAnimation,
+                        child: child,
+                      );
+                    },
+                    transitionDuration: const Duration(milliseconds: 1000),
+                  ),
+                );
               },
             ),
           ],
@@ -116,10 +138,10 @@ class FriendPageState extends State<FriendPage> with SingleTickerProviderStateMi
             controller: tabController,
             dragStartBehavior: DragStartBehavior.down,
             physics: const BouncingScrollPhysics(),
-            children: [
+            children: const [
               FriendSuggestionsTab(),
-              const CurrentFriendsTab(),
-              const FriendRequestsTab(),
+              CurrentFriendsTab(),
+              FriendRequestsTab(),
             ],
           ),
           child: Row(

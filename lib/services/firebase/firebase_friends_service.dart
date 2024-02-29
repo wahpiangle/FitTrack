@@ -31,7 +31,6 @@ class FirebaseFriendsService {
     final currentUserUid = FirebaseAuth.instance.currentUser?.uid;
 
     if (currentUserUid != null) {
-      // Send friend request to the other user
       final friendRef = FirebaseFirestore.instance.collection('users').doc(friendUid);
 
       await friendRef.set({
@@ -63,7 +62,6 @@ class FirebaseFriendsService {
         final friendFriends = friendSnapshot.data()?['friends'] ?? [];
 
         for (final suggestedFriendUid in friendFriends) {
-          // Exclude the current user and their existing friends
           if (suggestedFriendUid != currentUserUid && !currentUserFriends.contains(suggestedFriendUid)) {
             final suggestedFriendRef = FirebaseFirestore.instance.collection('users').doc(suggestedFriendUid);
             final suggestedFriendSnapshot = await suggestedFriendRef.get();

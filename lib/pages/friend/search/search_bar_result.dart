@@ -73,6 +73,8 @@ class SearchBarResultState extends State<SearchBarResult> {
     bool isCurrentUserFriend =
         (widget.user['friends'] as List<dynamic>?)?.contains(FirebaseAuth.instance.currentUser?.uid) ?? false;
 
+    bool isCurrentUser = widget.user['UID'] == FirebaseAuth.instance.currentUser?.uid;
+
     return ListTile(
       leading: ImageDisplay.buildUserProfileImage(widget.user['photoUrl']),
       title: Text(
@@ -82,43 +84,33 @@ class SearchBarResultState extends State<SearchBarResult> {
         ),
       ),
       trailing: FractionallySizedBox(
-        widthFactor: 0.32,
+        widthFactor: 0.21,
         heightFactor: 0.6,
-        child: isCurrentUserFriend
+        child: isCurrentUser || isCurrentUserFriend
             ? Container()
             : Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            Expanded(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  ElevatedButton(
-                    onPressed: addOrCancelFriend,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: friendRequestSent ? AppColours.secondaryLight : AppColours.secondary,
-                      padding: const EdgeInsets.all(8),
-                      textStyle: const TextStyle(fontSize: 11),
-                    ),
-                    child: AnimatedSwitcher(
-                      duration: const Duration(milliseconds: 300),
-                      child: friendRequestSent
-                          ? const Text(
-                        'Cancel',
-                        key: Key('requestedText'),
-                        style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
-                      )
-                          : const Text(
-                        'Add',
-                        key: Key('addText'),
-                        style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                  ),
-                  IconButton(
-                    icon: Icon(Icons.close, color: Colors.red), onPressed: () {  },
-
-                  ),
-                ],
+            ElevatedButton(
+              onPressed: addOrCancelFriend,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: friendRequestSent ? AppColours.secondaryLight : AppColours.secondary,
+                padding: const EdgeInsets.all(8),
+                textStyle: const TextStyle(fontSize: 11),
+              ),
+              child: AnimatedSwitcher(
+                duration: const Duration(milliseconds: 300),
+                child: friendRequestSent
+                    ? const Text(
+                  'Cancel',
+                  key: Key('requestedText'),
+                  style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+                )
+                    : const Text(
+                  'Add',
+                  key: Key('addText'),
+                  style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+                ),
               ),
             ),
           ],
