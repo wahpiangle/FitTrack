@@ -2,7 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:group_project/constants/themes/app_colours.dart';
-import 'search_bar.dart';
+import 'package:group_project/pages/friend/search/search_helper.dart';
+import 'search/friend_search_bar.dart';
 
 class FriendRequestsTab extends StatefulWidget {
   const FriendRequestsTab({
@@ -67,6 +68,7 @@ class FriendRequestsTabState extends State<FriendRequestsTab> {
           ),
           if (_searchController.text.isNotEmpty)
             buildSearchedUsersListView(),
+          if (_searchController.text.isEmpty)
           buildFriendRequestsList(),
         ],
       ),
@@ -77,7 +79,7 @@ class FriendRequestsTabState extends State<FriendRequestsTab> {
   Widget buildFriendRequestsList() {
     final currentUserUid = FirebaseAuth.instance.currentUser?.uid;
     return Padding(
-      padding: const EdgeInsets.only(top: 50),
+      padding: const EdgeInsets.only(top: 60),
       child: FutureBuilder<DocumentSnapshot>(
         future: FirebaseFirestore.instance.collection('users').doc(currentUserUid).get(),
         builder: (context, snapshot) {
@@ -104,7 +106,7 @@ class FriendRequestsTabState extends State<FriendRequestsTab> {
 
 
   Widget buildSearchedUsersListView() {
-    return  SearchHelper.buildSearchedUsersListView(searchedUsers);
+    return  SearchHelper.buildSearchResultsListView(searchedUsers);
   }
 }
 
@@ -123,20 +125,17 @@ class FriendRequestTile extends StatelessWidget {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const CircularProgressIndicator();
           }
-
           final userData = snapshot.data?.data() as Map<String, dynamic>?;
-
           if (userData == null) {
             return const SizedBox.shrink();
           }
-
           return Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Expanded(
                 child: Row(
                   children: [
-                    SearchHelper.buildUserProfileImage(userData['photoUrl']),
+                    ImageDisplay.buildUserProfileImage(userData['photoUrl']),
                     const SizedBox(width: 16),
                     Expanded(
                       child: Column(
