@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:group_project/constants/themes/app_colours.dart';
@@ -17,6 +18,57 @@ class SearchBarResultState extends State<SearchBarResult> {
   bool friendRequestSent = false;
 
   @override
+  void initState() {
+    super.initState();
+    checkFriendRequestStatus();
+  }
+
+  Future<void> checkFriendRequestStatus() async {
+    final currentUserUid = FirebaseAuth.instance.currentUser?.uid;
+    if (currentUserUid != null && widget.user['UID'] != null) {
+      final currentUserRef = FirebaseFirestore.instance.collection('users').doc(currentUserUid);
+      final currentUserData = (await currentUserRef.get()).data();
+      final friendUid = widget.user['UID'];
+
+      if (currentUserData != null && currentUserData.containsKey('requestSent')) {
+        final requestsSent = currentUserData['requestSent'] as List<dynamic>;
+        setState(() {
+          friendRequestSent = requestsSent.contains(friendUid);
+        });
+      }
+    }
+  }
+
+  Future<void> addOrCancelFriend() async {
+    final currentUserUid = FirebaseAuth.instance.currentUser?.uid;
+    if (currentUserUid != null && widget.user['UID'] != null) {
+      final friendUid = widget.user['UID'];
+      final currentUserRef = FirebaseFirestore.instance.collection('users').doc(currentUserUid);
+
+      if (friendRequestSent) {
+        await currentUserRef.set({
+          'requestSent': FieldValue.arrayRemove([friendUid]),
+        }, SetOptions(merge: true));
+
+        setState(() {
+          friendRequestSent = false;
+        });
+      } else {
+        await currentUserRef.set({
+          'requestSent': FieldValue.arrayUnion([friendUid]),
+        }, SetOptions(merge: true));
+
+        setState(() {
+          friendRequestSent = true;
+        });
+
+        FirebaseFriendsService.addFriend(widget.user['UID']);
+      }
+    }
+  }
+
+
+  @override
   Widget build(BuildContext context) {
     bool isCurrentUserFriend =
         (widget.user['friends'] as List<dynamic>?)?.contains(FirebaseAuth.instance.currentUser?.uid) ?? false;
@@ -30,39 +82,46 @@ class SearchBarResultState extends State<SearchBarResult> {
         ),
       ),
       trailing: FractionallySizedBox(
-        widthFactor: 0.22,
+        widthFactor: 0.32,
         heightFactor: 0.6,
         child: isCurrentUserFriend
             ? Container()
-            : ElevatedButton(
-          onPressed: () {
-            if (!friendRequestSent && widget.user['UID'] != null) {
-              setState(() {
-                friendRequestSent = true;
-              });
+            : Row(
+          children: [
+            Expanded(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  ElevatedButton(
+                    onPressed: addOrCancelFriend,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: friendRequestSent ? AppColours.secondaryLight : AppColours.secondary,
+                      padding: const EdgeInsets.all(8),
+                      textStyle: const TextStyle(fontSize: 11),
+                    ),
+                    child: AnimatedSwitcher(
+                      duration: const Duration(milliseconds: 300),
+                      child: friendRequestSent
+                          ? const Text(
+                        'Cancel',
+                        key: Key('requestedText'),
+                        style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+                      )
+                          : const Text(
+                        'Add',
+                        key: Key('addText'),
+                        style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.close, color: Colors.red), onPressed: () {  },
 
-              FirebaseFriendsService.addFriend(widget.user['UID']);
-            }
-          },
-          style: ElevatedButton.styleFrom(
-            backgroundColor: friendRequestSent ? AppColours.secondaryLight : AppColours.secondary,
-            padding: const EdgeInsets.all(8),
-            textStyle: const TextStyle(fontSize: 11),
-          ),
-          child: AnimatedSwitcher(
-            duration: const Duration(milliseconds: 300),
-            child: friendRequestSent
-                ? const Text(
-              'Requested',
-              key: Key('requestedText'),
-              style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
-            )
-                : const Text(
-              'Add',
-              key: Key('addText'),
-              style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ),
             ),
-          ),
+          ],
         ),
       ),
     );
