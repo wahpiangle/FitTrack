@@ -5,13 +5,20 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:group_project/models/post.dart';
 import 'firebase_posts_service.dart'; // Import FirebasePostsService
 
+class FriendPostPair {
+  final Post post;
+  final String friendName;
+
+  FriendPostPair(this.post, this.friendName);
+}
+
 class PostStream {
-  StreamController<Post> _controller = StreamController<Post>();
+  StreamController<FriendPostPair> _controller = StreamController<FriendPostPair>();
 
-  Stream<Post> get stream => _controller.stream;
+  Stream<FriendPostPair> get stream => _controller.stream;
 
-  void addPost(Post post) {
-    _controller.add(post);
+  void addPostWithFriendName(FriendPostPair postPair) {
+    _controller.add(postPair);
   }
 
   void dispose() {
@@ -20,28 +27,33 @@ class PostStream {
 }
 
 class FirebaseFriendsPost {
-  late Stream<Post> friendsPostStream; // Change the type to Stream<Post>
+  late Stream<FriendPostPair> friendsPostStream; // Change the type to Stream<FriendPostPair>
 
-  Future<Stream<Post>> initFriendsPostStream() async {
+  Future<Stream<FriendPostPair>> initFriendsPostStream() async {
     final currentUserUid = FirebaseAuth.instance.currentUser?.uid;
 
     if (currentUserUid != null) {
       try {
         List<String> friendIds = await getFriendsIds(currentUserUid);
-        List<Post> friendPosts = [];
+        List<FriendPostPair> friendPostPairs = [];
 
         for (String friendId in friendIds) {
           List<Post> posts = await FirebasePostsService.getPostsByUserId(friendId);
-          friendPosts.addAll(posts);
+          String? friendName = await FirebasePostsService.getUserName(friendId);
+
+          // Pair each post with the friend's name
+          for (Post post in posts) {
+            friendPostPairs.add(FriendPostPair(post, friendName!));
+          }
         }
 
         // Create a PostStream instance
         PostStream postStream = PostStream();
 
-        // Add each post to the stream
-        for (Post post in friendPosts) {
-          postStream.addPost(post);
-          print('Post added to stream: ${post.id}');
+        // Add each post with friend name to the stream
+        for (FriendPostPair postPair in friendPostPairs) {
+          postStream.addPostWithFriendName(postPair);
+          print('Post added to stream: ${postPair.post.id}');
         }
 
         // Assign the stream to friendsPostStream
@@ -62,7 +74,6 @@ class FirebaseFriendsPost {
       return friendsPostStream;
     }
   }
-
 
   Future<List<String>> getFriendsIds(String currentUserUid) async {
     List<String> friendIds = [];

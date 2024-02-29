@@ -25,8 +25,7 @@ class _HomeState extends State<Home> {
   late final bool? showCursor;
   String caption = ''; // Define caption variable
   int _current = 0;
-  late Stream<Post> friendsPostStream = Stream
-      .empty(); // Initialize with an empty stream
+  late Stream<FriendPostPair> friendsPostStream; // Initialize with an empty stream
   FirebaseFriendsPost firebaseFriendsPost = FirebaseFriendsPost();
 
   late final List<Map<String, dynamic>> imageList; // Define imageList variable
@@ -62,7 +61,6 @@ class _HomeState extends State<Home> {
       }
     });
   }
-
 
   void fetchFriendsPosts() async {
     FirebaseFriendsPost().initFriendsPostStream().then((stream) {
@@ -148,15 +146,13 @@ class _HomeState extends State<Home> {
                                 horizontal: 1, vertical: 1),
                             decoration: BoxDecoration(
                               color: Colors.transparent,
-                              border:
-                              Border.all(color: Colors.transparent),
+                              border: Border.all(color: Colors.transparent),
                               borderRadius: BorderRadius.circular(8),
                             ),
                             child: TextField(
                               showCursor: false,
                               textAlign: TextAlign.center,
-                              style:
-                              const TextStyle(color: Colors.white),
+                              style: const TextStyle(color: Colors.white),
                               enableInteractiveSelection: false,
                               decoration: const InputDecoration(
                                 alignLabelWithHint: true,
@@ -169,8 +165,7 @@ class _HomeState extends State<Home> {
                                 FirebasePostsService.saveCaption(
                                     workoutSessionId, caption);
                               },
-                              controller:
-                              TextEditingController(text: caption),
+                              controller: TextEditingController(text: caption),
                             ),
                           ),
                           // Add Row widget for icons
@@ -203,10 +198,10 @@ class _HomeState extends State<Home> {
                                             DisplayPostImageScreen(
                                               imagePath:
                                               imageList[index]['firstImageUrl'],
-                                              imagePath2: imageList[index]
-                                              ['secondImageUrl'],
-                                              workoutSessionId: imageList[index]
-                                              ['workoutSessionId'],
+                                              imagePath2:
+                                              imageList[index]['secondImageUrl'],
+                                              workoutSessionId:
+                                              imageList[index]['workoutSessionId'],
                                             ),
                                       ),
                                     );

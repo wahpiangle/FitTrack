@@ -169,6 +169,21 @@ class FirebasePostsService {
     }
   }
 
+  static Future<String?> getUserName(String userId) async {
+    try {
+      final DocumentSnapshot<Map<String, dynamic>> userSnapshot =
+      await usersCollectionRef.doc(userId).get();
+
+      if (userSnapshot.exists) {
+        final userName = userSnapshot.data()?['name'] ?? '';
+        return userName;
+      } else {
+        return null; // Return null if the document doesn't exist
+      }
+    } catch (e) {
+      return null; // Return null if an error occurs
+    }
+  }
 
 
 

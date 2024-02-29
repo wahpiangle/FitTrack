@@ -4,17 +4,14 @@ import 'package:group_project/services/firebase/firebase_friends_post.dart';
 import 'package:group_project/services/firebase/firebase_posts_service.dart';
 
 class FriendsPostCarousel extends StatefulWidget {
-  const FriendsPostCarousel
-      ({Key? key}) : super(key: key);
+  const FriendsPostCarousel({Key? key}) : super(key: key);
 
   @override
   State<FriendsPostCarousel> createState() => _FriendsPostCarouselState();
 }
 
 class _FriendsPostCarouselState extends State<FriendsPostCarousel> {
-  Stream<Post>? friendsPostStream;
-  String caption = ''; // Define caption variable
-  String userName = ''; // Define userName variable
+  Stream<FriendPostPair>? friendsPostStream; // Change the stream type
 
   @override
   void initState() {
@@ -31,24 +28,16 @@ class _FriendsPostCarouselState extends State<FriendsPostCarousel> {
     });
   }
 
-  void fetchCaption(int workoutSessionId) async {
-    // Fetch the caption using the provided workout session ID
-    String fetchedCaption = await FirebasePostsService.getCaption(
-        workoutSessionId);
-    setState(() {
-      caption = fetchedCaption;
-    });
-  }
-
-
   @override
   Widget build(BuildContext context) {
     return friendsPostStream != null
-        ? StreamBuilder<Post>(
+        ? StreamBuilder<FriendPostPair>(
       stream: friendsPostStream,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          final post = snapshot.data!;
+          final friendPostPair = snapshot.data!;
+          final post = friendPostPair.post;
+          final friendName = friendPostPair.friendName;
           return Container(
             margin: const EdgeInsets.all(5),
             padding: const EdgeInsets.all(8),
@@ -80,8 +69,8 @@ class _FriendsPostCarouselState extends State<FriendsPostCarousel> {
                       ),
                     ),
                     Positioned(
-                      bottom: 10, // Adjust the position from the bottom
-                      right: 10, // Adjust the position from the right
+                      bottom: 10,
+                      right: 10,
                       child: Row(
                         children: [
                           Column(
@@ -105,10 +94,21 @@ class _FriendsPostCarouselState extends State<FriendsPostCarousel> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 10), // Add spacing
+                const SizedBox(height: 10),
                 Center(
                   child: Text(
-                    post.caption, // Display the fetched caption
+                    friendName, // Display the friend's name
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                Center(
+                  child: Text(
+                    post.caption,
                     textAlign: TextAlign.center,
                     style: const TextStyle(
                       color: Colors.grey,
