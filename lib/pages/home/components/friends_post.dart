@@ -46,6 +46,37 @@ class _FriendsPostCarouselState extends State<FriendsPostCarousel> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const SizedBox(height: 10),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        CircleAvatar(
+                          // Add your profile image here
+                          backgroundImage: NetworkImage(
+                              'assets/icons/defaultimage.jpg'),
+                        ),
+                        const SizedBox(width: 10),
+                        Text(
+                          friendName, // Display the friend's name
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.more_vert),
+                      onPressed: () {
+                        // Handle the onPressed event
+                      },
+                      color: Colors.white,
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 10),
                 Stack(
                   children: [
                     ClipRRect(
@@ -95,17 +126,6 @@ class _FriendsPostCarouselState extends State<FriendsPostCarousel> {
                   ],
                 ),
                 const SizedBox(height: 10),
-                Center(
-                  child: Text(
-                    friendName, // Display the friend's name
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
                 Center(
                   child: Text(
                     post.caption,
