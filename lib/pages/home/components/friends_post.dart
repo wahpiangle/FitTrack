@@ -29,10 +29,8 @@ class _FriendsPostCarouselState extends State<FriendsPostCarousel> {
     });
   }
 
-
-  void fetchCaption() async {
-    // Fetch the caption using the appropriate workout session ID
-    final workoutSessionId = 1; // Example value, replace it with your logic
+  void fetchCaption(int workoutSessionId) async {
+    // Fetch the caption using the provided workout session ID
     String fetchedCaption = await FirebasePostsService.getCaption(
         workoutSessionId);
     setState(() {
@@ -86,14 +84,14 @@ class _FriendsPostCarouselState extends State<FriendsPostCarousel> {
                           Column(
                             children: [
                               Icon(
-                                Icons.favorite,
+                                Icons.favorite_border,
                                 color: Colors.red,
                                 size: 40,
                               ),
                               const SizedBox(height: 5),
                               Icon(
                                 Icons.comment,
-                                color: Colors.blue,
+                                color: Colors.grey,
                                 size: 40,
                               ),
                             ],
