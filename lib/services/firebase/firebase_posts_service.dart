@@ -14,6 +14,8 @@ class FirebasePostsService {
   static final FirebaseAuth auth = FirebaseAuth.instance;
   static final FirebaseStorage storage = FirebaseStorage.instance;
   static final postsCollectionRef = db.collection('posts');
+  static final usersCollectionRef = db.collection('users');
+
 
   static Future<bool> createPost(
       Post post, UploadImageProvider uploadImageProvider) async {
@@ -70,6 +72,8 @@ class FirebasePostsService {
           .collection('userPosts')
           .doc(post.workoutSession.targetId.toString())
           .set({
+
+        'userId': user.uid,
         'firstImageUrl': firstImageUrl,
         'secondImageUrl': secondImageUrl,
         'workoutSessionId': post.workoutSession.targetId,
@@ -81,6 +85,7 @@ class FirebasePostsService {
     }
   }
 
+
   static void deletePost(int workoutSessionId) async {
     final WorkoutSession workoutSession =
         objectBox.workoutSessionService.getWorkoutSession(workoutSessionId)!;
@@ -91,4 +96,82 @@ class FirebasePostsService {
         .doc(workoutSession.post.targetId.toString())
         .delete();
   }
+
+  static Future<bool> saveCaption(int workoutSessionId, String caption) async {
+    try {
+      final User user = auth.currentUser!;
+
+      // Update the caption for the specified workout session
+      await postsCollectionRef
+          .doc(user.uid)
+          .collection('userPosts')
+          .doc(workoutSessionId.toString())  // Use workoutSessionId directly
+          .update({'caption': caption});
+
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  static Future<String> getCaption(int workoutSessionId) async {
+    try {
+      final User user = auth.currentUser!;
+
+      final docSnapshot = await postsCollectionRef
+          .doc(user.uid)
+          .collection('userPosts')
+          .doc(workoutSessionId.toString())
+          .get();
+
+      if (docSnapshot.exists) {
+        final caption = docSnapshot.data()?['caption'] ?? '';
+        return caption; // Return the caption if it exists
+      } else {
+        return ''; // Return an empty string if the document doesn't exist
+      }
+    } catch (e) {
+      return ''; // Return an empty string if an error occurs
+    }
+  }
+
+  static Future<List<Post>> getPostsByUserId(String userId) async {
+    try {
+      final QuerySnapshot<Map<String, dynamic>> querySnapshot =
+      await postsCollectionRef
+          .doc(userId)
+          .collection('userPosts')
+          .get();
+
+      List<Post> posts = [];
+
+      for (QueryDocumentSnapshot<Map<String, dynamic>> doc
+      in querySnapshot.docs) {
+        DateTime postDate = DateTime.now(); // Default value
+
+        if (doc.data()['date'] != null) {
+          Timestamp timestamp = doc.data()['date'];
+          postDate = timestamp.toDate(); // Convert Timestamp to DateTime
+        }
+
+        Post post = Post(
+          firstImageUrl: doc.data()['firstImageUrl'] ?? '',
+          secondImageUrl: doc.data()['secondImageUrl'] ?? '',
+          caption: doc.data()['caption'] ?? '',
+          date: postDate, // Non-nullable DateTime
+        );
+        posts.add(post);
+      }
+
+      return posts;
+    } catch (e) {
+      return []; // Return an empty list if an error occurs
+    }
+  }
+
+
+
+
+
+
 }
