@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:group_project/models/post.dart';
 import 'package:group_project/services/firebase/firebase_friends_post.dart';
-import 'package:group_project/services/firebase/firebase_posts_service.dart';
 
 class FriendsPostCarousel extends StatefulWidget {
-  const FriendsPostCarousel({Key? key}) : super(key: key);
+  const FriendsPostCarousel({super.key});
 
   @override
   State<FriendsPostCarousel> createState() => _FriendsPostCarouselState();
@@ -37,7 +35,7 @@ class _FriendsPostCarouselState extends State<FriendsPostCarousel> {
           final List<FriendPostPair> friendPostPairs = snapshot.data!;
 
           return ListView.builder(
-            physics: NeverScrollableScrollPhysics(), // Disable scrolling
+            physics: const NeverScrollableScrollPhysics(), // Disable scrolling
             shrinkWrap: true, // Allow the ListView to wrap content
             itemCount: friendPostPairs.length,
             itemBuilder: (context, index) {
@@ -57,9 +55,9 @@ class _FriendsPostCarouselState extends State<FriendsPostCarousel> {
                       children: [
                         Row(
                           children: [
-                            CircleAvatar(
+                            const CircleAvatar(
                               // Add your profile image here
-                              backgroundImage: NetworkImage(
+                              backgroundImage: AssetImage(
                                 'assets/icons/defaultimage.jpg',
                               ),
                             ),
@@ -75,7 +73,7 @@ class _FriendsPostCarouselState extends State<FriendsPostCarousel> {
                           ],
                         ),
                         IconButton(
-                          icon: Icon(Icons.more_vert),
+                          icon: const Icon(Icons.more_vert),
                           onPressed: () {
                             // Handle the onPressed event
                           },
@@ -106,7 +104,7 @@ class _FriendsPostCarouselState extends State<FriendsPostCarousel> {
                             ),
                           ),
                         ),
-                        Positioned(
+                        const Positioned(
                           bottom: 10,
                           right: 10,
                           child: Row(
@@ -115,10 +113,10 @@ class _FriendsPostCarouselState extends State<FriendsPostCarousel> {
                                 children: [
                                   Icon(
                                     Icons.favorite_border,
-                                    color: Colors.red,
+                                    color: Colors.grey,
                                     size: 40,
                                   ),
-                                  const SizedBox(height: 5),
+                                  SizedBox(height: 5),
                                   Icon(
                                     Icons.comment,
                                     color: Colors.grey,
@@ -126,7 +124,7 @@ class _FriendsPostCarouselState extends State<FriendsPostCarousel> {
                                   ),
                                 ],
                               ),
-                              const SizedBox(width: 5),
+                              SizedBox(width: 5),
                             ],
                           ),
                         ),
@@ -150,13 +148,13 @@ class _FriendsPostCarouselState extends State<FriendsPostCarousel> {
             },
           );
         } else {
-          return Center(
+          return const Center(
             child: CircularProgressIndicator(),
           );
         }
       },
     )
-        : Center(
+        : const Center(
       child: CircularProgressIndicator(),
     );
   }

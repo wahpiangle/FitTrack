@@ -13,7 +13,7 @@ class FriendPostPair {
 }
 
 class PostStream {
-  StreamController<FriendPostPair> _controller = StreamController<FriendPostPair>();
+  final StreamController<FriendPostPair> _controller = StreamController<FriendPostPair>();
 
   Stream<FriendPostPair> get stream => _controller.stream;
 
@@ -38,7 +38,7 @@ class FirebaseFriendsPost {
         List<FriendPostPair> friendPostPairs = [];
 
         // Use a set to track unique posts
-        Set<String> uniquePosts = Set();
+        Set<String> uniquePosts = {};
 
         for (String friendId in friendIds) {
           List<Post> posts = await FirebasePostsService.getPostsByUserId(friendId);
@@ -46,7 +46,7 @@ class FirebaseFriendsPost {
 
           for (Post post in posts) {
             // Generate a unique identifier for the post
-            String postIdentifier = '${post.id}_${friendId}';
+            String postIdentifier = '${post.id}_$friendId';
 
             // Check if the post is already in the set, if not, add it to the list
             if (!uniquePosts.contains(postIdentifier)) {
@@ -59,13 +59,11 @@ class FirebaseFriendsPost {
         friendsPostStream = Stream.value(friendPostPairs);
         return friendsPostStream;
       } catch (e) {
-        print('Error initializing friendsPostStream: $e');
-        friendsPostStream = Stream.empty();
+        friendsPostStream = const Stream.empty();
         return friendsPostStream;
       }
     } else {
-      print('Current user is null');
-      friendsPostStream = Stream.empty();
+      friendsPostStream = const Stream.empty();
       return friendsPostStream;
     }
   }
@@ -92,7 +90,6 @@ class FirebaseFriendsPost {
         }
       }
     } catch (e) {
-      print('Error fetching friends: $e');
       // Handle the error as per your application's requirements
     }
 

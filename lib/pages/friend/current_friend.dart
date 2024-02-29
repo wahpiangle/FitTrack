@@ -5,7 +5,7 @@ import 'package:group_project/pages/friend/search/search_helper.dart';
 import 'search/friend_search_bar.dart';
 
 class CurrentFriendsTab extends StatefulWidget {
-  const CurrentFriendsTab({Key? key}) : super(key: key);
+  const CurrentFriendsTab({super.key});
 
   @override
   CurrentFriendsTabState createState() => CurrentFriendsTabState();
@@ -45,7 +45,6 @@ class CurrentFriendsTabState extends State<CurrentFriendsTab> {
         currentFriends = friendsQuery.docs.map((doc) => doc.data()).toList();
       });
     } else {
-      print('No friend details found for UIDs: $friendUids');
     }
   }
 
