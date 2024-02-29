@@ -6,10 +6,13 @@ import 'package:group_project/models/post.dart';
 import 'firebase_posts_service.dart'; // Import FirebasePostsService
 
 class FriendPostPair {
-  final Post post;
   final String friendName;
+  final List<Post> posts;
 
-  FriendPostPair(this.post, this.friendName);
+  FriendPostPair({
+    required this.friendName,
+    required this.posts,
+  });
 }
 
 class PostStream {
@@ -41,10 +44,14 @@ class FirebaseFriendsPost {
           List<Post> posts = await FirebasePostsService.getPostsByUserId(friendId);
           String? friendName = await FirebasePostsService.getUserName(friendId);
 
-          // Pair each post with the friend's name
-          for (Post post in posts) {
-            friendPostPairs.add(FriendPostPair(post, friendName!));
-          }
+          // Create a FriendPostPair instance with the fetched data
+          FriendPostPair postPair = FriendPostPair(
+            friendName: friendName!,
+            posts: posts,
+          );
+
+          // Add the FriendPostPair instance to the list
+          friendPostPairs.add(postPair);
         }
 
         // Create a PostStream instance
@@ -53,7 +60,7 @@ class FirebaseFriendsPost {
         // Add each post with friend name to the stream
         for (FriendPostPair postPair in friendPostPairs) {
           postStream.addPostWithFriendName(postPair);
-          print('Post added to stream: ${postPair.post.id}');
+          print('Post added to stream for ${postPair.friendName}');
         }
 
         // Assign the stream to friendsPostStream

@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:group_project/models/post.dart';
 import 'package:group_project/services/firebase/firebase_friends_post.dart';
-import 'package:group_project/services/firebase/firebase_posts_service.dart';
 
 class FriendsPostCarousel extends StatefulWidget {
-  const FriendsPostCarousel({Key? key}) : super(key: key);
+  const FriendsPostCarousel({super.key});
 
   @override
   State<FriendsPostCarousel> createState() => _FriendsPostCarouselState();
@@ -36,118 +35,124 @@ class _FriendsPostCarouselState extends State<FriendsPostCarousel> {
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           final friendPostPair = snapshot.data!;
-          final post = friendPostPair.post;
+          final List<Post> posts = friendPostPair.posts;
           final friendName = friendPostPair.friendName;
-          return Container(
-            margin: const EdgeInsets.all(5),
-            padding: const EdgeInsets.all(8),
-            width: double.infinity,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(height: 10),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+
+          return Column(
+            children: posts.map((post) {
+              return Container(
+                margin: const EdgeInsets.all(5),
+                padding: const EdgeInsets.all(8),
+                width: double.infinity,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    const SizedBox(height: 10),
                     Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        CircleAvatar(
-                          // Add your profile image here
-                          backgroundImage: NetworkImage(
-                              'assets/icons/defaultimage.jpg'),
+                        Row(
+                          children: [
+                            CircleAvatar(
+                              // Add your profile image here
+                              backgroundImage: AssetImage('assets/icons/defaultimage.jpg'),
+
+                            ),
+                            const SizedBox(width: 10),
+                            Text(
+                              friendName, // Display the friend's name
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
                         ),
-                        const SizedBox(width: 10),
-                        Text(
-                          friendName, // Display the friend's name
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
+                        IconButton(
+                          icon: const Icon(Icons.more_vert),
+                          onPressed: () {
+                            // Handle the onPressed event
+                          },
+                          color: Colors.white,
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    Stack(
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(8.0),
+                          child: Image.network(
+                            post.firstImageUrl,
+                            fit: BoxFit.cover,
+                            width: double.infinity,
+                          ),
+                        ),
+                        Positioned(
+                          top: 20,
+                          left: 20,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(8.0),
+                            child: Image.network(
+                              post.secondImageUrl,
+                              fit: BoxFit.cover,
+                              width: 100,
+                            ),
+                          ),
+                        ),
+                        const Positioned(
+                          bottom: 10,
+                          right: 10,
+                          child: Row(
+                            children: [
+                              Column(
+                                children: [
+                                  Icon(
+                                    Icons.favorite_border,
+                                    color: Colors.red,
+                                    size: 40,
+                                  ),
+                                  SizedBox(height: 5),
+                                  Icon(
+                                    Icons.comment,
+                                    color: Colors.grey,
+                                    size: 40,
+                                  ),
+                                ],
+                              ),
+                              SizedBox(width: 5),
+                            ],
                           ),
                         ),
                       ],
                     ),
-                    IconButton(
-                      icon: Icon(Icons.more_vert),
-                      onPressed: () {
-                        // Handle the onPressed event
-                      },
-                      color: Colors.white,
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 10),
-                Stack(
-                  children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(8.0),
-                      child: Image.network(
-                        post.firstImageUrl,
-                        fit: BoxFit.cover,
-                        width: double.infinity,
-                      ),
-                    ),
-                    Positioned(
-                      top: 20,
-                      left: 20,
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(8.0),
-                        child: Image.network(
-                          post.secondImageUrl,
-                          fit: BoxFit.cover,
-                          width: 100,
+                    const SizedBox(height: 10),
+                    Center(
+                      child: Text(
+                        post.caption,
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          color: Colors.grey,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                     ),
-                    Positioned(
-                      bottom: 10,
-                      right: 10,
-                      child: Row(
-                        children: [
-                          Column(
-                            children: [
-                              Icon(
-                                Icons.favorite_border,
-                                color: Colors.red,
-                                size: 40,
-                              ),
-                              const SizedBox(height: 5),
-                              Icon(
-                                Icons.comment,
-                                color: Colors.grey,
-                                size: 40,
-                              ),
-                            ],
-                          ),
-                          const SizedBox(width: 5),
-                        ],
-                      ),
-                    ),
                   ],
                 ),
-                const SizedBox(height: 10),
-                Center(
-                  child: Text(
-                    post.caption,
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(
-                      color: Colors.grey,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ],
-            ),
+              );
+            }).toList(),
           );
         } else {
-          return Center(
+          return const Center(
             child: CircularProgressIndicator(),
           );
         }
       },
+
     )
-        : Center(
+        : const Center(
       child: CircularProgressIndicator(),
     );
   }
