@@ -1,10 +1,9 @@
-import 'dart:io';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:group_project/constants/themes/app_colours.dart';
 import 'package:group_project/pages/auth/edit_password.dart';
+import 'package:group_project/pages/layout/user_profile_provider.dart';
 import 'package:group_project/pages/settings/components/logout_button.dart';
 import 'package:group_project/pages/settings/components/profile_menu_item.dart';
 import 'package:group_project/pages/settings/timer_details_settings.dart';
@@ -23,8 +22,6 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
-  late String username = '';
-  String profileImage = '';
   User? currentUser = AuthService().getCurrentUser();
   late bool isSignInWithGoogle;
   bool isFileImage = false;
@@ -36,7 +33,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
         currentUser?.providerData.first.providerId == 'google.com';
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _handleTimerActive(context); // Add this line to handle timer state
-      _loadUserData();
     });
   }
 
@@ -67,41 +63,30 @@ class _SettingsScreenState extends State<SettingsScreen> {
     timerProvider.addListener(listener);
   }
 
-  Future<void> _loadUserData() async {
-    FirebaseUserService.getUsername().then((value) {
-      setState(() {
-        username = value;
-      });
-    });
-    FirebaseUserService.getProfilePicture().then((value) {
-      setState(() {
-        profileImage = value;
-      });
-    });
-  }
-
-  void setUserInfo(String name, String image) async {
-    if (name == username && image == profileImage) {
+  void setUserInfo(String name, String image,
+      UserProfileProvider userProfileProvider) async {
+    if (name == userProfileProvider.username &&
+        image == userProfileProvider.profileImage) {
       return;
     } else {
-      if (image != profileImage) {
+      if (image != userProfileProvider.profileImage) {
         setState(() {
           isFileImage = true;
-          profileImage = image;
         });
         await FirebaseUserService.storeProfilePicture(image);
+        userProfileProvider.updateProfileImage();
       }
-      if (name != username) {
-        await FirebaseUserService.updateUsername(username);
-        setState(() {
-          username = name;
-        });
+      if (name != userProfileProvider.username) {
+        userProfileProvider.updateUsername(name);
+        await FirebaseUserService.updateUsername(userProfileProvider.username);
       }
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    UserProfileProvider userProfileProvider =
+        Provider.of<UserProfileProvider>(context);
     return Scaffold(
       body: Container(
         height: double.infinity,
@@ -133,41 +118,34 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     ),
                     Row(
                       children: [
-                        profileImage == ""
+                        userProfileProvider.profileImage == ""
                             ? const SizedBox(
                                 width: 100,
                                 height: 100,
                                 child: CircularProgressIndicator(
                                   backgroundColor: AppColours.secondary,
                                 ))
-                            : isFileImage
-                                ? CircleAvatar(
-                                    radius: 50,
-                                    backgroundImage:
-                                        FileImage(File(profileImage)),
-                                  )
-                                : SizedBox(
-                                    width: 100,
-                                    height: 100,
-                                    child: CachedNetworkImage(
-                                      imageUrl: profileImage,
-                                      imageBuilder: (context, imageProvider) =>
-                                          CircleAvatar(
-                                        radius: 120,
-                                        backgroundImage: imageProvider,
-                                      ),
-                                      placeholder: (context, url) =>
-                                          const CircularProgressIndicator(
-                                        backgroundColor: AppColours.secondary,
-                                      ),
-                                      errorWidget: (context, url, error) =>
-                                          const CircleAvatar(
-                                        radius: 120,
-                                        backgroundImage: AssetImage(
-                                            'assets/icons/defaultimage.jpg'),
-                                      ),
-                                    ),
+                            : SizedBox(
+                                width: 100,
+                                height: 100,
+                                child: CachedNetworkImage(
+                                  imageUrl: userProfileProvider.profileImage,
+                                  imageBuilder: (context, imageProvider) =>
+                                      CircleAvatar(
+                                    radius: 120,
+                                    backgroundImage: imageProvider,
                                   ),
+                                  placeholder: (context, url) =>
+                                      const CircularProgressIndicator(
+                                    backgroundColor: AppColours.secondary,
+                                  ),
+                                  errorWidget: (context, url, error) =>
+                                      const Icon(
+                                    Icons.error,
+                                    color: AppColours.secondary,
+                                  ),
+                                ),
+                              ),
                         const SizedBox(width: 20),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -175,7 +153,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             Padding(
                               padding: const EdgeInsets.only(left: 10),
                               child: Text(
-                                username,
+                                userProfileProvider.username,
                                 maxLines: 1,
                                 style: const TextStyle(
                                     fontSize: 20, color: Colors.white),
@@ -196,8 +174,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) => EditProfilePage(
-                                      username: username,
-                                      profileImage: profileImage,
+                                      username: userProfileProvider.username,
+                                      profileImage:
+                                          userProfileProvider.profileImage,
                                       setUserInfo: setUserInfo,
                                     ),
                                   ),

@@ -1,9 +1,9 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:group_project/main.dart';
 import 'package:provider/provider.dart';
-import 'dart:io';
-import 'package:group_project/pages/layout/profile_image_provider.dart';
+import 'package:group_project/pages/layout/user_profile_provider.dart';
 import 'package:group_project/pages/exercise/components/custom_exercise.dart';
 
 class TopNavBar extends StatelessWidget implements PreferredSizeWidget {
@@ -23,7 +23,7 @@ class TopNavBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     String profileImage =
-        Provider.of<ProfileImageProvider>(context).profileImage;
+        Provider.of<UserProfileProvider>(context).profileImage;
 
     Widget leadingWidget;
 
@@ -81,14 +81,17 @@ class TopNavBar extends StatelessWidget implements PreferredSizeWidget {
             child: SizedBox(
               width: 40,
               height: 40,
-              child: ClipOval(
-                child: CircleAvatar(
-                  radius: 50,
-                  backgroundImage: (profileImage.isEmpty ||
-                          profileImage == 'assets/icons/defaultimage.jpg')
-                      ? const AssetImage('assets/icons/defaultimage.jpg')
-                      : FileImage(File(profileImage)) as ImageProvider<Object>?,
+              child: CachedNetworkImage(
+                imageUrl: profileImage,
+                imageBuilder: (context, imageProvider) => ClipOval(
+                  child: Image(
+                    image: imageProvider,
+                    fit: BoxFit.cover,
+                  ),
                 ),
+                placeholder: (context, url) =>
+                    const CircularProgressIndicator(),
+                errorWidget: (context, url, error) => const Icon(Icons.error),
               ),
             ),
           ),

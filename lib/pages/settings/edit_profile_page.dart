@@ -3,14 +3,18 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:group_project/constants/themes/app_colours.dart';
+import 'package:group_project/pages/layout/user_profile_provider.dart';
 import 'package:group_project/pages/layout/top_nav_bar.dart';
 import 'package:group_project/pages/settings/components/image_picker_options.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 
 class EditProfilePage extends StatefulWidget {
   final String username;
   final String profileImage;
-  final void Function(String name, String image) setUserInfo;
+  final void Function(
+          String name, String image, UserProfileProvider profileImageProvider)
+      setUserInfo;
 
   const EditProfilePage({
     super.key,
@@ -50,6 +54,8 @@ class EditProfilePageState extends State<EditProfilePage> {
 
   @override
   Widget build(BuildContext context) {
+    UserProfileProvider profileImageProvider =
+        Provider.of<UserProfileProvider>(context);
     return Scaffold(
       appBar: const TopNavBar(
         pageIndex: 0,
@@ -190,8 +196,8 @@ class EditProfilePageState extends State<EditProfilePage> {
                                   showWarning = true;
                                 });
                               } else {
-                                widget.setUserInfo(
-                                    usernameController.text, profileImage);
+                                widget.setUserInfo(usernameController.text,
+                                    profileImage, profileImageProvider);
                                 Navigator.pop(context);
                               }
                             },

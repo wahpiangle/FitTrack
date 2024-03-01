@@ -10,7 +10,7 @@ import 'package:group_project/pages/complete_workout/congratulation_screen.dart'
 import 'package:group_project/pages/complete_workout/capture_image/post_workout_prompt.dart';
 import 'package:group_project/pages/layout/app_layout.dart';
 import 'package:group_project/pages/history/history_screen.dart';
-import 'package:group_project/pages/layout/profile_image_provider.dart';
+import 'package:group_project/pages/layout/user_profile_provider.dart';
 import 'package:group_project/pages/workout/components/timer/components/phone_notification.dart';
 import 'package:group_project/pages/workout/components/timer/providers/custom_timer_provider.dart';
 import 'package:group_project/pages/workout/components/timer/providers/rest_timer_provider.dart';
@@ -72,7 +72,7 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (context) => TimerProvider()),
         ChangeNotifierProvider(create: (context) => RestTimerProvider()),
-        ChangeNotifierProvider(create: (context) => ProfileImageProvider()),
+        ChangeNotifierProvider(create: (context) => UserProfileProvider()),
         ChangeNotifierProvider(create: (context) => CustomTimerProvider()),
         ChangeNotifierProvider(create: (context) => UploadImageProvider()),
         StreamProvider.value(
