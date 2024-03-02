@@ -14,7 +14,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final _formKey = GlobalKey<FormState>();
 
   // text field state
-  String name = '';
+  String username = '';
   String email = '';
   String password = '';
   String error = '';
@@ -64,9 +64,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       borderRadius: BorderRadius.circular(10.0),
                     ),
                   ),
-                  validator: (val) => val!.isEmpty ? 'Enter a name' : null,
+                  validator: (val) => val!.isEmpty ? 'Enter a username' : null,
                   onChanged: (val) {
-                    setState(() => name = val);
+                    setState(() => username = val);
                   }),
               const SizedBox(height: 30.0),
               const Text('Email',
@@ -139,7 +139,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           },
                         );
                         await _auth.registerWithEmailAndPassword(
-                            email, password, name);
+                            email, password, username);
                         Future.microtask(() => Navigator.pop(context));
                         Future.microtask(() => Navigator.pop(context));
                         errorMessage = '';
@@ -150,7 +150,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         } else {
                           Future.microtask(() => Navigator.of(context).pop());
                           errorMessage =
-                              'The email is already taken by another account.';
+                              'The email or username is already taken by another account.';
                         }
                       }
                       setState(() {});
