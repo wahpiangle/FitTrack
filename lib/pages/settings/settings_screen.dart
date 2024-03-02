@@ -7,7 +7,6 @@ import 'package:group_project/pages/layout/user_profile_provider.dart';
 import 'package:group_project/pages/settings/components/logout_button.dart';
 import 'package:group_project/pages/settings/components/profile_menu_item.dart';
 import 'package:group_project/pages/settings/timer_details_settings.dart';
-import 'package:group_project/services/firebase/firebase_user_service.dart';
 import 'package:provider/provider.dart';
 import 'package:group_project/services/firebase/auth_service.dart';
 import 'package:group_project/pages/settings/edit_profile_page.dart';
@@ -63,22 +62,24 @@ class _SettingsScreenState extends State<SettingsScreen> {
     timerProvider.addListener(listener);
   }
 
-  void setUserInfo(String name, String image,
+  void setUserInfo(String username, String image, String displayName,
       UserProfileProvider userProfileProvider) async {
-    if (name == userProfileProvider.username &&
-        image == userProfileProvider.profileImage) {
+    if (username == userProfileProvider.username &&
+        image == userProfileProvider.profileImage &&
+        displayName == userProfileProvider.displayName) {
       return;
     } else {
       if (image != userProfileProvider.profileImage) {
         setState(() {
           isFileImage = true;
         });
-        await FirebaseUserService.storeProfilePicture(image);
-        userProfileProvider.updateProfileImage();
+        await userProfileProvider.updateProfileImage(image);
       }
-      if (name != userProfileProvider.username) {
-        userProfileProvider.updateUsername(name);
-        await FirebaseUserService.updateUsername(userProfileProvider.username);
+      if (username != userProfileProvider.username) {
+        await userProfileProvider.updateUsername(username);
+      }
+      if (displayName != userProfileProvider.displayName) {
+        await userProfileProvider.updateDisplayName(displayName);
       }
     }
   }
@@ -150,16 +151,21 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
-                            Padding(
-                              padding: const EdgeInsets.only(left: 10),
-                              child: Text(
-                                userProfileProvider.username,
-                                maxLines: 1,
-                                style: const TextStyle(
-                                    fontSize: 20, color: Colors.white),
+                            Text(
+                              userProfileProvider.displayName,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 20,
                               ),
                             ),
-                            const SizedBox(height: 12),
+                            const SizedBox(height: 10),
+                            Text(
+                              '@${userProfileProvider.username}',
+                              maxLines: 1,
+                              style: const TextStyle(
+                                  fontSize: 14, color: Colors.grey),
+                            ),
+                            const SizedBox(height: 10),
                             TextButton(
                               style: TextButton.styleFrom(
                                 padding: const EdgeInsets.symmetric(
@@ -177,6 +183,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                       username: userProfileProvider.username,
                                       profileImage:
                                           userProfileProvider.profileImage,
+                                      displayName:
+                                          userProfileProvider.displayName,
                                       setUserInfo: setUserInfo,
                                     ),
                                   ),

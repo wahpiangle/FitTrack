@@ -2,23 +2,26 @@ import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:group_project/constants/themes/app_colours.dart';
 import 'package:group_project/pages/layout/user_profile_provider.dart';
 import 'package:group_project/pages/layout/top_nav_bar.dart';
 import 'package:group_project/pages/settings/components/image_picker_options.dart';
+import 'package:group_project/services/firebase/firebase_user_service.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 class EditProfilePage extends StatefulWidget {
   final String username;
   final String profileImage;
-  final void Function(
-          String name, String image, UserProfileProvider profileImageProvider)
-      setUserInfo;
+  final String displayName;
+  final void Function(String name, String image, String displayName,
+      UserProfileProvider profileImageProvider) setUserInfo;
 
   const EditProfilePage({
     super.key,
     required this.username,
+    required this.displayName,
     required this.profileImage,
     required this.setUserInfo,
   });
@@ -29,16 +32,19 @@ class EditProfilePage extends StatefulWidget {
 
 class EditProfilePageState extends State<EditProfilePage> {
   late TextEditingController usernameController;
+  late TextEditingController displayNameController;
   late String profileImage;
   final ImagePicker _picker = ImagePicker();
-  final int maxUsernameLength = 15;
+  final int maxUsernameLength = 25;
   bool showWarning = false;
+  bool userNameExists = false;
   bool isFileImage = false;
 
   @override
   void initState() {
     super.initState();
     usernameController = TextEditingController(text: widget.username);
+    displayNameController = TextEditingController(text: widget.displayName);
     profileImage = widget.profileImage;
   }
 
@@ -52,9 +58,29 @@ class EditProfilePageState extends State<EditProfilePage> {
     }
   }
 
+  Future<void> _handleSubmit(UserProfileProvider profileImageProvider) async {
+    final bool usernameExists = await FirebaseUserService.checkIfUsernameExists(
+        usernameController.text);
+    if (usernameController.text.length > maxUsernameLength) {
+      setState(() {
+        showWarning = true;
+      });
+    } else if (usernameExists && usernameController.text != widget.username) {
+      setState(() {
+        userNameExists = true;
+      });
+    } else {
+      widget.setUserInfo(usernameController.text, profileImage,
+          displayNameController.text, profileImageProvider);
+      if (context.mounted) {
+        Navigator.of(context).pop();
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    UserProfileProvider profileImageProvider =
+    UserProfileProvider userProfileProvider =
         Provider.of<UserProfileProvider>(context);
     return Scaffold(
       appBar: const TopNavBar(
@@ -132,14 +158,15 @@ class EditProfilePageState extends State<EditProfilePage> {
                 ),
                 const SizedBox(height: 60),
                 TextField(
-                  controller: usernameController,
+                  controller: displayNameController,
                   style: const TextStyle(color: Colors.white),
                   decoration: InputDecoration(
-                    labelText: 'Enter new username',
+                    labelText: 'Enter a new display name',
                     labelStyle: const TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 22),
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 22,
+                    ),
                     enabledBorder: const UnderlineInputBorder(
                       borderSide: BorderSide(color: Colors.grey, width: 1.5),
                     ),
@@ -149,6 +176,31 @@ class EditProfilePageState extends State<EditProfilePage> {
                       ),
                     ),
                   ),
+                ),
+                const SizedBox(height: 20),
+                TextField(
+                  controller: usernameController,
+                  style: const TextStyle(color: Colors.white),
+                  decoration: InputDecoration(
+                    labelText: 'Enter new username',
+                    labelStyle: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 22,
+                    ),
+                    enabledBorder: const UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.grey, width: 1.5),
+                    ),
+                    focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(
+                        color: showWarning ? Colors.red : Colors.white,
+                      ),
+                    ),
+                  ),
+                  inputFormatters: [
+                    FilteringTextInputFormatter.deny(
+                        RegExp(r'[!@#$%^&*(),.?":{}|<>]'))
+                  ],
                   maxLength: maxUsernameLength,
                   onChanged: (value) {
                     setState(() {
@@ -156,13 +208,12 @@ class EditProfilePageState extends State<EditProfilePage> {
                     });
                   },
                 ),
-                if (showWarning)
-                  const Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Text(
-                      'Username exceeds the character limit',
-                      style: TextStyle(color: Colors.red),
-                    ),
+                if (showWarning || userNameExists)
+                  Text(
+                    userNameExists
+                        ? 'Username already exists'
+                        : 'Username too long',
+                    style: const TextStyle(color: Colors.red),
                   ),
                 const SizedBox(height: 20),
                 Column(
@@ -189,17 +240,8 @@ class EditProfilePageState extends State<EditProfilePage> {
                         const SizedBox(width: 20),
                         Expanded(
                           child: ElevatedButton(
-                            onPressed: () {
-                              if (usernameController.text.length >
-                                  maxUsernameLength) {
-                                setState(() {
-                                  showWarning = true;
-                                });
-                              } else {
-                                widget.setUserInfo(usernameController.text,
-                                    profileImage, profileImageProvider);
-                                Navigator.pop(context);
-                              }
+                            onPressed: () async {
+                              await _handleSubmit(userProfileProvider);
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: const Color(

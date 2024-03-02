@@ -34,13 +34,13 @@ class AuthService {
 
   //register with email and password
   Future registerWithEmailAndPassword(
-      String email, String password, String name) async {
+      String email, String password, String username) async {
     try {
       UserCredential result = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
       User? user = result.user;
       user?.sendEmailVerification();
-      FirebaseUserService.createUserInFirestore(user!, name);
+      FirebaseUserService.createUserInFirestore(user!, username);
       return user;
     } catch (e) {
       rethrow;
