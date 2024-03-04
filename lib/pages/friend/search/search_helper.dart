@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:group_project/services/firebase/firebase_friends_service.dart';
 import 'package:group_project/pages/friend/search/search_bar_result.dart';
 import 'package:easy_debounce/easy_debounce.dart';
+
 
 class SearchHelper {
   static void performSearch({
@@ -28,6 +28,8 @@ class SearchHelper {
   }
 
   static Widget buildSearchResultsListView(List<Map<String, dynamic>> searchResults) {
+  static Widget buildSearchResultsListView(
+      List<Map<String, dynamic>> searchResults) {
     return Positioned(
       top: 0,
       left: 0,
@@ -37,18 +39,19 @@ class SearchHelper {
         color: Colors.black,
         child: searchResults.isEmpty
             ? const Center(
-          child: Text(
-            'No result',
-            style: TextStyle(color: Colors.white),
-          ),
-        )
+                child: Text(
+                  'No result',
+                  style: TextStyle(color: Colors.white),
+                ),
+              )
             : ListView.separated(
-          itemCount: searchResults.length,
-          separatorBuilder: (context, index) => const Divider(color: Colors.transparent, thickness: 0.5),
-          itemBuilder: (context, index) {
-            return SearchBarResult(user: searchResults[index]);
-          },
-        ),
+                itemCount: searchResults.length,
+                separatorBuilder: (context, index) =>
+                    const Divider(color: Colors.transparent, thickness: 0.5),
+                itemBuilder: (context, index) {
+                  return SearchBarResult(user: searchResults[index]);
+                },
+              ),
       ),
     );
   }

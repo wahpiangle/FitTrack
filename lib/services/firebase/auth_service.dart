@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:group_project/main.dart';
 import 'package:group_project/services/firebase/firebase_user_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -47,10 +48,29 @@ class AuthService {
     }
   }
 
-  //sign out
-  Future signOut() async {
+  // Sign out
+  Future<void> signOut() async {
     try {
-      return await _auth.signOut();
+      List<Map<String, dynamic>> imageList = []; // Initialize with your image list
+
+      await clearPostsSharedPreferences(imageList);
+      objectBox.postService.clearAllPosts();
+      await _auth.signOut();
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  // Clear SharedPreferences upon sign out
+  Future<void> clearPostsSharedPreferences(
+      List<Map<String, dynamic>> imageList) async {
+    try {
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      for (var image in imageList) {
+        prefs.remove(image['firstImageUrl']);
+        prefs.remove(image['secondImageUrl']);
+        prefs.remove('caption_${image['workoutSessionId']}');
+      }
     } catch (e) {
       rethrow;
     }

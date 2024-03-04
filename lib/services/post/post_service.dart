@@ -24,19 +24,24 @@ class PostService {
   List<Post> getActivePosts() {
     return postBox
         .query(
-          // get posts from the last 24 hours
-          Post_.date.greaterThan(
-            DateTime.now()
-                .subtract(
-                  const Duration(
-                    hours: 24,
-                  ),
-                )
-                .millisecondsSinceEpoch,
+      // get posts from the last 24 hours
+      Post_.date.greaterThan(
+        DateTime.now()
+            .subtract(
+          const Duration(
+            hours: 24,
           ),
         )
+            .millisecondsSinceEpoch,
+      ),
+    )
         .build()
         .find();
+  }
+
+  // Method to clear all posts
+  void clearAllPosts() {
+    postBox.removeAll();
   }
 
   void test() {

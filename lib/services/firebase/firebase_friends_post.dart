@@ -5,88 +5,72 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:group_project/models/post.dart';
 import 'firebase_posts_service.dart'; // Import FirebasePostsService
 
-class PostStream {
-  StreamController<Post> _controller = StreamController<Post>();
+class FriendPostPair {
+  final Post post;
+  final String friendName;
 
-  Stream<Post> get stream => _controller.stream;
-
-  void addPost(Post post) {
-    _controller.add(post);
-  }
-
-  void dispose() {
-    _controller.close();
-  }
+  FriendPostPair(this.post, this.friendName);
 }
 
 class FirebaseFriendsPost {
-  late Stream<Post> friendsPostStream; // Change the type to Stream<Post>
+  late Stream<List<FriendPostPair>> friendsPostStream;
 
-  Future<Stream<Post>> initFriendsPostStream() async {
+  Future<Stream<List<FriendPostPair>>> initFriendsPostStream() async {
     final currentUserUid = FirebaseAuth.instance.currentUser?.uid;
 
     if (currentUserUid != null) {
       try {
         List<String> friendIds = await getFriendsIds(currentUserUid);
-        List<Post> friendPosts = [];
+        List<FriendPostPair> friendPostPairs = [];
+
+        // Use a set to track unique posts
+        Set<String> uniquePosts = {};
 
         for (String friendId in friendIds) {
-          List<Post> posts = await FirebasePostsService.getPostsByUserId(friendId);
-          friendPosts.addAll(posts);
+          List<Post> posts =
+              await FirebasePostsService.getPostsByUserId(friendId);
+          String? friendName = await FirebasePostsService.getUserName(friendId);
+
+          for (Post post in posts) {
+            String postIdentifier = '${post.id}_$friendId';
+
+            if (!uniquePosts.contains(postIdentifier)) {
+              uniquePosts.add(postIdentifier);
+              friendPostPairs.add(FriendPostPair(post, friendName!));
+            }
+          }
         }
 
-        // Create a PostStream instance
-        PostStream postStream = PostStream();
-
-        // Add each post to the stream
-        for (Post post in friendPosts) {
-          postStream.addPost(post);
-          print('Post added to stream: ${post.id}');
-        }
-
-        // Assign the stream to friendsPostStream
-        friendsPostStream = postStream.stream;
-
-        print('Friend posts stream initialized successfully');
-
-        // Return the stream
+        friendsPostStream = Stream.value(friendPostPairs);
         return friendsPostStream;
       } catch (e) {
-        print('Error initializing friendsPostStream: $e');
-        friendsPostStream = Stream.empty();
+        friendsPostStream = const Stream.empty();
         return friendsPostStream;
       }
     } else {
-      print('Current user is null');
-      friendsPostStream = Stream.empty();
+      friendsPostStream = const Stream.empty();
       return friendsPostStream;
     }
   }
-
 
   Future<List<String>> getFriendsIds(String currentUserUid) async {
     List<String> friendIds = [];
 
     try {
-      // Fetch the document snapshot for the current user
       DocumentSnapshot userDoc = await FirebaseFirestore.instance
           .collection('users')
           .doc(currentUserUid)
           .get();
 
-      // Check if the document exists and has data
       if (userDoc.exists) {
-        // Retrieve the 'friends' field from the user document
         List<dynamic>? friends = userDoc.get('friends');
 
         if (friends != null && friends.isNotEmpty) {
-          // Cast the dynamic list to a list of strings
           friendIds = friends.cast<String>().toList();
         }
       }
     } catch (e) {
       print('Error fetching friends: $e');
-      // Handle the error as per your application's requirements
     }
 
     return friendIds;

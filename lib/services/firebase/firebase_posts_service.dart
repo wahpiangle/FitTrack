@@ -16,7 +16,6 @@ class FirebasePostsService {
   static final postsCollectionRef = db.collection('posts');
   static final usersCollectionRef = db.collection('users');
 
-
   static Future<bool> createPost(
       Post post, UploadImageProvider uploadImageProvider) async {
     final User user = auth.currentUser!;
@@ -72,7 +71,6 @@ class FirebasePostsService {
           .collection('userPosts')
           .doc(post.workoutSession.targetId.toString())
           .set({
-
         'userId': user.uid,
         'firstImageUrl': firstImageUrl,
         'secondImageUrl': secondImageUrl,
@@ -84,7 +82,6 @@ class FirebasePostsService {
       return false;
     }
   }
-
 
   static void deletePost(int workoutSessionId) async {
     final WorkoutSession workoutSession =
@@ -105,7 +102,7 @@ class FirebasePostsService {
       await postsCollectionRef
           .doc(user.uid)
           .collection('userPosts')
-          .doc(workoutSessionId.toString())  // Use workoutSessionId directly
+          .doc(workoutSessionId.toString()) // Use workoutSessionId directly
           .update({'caption': caption});
 
       return true;
@@ -126,27 +123,24 @@ class FirebasePostsService {
 
       if (docSnapshot.exists) {
         final caption = docSnapshot.data()?['caption'] ?? '';
-        return caption; // Return the caption if it exists
+        return caption;
       } else {
-        return ''; // Return an empty string if the document doesn't exist
+        return '';
       }
     } catch (e) {
-      return ''; // Return an empty string if an error occurs
+      return '';
     }
   }
 
   static Future<List<Post>> getPostsByUserId(String userId) async {
     try {
       final QuerySnapshot<Map<String, dynamic>> querySnapshot =
-      await postsCollectionRef
-          .doc(userId)
-          .collection('userPosts')
-          .get();
+          await postsCollectionRef.doc(userId).collection('userPosts').get();
 
       List<Post> posts = [];
 
       for (QueryDocumentSnapshot<Map<String, dynamic>> doc
-      in querySnapshot.docs) {
+          in querySnapshot.docs) {
         DateTime postDate = DateTime.now(); // Default value
 
         if (doc.data()['date'] != null) {
@@ -169,9 +163,50 @@ class FirebasePostsService {
     }
   }
 
+  static Future<String?> getUserName(String userId) async {
+    try {
+      final DocumentSnapshot<Map<String, dynamic>> userSnapshot =
+          await usersCollectionRef.doc(userId).get();
 
+      if (userSnapshot.exists) {
+        final userName = userSnapshot.data()?['username'] ?? '';
+        return userName;
+      } else {
+        return null;
+      }
+    } catch (e) {
+      return null;
+    }
+  }
 
+  // Method to get current user's posts
+  static Future<List<Post>> getCurrentUserPosts() async {
+    final currentUserUid = FirebaseAuth.instance.currentUser?.uid;
+    List<Post> currentUserPosts = [];
 
+    if (currentUserUid != null) {
+      try {
+        currentUserPosts =
+            await FirebasePostsService.getPostsByUserId(currentUserUid);
+      } catch (e) {
+        // Handle the error as per your application's requirements
+      }
+    }
 
+    return currentUserPosts;
+  }
 
+  Future<bool> firebasePostsNotEmpty() async {
+    try {
+      final currentUserUid = FirebaseAuth.instance.currentUser?.uid;
+      if (currentUserUid != null) {
+        final currentUserPosts =
+            await FirebasePostsService.getPostsByUserId(currentUserUid);
+        return currentUserPosts.isNotEmpty;
+      }
+    } catch (e) {
+      // Handle any errors here
+    }
+    return false; // Return false if there are errors or no posts found
+  }
 }

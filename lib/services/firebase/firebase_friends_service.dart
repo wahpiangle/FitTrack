@@ -125,4 +125,13 @@ class FirebaseFriendsService {
     onFriendAccepted();
   }
 
+  static Future<List<dynamic>> loadCurrentFriends() async {
+    final currentUserUid = FirebaseAuth.instance.currentUser!.uid;
+    final userDoc = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(currentUserUid)
+        .get();
+
+    return userDoc.data()?['friends'] as List<dynamic>? ?? [];
+  }
 }

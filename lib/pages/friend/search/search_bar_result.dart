@@ -70,8 +70,9 @@ class SearchBarResultState extends State<SearchBarResult> {
 
   @override
   Widget build(BuildContext context) {
-    bool isCurrentUserFriend =
-        (widget.user['friends'] as List<dynamic>?)?.contains(FirebaseAuth.instance.currentUser?.uid) ?? false;
+    bool isCurrentUserFriend = (widget.user['friends'] as List<dynamic>?)
+            ?.contains(FirebaseAuth.instance.currentUser?.uid) ??
+        false;
 
     bool isCurrentUser = widget.user['UID'] == FirebaseAuth.instance.currentUser?.uid;
 

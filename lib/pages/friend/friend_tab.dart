@@ -16,7 +16,8 @@ class FriendPage extends StatefulWidget {
   FriendPageState createState() => FriendPageState();
 }
 
-class FriendPageState extends State<FriendPage> with SingleTickerProviderStateMixin {
+class FriendPageState extends State<FriendPage>
+    with SingleTickerProviderStateMixin {
   late int currentPage;
   late TabController tabController;
   final List<Color> colors = [AppColours.secondary, AppColours.secondary, AppColours.secondary];
@@ -52,7 +53,9 @@ class FriendPageState extends State<FriendPage> with SingleTickerProviderStateMi
   @override
   Widget build(BuildContext context) {
 
-    final Color unselectedColor = colors[currentPage].computeLuminance() < 0.2 ? Colors.black : Colors.white;
+    final Color unselectedColor = colors[currentPage].computeLuminance() < 0.2
+        ? Colors.black
+        : Colors.white;
     return SafeArea(
       child: Scaffold(
         backgroundColor: AppColours.primary,
@@ -73,7 +76,8 @@ class FriendPageState extends State<FriendPage> with SingleTickerProviderStateMi
           actions: [
             IconButton(
               icon: Theme(
-                data: ThemeData(iconTheme: const IconThemeData(color: Colors.white)),
+                data: ThemeData(
+                    iconTheme: const IconThemeData(color: Colors.white)),
                 child: const Icon(Icons.arrow_forward_ios),
               ),
               onPressed: () {
@@ -122,7 +126,9 @@ class FriendPageState extends State<FriendPage> with SingleTickerProviderStateMi
           curve: Curves.decelerate,
           showIcon: true,
           width: MediaQuery.of(context).size.width * 0.8,
-          barColor: colors[currentPage].computeLuminance() > 0.2 ? AppColours.primaryBright : Colors.white,
+          barColor: colors[currentPage].computeLuminance() > 0.2
+              ? AppColours.primaryBright
+              : Colors.white,
           start: 2,
           end: 0,
           offset: 10,
@@ -181,7 +187,11 @@ class CustomTab extends StatelessWidget {
   final Color color;
   final VoidCallback onTap;
 
-  const CustomTab({super.key, required this.text, required this.color, required this.onTap});
+  const CustomTab(
+      {super.key,
+      required this.text,
+      required this.color,
+      required this.onTap});
 
   @override
   Widget build(BuildContext context) {

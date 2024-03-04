@@ -2,11 +2,10 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:group_project/main.dart';
+import 'package:group_project/pages/friend/friend_tab.dart';
 import 'package:provider/provider.dart';
 import 'package:group_project/pages/layout/user_profile_provider.dart';
 import 'package:group_project/pages/exercise/components/custom_exercise.dart';
-import 'package:group_project/pages/friend/friend_tab.dart';
-import 'package:group_project/main.dart';
 
 class TopNavBar extends StatelessWidget implements PreferredSizeWidget {
   final User? user;
@@ -58,7 +57,10 @@ class TopNavBar extends StatelessWidget implements PreferredSizeWidget {
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => FriendPage(title: '',)),
+            MaterialPageRoute(
+                builder: (context) => const FriendPage(
+                      title: '',
+                    )),
           );
         },
       );
@@ -81,7 +83,7 @@ class TopNavBar extends StatelessWidget implements PreferredSizeWidget {
             fontWeight: FontWeight.bold,
             color: Colors.white,
             fontFamily: pageIndex == 0 ? 'Dancing Script' : null,
-            fontSize : pageIndex == 0 ? 30 : null,
+            fontSize: pageIndex == 0 ? 30 : null,
           ),
         ),
       ),
