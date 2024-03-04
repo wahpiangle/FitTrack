@@ -103,4 +103,26 @@ class FirebaseFriendsService {
     }
   }
 
+  static Future<void> acceptFriendRequest(String friendUid, VoidCallback onFriendAccepted) async {
+    final currentUserUid = FirebaseAuth.instance.currentUser?.uid;
+
+    await FirebaseFirestore.instance.collection('users').doc(friendUid).update({
+      'friends': FieldValue.arrayUnion([currentUserUid])
+    });
+
+    await FirebaseFirestore.instance.collection('users').doc(currentUserUid).update({
+      'friends': FieldValue.arrayUnion([friendUid])
+    });
+
+    await FirebaseFirestore.instance.collection('users').doc(currentUserUid).update({
+      'requestReceived': FieldValue.arrayRemove([friendUid])
+    });
+
+    await FirebaseFirestore.instance.collection('users').doc(friendUid).update({
+      'requestSent': FieldValue.arrayRemove([currentUserUid])
+    });
+
+    onFriendAccepted();
+  }
+
 }

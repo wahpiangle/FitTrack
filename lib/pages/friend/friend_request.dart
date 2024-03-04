@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:group_project/constants/themes/app_colours.dart';
 import 'package:group_project/pages/friend/search/search_helper.dart';
 import 'package:group_project/pages/friend/search/user_image_display.dart';
+import 'package:group_project/services/firebase/firebase_friends_service.dart';
 import 'search/friend_search_bar.dart';
 
 class FriendRequestsTab extends StatefulWidget {
@@ -20,7 +21,7 @@ class FriendRequestsTab extends StatefulWidget {
 class FriendRequestsTabState extends State<FriendRequestsTab> {
   final TextEditingController _searchController = TextEditingController();
   List<Map<String, dynamic>> searchedUsers = [];
-  StreamController<void> _updateController = StreamController<void>.broadcast();
+  final StreamController<void> _updateController = StreamController<void>.broadcast();
 
   @override
   void dispose() {
@@ -111,7 +112,6 @@ class FriendRequestsTabState extends State<FriendRequestsTab> {
                   return FriendRequestTile(
                     friendUid: friendUid,
                     onFriendAccepted: () {
-                      // Trigger an update when a friend is accepted
                       _updateController.add(null);
                     },
                   );
@@ -176,24 +176,7 @@ class FriendRequestTile extends StatelessWidget {
                 height: 28,
                 child: ElevatedButton(
                   onPressed: () async {
-                    final currentUserUid = FirebaseAuth.instance.currentUser?.uid;
-
-                    await FirebaseFirestore.instance.collection('users').doc(friendUid).update({
-                      'friends': FieldValue.arrayUnion([currentUserUid])
-                    });
-
-                    await FirebaseFirestore.instance.collection('users').doc(currentUserUid).update({
-                      'friends': FieldValue.arrayUnion([friendUid])
-                    });
-
-                    await FirebaseFirestore.instance.collection('users').doc(currentUserUid).update({
-                      'requestReceived': FieldValue.arrayRemove([friendUid])
-                    });
-
-                    await FirebaseFirestore.instance.collection('users').doc(friendUid).update({
-                      'requestSent': FieldValue.arrayRemove([currentUserUid])
-                    });
-                    onFriendAccepted();
+                    FirebaseFriendsService.acceptFriendRequest(friendUid, onFriendAccepted);
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColours.secondaryLight,
