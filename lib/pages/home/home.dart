@@ -14,10 +14,11 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Home extends StatefulWidget {
-  const Home({Key? key}) : super(key: key);
+  const Home({super.key});
+
 
   @override
-  _HomeState createState() => _HomeState();
+  State<Home> createState() => _HomeState();
 }
 
 class _HomeState extends State<Home> {
@@ -259,12 +260,12 @@ class _HomeState extends State<Home> {
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       // Return a loading indicator if the future is not resolved yet
-                      return CircularProgressIndicator();
+                      return const CircularProgressIndicator();
                     } else {
                       // If the future is resolved, check if Firebase has posts
                       if (snapshot.hasData && snapshot.data!) {
                         // If Firebase has posts, display the CurrentUserPost widget
-                        return CurrentUserPost();
+                        return const CurrentUserPost();
                       } else {
                         // If Firebase does not have posts, display the "Start a Workout" UI
                         return Column(
@@ -281,16 +282,16 @@ class _HomeState extends State<Home> {
                                   // Add gray border
                                   borderRadius: BorderRadius.circular(8), // Optional: Add border radius
                                 ),
-                                child: Icon(
+                                child: const Icon(
                                   Icons.add,
                                   size: 48,
                                   color: Colors.grey,
                                 ),
                               ),
                             ),
-                            SizedBox(height: 8),
+                            const SizedBox(height: 8),
                             // Add space between the icon and the text
-                            Text(
+                            const Text(
                               'Start a Workout & Add a post!',
                               style: TextStyle(
                                 fontFamily: 'Dancing Script',

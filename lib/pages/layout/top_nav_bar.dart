@@ -57,7 +57,7 @@ class TopNavBar extends StatelessWidget implements PreferredSizeWidget {
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => FriendPage(title: '',)),
+            MaterialPageRoute(builder: (context) => const FriendPage(title: '',)),
           );
         },
       );

@@ -1,16 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:group_project/constants/upload_enums.dart';
 import 'package:group_project/models/post.dart';
-import 'package:group_project/pages/home/components/friends_post.dart';
 import 'package:group_project/services/firebase/firebase_posts_service.dart';
 import 'package:group_project/pages/home/components/display_post_image_screen.dart';
-import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class CurrentUserPost extends StatefulWidget {
-  const CurrentUserPost({Key? key}) : super(key: key);
+  const CurrentUserPost({super.key});
 
   @override
   State<CurrentUserPost> createState() => _CurrentUserPostState();
@@ -47,7 +43,6 @@ class _CurrentUserPostState extends State<CurrentUserPost> {
         fetchCaption(workoutSessionId);
       });
     } catch (e) {
-      print('Error fetching user posts: $e');
       // Handle error accordingly
     }
   }
@@ -101,8 +96,8 @@ class _CurrentUserPostState extends State<CurrentUserPost> {
                               // First image URL
                               CachedNetworkImage(
                                 imageUrl: imageList[index]['firstImageUrl'],
-                                placeholder: (context, url) => CircularProgressIndicator(),
-                                errorWidget: (context, url, error) => Icon(Icons.error),
+                                placeholder: (context, url) => const CircularProgressIndicator(),
+                                errorWidget: (context, url, error) => const Icon(Icons.error),
                               ),
                               // Second image URL stacked to the top left
                               Positioned(
@@ -113,8 +108,8 @@ class _CurrentUserPostState extends State<CurrentUserPost> {
                                   height: 50, // Adjust the size as needed
                                   child: CachedNetworkImage(
                                     imageUrl: imageList[index]['secondImageUrl'],
-                                    placeholder: (context, url) => CircularProgressIndicator(),
-                                    errorWidget: (context, url, error) => Icon(Icons.error),
+                                    placeholder: (context, url) => const CircularProgressIndicator(),
+                                    errorWidget: (context, url, error) => const Icon(Icons.error),
                                   ),
                                 ),
                               ),

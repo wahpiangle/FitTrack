@@ -57,7 +57,7 @@ class AuthService {
       objectBox.postService.clearAllPosts();
       await _auth.signOut();
     } catch (e) {
-      throw e;
+      rethrow;
     }
   }
 
@@ -72,8 +72,7 @@ class AuthService {
         prefs.remove('caption_${image['workoutSessionId']}');
       }
     } catch (e) {
-      print("Error clearing posts SharedPreferences: $e");
-      throw e;
+      rethrow;
     }
   }
 
