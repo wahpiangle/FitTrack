@@ -169,7 +169,7 @@ class FirebasePostsService {
           await usersCollectionRef.doc(userId).get();
 
       if (userSnapshot.exists) {
-        final userName = userSnapshot.data()?['displayName'] ?? '';
+        final userName = userSnapshot.data()?['username'] ?? '';
         return userName;
       } else {
         return null;
