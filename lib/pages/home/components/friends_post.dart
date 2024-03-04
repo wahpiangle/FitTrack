@@ -159,3 +159,5 @@ class _FriendsPostCarouselState extends State<FriendsPostCarousel> {
     );
   }
 }
+
+//TODO make friends second post viewable when swipe to right

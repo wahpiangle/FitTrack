@@ -2,9 +2,11 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:group_project/main.dart';
+import 'package:group_project/pages/friend/friend_tab.dart';
 import 'package:provider/provider.dart';
 import 'package:group_project/pages/layout/user_profile_provider.dart';
 import 'package:group_project/pages/exercise/components/custom_exercise.dart';
+
 import 'package:group_project/pages/friend/friend_tab.dart';
 import 'package:group_project/main.dart';
 
@@ -59,7 +61,7 @@ class TopNavBar extends StatelessWidget implements PreferredSizeWidget {
           Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => FriendPage(
+                builder: (context) => const FriendPage(
                       title: '',
                     )),
           );

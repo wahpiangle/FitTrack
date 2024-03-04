@@ -194,6 +194,7 @@ class FirebasePostsService {
     if (currentUserUid != null) {
       try {
         currentUserPosts = await FirebasePostsService.getPostsByUserId(currentUserUid);
+
       } catch (e) {
         // Handle the error as per your application's requirements
       }
@@ -201,6 +202,21 @@ class FirebasePostsService {
 
     return currentUserPosts;
   }
+
+
+  Future<bool> firebasePostsNotEmpty() async {
+    try {
+      final currentUserUid = FirebaseAuth.instance.currentUser?.uid;
+      if (currentUserUid != null) {
+        final currentUserPosts = await FirebasePostsService.getPostsByUserId(currentUserUid);
+        return currentUserPosts.isNotEmpty;
+      }
+    } catch (e) {
+      // Handle any errors here
+    }
+    return false; // Return false if there are errors or no posts found
+  }
+
 
 
 

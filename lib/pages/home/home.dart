@@ -3,6 +3,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:group_project/constants/upload_enums.dart';
 import 'package:group_project/main.dart';
 import 'package:group_project/pages/complete_workout/capture_image/upload_image_provider.dart';
+import 'package:group_project/pages/home/components/current_user_post.dart';
 import 'package:group_project/pages/home/components/display_image_stack.dart';
 import 'package:group_project/constants/themes/app_colours.dart';
 import 'package:group_project/pages/home/components/display_post_image_screen.dart';
@@ -12,9 +13,9 @@ import 'package:group_project/services/firebase/firebase_posts_service.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-
 class Home extends StatefulWidget {
   const Home({super.key});
+
 
   @override
   State<Home> createState() => _HomeState();
@@ -27,7 +28,7 @@ class _HomeState extends State<Home> {
   late Stream<List<FriendPostPair>> friendsPostStream;
   FirebaseFriendsPost firebaseFriendsPost = FirebaseFriendsPost();
 
-  late final List<Map<String, dynamic>> imageList;
+  late List<Map<String, dynamic>> imageList;
 
   @override
   void initState() {
@@ -61,6 +62,17 @@ class _HomeState extends State<Home> {
     });
   }
 
+  Future<bool> firebasePostsNotEmpty() async {
+    try {
+      // Call the method from FirebasePostsService to check if Firebase has posts
+      final hasPosts = await FirebasePostsService().firebasePostsNotEmpty();
+      return hasPosts;
+    } catch (e) {
+      // Handle any errors here
+      return false;
+    }
+  }
+
   void fetchFriendsPosts() async {
     FirebaseFriendsPost().initFriendsPostStream().then((stream) {
       setState(() {
@@ -70,8 +82,8 @@ class _HomeState extends State<Home> {
   }
 
   void fetchCaption(int workoutSessionId) async {
-    String fetchedCaption = await FirebasePostsService.getCaption(
-        workoutSessionId);
+    String fetchedCaption =
+    await FirebasePostsService.getCaption(workoutSessionId);
     setState(() {
       caption = fetchedCaption;
     });
@@ -106,22 +118,27 @@ class _HomeState extends State<Home> {
                       onPageChanged: (index, reason) {
                         setState(() {
                           _current = index;
-                          fetchCaption(imageList[index]['workoutSessionId']);
+                          fetchCaption(
+                              imageList[index]['workoutSessionId']);
                         });
                       },
                     ),
                     itemBuilder: (context, index, realIndex) {
-                      final firstImage = imageList[index]['firstImageUrl']!;
-                      final secondImage = imageList[index]['secondImageUrl']!;
+                      final firstImage =
+                      imageList[index]['firstImageUrl']!;
+                      final secondImage =
+                      imageList[index]['secondImageUrl']!;
                       final postId = imageList[index]['postId']!;
                       final workoutSessionId =
                       imageList[index]['workoutSessionId']!;
                       return Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 5),
+                        margin: const EdgeInsets.symmetric(
+                            horizontal: 5),
                         child: Column(
                           children: [
                             ClipRRect(
-                              borderRadius: const BorderRadius.all(
+                              borderRadius:
+                              const BorderRadius.all(
                                 Radius.circular(8.0),
                               ),
                               child: DisplayImageStack(
@@ -130,63 +147,86 @@ class _HomeState extends State<Home> {
                                 index: index,
                                 current: _current,
                                 postId: postId,
-                                workoutSessionId: workoutSessionId,
+                                workoutSessionId:
+                                workoutSessionId,
                               ),
                             ),
                             uploadImageProvider.uploadError
                                 ? const Text(
                               'There was an error uploading your workout. Please try again.',
-                              style: TextStyle(color: Colors.red),
+                              style: TextStyle(
+                                  color: Colors.red),
                               textAlign: TextAlign.center,
                             )
                                 : Container(
                               width: 100,
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 1, vertical: 1),
+                              padding:
+                              const EdgeInsets.symmetric(
+                                  horizontal: 1,
+                                  vertical: 1),
                               decoration: BoxDecoration(
                                 color: Colors.transparent,
-                                border: Border.all(color: Colors.transparent),
-                                borderRadius: BorderRadius.circular(8),
+                                border: Border.all(
+                                    color: Colors.transparent),
+                                borderRadius:
+                                BorderRadius.circular(8),
                               ),
                               child: TextField(
                                 showCursor: false,
-                                textAlign: TextAlign.center,
-                                style: const TextStyle(color: Colors.white),
-                                enableInteractiveSelection: false,
-                                decoration: const InputDecoration(
+                                textAlign:
+                                TextAlign.center,
+                                style: const TextStyle(
+                                    color: Colors.white),
+                                enableInteractiveSelection:
+                                false,
+                                decoration:
+                                const InputDecoration(
                                   alignLabelWithHint: true,
                                   hintText: 'Add a caption..',
-                                  hintStyle: TextStyle(color: Colors.grey),
+                                  hintStyle: TextStyle(
+                                      color: Colors.grey),
                                   border: InputBorder.none,
-                                  contentPadding: EdgeInsets.only(left: 16),
+                                  contentPadding:
+                                  EdgeInsets.only(
+                                      left: 16),
                                 ),
                                 onChanged: (caption) {
-                                  FirebasePostsService.saveCaption(
-                                      workoutSessionId, caption);
+                                  FirebasePostsService
+                                      .saveCaption(
+                                      workoutSessionId,
+                                      caption);
                                 },
                                 controller:
-                                TextEditingController(text: caption),
+                                TextEditingController(
+                                    text: caption),
                               ),
                             ),
                             Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
+                              mainAxisAlignment:
+                              MainAxisAlignment.center,
                               children: [
                                 Container(
-                                  margin: const EdgeInsets.all(5),
-                                  padding: const EdgeInsets.all(8),
+                                  margin:
+                                  const EdgeInsets.all(5),
+                                  padding:
+                                  const EdgeInsets.all(8),
                                   decoration: BoxDecoration(
                                     shape: BoxShape.circle,
-                                    border: Border.all(color: Colors.grey),
+                                    border: Border.all(
+                                        color: Colors.grey),
                                   ),
                                   child: const Icon(Icons.favorite,
                                       color: Colors.grey),
                                 ),
                                 Container(
-                                  margin: const EdgeInsets.all(5),
-                                  padding: const EdgeInsets.all(8),
+                                  margin:
+                                  const EdgeInsets.all(5),
+                                  padding:
+                                  const EdgeInsets.all(8),
                                   decoration: BoxDecoration(
                                     shape: BoxShape.circle,
-                                    border: Border.all(color: Colors.grey),
+                                    border: Border.all(
+                                        color: Colors.grey),
                                   ),
                                   child: GestureDetector(
                                     onTap: () {
@@ -214,39 +254,58 @@ class _HomeState extends State<Home> {
                     },
                   )
                 else
-                  Column(
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                          //TODO TO GO TO START NEW WORKOUT PAGE
-                        },
-                        child: Container(
-                          height: 200,
-                          width: 100,
-                          decoration: BoxDecoration(
-                            border: Border.all(color: Colors.grey), // Add gray border
-                            borderRadius: BorderRadius.circular(8), // Optional: Add border radius
-                          ),
-                          child: Icon(
-                            Icons.add,
-                            size: 48,
-                            color: Colors.grey,
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 8), // Add space between the icon and the text
-                      Text(
-                        'Start a Workout & Add a post!',
-                        style: TextStyle(
-                          fontFamily: 'Dancing Script',
-                          color: Colors.grey,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 25,
-                        ),
-                      ),
-                    ],
-                  ),
-
+                // Adding Current User's Post conditionally
+                FutureBuilder<bool>(
+                  future: firebasePostsNotEmpty(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      // Return a loading indicator if the future is not resolved yet
+                      return const CircularProgressIndicator();
+                    } else {
+                      // If the future is resolved, check if Firebase has posts
+                      if (snapshot.hasData && snapshot.data!) {
+                        // If Firebase has posts, display the CurrentUserPost widget
+                        return const CurrentUserPost();
+                      } else {
+                        // If Firebase does not have posts, display the "Start a Workout" UI
+                        return Column(
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                //TODO TO GO TO START NEW WORKOUT PAGE
+                              },
+                              child: Container(
+                                height: 200,
+                                width: 100,
+                                decoration: BoxDecoration(
+                                  border: Border.all(color: Colors.grey),
+                                  // Add gray border
+                                  borderRadius: BorderRadius.circular(8), // Optional: Add border radius
+                                ),
+                                child: const Icon(
+                                  Icons.add,
+                                  size: 48,
+                                  color: Colors.grey,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            // Add space between the icon and the text
+                            const Text(
+                              'Start a Workout & Add a post!',
+                              style: TextStyle(
+                                fontFamily: 'Dancing Script',
+                                color: Colors.grey,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 25,
+                              ),
+                            ),
+                          ],
+                        );
+                      }
+                    }
+                  },
+                ),
                 // Adding Friends' Posts Carousel
                 const FriendsPostCarousel(),
               ],
