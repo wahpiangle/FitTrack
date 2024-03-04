@@ -1,14 +1,15 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:group_project/constants/themes/app_colours.dart';
 import 'package:group_project/pages/auth/edit_password.dart';
-import 'package:group_project/pages/layout/top_nav_bar.dart';
+import 'package:group_project/pages/layout/user_profile_provider.dart';
+import 'package:group_project/pages/settings/components/logout_button.dart';
+import 'package:group_project/pages/settings/components/profile_menu_item.dart';
 import 'package:group_project/pages/settings/timer_details_settings.dart';
 import 'package:provider/provider.dart';
 import 'package:group_project/services/firebase/auth_service.dart';
-import 'package:group_project/services/user_state.dart';
-import 'package:group_project/pages/auth/offline_edit.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:io';
+import 'package:group_project/pages/settings/edit_profile_page.dart';
 import 'package:group_project/pages/workout/State/timer_sheet_manager.dart';
 import 'package:group_project/pages/workout/components/timer/providers/timer_provider.dart';
 
@@ -20,16 +21,15 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
-  late SharedPreferences _prefs;
-  late String username = '';
-  late String profileImage = '';
-  late bool isAnonymous = false;
-  late bool isSignInWithGoogle = false;
+  User? currentUser = AuthService().getCurrentUser();
+  late bool isSignInWithGoogle;
+  bool isFileImage = false;
 
   @override
   void initState() {
     super.initState();
-    _loadUserData();
+    isSignInWithGoogle =
+        currentUser?.providerData.first.providerId == 'google.com';
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _handleTimerActive(context); // Add this line to handle timer state
     });
@@ -62,98 +62,32 @@ class _SettingsScreenState extends State<SettingsScreen> {
     timerProvider.addListener(listener);
   }
 
-  Future<void> _loadUserData() async {
-    _prefs = await SharedPreferences.getInstance();
-    User? currentUser = AuthService().getCurrentUser();
-    bool fetchedIsAnonymous =
-        AuthService().getCurrentUser()?.isAnonymous ?? false;
-
-    setState(() {
-      isAnonymous = fetchedIsAnonymous;
-      if (!isAnonymous) {
-        _loadFirebaseUserData();
-      } else {
-        _loadAnonymousUserData();
-      }
-    });
-
-    setState(() {
-      isSignInWithGoogle =
-          currentUser?.providerData.first.providerId == 'google.com';
-      if (!isSignInWithGoogle) {
-        if (currentUser == null || currentUser.isAnonymous) {
-          _loadAnonymousUserData();
-        } else {
-          _loadFirebaseUserData();
-        }
-      }
-    });
-  }
-
-  _loadFirebaseUserData() async {
-    User? currentUser = AuthService().getCurrentUser();
-
-    if (currentUser != null) {
-      if (currentUser.displayName == null || currentUser.displayName!.isEmpty) {
-        // New user using email/Gmail login method
-        await _generateAndUploadRandomUsername();
-      } else {
-        // Existing user, load the data
+  void setUserInfo(String username, String image, String displayName,
+      UserProfileProvider userProfileProvider) async {
+    if (username == userProfileProvider.username &&
+        image == userProfileProvider.profileImage &&
+        displayName == userProfileProvider.displayName) {
+      return;
+    } else {
+      if (image != userProfileProvider.profileImage) {
         setState(() {
-          username = currentUser.displayName ?? '';
-          profileImage = currentUser.photoURL ?? '';
-          Provider.of<ProfileImageProvider>(context, listen: false)
-              .updateProfileImage(profileImage);
+          isFileImage = true;
         });
+        await userProfileProvider.updateProfileImage(image);
       }
-    }
-  }
-
-  _generateAndUploadRandomUsername() async {
-    String newUsername = generateUsername();
-    User? currentUser = AuthService().getCurrentUser();
-
-    if (currentUser != null) {
-      // Update Firebase user profile with the random username
-      await AuthService().updateUserProfile(displayName: newUsername);
-
-      setState(() {
-        username = newUsername;
-      });
-    }
-  }
-
-  _loadAnonymousUserData() {
-    username = _prefs.getString('username') ?? generateUsername();
-    profileImage =
-        _prefs.getString('profile_image') ?? 'assets/icons/defaultimage.jpg';
-  }
-
-  String generateUsername() {
-    String username = 'User_${DateTime.now().millisecondsSinceEpoch}';
-
-    // Limit the username to 15 characters
-    if (username.length > 15) {
-      username = username.substring(0, 15);
-    }
-
-    return username;
-  }
-
-  _saveUserData() async {
-    if (isAnonymous) {
-      await _prefs.setString('username', username);
-      await _prefs.setString('profile_image', profileImage);
+      if (username != userProfileProvider.username) {
+        await userProfileProvider.updateUsername(username);
+      }
+      if (displayName != userProfileProvider.displayName) {
+        await userProfileProvider.updateDisplayName(displayName);
+      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final UserStateProvider userStateProvider =
-        Provider.of<UserStateProvider>(context);
-
-    bool isLoggedIn = userStateProvider.userState.isLoggedIn;
-
+    UserProfileProvider userProfileProvider =
+        Provider.of<UserProfileProvider>(context);
     return Scaffold(
       body: Container(
         height: double.infinity,
@@ -185,61 +119,83 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     ),
                     Row(
                       children: [
-                        SizedBox(
-                          width: 100,
-                          height: 100,
-                          child: ClipOval(
-                            child: (profileImage.isEmpty ||
-                                    profileImage ==
-                                        'assets/icons/defaultimage.jpg')
-                                ? const CircleAvatar(
-                                    radius: 50,
-                                    backgroundImage: AssetImage(
-                                        'assets/icons/defaultimage.jpg'),
-                                  )
-                                : CircleAvatar(
-                                    radius: 50,
-                                    backgroundImage:
-                                        FileImage(File(profileImage)),
+                        userProfileProvider.profileImage == ""
+                            ? const SizedBox(
+                                width: 100,
+                                height: 100,
+                                child: CircularProgressIndicator(
+                                  backgroundColor: AppColours.secondary,
+                                ))
+                            : SizedBox(
+                                width: 100,
+                                height: 100,
+                                child: CachedNetworkImage(
+                                  imageUrl: userProfileProvider.profileImage,
+                                  imageBuilder: (context, imageProvider) =>
+                                      CircleAvatar(
+                                    radius: 120,
+                                    backgroundImage: imageProvider,
                                   ),
-                          ),
-                        ),
+                                  placeholder: (context, url) =>
+                                      const CircularProgressIndicator(
+                                    backgroundColor: AppColours.secondary,
+                                  ),
+                                  errorWidget: (context, url, error) =>
+                                      const Icon(
+                                    Icons.error,
+                                    color: AppColours.secondary,
+                                  ),
+                                ),
+                              ),
                         const SizedBox(width: 20),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
-                            Padding(
-                              padding: const EdgeInsets.only(left: 10),
-                              child: Text(
-                                // user?.displayName ?? 'User',
-                                username,
-                                maxLines: 1,
-                                style: const TextStyle(
-                                    fontSize: 20, color: Colors.white),
+                            Text(
+                              userProfileProvider.displayName,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 20,
                               ),
                             ),
-                            const SizedBox(height: 12),
-                            Container(
-                              width: MediaQuery.of(context).size.width * 0.35,
-                              height: MediaQuery.of(context).size.height * 0.05,
-                              decoration: BoxDecoration(
-                                color: const Color(0xFFE1F0CF),
-                                borderRadius: BorderRadius.circular(100),
+                            const SizedBox(height: 10),
+                            Text(
+                              '@${userProfileProvider.username}',
+                              maxLines: 1,
+                              style: const TextStyle(
+                                  fontSize: 14, color: Colors.grey),
+                            ),
+                            const SizedBox(height: 10),
+                            TextButton(
+                              style: TextButton.styleFrom(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 30, vertical: 10),
+                                backgroundColor: AppColours.secondary,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
                               ),
-                              child: TextButton(
-                                onPressed: () {
-                                  // Check if the user is logged in or not
-                                  if (isLoggedIn) {
-                                    _editProfile(context);
-                                  }
-                                },
-                                child: const Text(
-                                  'Edit Profile',
-                                  style: TextStyle(
-                                    color: Color(0xFF1A1A1A),
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.bold,
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => EditProfilePage(
+                                      username: userProfileProvider.username,
+                                      profileImage:
+                                          userProfileProvider.profileImage,
+                                      displayName:
+                                          userProfileProvider.displayName,
+                                      setUserInfo: setUserInfo,
+                                    ),
                                   ),
+                                );
+                              },
+                              child: const Text(
+                                'Edit Profile',
+                                style: TextStyle(
+                                  color: Color(0xFF1A1A1A),
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
                                 ),
                               ),
                             ),
@@ -293,138 +249,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ),
               ),
             ],
-          ),
-        ),
-      ),
-
-      // Nav Bar
-    );
-  }
-
-  void updateProfileImage(String newProfileImage) {
-    setState(() {
-      profileImage = newProfileImage;
-      if (isAnonymous) {
-        _saveUserData(); // Save updated profile image for anonymous users
-      } else {}
-    });
-  }
-
-  void _editProfile(BuildContext context) async {
-    Map<String, dynamic>? result = await Navigator.push(
-      context,
-      MaterialPageRoute(
-          builder: (context) =>
-              EditProfilePage(username: username, profileImage: profileImage)),
-    );
-
-    if (result != null &&
-        result.containsKey('username') &&
-        result['username'] != null) {
-      setState(() {
-        username = result['username']!;
-        if (result.containsKey('profileImage')) {
-          profileImage = result['profileImage'];
-          // Update Firebase user profile for authenticated users
-          if (!isAnonymous) {
-            AuthService().updateUserProfile(
-                displayName: username, photoURL: profileImage);
-          }
-          _saveUserData();
-        }
-      });
-    }
-  }
-}
-
-class ProfileMenuItem extends StatelessWidget {
-  final String title;
-  final IconData icon;
-  final VoidCallback onPressed;
-
-  const ProfileMenuItem({
-    super.key,
-    required this.title,
-    required this.icon,
-    required this.onPressed,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Container(
-          decoration: BoxDecoration(
-            color: Colors.grey[850],
-            borderRadius: BorderRadius.circular(20.0),
-          ),
-          child: Material(
-            color: Colors.transparent,
-            child: InkWell(
-              onTap: onPressed,
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        Icon(
-                          icon,
-                          color: Colors.white,
-                          size: 28,
-                        ),
-                        const SizedBox(width: 12),
-                        Text(
-                          title,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
-                    const Icon(
-                      Icons.arrow_forward_ios,
-                      color: Colors.white,
-                      size: 18,
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ),
-        const SizedBox(height: 15),
-      ],
-    );
-  }
-}
-
-class LogoutButton extends StatelessWidget {
-  final AuthService authService = AuthService();
-  LogoutButton({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: double.infinity,
-      child: TextButton(
-        onPressed: () {
-          authService.signOut();
-          Future.microtask(
-              () => Navigator.of(context).popAndPushNamed('/auth'));
-        },
-        style: TextButton.styleFrom(
-          foregroundColor: Colors.red,
-          backgroundColor: Colors.transparent,
-        ),
-        child: const Text(
-          'Log Out',
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
           ),
         ),
       ),
