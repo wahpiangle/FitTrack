@@ -34,13 +34,13 @@ class AuthService {
 
   //register with email and password
   Future registerWithEmailAndPassword(
-      String email, String password, String name) async {
+      String email, String password, String username) async {
     try {
       UserCredential result = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
       User? user = result.user;
       user?.sendEmailVerification();
-      FirebaseUserService.createUserInFirestore(user!, name);
+      FirebaseUserService.createUserInFirestore(user!, username);
       return user;
     } catch (e) {
       rethrow;
@@ -58,26 +58,6 @@ class AuthService {
 
   User? getCurrentUser() {
     return _auth.currentUser;
-  }
-
-  Future<void> updateUserProfile({
-    required String displayName,
-    String? photoURL,
-  }) async {
-    try {
-      User? user = getCurrentUser();
-
-      if (user != null) {
-        // await user.updateProfile(displayName: displayName, photoURL: photoURL);
-        await user.updateDisplayName(displayName);
-        await user.updatePhotoURL(photoURL);
-        await user.reload();
-        user = getCurrentUser();
-      }
-    } catch (e) {
-      print(e.toString());
-      rethrow;
-    }
   }
 
   //sign in with Google

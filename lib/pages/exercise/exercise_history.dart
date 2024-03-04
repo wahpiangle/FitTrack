@@ -79,12 +79,19 @@ class _ExerciseHistoryState extends State<ExerciseHistory> {
                 Expanded(
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 30.0),
-                    child: snapshot.data!
-                            .where((workoutSession) =>
-                                workoutSession.exercisesSetsInfo.any((info) =>
-                                    info.exercise.target?.name ==
-                                    widget.exercise.name))
-                            .isEmpty
+                    child: !snapshot.hasData ||
+                            snapshot.data!
+                                .where((workoutSession) => workoutSession
+                                    .exercisesSetsInfo
+                                    .any((info) =>
+                                        info.exercise.target?.name ==
+                                        widget.exercise.name))
+                                .isEmpty
+                        // .where((workoutSession) =>
+                        //     workoutSession.exercisesSetsInfo.any((info) =>
+                        //         info.exercise.target?.name ==
+                        //         widget.exercise.name))
+                        // .isEmpty
                         ? const Column(
                             children: [
                               SizedBox(height: 200.0),
@@ -122,13 +129,10 @@ class _ExerciseHistoryState extends State<ExerciseHistory> {
                                 controller: _scrollController,
                                 index: snapshot.data!.indexWhere((element) =>
                                     element.id == workoutSession.id),
-                                child: IgnorePointer(
-                                  ignoring: true,
-                                  child: ExerciseWorkoutCard(
-                                    key: Key(workoutSession.id.toString()),
-                                    workoutSession: workoutSession,
-                                    exerciseName: widget.exercise.name,
-                                  ),
+                                child: ExerciseWorkoutCard(
+                                  key: Key(workoutSession.id.toString()),
+                                  workoutSession: workoutSession,
+                                  exerciseName: widget.exercise.name,
                                 ),
                               );
                             }).toList(),
