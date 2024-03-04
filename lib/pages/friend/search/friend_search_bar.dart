@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:group_project/constants/themes/app_colours.dart';
-import 'search_helper.dart';
+import 'package:group_project/services/firebase/firebase_friends_service.dart';
 
 class FriendSearchBar extends StatelessWidget {
   final TextEditingController controller;
@@ -8,11 +8,11 @@ class FriendSearchBar extends StatelessWidget {
   final Function() onCancel;
 
   const FriendSearchBar({
-    Key? key,
+    super.key,
     required this.controller,
     required this.onSearch,
     required this.onCancel,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -24,12 +24,10 @@ class FriendSearchBar extends StatelessWidget {
           TextField(
             controller: controller,
             style: const TextStyle(color: Colors.white),
-            onChanged: (query) {
-              SearchHelper.performSearch(
-                controller: controller,
-                onSearch: onSearch,
-                onCancel: onCancel,
-              );
+            onChanged: (query) async {
+              final results =
+                  await FirebaseFriendsService.searchUsers(controller.text);
+              onSearch(results);
             },
             decoration: const InputDecoration(
               hintText: 'Search by username or phone number',
@@ -42,10 +40,8 @@ class FriendSearchBar extends StatelessWidget {
             IconButton(
               icon: const Icon(Icons.cancel, color: Colors.grey),
               onPressed: () {
-                SearchHelper.cancelSearch(
-                  controller: controller,
-                  onCancel: onCancel,
-                );
+                controller.clear();
+                onCancel();
               },
             ),
         ],
@@ -53,4 +49,3 @@ class FriendSearchBar extends StatelessWidget {
     );
   }
 }
-

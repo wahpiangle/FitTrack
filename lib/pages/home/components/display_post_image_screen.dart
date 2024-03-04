@@ -12,7 +12,7 @@ class DisplayPostImageScreen extends StatelessWidget {
     required this.imagePath2,
     required this.workoutSessionId,
   });
-  // TODO: display exercise details
+  // TODO: display exercise details & comments
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,6 +22,9 @@ class DisplayPostImageScreen extends StatelessWidget {
           style: TextStyle(color: Colors.white),
         ),
         backgroundColor: AppColours.primary,
+        iconTheme: const IconThemeData(
+          color: Colors.white,
+        ),
       ),
       backgroundColor: AppColours.primary,
       body: Container(

@@ -7,7 +7,7 @@ import 'search_helper.dart';
 class SearchBarResult extends StatefulWidget {
   final Map<String, dynamic> user;
 
-  const SearchBarResult({Key? key, required this.user}) : super(key: key);
+  const SearchBarResult({super.key, required this.user});
 
   @override
   SearchBarResultState createState() => SearchBarResultState();
@@ -18,13 +18,20 @@ class SearchBarResultState extends State<SearchBarResult> {
 
   @override
   Widget build(BuildContext context) {
-    bool isCurrentUserFriend =
-        (widget.user['friends'] as List<dynamic>?)?.contains(FirebaseAuth.instance.currentUser?.uid) ?? false;
+    bool isCurrentUserFriend = (widget.user['friends'] as List<dynamic>?)
+            ?.contains(FirebaseAuth.instance.currentUser?.uid) ??
+        false;
 
     return ListTile(
       leading: ImageDisplay.buildUserProfileImage(widget.user['photoUrl']),
       title: Text(
         widget.user['name'] ?? '',
+        style: const TextStyle(
+          color: Colors.white,
+        ),
+      ),
+      subtitle: Text(
+        widget.user['username'] ?? '',
         style: const TextStyle(
           color: Colors.white,
         ),
@@ -35,35 +42,38 @@ class SearchBarResultState extends State<SearchBarResult> {
         child: isCurrentUserFriend
             ? Container()
             : ElevatedButton(
-          onPressed: () {
-            if (!friendRequestSent && widget.user['UID'] != null) {
-              setState(() {
-                friendRequestSent = true;
-              });
-
-              FirebaseFriendsService.addFriend(widget.user['UID']);
-            }
-          },
-          style: ElevatedButton.styleFrom(
-            backgroundColor: friendRequestSent ? AppColours.secondaryLight : AppColours.secondary,
-            padding: const EdgeInsets.all(8),
-            textStyle: const TextStyle(fontSize: 11),
-          ),
-          child: AnimatedSwitcher(
-            duration: const Duration(milliseconds: 300),
-            child: friendRequestSent
-                ? const Text(
-              'Requested',
-              key: Key('requestedText'),
-              style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
-            )
-                : const Text(
-              'Add',
-              key: Key('addText'),
-              style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
-            ),
-          ),
-        ),
+                onPressed: () {
+                  if (!friendRequestSent && widget.user['UID'] != null) {
+                    setState(() {
+                      friendRequestSent = true;
+                    });
+                    FirebaseFriendsService.addFriend(widget.user['UID']);
+                  }
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: friendRequestSent
+                      ? AppColours.secondaryLight
+                      : AppColours.secondary,
+                  padding: const EdgeInsets.all(8),
+                  textStyle: const TextStyle(fontSize: 11),
+                ),
+                child: AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 300),
+                  child: friendRequestSent
+                      ? const Text(
+                          'Requested',
+                          key: Key('requestedText'),
+                          style: TextStyle(
+                              color: Colors.black, fontWeight: FontWeight.bold),
+                        )
+                      : const Text(
+                          'Add',
+                          key: Key('addText'),
+                          style: TextStyle(
+                              color: Colors.black, fontWeight: FontWeight.bold),
+                        ),
+                ),
+              ),
       ),
     );
   }

@@ -7,9 +7,6 @@ import 'package:provider/provider.dart';
 import 'package:group_project/pages/layout/user_profile_provider.dart';
 import 'package:group_project/pages/exercise/components/custom_exercise.dart';
 
-import 'package:group_project/pages/friend/friend_tab.dart';
-import 'package:group_project/main.dart';
-
 class TopNavBar extends StatelessWidget implements PreferredSizeWidget {
   final User? user;
   final String title;

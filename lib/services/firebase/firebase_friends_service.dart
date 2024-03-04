@@ -2,13 +2,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class FirebaseFriendsService {
-  static Future<List<Map<String, dynamic>>> searchUsers(String searchText) async {
+  static Future<List<Map<String, dynamic>>> searchUsers(
+      String searchText) async {
     final usernameSnapshot = await FirebaseFirestore.instance
         .collection('users')
-        .orderBy('name')
-        .startAt([searchText])
-        .endAt(['${searchText}z'])
-        .get();
+        .orderBy('username')
+        .startAt([searchText]).endAt(['${searchText}z']).get();
 
     final phoneSnapshot = await FirebaseFirestore.instance
         .collection('users')
@@ -31,14 +30,16 @@ class FirebaseFriendsService {
 
     if (currentUserUid != null) {
       // Send friend request to the other user
-      final friendRef = FirebaseFirestore.instance.collection('users').doc(friendUid);
+      final friendRef =
+          FirebaseFirestore.instance.collection('users').doc(friendUid);
 
       await friendRef.set({
         'requestReceived': FieldValue.arrayUnion([currentUserUid])
       }, SetOptions(merge: true));
 
       // Update the current user's document to include the sent request
-      final currentUserRef = FirebaseFirestore.instance.collection('users').doc(currentUserUid);
+      final currentUserRef =
+          FirebaseFirestore.instance.collection('users').doc(currentUserUid);
 
       await currentUserRef.set({
         'requestSent': FieldValue.arrayUnion([friendUid])
@@ -46,4 +47,13 @@ class FirebaseFriendsService {
     }
   }
 
+  static Future<List<dynamic>> loadCurrentFriends() async {
+    final currentUserUid = FirebaseAuth.instance.currentUser!.uid;
+    final userDoc = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(currentUserUid)
+        .get();
+
+    return userDoc.data()?['friends'] as List<dynamic>? ?? [];
+  }
 }
