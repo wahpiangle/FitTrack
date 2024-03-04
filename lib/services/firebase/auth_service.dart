@@ -1,14 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-
 import 'package:group_project/main.dart';
 import 'package:group_project/services/firebase/firebase_user_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
-
-
   GoogleSignIn googleSignIn = GoogleSignIn(
     scopes: [
       'email',
@@ -16,13 +13,20 @@ class AuthService {
     ],
   );
 
-  //auth change user stream
+  // Auth change user stream
   Stream<User?> get user {
     return _auth.authStateChanges().map((User? user) => user);
   }
 
-  //sign in with email and password
-  Future signInWithEmailAndPassword(String email, String password) async {
+  // Check if the user is currently signed in
+  bool isUserSignedIn() {
+    final currentUser = _auth.currentUser;
+    return currentUser != null;
+  }
+
+  // Sign in with email and password
+  Future<User?> signInWithEmailAndPassword(
+      String email, String password) async {
     try {
       UserCredential result = await _auth.signInWithEmailAndPassword(
           email: email, password: password);
@@ -31,12 +35,12 @@ class AuthService {
       objectBox.exerciseService.populateDataFromFirebase();
       return user;
     } catch (e) {
-      rethrow;
+      throw e;
     }
   }
 
-  //register with email and password
-  Future registerWithEmailAndPassword(
+  // Register with email and password
+  Future<User?> registerWithEmailAndPassword(
       String email, String password, String name) async {
     try {
       UserCredential result = await _auth.createUserWithEmailAndPassword(
@@ -46,32 +50,28 @@ class AuthService {
       FirebaseUserService.createUserInFirestore(user!, name);
       return user;
     } catch (e) {
-      rethrow;
+      throw e;
     }
   }
 
-  Future signOut() async {
+  // Sign out
+  Future<void> signOut() async {
     try {
-      // Retrieve the imageList from where it's defined or initialized
-      List<Map<String, dynamic>> imageList = []; // Example initialization
+      List<Map<String, dynamic>> imageList = []; // Initialize with your image list
 
-      // Clear posts-related data upon sign-out from SharedPreferences
       await clearPostsSharedPreferences(imageList);
-
-      // Clear posts-related data upon sign-out from ObjectBox
       objectBox.postService.clearAllPosts();
-
-      return await _auth.signOut();
+      await _auth.signOut();
     } catch (e) {
-      rethrow;
+      throw e;
     }
   }
 
-
-  Future<void> clearPostsSharedPreferences(List<Map<String, dynamic>> imageList) async {
+  // Clear SharedPreferences upon sign out
+  Future<void> clearPostsSharedPreferences(
+      List<Map<String, dynamic>> imageList) async {
     try {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
-      // Remove image URL and caption
       for (var image in imageList) {
         prefs.remove(image['firstImageUrl']);
         prefs.remove(image['secondImageUrl']);
@@ -79,24 +79,23 @@ class AuthService {
       }
     } catch (e) {
       print("Error clearing posts SharedPreferences: $e");
-      rethrow;
+      throw e;
     }
   }
 
-
+  // Get the current user
   User? getCurrentUser() {
     return _auth.currentUser;
   }
 
+  // Update user profile
   Future<void> updateUserProfile({
     required String displayName,
     String? photoURL,
   }) async {
     try {
       User? user = getCurrentUser();
-
       if (user != null) {
-        // await user.updateProfile(displayName: displayName, photoURL: photoURL);
         await user.updateDisplayName(displayName);
         await user.updatePhotoURL(photoURL);
         await user.reload();
@@ -104,28 +103,29 @@ class AuthService {
       }
     } catch (e) {
       print(e.toString());
-      rethrow;
+      throw e;
     }
   }
 
-  //sign in with Google
-  Future signInWithGoogle() async {
+  // Sign in with Google
+  Future<User?> signInWithGoogle() async {
     try {
       final GoogleSignInAccount? googleSignInAccount =
-          await googleSignIn.signIn();
+      await googleSignIn.signIn();
       final GoogleSignInAuthentication googleSignInAuthentication =
-          await googleSignInAccount!.authentication;
+      await googleSignInAccount!.authentication;
       final AuthCredential credential = GoogleAuthProvider.credential(
         accessToken: googleSignInAuthentication.accessToken,
         idToken: googleSignInAuthentication.idToken,
       );
-      UserCredential result = await _auth.signInWithCredential(credential);
+      UserCredential result =
+      await _auth.signInWithCredential(credential);
       User? user = result.user;
       objectBox.workoutSessionService.populateDataFromFirebase();
       objectBox.exerciseService.populateDataFromFirebase();
       return user;
     } catch (e) {
-      rethrow;
+      throw e;
     }
   }
 }
