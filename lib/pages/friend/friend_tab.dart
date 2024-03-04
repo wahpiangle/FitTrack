@@ -97,7 +97,7 @@ class FriendPageState extends State<FriendPage> with SingleTickerProviderStateMi
                         child: child,
                       );
                     },
-                    transitionDuration: const Duration(milliseconds: 1000),
+                    transitionDuration: const Duration(milliseconds: 500),
                   ),
                 );
               },

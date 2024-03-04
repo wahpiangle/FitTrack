@@ -143,7 +143,7 @@ class FriendRequestTile extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            userData['name'] ?? '',
+                            userData['username'] ?? '',
                             style: const TextStyle(
                               color: Colors.white,
                             ),

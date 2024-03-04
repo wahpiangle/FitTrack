@@ -78,14 +78,14 @@ class SearchBarResultState extends State<SearchBarResult> {
     return ListTile(
       leading: ImageDisplay.buildUserProfileImage(widget.user['photoUrl']),
       title: Text(
-        widget.user['name'] ?? '',
+        widget.user['username'] ?? '',
         style: const TextStyle(
           color: Colors.white,
         ),
       ),
       trailing: FractionallySizedBox(
-        widthFactor: 0.21,
-        heightFactor: 0.6,
+        widthFactor: 0.22,
+        heightFactor: 0.55,
         child: isCurrentUser || isCurrentUserFriend
             ? Container()
             : Row(
@@ -96,7 +96,7 @@ class SearchBarResultState extends State<SearchBarResult> {
               style: ElevatedButton.styleFrom(
                 backgroundColor: friendRequestSent ? AppColours.secondaryLight : AppColours.secondary,
                 padding: const EdgeInsets.all(8),
-                textStyle: const TextStyle(fontSize: 11),
+                textStyle: const TextStyle(fontSize: 10),
               ),
               child: AnimatedSwitcher(
                 duration: const Duration(milliseconds: 300),

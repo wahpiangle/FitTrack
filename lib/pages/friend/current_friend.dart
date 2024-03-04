@@ -126,22 +126,22 @@ class CurrentFriendsTabState extends State<CurrentFriendsTab> {
           return ListTile(
             leading: ImageDisplay.buildUserProfileImage(currentFriends[index]['photoUrl']),
             title: Text(
-              currentFriends[index]['name'] ?? '',
+              currentFriends[index]['displayName'] ?? '',
               style: const TextStyle(
                 color: Colors.white,
               ),
             ),
             trailing: FractionallySizedBox(
-              widthFactor: 0.21,
-              heightFactor: 0.6,
+              widthFactor: 0.18,
+              heightFactor: 0.55,
               child: ElevatedButton(
                 onPressed: () {
                   FirebaseFriendsService.removeFriend(currentFriends[index]['UID']);
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor:Colors.redAccent,
+                  backgroundColor: const Color(0xFFe2062c),
                   padding: const EdgeInsets.all(8),
-                  textStyle: const TextStyle(fontSize: 11),
+                  textStyle: const TextStyle(fontSize: 10),
                 ),
                 child: const Text(
                     'Remove',

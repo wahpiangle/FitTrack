@@ -7,15 +7,14 @@ class FirebaseFriendsService {
 
     final usernameSnapshot = await FirebaseFirestore.instance
         .collection('users')
-        .orderBy('name')
+        .orderBy('username')
         .get();
-
 
     final List<Map<String, dynamic>> results = [];
 
     for (var doc in usernameSnapshot.docs) {
       Map<String, dynamic> data = doc.data();
-      final lowercaseName = data['name'].toLowerCase();
+      final lowercaseName = data['username'].toLowerCase();
       if (lowercaseName.contains(searchText)) {
         data['UID'] = doc.id;
         results.add(data);
@@ -23,7 +22,7 @@ class FirebaseFriendsService {
     }
 
     return [
-      ...results.toList(),
+      ...results,
     ];
   }
 
@@ -54,25 +53,27 @@ class FirebaseFriendsService {
       final currentUserFriendsSnapshot = await currentUserRef.get();
       final currentUserFriends = currentUserFriendsSnapshot.data()?['friends'] ?? [];
 
-      final suggestions = <Map<String, dynamic>>[];
+      final friendUids = currentUserFriends.map((friendUid) => FirebaseFirestore.instance.collection('users').doc(friendUid)).toList();
+      final friendsQuery = await FirebaseFirestore.instance.collection('users').where(FieldPath.documentId, whereIn: friendUids).get();
 
-      for (final friendUid in currentUserFriends) {
-        final friendRef = FirebaseFirestore.instance.collection('users').doc(friendUid);
-        final friendSnapshot = await friendRef.get();
-        final friendFriends = friendSnapshot.data()?['friends'] ?? [];
+      final Map<String, dynamic> userDataMap = {};
+      final List<Map<String, dynamic>> suggestions = [];
+
+      for (final friendDoc in friendsQuery.docs) {
+        final friendData = userDataMap[friendDoc.id] ?? friendDoc;
+        userDataMap[friendDoc.id] = friendData;
+
+        final friendFriends = friendData.data()?['friends'] ?? [];
 
         for (final suggestedFriendUid in friendFriends) {
           if (suggestedFriendUid != currentUserUid && !currentUserFriends.contains(suggestedFriendUid)) {
-            final suggestedFriendRef = FirebaseFirestore.instance.collection('users').doc(suggestedFriendUid);
-            final suggestedFriendSnapshot = await suggestedFriendRef.get();
-            final suggestedFriendData = suggestedFriendSnapshot.data();
+            final suggestedFriendData = userDataMap[suggestedFriendUid] ?? await FirebaseFirestore.instance.collection('users').doc(suggestedFriendUid).get();
+            userDataMap[suggestedFriendUid] = suggestedFriendData;
 
-            if (suggestedFriendData != null) {
-              suggestions.add({
-                'UID': suggestedFriendUid,
-                ...suggestedFriendData,
-              });
-            }
+            suggestions.add({
+              'UID': suggestedFriendUid,
+              ...suggestedFriendData.data(),
+            });
           }
         }
       }
@@ -90,13 +91,12 @@ class FirebaseFriendsService {
       final currentUserRef = FirebaseFirestore.instance.collection('users').doc(currentUserUid);
       final friendRef = FirebaseFirestore.instance.collection('users').doc(friendUid);
 
-      await currentUserRef.update({
-        'friends': FieldValue.arrayRemove([friendUid]),
-      });
+      final batch = FirebaseFirestore.instance.batch();
 
-      await friendRef.update({
-        'friends': FieldValue.arrayRemove([currentUserUid]),
-      });
+      batch.update(currentUserRef, {'friends': FieldValue.arrayRemove([friendUid])});
+      batch.update(friendRef, {'friends': FieldValue.arrayRemove([currentUserUid])});
+
+      await batch.commit();
     }
   }
 }
