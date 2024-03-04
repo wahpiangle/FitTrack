@@ -85,7 +85,7 @@ class SearchBarResultState extends State<SearchBarResult> {
       ),
       trailing: FractionallySizedBox(
         widthFactor: 0.22,
-        heightFactor: 0.55,
+        heightFactor: 0.50,
         child: isCurrentUser || isCurrentUserFriend
             ? Container()
             : Row(

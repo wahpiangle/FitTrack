@@ -134,11 +134,10 @@ class CurrentFriendsTabState extends State<CurrentFriendsTab> {
             ),
             trailing: FractionallySizedBox(
               widthFactor: 0.18,
-              heightFactor: 0.55,
+              heightFactor: 0.50,
               child: ElevatedButton(
                 onPressed: () {
                   FirebaseFriendsService.removeFriend(currentFriends[index]['UID'], () {
-                    // Reload friends after removal
                     loadCurrentFriends();
                   });
                 },
@@ -159,8 +158,5 @@ class CurrentFriendsTabState extends State<CurrentFriendsTab> {
       ),
     );
   }
-
-
-
 
 }
