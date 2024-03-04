@@ -155,15 +155,22 @@ class FriendRequestTile extends StatelessWidget {
                 child: Row(
                   children: [
                     ImageDisplay.buildUserProfileImage(userData['photoUrl']),
-                    const SizedBox(width: 16),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            userData['username'] ?? '',
-                            style: const TextStyle(
-                              color: Colors.white,
+                          ListTile(
+                            title: Text(
+                              userData['displayName'] ?? '',
+                              style: const TextStyle(
+                                color: Colors.white,
+                              ),
+                            ),
+                            subtitle: Text(
+                              userData['username'] ?? '',
+                              style: const TextStyle(
+                                color: Colors.white,
+                              ),
                             ),
                           ),
                         ],

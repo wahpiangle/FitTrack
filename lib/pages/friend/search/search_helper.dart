@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:group_project/pages/friend/search/search_bar_result.dart';
 import 'package:easy_debounce/easy_debounce.dart';
+import 'package:group_project/services/firebase/firebase_friends_service.dart';
 
 
 class SearchHelper {
@@ -26,8 +27,7 @@ class SearchHelper {
     controller.clear();
     onCancel();
   }
-
-  static Widget buildSearchResultsListView(List<Map<String, dynamic>> searchResults) {
+  
   static Widget buildSearchResultsListView(
       List<Map<String, dynamic>> searchResults) {
     return Positioned(

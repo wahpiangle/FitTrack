@@ -79,6 +79,12 @@ class SearchBarResultState extends State<SearchBarResult> {
     return ListTile(
       leading: ImageDisplay.buildUserProfileImage(widget.user['photoUrl']),
       title: Text(
+        widget.user['displayName'] ?? '',
+        style: const TextStyle(
+          color: Colors.white,
+        ),
+      ),
+      subtitle: Text(
         widget.user['username'] ?? '',
         style: const TextStyle(
           color: Colors.white,

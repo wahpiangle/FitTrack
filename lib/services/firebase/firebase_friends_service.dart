@@ -125,13 +125,39 @@ class FirebaseFriendsService {
     onFriendAccepted();
   }
 
-  static Future<List<dynamic>> loadCurrentFriends() async {
-    final currentUserUid = FirebaseAuth.instance.currentUser!.uid;
-    final userDoc = await FirebaseFirestore.instance
-        .collection('users')
-        .doc(currentUserUid)
-        .get();
+  static Future<List<Map<String, dynamic>>> loadCurrentFriends() async {
+    final currentUserUid = FirebaseAuth.instance.currentUser?.uid;
+    if (currentUserUid != null) {
+      final userDoc = await FirebaseFirestore.instance.collection('users').doc(currentUserUid).get();
 
-    return userDoc.data()?['friends'] as List<dynamic>? ?? [];
+      if (userDoc.exists) {
+        final friends = userDoc.data()?['friends'] as List<dynamic>? ?? [];
+
+        if (friends.isNotEmpty) {
+          return fetchFriendDetails(friends);
+        }
+      }
+    }
+
+    return [];
   }
+
+  static Future<List<Map<String, dynamic>>> fetchFriendDetails(List<dynamic> friendUids) async {
+    final friendsQuery = await FirebaseFirestore.instance.collection('users').where(FieldPath.documentId, whereIn: friendUids).get();
+
+    if (friendsQuery.docs.isNotEmpty) {
+      return friendsQuery.docs.map((doc) {
+        final Map<String, dynamic> data = doc.data();
+        final List<String> friends = List<String>.from(data['friends'] ?? []);
+        return {
+          'UID': doc.id,
+          ...data,
+          'friends': friends,
+        };
+      }).toList();
+    } else {
+      return [];
+    }
+  }
+
 }

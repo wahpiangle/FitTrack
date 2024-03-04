@@ -81,7 +81,7 @@ class FriendSuggestionsTabState extends State<FriendSuggestionsTab> {
             buildSearchedUsersListView(),
           if (friendSuggestions.isEmpty && searchedUsers.isEmpty)
             Center(
-              child: Text('No contact found', style: TextStyle(color: Colors.white)),
+              child: Text('No Suggestion found', style: TextStyle(color: Colors.white)),
             ),
         ],
       ),
