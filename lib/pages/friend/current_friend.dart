@@ -120,6 +120,7 @@ class CurrentFriendsTabState extends State<CurrentFriendsTab> {
     return Padding(
       padding: const EdgeInsets.only(top: 60),
       child: ListView.separated(
+        key: UniqueKey(), // Add this line
         itemCount: currentFriends.length,
         separatorBuilder: (context, index) => const Divider(color: Colors.transparent, thickness: 0.2),
         itemBuilder: (context, index) {
@@ -136,7 +137,10 @@ class CurrentFriendsTabState extends State<CurrentFriendsTab> {
               heightFactor: 0.55,
               child: ElevatedButton(
                 onPressed: () {
-                  FirebaseFriendsService.removeFriend(currentFriends[index]['UID']);
+                  FirebaseFriendsService.removeFriend(currentFriends[index]['UID'], () {
+                    // Reload friends after removal
+                    loadCurrentFriends();
+                  });
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFFe2062c),
@@ -144,9 +148,9 @@ class CurrentFriendsTabState extends State<CurrentFriendsTab> {
                   textStyle: const TextStyle(fontSize: 10),
                 ),
                 child: const Text(
-                    'Remove',
-                    key: Key('requestedText'),
-                    style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+                  'Remove',
+                  key: Key('requestedText'),
+                  style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
                 ),
               ),
             ),
@@ -155,6 +159,7 @@ class CurrentFriendsTabState extends State<CurrentFriendsTab> {
       ),
     );
   }
+
 
 
 

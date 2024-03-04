@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/animation.dart';
 
 class FirebaseFriendsService {
   static Future<List<Map<String, dynamic>>> searchUsers(String searchText) async {
@@ -84,7 +85,7 @@ class FirebaseFriendsService {
     return [];
   }
 
-  static void removeFriend(String friendUid) async {
+  static void removeFriend(String friendUid, VoidCallback onRemoved) async {
     final currentUserUid = FirebaseAuth.instance.currentUser?.uid;
 
     if (currentUserUid != null) {
@@ -97,6 +98,9 @@ class FirebaseFriendsService {
       batch.update(friendRef, {'friends': FieldValue.arrayRemove([currentUserUid])});
 
       await batch.commit();
+
+      onRemoved();
     }
   }
+
 }
