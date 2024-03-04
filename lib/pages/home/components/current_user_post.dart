@@ -20,6 +20,7 @@ class _CurrentUserPostState extends State<CurrentUserPost> {
   late List<Map<String, dynamic>> imageList = [];
   String caption = '';
   int _current = 0;
+  int workoutSessionId = 0; // Declare workoutSessionId here
 
   @override
   void initState() {
@@ -41,6 +42,9 @@ class _CurrentUserPostState extends State<CurrentUserPost> {
 
       setState(() {
         imageList = postMapList;
+        // Fetch the caption for the initial workoutSessionId
+        workoutSessionId = imageList.isNotEmpty ? imageList[_current]['workoutSessionId'] : 0;
+        fetchCaption(workoutSessionId);
       });
     } catch (e) {
       print('Error fetching user posts: $e');
@@ -49,8 +53,7 @@ class _CurrentUserPostState extends State<CurrentUserPost> {
   }
 
   void fetchCaption(int workoutSessionId) async {
-    String fetchedCaption =
-    await FirebasePostsService.getCaption(workoutSessionId);
+    String fetchedCaption = await FirebasePostsService.getCaption(workoutSessionId);
     setState(() {
       caption = fetchedCaption;
     });
@@ -80,11 +83,13 @@ class _CurrentUserPostState extends State<CurrentUserPost> {
                     onPageChanged: (index, reason) {
                       setState(() {
                         _current = index;
-                        fetchCaption(imageList[index]['workoutSessionId']);
+                        // Fetch the caption for the new workoutSessionId when page changes
+                        workoutSessionId = imageList[index]['workoutSessionId'];
+                        fetchCaption(workoutSessionId);
                       });
                     },
                   ),
-// Inside the itemBuilder of CarouselSlider.builder
+                  // Inside the itemBuilder of CarouselSlider.builder
                   itemBuilder: (context, index, realIndex) {
                     return Container(
                       margin: const EdgeInsets.symmetric(horizontal: 5),
@@ -114,6 +119,34 @@ class _CurrentUserPostState extends State<CurrentUserPost> {
                                 ),
                               ),
                             ],
+                          ),
+
+                          Container(
+                            width: 100,
+                            padding: const EdgeInsets.symmetric(horizontal: 1, vertical: 1),
+                            decoration: BoxDecoration(
+                              color: Colors.transparent,
+                              border: Border.all(color: Colors.transparent),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: TextField(
+                              showCursor: false,
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(color: Colors.white),
+                              enableInteractiveSelection: false,
+                              decoration: const InputDecoration(
+                                alignLabelWithHint: true,
+                                hintText: 'Add a caption..',
+                                hintStyle: TextStyle(color: Colors.grey),
+                                border: InputBorder.none,
+                                contentPadding: EdgeInsets.only(left: 16),
+                              ),
+                              onChanged: (caption) {
+                                // Use the workoutSessionId state variable here
+                                FirebasePostsService.saveCaption(workoutSessionId, caption);
+                              },
+                              controller: TextEditingController(text: caption),
+                            ),
                           ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -156,7 +189,6 @@ class _CurrentUserPostState extends State<CurrentUserPost> {
                       ),
                     );
                   },
-
                 )
             ],
           ),
@@ -165,3 +197,7 @@ class _CurrentUserPostState extends State<CurrentUserPost> {
     );
   }
 }
+
+//TODO to fix caption issue here (save and fetch)
+//TODO when click inside photo/comment button will go to display image stack page
+//TODO when click on the like will show who liked
