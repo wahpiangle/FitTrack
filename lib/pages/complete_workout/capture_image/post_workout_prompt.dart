@@ -27,6 +27,8 @@ class PostWorkoutPromptState extends State<PostWorkoutPrompt> {
   bool isCapturingImage = false;
   XFile? firstImageState;
   XFile? secondImageState;
+  DateTime? pictureTakenTime;
+
 
   @override
   void initState() {
@@ -85,6 +87,9 @@ class PostWorkoutPromptState extends State<PostWorkoutPrompt> {
     });
     await _initializeControllerFuture;
 
+    // Capture the current time
+    pictureTakenTime = DateTime.now();
+
     final firstImage = await _controller.takePicture();
     setState(() {
       firstImageState = firstImage;
@@ -123,13 +128,14 @@ class PostWorkoutPromptState extends State<PostWorkoutPrompt> {
         (ModalRoute.of(context)?.settings.arguments as WorkoutSession);
     return Scaffold(
       appBar: AppBar(
+
         backgroundColor: AppColours.primary,
         title: const Text(
           'FitTrack',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold ,fontFamily: 'Dancing Script'),
         ),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
           onPressed: () {
             Navigator.pop(context);
           },
@@ -153,6 +159,7 @@ class PostWorkoutPromptState extends State<PostWorkoutPrompt> {
                     imagePath: firstImageState!.path,
                     imagePath2: secondImageState!.path,
                     workoutSession: workoutSession,
+                    pictureTakenTime: pictureTakenTime ?? DateTime.now(), // Pass the captured time
                   ),
                 ],
               ),
