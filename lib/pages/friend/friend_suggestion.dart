@@ -75,13 +75,12 @@ class FriendSuggestionsTabState extends State<FriendSuggestionsTab> {
               ),
             ),
           ),
-          if (friendSuggestions.isNotEmpty)
-            buildFriendSuggestionsListView(),
-          if (searchedUsers.isNotEmpty)
-            buildSearchedUsersListView(),
+          if (friendSuggestions.isNotEmpty) buildFriendSuggestionsListView(),
+          if (searchedUsers.isNotEmpty) buildSearchedUsersListView(),
           if (friendSuggestions.isEmpty && searchedUsers.isEmpty)
-            Center(
-              child: Text('No Suggestion found', style: TextStyle(color: Colors.white)),
+            const Center(
+              child: Text('No Suggestion found',
+                  style: TextStyle(color: Colors.white)),
             ),
         ],
       ),
@@ -95,5 +94,4 @@ class FriendSuggestionsTabState extends State<FriendSuggestionsTab> {
   Widget buildSearchedUsersListView() {
     return SearchHelper.buildSearchResultsListView(searchedUsers);
   }
-
 }

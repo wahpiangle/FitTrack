@@ -21,7 +21,9 @@ class _CurrentUserPostState extends State<CurrentUserPost> {
   @override
   void initState() {
     super.initState();
-    fetchUserPosts();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      fetchUserPosts();
+    });
   }
 
   void fetchUserPosts() async {
@@ -39,20 +41,16 @@ class _CurrentUserPostState extends State<CurrentUserPost> {
       setState(() {
         imageList = postMapList;
         // Fetch the caption for the initial workoutSessionId
-        workoutSessionId = imageList.isNotEmpty ? imageList[_current]['workoutSessionId'] : 0;
+        workoutSessionId =
+            imageList.isNotEmpty ? imageList[_current]['workoutSessionId'] : 0;
         fetchCaption(workoutSessionId);
       });
     } catch (e) {
-      // Handle error accordingly
+      print('Error fetching user posts: $e');
     }
   }
 
-  void fetchCaption(int workoutSessionId) async {
-    String fetchedCaption = await FirebasePostsService.getCaption(workoutSessionId);
-    setState(() {
-      caption = fetchedCaption;
-    });
-  }
+  void fetchCaption(int workoutSessionId) async {}
 
   @override
   Widget build(BuildContext context) {
@@ -96,8 +94,10 @@ class _CurrentUserPostState extends State<CurrentUserPost> {
                               // First image URL
                               CachedNetworkImage(
                                 imageUrl: imageList[index]['firstImageUrl'],
-                                placeholder: (context, url) => const CircularProgressIndicator(),
-                                errorWidget: (context, url, error) => const Icon(Icons.error),
+                                placeholder: (context, url) =>
+                                    const CircularProgressIndicator(),
+                                errorWidget: (context, url, error) =>
+                                    const Icon(Icons.error),
                               ),
                               // Second image URL stacked to the top left
                               Positioned(
@@ -107,18 +107,21 @@ class _CurrentUserPostState extends State<CurrentUserPost> {
                                   width: 50, // Adjust the size as needed
                                   height: 50, // Adjust the size as needed
                                   child: CachedNetworkImage(
-                                    imageUrl: imageList[index]['secondImageUrl'],
-                                    placeholder: (context, url) => const CircularProgressIndicator(),
-                                    errorWidget: (context, url, error) => const Icon(Icons.error),
+                                    imageUrl: imageList[index]
+                                        ['secondImageUrl'],
+                                    placeholder: (context, url) =>
+                                        const CircularProgressIndicator(),
+                                    errorWidget: (context, url, error) =>
+                                        const Icon(Icons.error),
                                   ),
                                 ),
                               ),
                             ],
                           ),
-
                           Container(
                             width: 100,
-                            padding: const EdgeInsets.symmetric(horizontal: 1, vertical: 1),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 1, vertical: 1),
                             decoration: BoxDecoration(
                               color: Colors.transparent,
                               border: Border.all(color: Colors.transparent),
@@ -138,7 +141,8 @@ class _CurrentUserPostState extends State<CurrentUserPost> {
                               ),
                               onChanged: (caption) {
                                 // Use the workoutSessionId state variable here
-                                FirebasePostsService.saveCaption(workoutSessionId, caption);
+                                FirebasePostsService.saveCaption(
+                                    workoutSessionId, caption);
                               },
                               controller: TextEditingController(text: caption),
                             ),
@@ -153,7 +157,8 @@ class _CurrentUserPostState extends State<CurrentUserPost> {
                                   shape: BoxShape.circle,
                                   border: Border.all(color: Colors.grey),
                                 ),
-                                child: const Icon(Icons.favorite, color: Colors.grey),
+                                child: const Icon(Icons.favorite,
+                                    color: Colors.grey),
                               ),
                               Container(
                                 margin: const EdgeInsets.all(5),
@@ -167,15 +172,20 @@ class _CurrentUserPostState extends State<CurrentUserPost> {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (context) => DisplayPostImageScreen(
-                                          imagePath: imageList[index]['firstImageUrl'],
-                                          imagePath2: imageList[index]['secondImageUrl'],
-                                          workoutSessionId: imageList[index]['workoutSessionId'],
+                                        builder: (context) =>
+                                            DisplayPostImageScreen(
+                                          imagePath: imageList[index]
+                                              ['firstImageUrl'],
+                                          imagePath2: imageList[index]
+                                              ['secondImageUrl'],
+                                          workoutSessionId: imageList[index]
+                                              ['workoutSessionId'],
                                         ),
                                       ),
                                     );
                                   },
-                                  child: const Icon(Icons.comment, color: Colors.grey),
+                                  child: const Icon(Icons.comment,
+                                      color: Colors.grey),
                                 ),
                               ),
                             ],
