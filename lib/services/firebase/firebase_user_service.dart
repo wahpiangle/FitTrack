@@ -23,7 +23,7 @@ class FirebaseUserService {
         'email': user.email,
         'username': formattedUsername,
         'displayName': user.displayName,
-        'photoUrl': "",
+        'photoUrl': '',
         'createdAt': FieldValue.serverTimestamp(),
         'updatedAt': FieldValue.serverTimestamp(),
       });
