@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:group_project/models/post.dart';
-import 'firebase_posts_service.dart'; // Import FirebasePostsService
+import 'firebase_posts_service.dart';
 
 class FriendPostPair {
   final Post post;
