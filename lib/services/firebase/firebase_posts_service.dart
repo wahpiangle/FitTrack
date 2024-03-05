@@ -75,6 +75,7 @@ class FirebasePostsService {
         'firstImageUrl': firstImageUrl,
         'secondImageUrl': secondImageUrl,
         'workoutSessionId': post.workoutSession.targetId,
+        'date': post.date,
       });
       return true;
     } catch (e) {
