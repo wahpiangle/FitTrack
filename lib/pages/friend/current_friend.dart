@@ -92,10 +92,12 @@ class CurrentFriendsTabState extends State<CurrentFriendsTab> {
       child: ListView.separated(
         key: UniqueKey(), // Add this line
         itemCount: currentFriends.length,
-        separatorBuilder: (context, index) => const Divider(color: Colors.transparent, thickness: 0.2),
+        separatorBuilder: (context, index) =>
+            const Divider(color: Colors.transparent, thickness: 0.2),
         itemBuilder: (context, index) {
           return ListTile(
-            leading: ImageDisplay.buildUserProfileImage(currentFriends[index]['photoUrl']),
+            leading: ImageDisplay.buildUserProfileImage(
+                currentFriends[index]['photoUrl']),
             title: Text(
               currentFriends[index]['displayName'] ?? '',
               style: const TextStyle(
@@ -107,19 +109,21 @@ class CurrentFriendsTabState extends State<CurrentFriendsTab> {
               heightFactor: 0.50,
               child: ElevatedButton(
                 onPressed: () {
-                  FirebaseFriendsService.removeFriend(currentFriends[index]['UID'], () {
+                  FirebaseFriendsService.removeFriend(
+                      currentFriends[index]['UID'], () {
                     loadCurrentFriends();
                   });
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFFe2062c),
+                  backgroundColor: Colors.red,
                   padding: const EdgeInsets.all(8),
                   textStyle: const TextStyle(fontSize: 10),
                 ),
                 child: const Text(
                   'Remove',
                   key: Key('requestedText'),
-                  style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                      color: Colors.white, fontWeight: FontWeight.bold),
                 ),
               ),
             ),
@@ -128,5 +132,4 @@ class CurrentFriendsTabState extends State<CurrentFriendsTab> {
       ),
     );
   }
-
 }

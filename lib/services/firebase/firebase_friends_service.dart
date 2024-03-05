@@ -1,9 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/animation.dart';
+import 'package:group_project/models/firebase_user.dart';
+import 'package:group_project/services/firebase/firebase_user_service.dart';
 
 class FirebaseFriendsService {
-  static Future<List<Map<String, dynamic>>> searchUsers(String searchText) async {
+  static Future<List<Map<String, dynamic>>> searchUsers(
+      String searchText) async {
     searchText = searchText.toLowerCase();
 
     final usernameSnapshot = await FirebaseFirestore.instance
@@ -31,13 +34,15 @@ class FirebaseFriendsService {
     final currentUserUid = FirebaseAuth.instance.currentUser?.uid;
 
     if (currentUserUid != null) {
-      final friendRef = FirebaseFirestore.instance.collection('users').doc(friendUid);
+      final friendRef =
+          FirebaseFirestore.instance.collection('users').doc(friendUid);
 
       await friendRef.set({
         'requestReceived': FieldValue.arrayUnion([currentUserUid])
       }, SetOptions(merge: true));
 
-      final currentUserRef = FirebaseFirestore.instance.collection('users').doc(currentUserUid);
+      final currentUserRef =
+          FirebaseFirestore.instance.collection('users').doc(currentUserUid);
 
       await currentUserRef.set({
         'requestSent': FieldValue.arrayUnion([friendUid])
@@ -49,13 +54,23 @@ class FirebaseFriendsService {
     final currentUserUid = FirebaseAuth.instance.currentUser?.uid;
 
     if (currentUserUid != null) {
-      final currentUserRef = FirebaseFirestore.instance.collection('users').doc(currentUserUid);
+      final currentUserRef =
+          FirebaseFirestore.instance.collection('users').doc(currentUserUid);
 
       final currentUserFriendsSnapshot = await currentUserRef.get();
-      final currentUserFriends = currentUserFriendsSnapshot.data()?['friends'] ?? [];
-
-      final friendUids = currentUserFriends.map((friendUid) => FirebaseFirestore.instance.collection('users').doc(friendUid)).toList();
-      final friendsQuery = await FirebaseFirestore.instance.collection('users').where(FieldPath.documentId, whereIn: friendUids).get();
+      final currentUserFriends =
+          currentUserFriendsSnapshot.data()?['friends'] ?? [];
+      final friendUids = currentUserFriends
+          .map((friendUid) =>
+              FirebaseFirestore.instance.collection('users').doc(friendUid))
+          .toList();
+      if (friendUids.isEmpty) {
+        return [];
+      }
+      final friendsQuery = await FirebaseFirestore.instance
+          .collection('users')
+          .where(FieldPath.documentId, whereIn: friendUids)
+          .get();
 
       final Map<String, dynamic> userDataMap = {};
       final List<Map<String, dynamic>> suggestions = [];
@@ -67,8 +82,13 @@ class FirebaseFriendsService {
         final friendFriends = friendData.data()?['friends'] ?? [];
 
         for (final suggestedFriendUid in friendFriends) {
-          if (suggestedFriendUid != currentUserUid && !currentUserFriends.contains(suggestedFriendUid)) {
-            final suggestedFriendData = userDataMap[suggestedFriendUid] ?? await FirebaseFirestore.instance.collection('users').doc(suggestedFriendUid).get();
+          if (suggestedFriendUid != currentUserUid &&
+              !currentUserFriends.contains(suggestedFriendUid)) {
+            final suggestedFriendData = userDataMap[suggestedFriendUid] ??
+                await FirebaseFirestore.instance
+                    .collection('users')
+                    .doc(suggestedFriendUid)
+                    .get();
             userDataMap[suggestedFriendUid] = suggestedFriendData;
 
             suggestions.add({
@@ -89,13 +109,19 @@ class FirebaseFriendsService {
     final currentUserUid = FirebaseAuth.instance.currentUser?.uid;
 
     if (currentUserUid != null) {
-      final currentUserRef = FirebaseFirestore.instance.collection('users').doc(currentUserUid);
-      final friendRef = FirebaseFirestore.instance.collection('users').doc(friendUid);
+      final currentUserRef =
+          FirebaseFirestore.instance.collection('users').doc(currentUserUid);
+      final friendRef =
+          FirebaseFirestore.instance.collection('users').doc(friendUid);
 
       final batch = FirebaseFirestore.instance.batch();
 
-      batch.update(currentUserRef, {'friends': FieldValue.arrayRemove([friendUid])});
-      batch.update(friendRef, {'friends': FieldValue.arrayRemove([currentUserUid])});
+      batch.update(currentUserRef, {
+        'friends': FieldValue.arrayRemove([friendUid])
+      });
+      batch.update(friendRef, {
+        'friends': FieldValue.arrayRemove([currentUserUid])
+      });
 
       await batch.commit();
 
@@ -103,18 +129,25 @@ class FirebaseFriendsService {
     }
   }
 
-  static Future<void> acceptFriendRequest(String friendUid, VoidCallback onFriendAccepted) async {
+  static Future<void> acceptFriendRequest(
+      String friendUid, VoidCallback onFriendAccepted) async {
     final currentUserUid = FirebaseAuth.instance.currentUser?.uid;
 
     await FirebaseFirestore.instance.collection('users').doc(friendUid).update({
       'friends': FieldValue.arrayUnion([currentUserUid])
     });
 
-    await FirebaseFirestore.instance.collection('users').doc(currentUserUid).update({
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(currentUserUid)
+        .update({
       'friends': FieldValue.arrayUnion([friendUid])
     });
 
-    await FirebaseFirestore.instance.collection('users').doc(currentUserUid).update({
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(currentUserUid)
+        .update({
       'requestReceived': FieldValue.arrayRemove([friendUid])
     });
 
@@ -127,37 +160,40 @@ class FirebaseFriendsService {
 
   static Future<List<Map<String, dynamic>>> loadCurrentFriends() async {
     final currentUserUid = FirebaseAuth.instance.currentUser?.uid;
-    if (currentUserUid != null) {
-      final userDoc = await FirebaseFirestore.instance.collection('users').doc(currentUserUid).get();
+    final userDoc = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(currentUserUid)
+        .get();
 
-      if (userDoc.exists) {
-        final friends = userDoc.data()?['friends'] as List<dynamic>? ?? [];
-
-        if (friends.isNotEmpty) {
-          return fetchFriendDetails(friends);
-        }
-      }
+    final friendsUid = userDoc.data()?['friends'] as List<dynamic>? ?? [];
+    List<Map<String, dynamic>> friends = [];
+    for (var friendUid in friendsUid) {
+      final friendDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(friendUid)
+          .get();
+      friends.add({
+        'UID': friendUid,
+        ...?friendDoc.data(),
+      });
     }
 
-    return [];
+    return friends;
   }
 
-  static Future<List<Map<String, dynamic>>> fetchFriendDetails(List<dynamic> friendUids) async {
-    final friendsQuery = await FirebaseFirestore.instance.collection('users').where(FieldPath.documentId, whereIn: friendUids).get();
-
-    if (friendsQuery.docs.isNotEmpty) {
-      return friendsQuery.docs.map((doc) {
-        final Map<String, dynamic> data = doc.data();
-        final List<String> friends = List<String>.from(data['friends'] ?? []);
-        return {
-          'UID': doc.id,
-          ...data,
-          'friends': friends,
-        };
-      }).toList();
-    } else {
-      return [];
+  static Future<List<FirebaseUser>> getFriendRequestsDocuments() async {
+    final currentUserUid = FirebaseAuth.instance.currentUser?.uid;
+    final requests = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(currentUserUid)
+        .get();
+    final requestsUids =
+        requests.data()?['requestReceived'] as List<dynamic>? ?? [];
+    final friendRequestsUserDocuments = <FirebaseUser>[];
+    for (var requestUid in requestsUids) {
+      final firebaseUser = await FirebaseUserService.getUserByUid(requestUid);
+      friendRequestsUserDocuments.add(firebaseUser);
     }
+    return friendRequestsUserDocuments;
   }
-
 }

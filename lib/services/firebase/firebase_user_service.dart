@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:group_project/models/firebase_user.dart';
 
 class FirebaseUserService {
   static final FirebaseFirestore db = FirebaseFirestore.instance;
@@ -84,5 +85,11 @@ class FirebaseUserService {
     final User user = auth.currentUser!;
     user.updateDisplayName(displayName);
     await usersCollectionRef.doc(user.uid).update({'displayName': displayName});
+  }
+
+  static Future<FirebaseUser> getUserByUid(String uid) async {
+    final DocumentSnapshot<Map<String, dynamic>> doc =
+        await usersCollectionRef.doc(uid).get();
+    return FirebaseUser.fromDocument(doc);
   }
 }
