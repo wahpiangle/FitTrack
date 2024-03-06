@@ -5,7 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:group_project/models/firebase_user.dart';
 import 'package:group_project/pages/friend/components/friend_request_tile.dart';
-import 'package:group_project/pages/friend/search/search_helper.dart';
+import 'package:group_project/pages/friend/search/search_results_list.dart';
 import 'package:group_project/services/firebase/firebase_friends_service.dart';
 import 'search/friend_search_bar.dart';
 
@@ -20,7 +20,7 @@ class FriendRequestsTab extends StatefulWidget {
 
 class FriendRequestsTabState extends State<FriendRequestsTab> {
   final TextEditingController _searchController = TextEditingController();
-  List<Map<String, dynamic>> searchedUsers = [];
+  List<FirebaseUser> searchedUsers = [];
   final StreamController<void> _updateController =
       StreamController<void>.broadcast();
   List<FirebaseUser> requestDocumentList = [];
@@ -90,7 +90,7 @@ class FriendRequestsTabState extends State<FriendRequestsTab> {
                     ),
                   ),
                   if (_searchController.text.isNotEmpty)
-                    SearchHelper.buildSearchResultsListView(searchedUsers),
+                    SearchResultList(searchResults: searchedUsers),
                   if (_searchController.text.isEmpty)
                     Padding(
                       padding: const EdgeInsets.only(top: 60),

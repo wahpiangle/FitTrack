@@ -59,11 +59,9 @@ class _CurrentUserPostState extends State<CurrentUserPost> {
     return Scrollbar(
       child: SingleChildScrollView(
         child: Container(
-          margin: const EdgeInsets.symmetric(horizontal: 10),
+          margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
           child: Column(
             children: [
-              const SizedBox(height: 5),
-              if (hasImages) const SizedBox(height: 1),
               if (hasImages)
                 CarouselSlider.builder(
                   itemCount: imageList.length,
@@ -72,17 +70,15 @@ class _CurrentUserPostState extends State<CurrentUserPost> {
                     enlargeCenterPage: true,
                     enableInfiniteScroll: false,
                     enlargeFactor: 0.2,
-                    viewportFraction: 0.45,
+                    viewportFraction: 0.55,
                     onPageChanged: (index, reason) {
                       setState(() {
                         _current = index;
-                        // Fetch the caption for the new workoutSessionId when page changes
                         workoutSessionId = imageList[index]['workoutSessionId'];
                         fetchCaption(workoutSessionId);
                       });
                     },
                   ),
-                  // Inside the itemBuilder of CarouselSlider.builder
                   itemBuilder: (context, index, realIndex) {
                     return Container(
                       margin: const EdgeInsets.symmetric(horizontal: 5),
@@ -91,7 +87,6 @@ class _CurrentUserPostState extends State<CurrentUserPost> {
                         children: [
                           Stack(
                             children: [
-                              // First image URL
                               CachedNetworkImage(
                                 imageUrl: imageList[index]['firstImageUrl'],
                                 placeholder: (context, url) =>
@@ -99,13 +94,12 @@ class _CurrentUserPostState extends State<CurrentUserPost> {
                                 errorWidget: (context, url, error) =>
                                     const Icon(Icons.error),
                               ),
-                              // Second image URL stacked to the top left
                               Positioned(
                                 top: 0,
                                 left: 0,
                                 child: SizedBox(
-                                  width: 50, // Adjust the size as needed
-                                  height: 50, // Adjust the size as needed
+                                  width: 50,
+                                  height: 50,
                                   child: CachedNetworkImage(
                                     imageUrl: imageList[index]
                                         ['secondImageUrl'],
@@ -118,34 +112,21 @@ class _CurrentUserPostState extends State<CurrentUserPost> {
                               ),
                             ],
                           ),
-                          Container(
-                            width: 100,
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 1, vertical: 1),
-                            decoration: BoxDecoration(
-                              color: Colors.transparent,
-                              border: Border.all(color: Colors.transparent),
-                              borderRadius: BorderRadius.circular(8),
+                          TextField(
+                            showCursor: false,
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(color: Colors.white),
+                            enableInteractiveSelection: false,
+                            decoration: const InputDecoration(
+                              hintText: 'Add a caption..',
+                              hintStyle: TextStyle(color: Colors.grey),
+                              border: InputBorder.none,
                             ),
-                            child: TextField(
-                              showCursor: false,
-                              textAlign: TextAlign.center,
-                              style: const TextStyle(color: Colors.white),
-                              enableInteractiveSelection: false,
-                              decoration: const InputDecoration(
-                                alignLabelWithHint: true,
-                                hintText: 'Add a caption..',
-                                hintStyle: TextStyle(color: Colors.grey),
-                                border: InputBorder.none,
-                                contentPadding: EdgeInsets.only(left: 16),
-                              ),
-                              onChanged: (caption) {
-                                // Use the workoutSessionId state variable here
-                                FirebasePostsService.saveCaption(
-                                    workoutSessionId, caption);
-                              },
-                              controller: TextEditingController(text: caption),
-                            ),
+                            onChanged: (caption) {
+                              FirebasePostsService.saveCaption(
+                                  workoutSessionId, caption);
+                            },
+                            controller: TextEditingController(text: caption),
                           ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,

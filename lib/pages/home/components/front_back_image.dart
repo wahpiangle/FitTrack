@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 class FrontBackImage extends StatelessWidget {
@@ -20,10 +21,7 @@ class FrontBackImage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        Image.file(
-          File(firstImageUrl),
-          fit: BoxFit.fill,
-        ),
+        getImageBasedonType(firstImageUrl, false),
         Container(
           margin: const EdgeInsets.only(
             left: 5,
@@ -35,13 +33,27 @@ class FrontBackImage extends StatelessWidget {
             ),
             borderRadius: BorderRadius.circular(5),
           ),
-          child: Image.file(
-            File(secondImageUrl),
-            fit: BoxFit.fill,
-            width: 50,
-          ),
+          child: getImageBasedonType(secondImageUrl, true),
         ),
       ],
+    );
+  }
+}
+
+Widget getImageBasedonType(String image, bool secondImage) {
+  if (image.contains("http://") || image.contains("https://")) {
+    return CachedNetworkImage(
+      fit: BoxFit.fill,
+      width: secondImage ? 50 : null,
+      imageUrl: image,
+      placeholder: (context, url) => const CircularProgressIndicator(),
+      errorWidget: (context, url, error) => const Icon(Icons.error),
+    );
+  } else {
+    return Image.file(
+      File(image),
+      fit: BoxFit.fill,
+      width: secondImage ? 50 : null,
     );
   }
 }
