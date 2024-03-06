@@ -61,7 +61,6 @@
 		</array>
 	</dict>
 </array>
-
  <key>UNUserNotificationCenterDelegateClassName</key>
     <string>$(PRODUCT_MODULE_NAME).NotificationDelegate</string>
     <key>NSLocalNetworkUsageDescription</key>

@@ -5,8 +5,10 @@ List<Category> categoryData = [
   Category(name: 'Dumbbell'),
   Category(name: 'Machine'),
   Category(name: 'Cable'),
-  Category(name: 'Bodyweight'),
+  Category(name: 'Band'),
+  Category(name: 'Assisted Bodyweight'),
   Category(name: 'Weighted Bodyweight'),
+  Category(name: 'Reps Only'),
   Category(name: 'Duration'),
   Category(name: 'Other'),
 ];

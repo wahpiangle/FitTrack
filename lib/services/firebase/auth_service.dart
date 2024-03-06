@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:group_project/main.dart';
 import 'package:group_project/services/firebase/firebase_user_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -34,23 +35,42 @@ class AuthService {
 
   //register with email and password
   Future registerWithEmailAndPassword(
-      String email, String password, String name) async {
+      String email, String password, String username) async {
     try {
       UserCredential result = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
       User? user = result.user;
       user?.sendEmailVerification();
-      FirebaseUserService.createUserInFirestore(user!, name);
+      FirebaseUserService.createUserInFirestore(user!, username);
       return user;
     } catch (e) {
       rethrow;
     }
   }
 
-  //sign out
-  Future signOut() async {
+  // Sign out
+  Future<void> signOut() async {
     try {
-      return await _auth.signOut();
+      List<Map<String, dynamic>> imageList = []; // Initialize with your image list
+
+      await clearPostsSharedPreferences(imageList);
+      objectBox.postService.clearAllPosts();
+      await _auth.signOut();
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  // Clear SharedPreferences upon sign out
+  Future<void> clearPostsSharedPreferences(
+      List<Map<String, dynamic>> imageList) async {
+    try {
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      for (var image in imageList) {
+        prefs.remove(image['firstImageUrl']);
+        prefs.remove(image['secondImageUrl']);
+        prefs.remove('caption_${image['workoutSessionId']}');
+      }
     } catch (e) {
       rethrow;
     }
@@ -58,26 +78,6 @@ class AuthService {
 
   User? getCurrentUser() {
     return _auth.currentUser;
-  }
-
-  Future<void> updateUserProfile({
-    required String displayName,
-    String? photoURL,
-  }) async {
-    try {
-      User? user = getCurrentUser();
-
-      if (user != null) {
-        // await user.updateProfile(displayName: displayName, photoURL: photoURL);
-        await user.updateDisplayName(displayName);
-        await user.updatePhotoURL(photoURL);
-        await user.reload();
-        user = getCurrentUser();
-      }
-    } catch (e) {
-      print(e.toString());
-      rethrow;
-    }
   }
 
   //sign in with Google

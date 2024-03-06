@@ -15,7 +15,7 @@ class TimerDetailsSettings extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const TopNavBar(
-        pageIndex: 0,
+        pageIndex: 6,
         title: 'Timer Details',
         user: null,
         showBackButton: true,

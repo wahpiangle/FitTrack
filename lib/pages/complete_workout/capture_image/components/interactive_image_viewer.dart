@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -45,13 +46,13 @@ class _InteractiveImageViewerState extends State<InteractiveImageViewer> {
                 hideSecondImage = false;
               });
             },
-            child: Image.file(
-              File(
-                displaySecondImage ? widget.imagePath2 : widget.imagePath,
-              ),
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height * 0.65,
-              fit: BoxFit.cover,
+            child: getImageBasedonType(
+              widget.imagePath,
+              true,
+              displaySecondImage,
+              widget.imagePath,
+              widget.imagePath2,
+              context,
             ),
           ),
         ),
@@ -97,14 +98,13 @@ class _InteractiveImageViewerState extends State<InteractiveImageViewer> {
                     ),
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(20),
-                      child: Image.file(
-                        File(
-                          displaySecondImage
-                              ? widget.imagePath
-                              : widget.imagePath2,
-                        ),
-                        alignment: Alignment.topLeft,
-                        width: MediaQuery.of(context).size.width * 0.25,
+                      child: getImageBasedonType(
+                        widget.imagePath,
+                        false,
+                        displaySecondImage,
+                        widget.imagePath,
+                        widget.imagePath2,
+                        context,
                       ),
                     ),
                   ),
@@ -112,5 +112,53 @@ class _InteractiveImageViewerState extends State<InteractiveImageViewer> {
         ),
       ],
     );
+  }
+}
+
+Widget getImageBasedonType(
+    String image,
+    bool isMainImage,
+    bool displaySecondImage,
+    String imagePath,
+    String imagePath2,
+    BuildContext context) {
+  if (image.contains("http://") || image.contains("https://")) {
+    if (isMainImage) {
+      return CachedNetworkImage(
+        imageUrl: displaySecondImage ? imagePath : imagePath2,
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height * 0.65,
+        fit: BoxFit.cover,
+        placeholder: (context, url) => const CircularProgressIndicator(),
+        errorWidget: (context, url, error) => const Icon(Icons.error),
+      );
+    } else {
+      return CachedNetworkImage(
+        imageUrl: displaySecondImage ? imagePath2 : imagePath,
+        alignment: Alignment.topLeft,
+        width: MediaQuery.of(context).size.width * 0.25,
+        placeholder: (context, url) => const CircularProgressIndicator(),
+        errorWidget: (context, url, error) => const Icon(Icons.error),
+      );
+    }
+  } else {
+    if (isMainImage) {
+      return Image.file(
+        File(
+          displaySecondImage ? imagePath : imagePath2,
+        ),
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height * 0.65,
+        fit: BoxFit.cover,
+      );
+    } else {
+      return Image.file(
+        File(
+          displaySecondImage ? imagePath2 : imagePath,
+        ),
+        alignment: Alignment.topLeft,
+        width: MediaQuery.of(context).size.width * 0.25,
+      );
+    }
   }
 }

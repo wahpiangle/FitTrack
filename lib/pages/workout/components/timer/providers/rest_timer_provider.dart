@@ -35,6 +35,7 @@ class RestTimerProvider with ChangeNotifier {
       _restTimerMinutes = prefs.getInt('restTimerMinutes') ?? 0;
       _restTimerSeconds = prefs.getInt('restTimerSeconds') ?? 0;
       selectedTimeInterval = prefs.getInt('selectedRestTimeInterval') ?? 10;
+      _isRestTimerEnabled = prefs.getBool('isRestTimerEnabled') ?? true;
       notifyListeners();
       if (_currentDuration > 0) {
         startRestTimer(context);
@@ -52,6 +53,7 @@ class RestTimerProvider with ChangeNotifier {
     prefs.setInt('restTimerMinutes', _restTimerMinutes);
     prefs.setInt('restTimerSeconds', _restTimerSeconds);
     prefs.setInt('selectedRestTimeInterval', selectedTimeInterval);
+    prefs.setBool('isRestTimerEnabled', _isRestTimerEnabled);
   }
 
 
@@ -89,6 +91,7 @@ class RestTimerProvider with ChangeNotifier {
   void toggleRestTimer(bool value) {
     _isRestTimerEnabled = value;
     notifyListeners();
+    _saveRestTimerState();
   }
 
   void setRestTimerDuration(int duration) {

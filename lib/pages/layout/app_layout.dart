@@ -52,7 +52,7 @@ class _AppLayoutState extends State<AppLayout> {
   String _getPageTitle() {
     switch (_currentIndex) {
       case Pages.HomePage:
-        return 'Home';
+        return 'FitTrack';
       case Pages.HistoryPage:
         return 'History';
       case Pages.NewWorkoutPage:
