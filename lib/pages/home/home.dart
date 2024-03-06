@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:group_project/constants/upload_enums.dart';
-import 'package:group_project/main.dart';
 import 'package:group_project/models/post.dart';
 import 'package:group_project/pages/complete_workout/capture_image/upload_image_provider.dart';
 import 'package:group_project/pages/home/components/display_image_stack.dart';
@@ -27,7 +26,7 @@ class _HomeState extends State<Home> {
   late Stream<List<FriendPostPair>> friendsPostStream;
   FirebaseFriendsPost firebaseFriendsPost = FirebaseFriendsPost();
 
-  late List<Map<String, dynamic>> imageList;
+  List<Post> imageList = [];
 
   @override
   void initState() {
@@ -35,20 +34,10 @@ class _HomeState extends State<Home> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       fetchUserPosts();
     });
-    imageList =
-        objectBox.postService.getActivePosts().asMap().entries.map((entry) {
-      final item = entry.value;
-      return {
-        'firstImageUrl': item.firstImageUrl,
-        'secondImageUrl': item.secondImageUrl,
-        'postId': item.id,
-        'workoutSessionId': item.id,
-      };
-    }).toList();
 
     fetchFriendsPosts();
     fetchCaption(imageList.isNotEmpty
-        ? imageList[_current]['workoutSessionId']
+        ? imageList[_current].id
         : 0); // Adjusted for index out of range
     context.read<UploadImageProvider>().getSharedPreferences();
     SharedPreferences.getInstance().then((prefs) {
@@ -77,17 +66,10 @@ class _HomeState extends State<Home> {
 
   void fetchUserPosts() async {
     List<Post> userPosts = await FirebasePostsService.getCurrentUserPosts();
-    List<Map<String, dynamic>> postMapList = userPosts.map((post) {
-      return {
-        'firstImageUrl': post.firstImageUrl,
-        'secondImageUrl': post.secondImageUrl,
-        'postId': post.id,
-        'workoutSessionId': post.id,
-      };
-    }).toList();
+
     setState(() {
-      imageList = postMapList;
-      fetchCaption(imageList.isNotEmpty ? imageList[_current]['postId'] : 0);
+      imageList = userPosts;
+      fetchCaption(imageList.isNotEmpty ? imageList[_current].id : 0);
     });
   }
 
@@ -115,16 +97,15 @@ class _HomeState extends State<Home> {
                     onPageChanged: (index, reason) {
                       setState(() {
                         _current = index;
-                        fetchCaption(imageList[index]['workoutSessionId']);
+                        fetchCaption(imageList[index].id);
                       });
                     },
                   ),
                   itemBuilder: (context, index, realIndex) {
-                    final firstImage = imageList[index]['firstImageUrl']!;
-                    final secondImage = imageList[index]['secondImageUrl']!;
-                    final postId = imageList[index]['postId']!;
-                    final workoutSessionId =
-                        imageList[index]['workoutSessionId']!;
+                    final firstImage = imageList[index].firstImageUrl;
+                    final secondImage = imageList[index].secondImageUrl;
+                    final postId = imageList[index].id;
+                    final workoutSessionId = imageList[index].id;
                     return Container(
                       margin: const EdgeInsets.symmetric(horizontal: 5),
                       child: Column(
@@ -180,12 +161,10 @@ class _HomeState extends State<Home> {
                                   MaterialPageRoute(
                                     builder: (context) =>
                                         DisplayPostImageScreen(
-                                      imagePath: imageList[index]
-                                          ['firstImageUrl'],
-                                      imagePath2: imageList[index]
-                                          ['secondImageUrl'],
-                                      workoutSessionId: imageList[index]
-                                          ['workoutSessionId'],
+                                      imagePath: imageList[index].firstImageUrl,
+                                      imagePath2:
+                                          imageList[index].secondImageUrl,
+                                      workoutSessionId: imageList[index].id,
                                     ),
                                   ),
                                 );
