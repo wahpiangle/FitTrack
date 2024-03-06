@@ -35,9 +35,8 @@ class _FriendsPostCarouselState extends State<FriendsPostCarousel> {
                 final List<FriendPostPair> friendPostPairs = snapshot.data!;
 
                 return ListView.builder(
-                  physics:
-                      const NeverScrollableScrollPhysics(), // Disable scrolling
-                  shrinkWrap: true, // Allow the ListView to wrap content
+                  physics: const NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
                   itemCount: friendPostPairs.length,
                   itemBuilder: (context, index) {
                     final friendPostPair = friendPostPairs[index];

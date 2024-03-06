@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_floating_bottom_bar/flutter_floating_bottom_bar.dart';
 import 'package:group_project/constants/page_enums.dart';
 import 'package:group_project/constants/themes/app_colours.dart';
+import 'package:group_project/pages/friend/components/custom_friends_navigation_tab.dart';
 import 'package:group_project/pages/friend/current_friend.dart';
 import 'package:group_project/pages/friend/friend_request.dart';
 import 'package:group_project/pages/friend/friend_suggestion.dart';
@@ -20,7 +21,11 @@ class FriendPageState extends State<FriendPage>
     with SingleTickerProviderStateMixin {
   late int currentPage;
   late TabController tabController;
-  final List<Color> colors = [AppColours.secondary, AppColours.secondary, AppColours.secondary];
+  final List<Color> colors = [
+    AppColours.secondary,
+    AppColours.secondary,
+    AppColours.secondary
+  ];
 
   @override
   void initState() {
@@ -33,10 +38,7 @@ class FriendPageState extends State<FriendPage>
       }
     });
     super.initState();
-
   }
-
-
 
   void changePage(int newPage) {
     setState(() {
@@ -52,7 +54,6 @@ class FriendPageState extends State<FriendPage>
 
   @override
   Widget build(BuildContext context) {
-
     final Color unselectedColor = colors[currentPage].computeLuminance() < 0.2
         ? Colors.black
         : Colors.white;
@@ -85,15 +86,18 @@ class FriendPageState extends State<FriendPage>
                 Navigator.pushReplacement(
                   context,
                   PageRouteBuilder(
-                    pageBuilder: (context, animation1, animation2) => const AppLayout(
+                    pageBuilder: (context, animation1, animation2) =>
+                        const AppLayout(
                       currentIndex: Pages.HomePage,
                     ),
-                    transitionsBuilder: (context, animation1, animation2, child) {
+                    transitionsBuilder:
+                        (context, animation1, animation2, child) {
                       const begin = Offset(0.2, 0.0);
                       const end = Offset(0.0, 0.0);
                       const curve = Curves.easeIn;
 
-                      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+                      var tween = Tween(begin: begin, end: end)
+                          .chain(CurveTween(curve: curve));
                       var offsetAnimation = animation1.drive(tween);
 
                       return SlideTransition(
@@ -121,11 +125,10 @@ class FriendPageState extends State<FriendPage>
               ),
             ),
           ),
-          borderRadius: BorderRadius.circular(500),
+          borderRadius: BorderRadius.circular(20),
           duration: const Duration(seconds: 1),
           curve: Curves.decelerate,
           showIcon: true,
-          width: MediaQuery.of(context).size.width * 0.8,
           barColor: colors[currentPage].computeLuminance() > 0.2
               ? AppColours.primaryBright
               : Colors.white,
@@ -138,8 +141,6 @@ class FriendPageState extends State<FriendPage>
           reverse: false,
           hideOnScroll: false,
           scrollOpposite: false,
-          onBottomBarHidden: () {},
-          onBottomBarShown: () {},
           body: (context, controller) => TabBarView(
             controller: tabController,
             dragStartBehavior: DragStartBehavior.down,
@@ -153,21 +154,21 @@ class FriendPageState extends State<FriendPage>
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              CustomTab(
+              CustomFriendsNavigationTab(
                 text: "Suggestions",
                 color: currentPage == 0 ? colors[0] : unselectedColor,
                 onTap: () {
                   tabController.animateTo(0);
                 },
               ),
-              CustomTab(
+              CustomFriendsNavigationTab(
                 text: "Friends",
                 color: currentPage == 1 ? colors[1] : unselectedColor,
                 onTap: () {
                   tabController.animateTo(1);
                 },
               ),
-              CustomTab(
+              CustomFriendsNavigationTab(
                 text: "Requests",
                 color: currentPage == 2 ? colors[2] : unselectedColor,
                 onTap: () {
@@ -175,37 +176,6 @@ class FriendPageState extends State<FriendPage>
                 },
               ),
             ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class CustomTab extends StatelessWidget {
-  final String text;
-  final Color color;
-  final VoidCallback onTap;
-
-  const CustomTab(
-      {super.key,
-      required this.text,
-      required this.color,
-      required this.onTap});
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      child: SizedBox(
-        height: 40,
-        width: 100,
-        child: Center(
-          child: Text(
-            text,
-            style: TextStyle(
-              color: color,
-            ),
           ),
         ),
       ),

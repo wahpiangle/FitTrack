@@ -23,7 +23,7 @@ class FirebaseUserService {
         'email': user.email,
         'username': formattedUsername,
         'displayName': user.displayName,
-        'photoUrl': "",
+        'photoUrl': '',
         'createdAt': FieldValue.serverTimestamp(),
         'updatedAt': FieldValue.serverTimestamp(),
       });
@@ -91,5 +91,21 @@ class FirebaseUserService {
     final DocumentSnapshot<Map<String, dynamic>> doc =
         await usersCollectionRef.doc(uid).get();
     return FirebaseUser.fromDocument(doc);
+  }
+
+  static Future<List<FirebaseUser>> getUserFriendsByUid(String uid) async {
+    final friendsUids = await getUserFriendsUidsByUid(uid);
+    List<FirebaseUser> friends = [];
+    for (var friendUid in friendsUids) {
+      final friend = await getUserByUid(friendUid);
+      friends.add(friend);
+    }
+    return friends;
+  }
+
+  static Future<List<dynamic>> getUserFriendsUidsByUid(String uid) async {
+    final DocumentSnapshot<Map<String, dynamic>> doc =
+        await usersCollectionRef.doc(uid).get();
+    return doc['friends'];
   }
 }
