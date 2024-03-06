@@ -12,7 +12,6 @@ class DisplayImageStack extends StatelessWidget {
   final int index;
   final int current;
   final int postId;
-  final int workoutSessionId;
 
   const DisplayImageStack({
     super.key,
@@ -21,7 +20,6 @@ class DisplayImageStack extends StatelessWidget {
     required this.index,
     required this.current,
     required this.postId,
-    required this.workoutSessionId,
   });
 
   @override
@@ -44,7 +42,7 @@ class DisplayImageStack extends StatelessWidget {
               builder: (context) => DisplayPostImageScreen(
                   imagePath: firstImageUrl,
                   imagePath2: secondImageUrl,
-                  workoutSessionId: workoutSessionId),
+                  workoutSessionId: postId,),
             ),
           );
         }

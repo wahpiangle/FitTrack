@@ -76,6 +76,7 @@ class FirebasePostsService {
         'secondImageUrl': secondImageUrl,
         'workoutSessionId': post.workoutSession.targetId,
         'date': post.date,
+        'caption': post.caption,
       });
       return true;
     } catch (e) {
@@ -99,7 +100,6 @@ class FirebasePostsService {
     try {
       final User user = auth.currentUser!;
 
-      // Update the caption for the specified workout session
       await postsCollectionRef
           .doc(user.uid)
           .collection('userPosts')
@@ -153,7 +153,8 @@ class FirebasePostsService {
           firstImageUrl: doc.data()['firstImageUrl'] ?? '',
           secondImageUrl: doc.data()['secondImageUrl'] ?? '',
           caption: doc.data()['caption'] ?? '',
-          date: postDate, // Non-nullable DateTime
+          date: postDate,
+          id: int.parse(doc.id),
         );
         posts.add(post);
       }
@@ -180,21 +181,10 @@ class FirebasePostsService {
     }
   }
 
-  // Method to get current user's posts
   static Future<List<Post>> getCurrentUserPosts() async {
     final currentUserUid = FirebaseAuth.instance.currentUser?.uid;
-    List<Post> currentUserPosts = [];
 
-    if (currentUserUid != null) {
-      try {
-        currentUserPosts =
-            await FirebasePostsService.getPostsByUserId(currentUserUid);
-      } catch (e) {
-        // Handle the error as per your application's requirements
-      }
-    }
-
-    return currentUserPosts;
+    return await FirebasePostsService.getPostsByUserId(currentUserUid!);
   }
 
   Future<bool> firebasePostsNotEmpty() async {
@@ -208,6 +198,6 @@ class FirebasePostsService {
     } catch (e) {
       // Handle any errors here
     }
-    return false; // Return false if there are errors or no posts found
+    return false;
   }
 }
