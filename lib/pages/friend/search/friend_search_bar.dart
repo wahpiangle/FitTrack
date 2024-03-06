@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:group_project/constants/themes/app_colours.dart';
-import 'package:group_project/models/firebase_user.dart';
+import 'package:group_project/models/firebase/firebase_user.dart';
 import 'package:group_project/services/firebase/firebase_friends_service.dart';
 
 class FriendSearchBar extends StatelessWidget {
