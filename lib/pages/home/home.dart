@@ -98,7 +98,7 @@ class _HomeState extends State<Home> {
       body: Scrollbar(
         child: SingleChildScrollView(
           child: Container(
-            margin: const EdgeInsets.symmetric(horizontal: 10),
+            margin: const EdgeInsets.all(10),
             child: Column(
               children: [
                 const SizedBox(height: 5),
