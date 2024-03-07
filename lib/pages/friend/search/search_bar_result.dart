@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:group_project/constants/themes/app_colours.dart';
-import 'package:group_project/models/firebase_user.dart';
+import 'package:group_project/models/firebase/firebase_user.dart';
 import 'package:group_project/pages/friend/search/user_image_display.dart';
 import 'package:group_project/services/firebase/firebase_friends_service.dart';
 

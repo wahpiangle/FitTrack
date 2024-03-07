@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/animation.dart';
-import 'package:group_project/models/firebase_user.dart';
+import 'package:group_project/models/firebase/firebase_user.dart';
 import 'package:group_project/services/firebase/firebase_user_service.dart';
 
 class FirebaseFriendsService {

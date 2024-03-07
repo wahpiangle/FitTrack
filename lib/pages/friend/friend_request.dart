@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:group_project/models/firebase_user.dart';
+import 'package:group_project/models/firebase/firebase_user.dart';
 import 'package:group_project/pages/friend/components/friend_request_tile.dart';
 import 'package:group_project/pages/friend/search/search_results_list.dart';
 import 'package:group_project/services/firebase/firebase_friends_service.dart';
