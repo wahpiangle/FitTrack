@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:group_project/pages/home/components/reaction_button.dart';
 import 'package:group_project/services/firebase/firebase_friends_post.dart';
 
 class FriendsPostCarousel extends StatefulWidget {
@@ -10,6 +11,7 @@ class FriendsPostCarousel extends StatefulWidget {
 
 class _FriendsPostCarouselState extends State<FriendsPostCarousel> {
   Stream<List<FriendPostPair>>? friendsPostStream;
+  bool displayHoldInstruction = false;
 
   @override
   void initState() {
@@ -25,6 +27,17 @@ class _FriendsPostCarouselState extends State<FriendsPostCarousel> {
     });
   }
 
+  void showHoldInstruction() {
+    setState(() {
+      displayHoldInstruction = true;
+    });
+    Future.delayed(const Duration(seconds: 3), () {
+      setState(() {
+        displayHoldInstruction = false;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return friendsPostStream != null
@@ -33,7 +46,6 @@ class _FriendsPostCarouselState extends State<FriendsPostCarousel> {
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 final List<FriendPostPair> friendPostPairs = snapshot.data!;
-
                 return ListView.builder(
                   physics: const NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
@@ -104,27 +116,48 @@ class _FriendsPostCarouselState extends State<FriendsPostCarousel> {
                                   ),
                                 ),
                               ),
-                              const Positioned(
+                              displayHoldInstruction
+                                  ? Positioned.fill(
+                                      child: Opacity(
+                                        opacity: 0.5,
+                                        child: Container(
+                                          color: const Color(0xFF000000),
+                                        ),
+                                      ),
+                                    )
+                                  : const SizedBox(),
+                              displayHoldInstruction
+                                  ? const Positioned.fill(
+                                      child: Center(
+                                        child: Text(
+                                          'Hold the emoji button to react',
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ),
+                                    )
+                                  : const SizedBox(),
+                              Positioned(
                                 bottom: 10,
                                 right: 10,
-                                child: Row(
+                                child: Column(
                                   children: [
-                                    Column(
-                                      children: [
-                                        Icon(
-                                          Icons.favorite_border,
-                                          color: Colors.grey,
-                                          size: 40,
-                                        ),
-                                        SizedBox(height: 5),
-                                        Icon(
-                                          Icons.comment,
-                                          color: Colors.grey,
-                                          size: 40,
-                                        ),
-                                      ],
+                                    const Icon(Icons.comment_sharp,
+                                        color: Colors.white,
+                                        size: 30,
+                                        shadows: [
+                                          Shadow(
+                                            color: Colors.black,
+                                            blurRadius: 10,
+                                          ),
+                                        ]),
+                                    const SizedBox(height: 10),
+                                    ReactionButton(
+                                      showHoldInstruction: showHoldInstruction,
                                     ),
-                                    SizedBox(width: 5),
                                   ],
                                 ),
                               ),

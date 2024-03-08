@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:group_project/models/post.dart';
 import 'package:group_project/constants/themes/app_colours.dart';
-import 'package:group_project/pages/home/components/no_workout_posted_page.dart';
-import 'package:group_project/pages/home/components/workout_posted_page.dart';
+import 'package:group_project/pages/home/no_workout_posted_page.dart';
+import 'package:group_project/pages/home/workout_posted_page.dart';
 import 'package:group_project/services/firebase/firebase_posts_service.dart';
 
 class Home extends StatefulWidget {
