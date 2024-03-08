@@ -47,9 +47,6 @@ class WorkoutSessionService {
       }
       exercisesSetsInfoBox.remove(exercisesSetsInfo.id);
     }
-    if (workoutSession.post.target != null) {
-      postBox.remove(workoutSession.post.targetId);
-    }
     workoutSessionBox.remove(workoutSessionId);
   }
 
@@ -228,9 +225,9 @@ class WorkoutSessionService {
     }
   }
 
-  void attachPostToWorkoutSession(int workoutSessionId, int postId) {
+  void attachPostToWorkoutSession(int workoutSessionId, String postId) {
     WorkoutSession workoutSession = getWorkoutSession(workoutSessionId)!;
-    workoutSession.post.targetId = postId;
+    workoutSession.postId = postId;
     workoutSessionBox.put(workoutSession);
   }
 

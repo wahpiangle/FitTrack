@@ -66,7 +66,8 @@ class FirebasePostsService {
       final secondImageUrl = await uploadSecondImageTask.then((res) {
         return res.ref.getDownloadURL();
       });
-      await postsCollectionRef.add(
+      final DocumentReference<Map<String, dynamic>> doc =
+          await postsCollectionRef.add(
         {
           'postedBy': user.uid,
           'firstImageUrl': firstImageUrl,
@@ -76,6 +77,8 @@ class FirebasePostsService {
           'caption': post.caption,
         },
       );
+      objectBox.workoutSessionService
+          .attachPostToWorkoutSession(post.workoutSessionId, doc.id);
       return true;
     } catch (e) {
       uploadImageProvider.setUploadError(true);
@@ -83,15 +86,12 @@ class FirebasePostsService {
     }
   }
 
-  static void deletePost(int workoutSessionId) async {
-    final WorkoutSession workoutSession =
-        objectBox.workoutSessionService.getWorkoutSession(workoutSessionId)!;
-    final User user = auth.currentUser!;
+  static void deletePost(String postId) async {
     await postsCollectionRef
-        .doc(user.uid)
-        .collection('userPosts')
-        .doc(workoutSession.post.targetId.toString())
-        .delete();
+        .doc(postId)
+        .delete()
+        .then((value) => print('Post Deleted'))
+        .catchError((error) => print('Failed to delete post: $error'));
   }
 
   static Future<bool> saveCaption(int workoutSessionId, String caption) async {
