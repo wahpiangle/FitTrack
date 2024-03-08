@@ -119,34 +119,29 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     ),
                     Row(
                       children: [
-                        userProfileProvider.profileImage == ""
-                            ? const SizedBox(
-                                width: 100,
-                                height: 100,
-                                child: CircularProgressIndicator(
-                                  backgroundColor: AppColours.secondary,
-                                ))
-                            : SizedBox(
-                                width: 100,
-                                height: 100,
-                                child: CachedNetworkImage(
-                                  imageUrl: userProfileProvider.profileImage,
-                                  imageBuilder: (context, imageProvider) =>
-                                      CircleAvatar(
-                                    radius: 120,
-                                    backgroundImage: imageProvider,
-                                  ),
-                                  placeholder: (context, url) =>
-                                      const CircularProgressIndicator(
-                                    backgroundColor: AppColours.secondary,
-                                  ),
-                                  errorWidget: (context, url, error) =>
-                                      const Icon(
-                                    Icons.error,
-                                    color: AppColours.secondary,
-                                  ),
-                                ),
+                        SizedBox(
+                          width: 100,
+                          height: 100,
+                          child: CachedNetworkImage(
+                            imageUrl: userProfileProvider.profileImage,
+                            imageBuilder: (context, imageProvider) =>
+                                CircleAvatar(
+                              radius: 120,
+                              backgroundImage: imageProvider,
+                            ),
+                            placeholder: (context, url) =>
+                                const CircularProgressIndicator(
+                              backgroundColor: AppColours.secondary,
+                            ),
+                            errorWidget: (context, url, error) =>
+                                const CircleAvatar(
+                              radius: 120,
+                              backgroundImage: AssetImage(
+                                'assets/icons/defaultimage.jpg',
                               ),
+                            ),
+                          ),
+                        ),
                         const SizedBox(width: 20),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,

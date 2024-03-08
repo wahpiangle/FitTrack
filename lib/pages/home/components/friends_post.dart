@@ -156,6 +156,7 @@ class _FriendsPostCarouselState extends State<FriendsPostCarousel> {
                                         ]),
                                     const SizedBox(height: 10),
                                     ReactionButton(
+                                      post: post,
                                       showHoldInstruction: showHoldInstruction,
                                     ),
                                   ],

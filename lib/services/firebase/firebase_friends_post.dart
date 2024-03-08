@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:group_project/models/post.dart';
+import 'package:group_project/services/firebase/firebase_user_service.dart';
 import 'firebase_posts_service.dart';
 
 class FriendPostPair {
@@ -29,7 +30,8 @@ class FirebaseFriendsPost {
         for (String friendId in friendIds) {
           List<Post> posts =
               await FirebasePostsService.getPostsByUserId(friendId);
-          String? friendName = await FirebasePostsService.getUserName(friendId);
+          String? friendName =
+              await FirebaseUserService.getUserNameById(friendId);
 
           for (Post post in posts) {
             String postIdentifier = '${post.id}_$friendId';

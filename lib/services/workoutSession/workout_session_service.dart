@@ -210,8 +210,9 @@ class WorkoutSessionService {
 
         for (var exercisesSetsInfo in workoutSession['exercisesSetsInfo']) {
           final newExercisesSetsInfo = ExercisesSetsInfo();
-          newExercisesSetsInfo.exercise.targetId =
-              exercisesSetsInfo['exercise'];
+          newExercisesSetsInfo.exercise.target = exerciseBox.get(
+            (exercisesSetsInfo['exercise']),
+          );
           for (var exerciseSet in exercisesSetsInfo['exerciseSets']) {
             final newExerciseSet = ExerciseSet();
             newExerciseSet.reps = exerciseSet['reps'];

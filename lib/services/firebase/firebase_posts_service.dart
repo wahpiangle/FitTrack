@@ -20,10 +20,10 @@ class FirebasePostsService {
       Post post, UploadImageProvider uploadImageProvider) async {
     final User user = auth.currentUser!;
     uploadImageProvider.setIsUploading(true);
-    Reference firstRef = storage.ref(
-        'images/${user.uid}/firstImage/${post.workoutSession.targetId}.jpg');
-    Reference secondRef = storage.ref(
-        'images/${user.uid}/secondImage/${post.workoutSession.targetId}.jpg');
+    Reference firstRef = storage
+        .ref('images/${user.uid}/firstImage/${post.workoutSessionId}.jpg');
+    Reference secondRef = storage
+        .ref('images/${user.uid}/secondImage/${post.workoutSessionId}.jpg');
     uploadImageProvider.setUploadError(true);
     try {
       final uploadFirstImageTask = firstRef.putFile(File(post.firstImageUrl));
@@ -49,14 +49,14 @@ class FirebasePostsService {
               uploadImageProvider.setUploadError(false);
               uploadImageProvider.setIsUploading(true);
             case TaskState.paused:
-              uploadImageProvider.setUploadError(true);
-              uploadImageProvider.setIsUploading(false);
+              uploadImageProvider.setUploadError(false);
+              uploadImageProvider.setIsUploading(true);
             case TaskState.canceled:
               uploadImageProvider.setUploadError(true);
               uploadImageProvider.setIsUploading(false);
             default:
-              uploadImageProvider.setUploadError(true);
-              uploadImageProvider.setIsUploading(false);
+              uploadImageProvider.setUploadError(false);
+              uploadImageProvider.setIsUploading(true);
           }
         });
       }
@@ -66,18 +66,16 @@ class FirebasePostsService {
       final secondImageUrl = await uploadSecondImageTask.then((res) {
         return res.ref.getDownloadURL();
       });
-      await postsCollectionRef
-          .doc(user.uid)
-          .collection('userPosts')
-          .doc(post.workoutSession.targetId.toString())
-          .set({
-        'userId': user.uid,
-        'firstImageUrl': firstImageUrl,
-        'secondImageUrl': secondImageUrl,
-        'workoutSessionId': post.workoutSession.targetId,
-        'date': post.date,
-        'caption': post.caption,
-      });
+      await postsCollectionRef.add(
+        {
+          'postedBy': user.uid,
+          'firstImageUrl': firstImageUrl,
+          'secondImageUrl': secondImageUrl,
+          'workoutSessionId': post.workoutSessionId,
+          'date': post.date,
+          'caption': post.caption,
+        },
+      );
       return true;
     } catch (e) {
       uploadImageProvider.setUploadError(true);
@@ -136,68 +134,38 @@ class FirebasePostsService {
   static Future<List<Post>> getPostsByUserId(String userId) async {
     try {
       final QuerySnapshot<Map<String, dynamic>> querySnapshot =
-          await postsCollectionRef.doc(userId).collection('userPosts').get();
-
+          await postsCollectionRef.where('postedBy', isEqualTo: userId).get();
       List<Post> posts = [];
-
-      for (QueryDocumentSnapshot<Map<String, dynamic>> doc
-          in querySnapshot.docs) {
-        DateTime postDate = DateTime.now(); // Default value
-
-        if (doc.data()['date'] != null) {
-          Timestamp timestamp = doc.data()['date'];
-          postDate = timestamp.toDate(); // Convert Timestamp to DateTime
-        }
-
-        Post post = Post(
-          firstImageUrl: doc.data()['firstImageUrl'] ?? '',
-          secondImageUrl: doc.data()['secondImageUrl'] ?? '',
-          caption: doc.data()['caption'] ?? '',
-          date: postDate,
-          id: int.parse(doc.id),
-        );
-        posts.add(post);
+      for (var doc in querySnapshot.docs) {
+        posts.add(Post.fromDocument(doc));
       }
-
       return posts;
     } catch (e) {
-      return []; // Return an empty list if an error occurs
-    }
-  }
-
-  static Future<String?> getUserName(String userId) async {
-    try {
-      final DocumentSnapshot<Map<String, dynamic>> userSnapshot =
-          await usersCollectionRef.doc(userId).get();
-
-      if (userSnapshot.exists) {
-        final userName = userSnapshot.data()?['username'] ?? '';
-        return userName;
-      } else {
-        return null;
-      }
-    } catch (e) {
-      return null;
+      print(e);
+      return [];
     }
   }
 
   static Future<List<Post>> getCurrentUserPosts() async {
     final currentUserUid = FirebaseAuth.instance.currentUser?.uid;
-
     return await FirebasePostsService.getPostsByUserId(currentUserUid!);
   }
 
-  Future<bool> firebasePostsNotEmpty() async {
+  static Future<void> addReactionToPost(String imagePath, Post post) async {
+    final currentUserUid = FirebaseAuth.instance.currentUser?.uid;
+    Reference ref =
+        storage.ref('images/${post.id}/reactions/$currentUserUid.jpg');
     try {
-      final currentUserUid = FirebaseAuth.instance.currentUser?.uid;
-      if (currentUserUid != null) {
-        final currentUserPosts =
-            await FirebasePostsService.getPostsByUserId(currentUserUid);
-        return currentUserPosts.isNotEmpty;
-      }
+      TaskSnapshot uploadImage = await ref.putFile(File(imagePath));
+      uploadImage.ref.getDownloadURL().then((url) {
+        postsCollectionRef.doc(post.postId).collection('reactions').add({
+          'imageUrl': url,
+          'postedByUserId': currentUserUid,
+          'postId': post.postId,
+        });
+      });
     } catch (e) {
-      // Handle any errors here
+      print(e);
     }
-    return false;
   }
 }

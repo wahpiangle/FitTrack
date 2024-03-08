@@ -1,11 +1,16 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:group_project/models/post.dart';
+import 'package:group_project/services/firebase/firebase_posts_service.dart';
 
 class CaptureReactionDialog extends StatefulWidget {
   final ValueNotifier<Offset> pointerPosition;
+  final Post post;
+
   const CaptureReactionDialog({
     super.key,
     required this.pointerPosition,
+    required this.post,
   });
 
   @override
@@ -20,7 +25,9 @@ class _CaptureReactionDialogState extends State<CaptureReactionDialog> {
 
   @override
   void dispose() async {
-    await _takePicture();
+    if (isPointerInRect) {
+      await _takePicture();
+    }
     _controller.dispose();
     super.dispose();
   }
@@ -37,8 +44,11 @@ class _CaptureReactionDialogState extends State<CaptureReactionDialog> {
   Future<void> _takePicture() async {
     try {
       await _initializeControllerFuture;
-      // final XFile file = await _controller.takePicture();
-      // print(file.path);
+      final XFile file = await _controller.takePicture();
+      await FirebasePostsService.addReactionToPost(
+        file.path,
+        widget.post,
+      );
     } catch (e) {
       print(e);
     }

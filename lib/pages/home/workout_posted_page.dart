@@ -12,10 +12,10 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class WorkoutPostedPage extends StatefulWidget {
-  final List<Post> imageList;
+  final List<Post> currentUserPosts;
   const WorkoutPostedPage({
     super.key,
-    required this.imageList,
+    required this.currentUserPosts,
   });
 
   @override
@@ -64,7 +64,7 @@ class _WorkoutPostedPageState extends State<WorkoutPostedPage> {
           child: Column(
             children: [
               CarouselSlider.builder(
-                itemCount: widget.imageList.length,
+                itemCount: widget.currentUserPosts.length,
                 options: CarouselOptions(
                   aspectRatio: 1,
                   enlargeCenterPage: true,
@@ -78,75 +78,82 @@ class _WorkoutPostedPageState extends State<WorkoutPostedPage> {
                   },
                 ),
                 itemBuilder: (context, index, realIndex) {
-                  final firstImage = widget.imageList[index].firstImageUrl;
-                  final secondImage = widget.imageList[index].secondImageUrl;
-                  final postId = widget.imageList[index].id;
-                  return Column(
-                    children: [
-                      ClipRRect(
-                        borderRadius: const BorderRadius.all(
-                          Radius.circular(8.0),
+                  final firstImage =
+                      widget.currentUserPosts[index].firstImageUrl;
+                  final secondImage =
+                      widget.currentUserPosts[index].secondImageUrl;
+                  final postId = widget.currentUserPosts[index].id;
+                  return Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 5),
+                    child: Column(
+                      children: [
+                        ClipRRect(
+                          borderRadius: const BorderRadius.all(
+                            Radius.circular(8.0),
+                          ),
+                          child: DisplayImageStack(
+                            firstImageUrl: firstImage,
+                            secondImageUrl: secondImage,
+                            index: index,
+                            current: _current,
+                            postId: postId,
+                          ),
                         ),
-                        child: DisplayImageStack(
-                          firstImageUrl: firstImage,
-                          secondImageUrl: secondImage,
-                          index: index,
-                          current: _current,
-                          postId: postId,
-                        ),
-                      ),
-                      uploadImageProvider.uploadError
-                          ? const Text(
-                              'There was an error uploading your workout. Please try again.',
-                              style: TextStyle(color: Colors.red),
-                              textAlign: TextAlign.center,
-                            )
-                          : TextField(
-                              textAlign: TextAlign.center,
-                              style: const TextStyle(color: Colors.white),
-                              enableInteractiveSelection: false,
-                              decoration: const InputDecoration(
-                                alignLabelWithHint: true,
-                                hintText: 'Add a caption..',
-                                hintStyle: TextStyle(color: Colors.grey),
-                                border: InputBorder.none,
-                              ),
-                              onChanged: (caption) {
-                                FirebasePostsService.saveCaption(
-                                  postId,
-                                  caption,
-                                );
-                              },
-                              controller: TextEditingController(
-                                text: widget.imageList[index].caption,
-                              ),
-                            ),
-                      Container(
-                        margin: const EdgeInsets.all(5),
-                        padding: const EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          border: Border.all(color: Colors.grey),
-                        ),
-                        child: GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => DisplayPostImageScreen(
-                                  imagePath:
-                                      widget.imageList[index].firstImageUrl,
-                                  imagePath2:
-                                      widget.imageList[index].secondImageUrl,
-                                  workoutSessionId: widget.imageList[index].id,
+                        uploadImageProvider.uploadError
+                            ? const Text(
+                                'There was an error uploading your workout. Please try again.',
+                                style: TextStyle(color: Colors.red),
+                                textAlign: TextAlign.center,
+                              )
+                            : TextField(
+                                textAlign: TextAlign.center,
+                                style: const TextStyle(color: Colors.white),
+                                enableInteractiveSelection: false,
+                                decoration: const InputDecoration(
+                                  alignLabelWithHint: true,
+                                  hintText: 'Add a caption..',
+                                  hintStyle: TextStyle(color: Colors.grey),
+                                  border: InputBorder.none,
+                                ),
+                                onChanged: (caption) {
+                                  FirebasePostsService.saveCaption(
+                                    postId,
+                                    caption,
+                                  );
+                                },
+                                controller: TextEditingController(
+                                  text: widget.currentUserPosts[index].caption,
                                 ),
                               ),
-                            );
-                          },
-                          child: const Icon(Icons.comment, color: Colors.grey),
+                        Container(
+                          margin: const EdgeInsets.all(5),
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(color: Colors.grey),
+                          ),
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => DisplayPostImageScreen(
+                                    imagePath: widget
+                                        .currentUserPosts[index].firstImageUrl,
+                                    imagePath2: widget
+                                        .currentUserPosts[index].secondImageUrl,
+                                    workoutSessionId:
+                                        widget.currentUserPosts[index].id,
+                                  ),
+                                ),
+                              );
+                            },
+                            child:
+                                const Icon(Icons.comment, color: Colors.grey),
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   );
                 },
               ),

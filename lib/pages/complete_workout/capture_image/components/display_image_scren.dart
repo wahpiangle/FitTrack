@@ -7,6 +7,7 @@ import 'package:group_project/pages/complete_workout/capture_image/components/in
 import 'package:group_project/pages/complete_workout/capture_image/upload_image_provider.dart';
 import 'package:group_project/pages/layout/app_layout.dart';
 import 'package:group_project/services/firebase/firebase_posts_service.dart';
+import 'package:group_project/services/firebase/firebase_user_service.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -15,7 +16,7 @@ class DisplayImageScreen extends StatefulWidget {
   final String imagePath;
   final String imagePath2;
   final WorkoutSession workoutSession;
-  final DateTime pictureTakenTime; // Add this variable
+  final DateTime pictureTakenTime;
 
   const DisplayImageScreen({
     super.key,
@@ -23,7 +24,7 @@ class DisplayImageScreen extends StatefulWidget {
     required this.imagePath,
     required this.imagePath2,
     required this.workoutSession,
-    required this.pictureTakenTime, // Initialize the variable
+    required this.pictureTakenTime,
   });
 
   @override
@@ -45,12 +46,14 @@ class _DisplayImageScreenState extends State<DisplayImageScreen> {
       ),
     );
     Post newPost = Post(
+      postId: '',
       caption: '',
       firstImageUrl: widget.imagePath,
       secondImageUrl: widget.imagePath2,
       date: DateTime.now(),
+      postedBy: FirebaseUserService.auth.currentUser!.uid,
+      workoutSessionId: widget.workoutSession.id,
     );
-    newPost.workoutSession.target = widget.workoutSession;
     objectBox.postService.addPost(
       newPost,
     );
@@ -63,31 +66,27 @@ class _DisplayImageScreenState extends State<DisplayImageScreen> {
   @override
   Widget build(BuildContext context) {
     final UploadImageProvider uploadImageProvider =
-    context.read<UploadImageProvider>();
+        context.read<UploadImageProvider>();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
-
       children: [
-        // Display the captured time here
         Text(
           '${DateFormat.jm().format(widget.pictureTakenTime)}',
           // Display time only
           style: const TextStyle(
-            color: const Color(0xFFC1C1C1), // Set color to #333333
+            color: const Color(0xFFC1C1C1),
             fontWeight: FontWeight.bold,
             fontSize: 15,
           ),
         ),
         const SizedBox(
-          height: 1, // Adjust spacing between time and date
+          height: 1,
         ),
-        // Display the captured date here
         Text(
           '${DateFormat.yMMMMd().format(widget.pictureTakenTime)}',
-          // Display date only
-          style: TextStyle(
-            color: const Color(0xFFC1C1C1), // Set color to #333333
+          style: const TextStyle(
+            color: Color(0xFFC1C1C1),
             fontWeight: FontWeight.bold,
             fontSize: 15,
           ),
