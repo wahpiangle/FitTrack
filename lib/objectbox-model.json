@@ -116,16 +116,6 @@
           "type": 1
         },
         {
-          "id": "7:274552949688268393",
-          "name": "recentWeight",
-          "type": 6
-        },
-        {
-          "id": "8:2419114567633605213",
-          "name": "recentReps",
-          "type": 6
-        },
-        {
           "id": "9:5709109583002986650",
           "name": "isCustom",
           "type": 1
@@ -411,7 +401,10 @@
   "modelVersionParserMinimum": 5,
   "retiredEntityUids": [],
   "retiredIndexUids": [],
-  "retiredPropertyUids": [],
+  "retiredPropertyUids": [
+    274552949688268393,
+    2419114567633605213
+  ],
   "retiredRelationUids": [],
   "version": 1
 }
