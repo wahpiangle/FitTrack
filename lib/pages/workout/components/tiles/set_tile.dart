@@ -101,10 +101,9 @@ class _SetTileState extends State<SetTile> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Dismissible(
-      key: Key(widget.set.id.toString()),
+      key: Key(widget.setIndex.toString()), // Use setIndex as the key
       direction: DismissDirection.endToStart,
       onDismissed: (direction) {
-        widget.removeSet(widget.set.id);
         setState(() {
           widget.exercisesSetsInfo.exerciseSets
               .removeWhere((element) => element.id == widget.set.id);
