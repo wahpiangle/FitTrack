@@ -93,19 +93,25 @@ class FirebaseUserService {
     return FirebaseUser.fromDocument(doc);
   }
 
-  static Future<List<FirebaseUser>> getUserFriendsByUid(String uid) async {
-    final friendsUids = await getUserFriendsUidsByUid(uid);
-    List<FirebaseUser> friends = [];
-    for (var friendUid in friendsUids) {
-      final friend = await getUserByUid(friendUid);
-      friends.add(friend);
-    }
-    return friends;
-  }
-
   static Future<List<dynamic>> getUserFriendsUidsByUid(String uid) async {
     final DocumentSnapshot<Map<String, dynamic>> doc =
         await usersCollectionRef.doc(uid).get();
     return doc['friends'];
+  }
+
+  static Future<String?> getUserNameById(String userId) async {
+    try {
+      final DocumentSnapshot<Map<String, dynamic>> userSnapshot =
+          await usersCollectionRef.doc(userId).get();
+
+      if (userSnapshot.exists) {
+        final userName = userSnapshot.data()?['username'] ?? '';
+        return userName;
+      } else {
+        return null;
+      }
+    } catch (e) {
+      return null;
+    }
   }
 }

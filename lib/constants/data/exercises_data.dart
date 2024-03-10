@@ -966,8 +966,13 @@ Map<String, String> halfImageMap = {
 
 List<Exercise> generateExerciseData() {
   List<Exercise> exerciseData = [];
-  exerciseMap.forEach((key, value) {
+  exerciseMap.forEach((
+    key,
+    value,
+  ) {
+    final int index = exerciseMap.keys.toList().indexOf(key);
     Exercise exercise = Exercise(
+      id: index,
       name: key,
       imagePath: imageMap[key]!,
       halfImagePath: halfImageMap[key]!,

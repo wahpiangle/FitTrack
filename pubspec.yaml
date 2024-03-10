@@ -69,6 +69,7 @@ dependencies:
   flutter_contacts: ^1.1.7+1
   flutter_floating_bottom_bar: ^1.2.0
   easy_debounce: ^2.0.3
+  peek_and_pop_dialog: ^0.0.2
 
 dev_dependencies:
   flutter_test:

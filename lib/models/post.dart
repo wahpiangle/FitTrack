@@ -1,4 +1,4 @@
-import 'package:group_project/models/workout_session.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:objectbox/objectbox.dart';
 
 @Entity()
@@ -9,8 +9,9 @@ class Post {
   final String firstImageUrl;
   final String secondImageUrl;
   final DateTime date;
-
-  final workoutSession = ToOne<WorkoutSession>();
+  final String postedBy;
+  final int workoutSessionId;
+  final String postId;
 
   Post({
     this.id = 0,
@@ -18,5 +19,20 @@ class Post {
     required this.firstImageUrl,
     required this.secondImageUrl,
     required this.date,
+    required this.postedBy,
+    required this.workoutSessionId,
+    required this.postId,
   });
+
+  static fromDocument(QueryDocumentSnapshot<Map<String, dynamic>> doc) {
+    return Post(
+      postId: doc.id,
+      caption: doc.data()['caption'],
+      firstImageUrl: doc.data()['firstImageUrl'],
+      secondImageUrl: doc.data()['secondImageUrl'],
+      date: doc.data()['date'].toDate(),
+      postedBy: doc.data()['postedBy'],
+      workoutSessionId: doc.data()['workoutSessionId'],
+    );
+  }
 }
