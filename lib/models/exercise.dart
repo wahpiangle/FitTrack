@@ -6,7 +6,7 @@ import 'body_part.dart';
 
 @Entity()
 class Exercise {
-  @Id()
+  @Id(assignable: true)
   int id;
   String name;
   String imagePath;

@@ -70,6 +70,8 @@ dependencies:
   flutter_floating_bottom_bar: ^1.2.0
   easy_debounce: ^2.0.3
   json_serializable: ^6.7.1
+  peek_and_pop_dialog: ^0.0.2
+
 
 dev_dependencies:
   flutter_test:

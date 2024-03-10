@@ -25,7 +25,6 @@ class TopNavBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     String profileImage =
         Provider.of<UserProfileProvider>(context).profileImage;
-
     Widget leadingWidget;
 
     if (showBackButton) {
@@ -107,7 +106,12 @@ class TopNavBar extends StatelessWidget implements PreferredSizeWidget {
                 ),
                 placeholder: (context, url) =>
                     const CircularProgressIndicator(),
-                errorWidget: (context, url, error) => const Icon(Icons.error),
+                errorWidget: (context, url, error) => ClipOval(
+                  child: Image.asset(
+                    'assets/icons/defaultimage.jpg',
+                    fit: BoxFit.cover,
+                  ),
+                ),
               ),
             ),
           ),

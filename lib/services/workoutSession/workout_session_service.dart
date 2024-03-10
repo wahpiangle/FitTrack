@@ -47,9 +47,6 @@ class WorkoutSessionService {
       }
       exercisesSetsInfoBox.remove(exercisesSetsInfo.id);
     }
-    if (workoutSession.post.target != null) {
-      postBox.remove(workoutSession.post.targetId);
-    }
     workoutSessionBox.remove(workoutSessionId);
   }
 
@@ -210,8 +207,9 @@ class WorkoutSessionService {
 
         for (var exercisesSetsInfo in workoutSession['exercisesSetsInfo']) {
           final newExercisesSetsInfo = ExercisesSetsInfo();
-          newExercisesSetsInfo.exercise.targetId =
-              exercisesSetsInfo['exercise'];
+          newExercisesSetsInfo.exercise.target = exerciseBox.get(
+            (exercisesSetsInfo['exercise']),
+          );
           for (var exerciseSet in exercisesSetsInfo['exerciseSets']) {
             final newExerciseSet = ExerciseSet();
             newExerciseSet.reps = exerciseSet['reps'];
@@ -227,9 +225,9 @@ class WorkoutSessionService {
     }
   }
 
-  void attachPostToWorkoutSession(int workoutSessionId, int postId) {
+  void attachPostToWorkoutSession(int workoutSessionId, String postId) {
     WorkoutSession workoutSession = getWorkoutSession(workoutSessionId)!;
-    workoutSession.post.targetId = postId;
+    workoutSession.postId = postId;
     workoutSessionBox.put(workoutSession);
   }
 

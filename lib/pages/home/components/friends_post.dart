@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:group_project/pages/home/components/reaction/reaction_button.dart';
+import 'package:group_project/pages/home/components/reaction/reaction_images.dart';
 import 'package:group_project/services/firebase/firebase_friends_post.dart';
 
 class FriendsPostCarousel extends StatefulWidget {
@@ -9,7 +11,8 @@ class FriendsPostCarousel extends StatefulWidget {
 }
 
 class _FriendsPostCarouselState extends State<FriendsPostCarousel> {
-  Stream<List<FriendPostPair>>? friendsPostStream;
+  Stream<List<FriendsPost>>? friendsPostStream;
+  bool displayHoldInstruction = false;
 
   @override
   void initState() {
@@ -25,23 +28,36 @@ class _FriendsPostCarouselState extends State<FriendsPostCarousel> {
     });
   }
 
+  void showHoldInstruction() {
+    setState(() {
+      displayHoldInstruction = true;
+    });
+    Future.delayed(const Duration(seconds: 3), () {
+      setState(() {
+        displayHoldInstruction = false;
+      });
+    });
+  }
+
+  void toggleState() {
+    fetchFriendsPosts();
+  }
+
   @override
   Widget build(BuildContext context) {
     return friendsPostStream != null
-        ? StreamBuilder<List<FriendPostPair>>(
+        ? StreamBuilder<List<FriendsPost>>(
             stream: friendsPostStream,
             builder: (context, snapshot) {
               if (snapshot.hasData) {
-                final List<FriendPostPair> friendPostPairs = snapshot.data!;
-
+                final List<FriendsPost> friendsPosts = snapshot.data!;
                 return ListView.builder(
                   physics: const NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
-                  itemCount: friendPostPairs.length,
+                  itemCount: friendsPosts.length,
                   itemBuilder: (context, index) {
-                    final friendPostPair = friendPostPairs[index];
-                    final post = friendPostPair.post;
-                    final friendName = friendPostPair.friendName;
+                    final friendPostData = friendsPosts[index];
+                    final postReactions = friendPostData.reactions;
                     return Container(
                       margin: const EdgeInsets.all(5),
                       padding: const EdgeInsets.all(8),
@@ -63,7 +79,7 @@ class _FriendsPostCarouselState extends State<FriendsPostCarousel> {
                                   ),
                                   const SizedBox(width: 10),
                                   Text(
-                                    friendName,
+                                    friendPostData.friend.displayName,
                                     style: const TextStyle(
                                       color: Colors.white,
                                       fontSize: 20,
@@ -87,7 +103,7 @@ class _FriendsPostCarouselState extends State<FriendsPostCarousel> {
                               ClipRRect(
                                 borderRadius: BorderRadius.circular(8.0),
                                 child: Image.network(
-                                  post.firstImageUrl,
+                                  friendPostData.post.firstImageUrl,
                                   fit: BoxFit.cover,
                                   width: double.infinity,
                                 ),
@@ -98,42 +114,74 @@ class _FriendsPostCarouselState extends State<FriendsPostCarousel> {
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(8.0),
                                   child: Image.network(
-                                    post.secondImageUrl,
+                                    friendPostData.post.secondImageUrl,
                                     fit: BoxFit.cover,
                                     width: 100,
                                   ),
                                 ),
                               ),
-                              const Positioned(
+                              displayHoldInstruction
+                                  ? Positioned.fill(
+                                      child: Opacity(
+                                        opacity: 0.5,
+                                        child: Container(
+                                          color: const Color(0xFF000000),
+                                        ),
+                                      ),
+                                    )
+                                  : const SizedBox(),
+                              displayHoldInstruction
+                                  ? const Positioned.fill(
+                                      child: Center(
+                                        child: Text(
+                                          'Hold the emoji button to react',
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ),
+                                    )
+                                  : const SizedBox(),
+                              Positioned(
                                 bottom: 10,
                                 right: 10,
-                                child: Row(
+                                child: Column(
                                   children: [
-                                    Column(
-                                      children: [
-                                        Icon(
-                                          Icons.favorite_border,
-                                          color: Colors.grey,
-                                          size: 40,
-                                        ),
-                                        SizedBox(height: 5),
-                                        Icon(
-                                          Icons.comment,
-                                          color: Colors.grey,
-                                          size: 40,
-                                        ),
-                                      ],
+                                    const Icon(Icons.comment_sharp,
+                                        color: Colors.white,
+                                        size: 30,
+                                        shadows: [
+                                          Shadow(
+                                            color: Colors.black,
+                                            blurRadius: 10,
+                                          ),
+                                        ]),
+                                    const SizedBox(height: 10),
+                                    ReactionButton(
+                                      post: friendPostData.post,
+                                      showHoldInstruction: showHoldInstruction,
+                                      toggleState: toggleState,
                                     ),
-                                    SizedBox(width: 5),
                                   ],
                                 ),
                               ),
+                              postReactions != null
+                                  ? Positioned(
+                                      bottom: 10,
+                                      left: 10,
+                                      child: ReactionImages(
+                                        postReactions: postReactions,
+                                      ),
+                                    )
+                                  : const SizedBox.shrink(),
                             ],
                           ),
                           const SizedBox(height: 10),
                           Center(
                             child: Text(
-                              post.caption,
+                              friendPostData.post.caption,
                               textAlign: TextAlign.center,
                               style: const TextStyle(
                                 color: Colors.grey,

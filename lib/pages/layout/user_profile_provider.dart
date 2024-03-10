@@ -49,4 +49,18 @@ class UserProfileProvider extends ChangeNotifier {
     await FirebaseUserService.updateDisplayName(displayName);
     notifyListeners();
   }
+
+  void reset() {
+    _profileImage = '';
+    _username = '';
+    _displayName = '';
+    notifyListeners();
+  }
+
+  void loadAll() {
+    _loadProfileImage();
+    _loadUsername();
+    _loadDisplayName();
+    notifyListeners();
+  }
 }

@@ -2,7 +2,7 @@ import 'package:objectbox/objectbox.dart';
 
 @Entity()
 class BodyPart {
-  @Id()
+  @Id(assignable: true)
   int id;
   String name;
 

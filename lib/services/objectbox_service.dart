@@ -104,12 +104,30 @@ class ObjectBox {
         postBox: _postBox,
       );
 
-// check history
-  void test() {
-    print(currentWorkoutSessionService
-        .getCurrentWorkoutSession()
-        .exercisesSetsInfo
-        .length);
-    // print(_workoutTemplateBox.removeAll());
+  void clearAll() async {
+    _bodyPartBox.removeAll();
+    _exerciseBox.removeAll();
+    _categoryBox.removeAll();
+    _currentWorkoutSessionBox.removeAll();
+    _exerciseSetBox.removeAll();
+    _exercisesSetsInfoBox.removeAll();
+    _workoutSessionBox.removeAll();
+    _workoutTemplateBox.removeAll();
+    _postBox.removeAll();
+  }
+
+  void initializeObjectBoxUponLogin() {
+    if (_bodyPartBox.isEmpty()) {
+      _bodyPartBox.putMany(bodyPartData);
+    }
+    if (_exerciseBox.isEmpty()) {
+      _exerciseBox.putMany(generateExerciseData());
+    }
+    if (_categoryBox.isEmpty()) {
+      _categoryBox.putMany(categoryData);
+    }
+    if (_currentWorkoutSessionBox.isEmpty()) {
+      _currentWorkoutSessionBox.put(CurrentWorkoutSession());
+    }
   }
 }

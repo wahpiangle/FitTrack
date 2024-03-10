@@ -1,8 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:group_project/main.dart';
+import 'package:group_project/pages/layout/user_profile_provider.dart';
 import 'package:group_project/services/firebase/firebase_user_service.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:provider/provider.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -25,8 +26,12 @@ class AuthService {
       UserCredential result = await _auth.signInWithEmailAndPassword(
           email: email, password: password);
       User? user = result.user;
+      objectBox.initializeObjectBoxUponLogin();
       objectBox.workoutSessionService.populateDataFromFirebase();
       objectBox.exerciseService.populateDataFromFirebase();
+      Provider.of<UserProfileProvider>(navigatorKey.currentContext!,
+              listen: false)
+          .loadAll();
       return user;
     } catch (e) {
       rethrow;
@@ -51,26 +56,11 @@ class AuthService {
   // Sign out
   Future<void> signOut() async {
     try {
-      List<Map<String, dynamic>> imageList = []; // Initialize with your image list
-
-      await clearPostsSharedPreferences(imageList);
-      objectBox.postService.clearAllPosts();
+      objectBox.clearAll();
+      Provider.of<UserProfileProvider>(navigatorKey.currentContext!,
+              listen: false)
+          .reset();
       await _auth.signOut();
-    } catch (e) {
-      rethrow;
-    }
-  }
-
-  // Clear SharedPreferences upon sign out
-  Future<void> clearPostsSharedPreferences(
-      List<Map<String, dynamic>> imageList) async {
-    try {
-      final SharedPreferences prefs = await SharedPreferences.getInstance();
-      for (var image in imageList) {
-        prefs.remove(image['firstImageUrl']);
-        prefs.remove(image['secondImageUrl']);
-        prefs.remove('caption_${image['workoutSessionId']}');
-      }
     } catch (e) {
       rethrow;
     }

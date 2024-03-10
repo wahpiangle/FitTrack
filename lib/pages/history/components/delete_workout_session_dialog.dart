@@ -75,7 +75,10 @@ class DeleteWorkoutSessionDialog extends StatelessWidget {
                 child: TextButton(
                   onPressed: () {
                     try {
-                      FirebasePostsService.deletePost(workoutSessionId);
+                      FirebasePostsService.deletePost(objectBox
+                          .workoutSessionService
+                          .getWorkoutSession(workoutSessionId)!
+                          .postId);
                       FirebaseWorkoutsService.deleteWorkoutSession(
                           workoutSessionId);
                     } catch (e) {
