@@ -5,8 +5,10 @@ import 'package:group_project/models/firebase/reaction.dart';
 
 class ReactionImages extends StatelessWidget {
   final List<Reaction> postReactions;
+  final bool isCurrentUserPost;
   const ReactionImages({
     required this.postReactions,
+    this.isCurrentUserPost = false,
     super.key,
   });
 

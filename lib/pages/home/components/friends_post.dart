@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:group_project/pages/home/components/reaction_button.dart';
-import 'package:group_project/pages/home/components/reaction_images.dart';
+import 'package:group_project/pages/home/components/reaction/reaction_button.dart';
+import 'package:group_project/pages/home/components/reaction/reaction_images.dart';
 import 'package:group_project/services/firebase/firebase_friends_post.dart';
 
 class FriendsPostCarousel extends StatefulWidget {

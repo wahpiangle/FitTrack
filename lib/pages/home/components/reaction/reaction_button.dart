@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:group_project/models/post.dart';
-import 'package:group_project/pages/home/components/capture_reaction_dialog.dart';
+import 'package:group_project/pages/home/components/reaction/capture_reaction_dialog.dart';
 import 'package:peek_and_pop_dialog/peek_and_pop_dialog.dart';
 
 class ReactionButton extends StatefulWidget {

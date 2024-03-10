@@ -1,11 +1,13 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:group_project/constants/upload_enums.dart';
+import 'package:group_project/models/firebase/reaction.dart';
 import 'package:group_project/models/post.dart';
 import 'package:group_project/pages/complete_workout/capture_image/upload_image_provider.dart';
 import 'package:group_project/pages/home/components/display_image_stack.dart';
 import 'package:group_project/pages/home/components/display_post_image_screen.dart';
 import 'package:group_project/pages/home/components/friends_post.dart';
+import 'package:group_project/pages/home/components/reaction/reaction_images.dart';
 import 'package:group_project/services/firebase/firebase_friends_post.dart';
 import 'package:group_project/services/firebase/firebase_posts_service.dart';
 import 'package:provider/provider.dart';
@@ -25,12 +27,12 @@ class WorkoutPostedPage extends StatefulWidget {
 class _WorkoutPostedPageState extends State<WorkoutPostedPage> {
   int _current = 0;
   late Stream<List<FriendsPost>> friendsPostStream;
-  FirebaseFriendsPost firebaseFriendsPost = FirebaseFriendsPost();
+  List<Reaction> postReactions = [];
 
   @override
   void initState() {
     super.initState();
-
+    fetchPostReactions(widget.currentUserPosts[_current].postId);
     fetchFriendsPosts();
     context.read<UploadImageProvider>().getSharedPreferences();
     SharedPreferences.getInstance().then((prefs) {
@@ -46,6 +48,14 @@ class _WorkoutPostedPageState extends State<WorkoutPostedPage> {
       setState(() {
         friendsPostStream = stream;
       });
+    });
+  }
+
+  void fetchPostReactions(String postId) async {
+    final List<Reaction> reactions =
+        await FirebasePostsService.getReactionsByPostId(postId);
+    setState(() {
+      postReactions = reactions;
     });
   }
 
@@ -66,7 +76,7 @@ class _WorkoutPostedPageState extends State<WorkoutPostedPage> {
               CarouselSlider.builder(
                 itemCount: widget.currentUserPosts.length,
                 options: CarouselOptions(
-                  aspectRatio: 1,
+                  aspectRatio: 0.9,
                   enlargeCenterPage: true,
                   enableInfiniteScroll: false,
                   enlargeFactor: 0.2,
@@ -99,6 +109,13 @@ class _WorkoutPostedPageState extends State<WorkoutPostedPage> {
                             postId: postId,
                           ),
                         ),
+                        const SizedBox(height: 10),
+                        postReactions.isNotEmpty
+                            ? ReactionImages(
+                                postReactions: postReactions,
+                                isCurrentUserPost: true,
+                              )
+                            : const SizedBox(),
                         uploadImageProvider.uploadError
                             ? const Text(
                                 'There was an error uploading your workout. Please try again.',
