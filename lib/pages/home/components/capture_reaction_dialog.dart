@@ -1,16 +1,19 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:group_project/constants/themes/app_colours.dart';
 import 'package:group_project/models/post.dart';
 import 'package:group_project/services/firebase/firebase_posts_service.dart';
 
 class CaptureReactionDialog extends StatefulWidget {
   final ValueNotifier<Offset> pointerPosition;
   final Post post;
+  final void Function() toggleState;
 
   const CaptureReactionDialog({
     super.key,
     required this.pointerPosition,
     required this.post,
+    required this.toggleState,
   });
 
   @override
@@ -28,6 +31,7 @@ class _CaptureReactionDialogState extends State<CaptureReactionDialog> {
     if (isPointerInRect) {
       await _takePicture();
     }
+    widget.toggleState();
     _controller.dispose();
     super.dispose();
   }
@@ -79,7 +83,7 @@ class _CaptureReactionDialogState extends State<CaptureReactionDialog> {
       height: 300,
     );
     return Container(
-      color: Colors.black.withOpacity(0.8),
+      color: AppColours.primary,
       child: ValueListenableBuilder(
           valueListenable: widget.pointerPosition,
           builder: (context, value, child) {

@@ -5,8 +5,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:group_project/main.dart';
+import 'package:group_project/models/firebase/reaction.dart';
 import 'package:group_project/models/post.dart';
-import 'package:group_project/models/workout_session.dart';
 import 'package:group_project/pages/complete_workout/capture_image/upload_image_provider.dart';
 
 class FirebasePostsService {
@@ -154,18 +154,37 @@ class FirebasePostsService {
   static Future<void> addReactionToPost(String imagePath, Post post) async {
     final currentUserUid = FirebaseAuth.instance.currentUser?.uid;
     Reference ref =
-        storage.ref('images/${post.id}/reactions/$currentUserUid.jpg');
+        storage.ref('posts/${post.postId}/reactions/$currentUserUid.jpg');
     try {
       TaskSnapshot uploadImage = await ref.putFile(File(imagePath));
       uploadImage.ref.getDownloadURL().then((url) {
-        postsCollectionRef.doc(post.postId).collection('reactions').add({
+        postsCollectionRef
+            .doc(post.postId)
+            .collection('reactions')
+            .doc(currentUserUid)
+            .set({
           'imageUrl': url,
-          'postedByUserId': currentUserUid,
           'postId': post.postId,
+          'date': DateTime.now(),
         });
       });
     } catch (e) {
       print(e);
+    }
+  }
+
+  static Future<List<Reaction>> getReactionsByPostId(String postId) async {
+    try {
+      final QuerySnapshot<Map<String, dynamic>> querySnapshot =
+          await postsCollectionRef.doc(postId).collection('reactions').get();
+      List<Reaction> reactions = [];
+      for (var doc in querySnapshot.docs) {
+        reactions.add(Reaction.fromDocument(doc));
+      }
+      return reactions;
+    } catch (e) {
+      print(e);
+      return [];
     }
   }
 }

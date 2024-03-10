@@ -2,48 +2,59 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:group_project/models/firebase/firebase_user.dart';
+import 'package:group_project/models/firebase/reaction.dart';
 import 'package:group_project/models/post.dart';
 import 'package:group_project/services/firebase/firebase_user_service.dart';
 import 'firebase_posts_service.dart';
 
-class FriendPostPair {
+class FriendsPost {
   final Post post;
-  final String friendName;
+  final FirebaseUser friend;
+  final List<Reaction>? reactions;
 
-  FriendPostPair(this.post, this.friendName);
+  FriendsPost(this.post, this.friend, this.reactions);
 }
 
 class FirebaseFriendsPost {
-  late Stream<List<FriendPostPair>> friendsPostStream;
+  late Stream<List<FriendsPost>> friendsPostStream;
 
-  Future<Stream<List<FriendPostPair>>> initFriendsPostStream() async {
+  Future<Stream<List<FriendsPost>>> initFriendsPostStream() async {
     final currentUserUid = FirebaseAuth.instance.currentUser?.uid;
 
     if (currentUserUid != null) {
       try {
         List<String> friendIds = await getFriendsIds(currentUserUid);
-        List<FriendPostPair> friendPostPairs = [];
 
-        // Use a set to track unique posts
         Set<String> uniquePosts = {};
+        List<FriendsPost> friendPosts = [];
 
         for (String friendId in friendIds) {
           List<Post> posts =
               await FirebasePostsService.getPostsByUserId(friendId);
-          String? friendName =
-              await FirebaseUserService.getUserNameById(friendId);
+          FirebaseUser friend =
+              await FirebaseUserService.getUserByUid(friendId);
 
           for (Post post in posts) {
-            String postIdentifier = '${post.id}_$friendId';
+            String postIdentifier = post.postId;
 
             if (!uniquePosts.contains(postIdentifier)) {
               uniquePosts.add(postIdentifier);
-              friendPostPairs.add(FriendPostPair(post, friendName!));
+              List<Reaction> postReactions =
+                  await FirebasePostsService.getReactionsByPostId(
+                      postIdentifier);
+              friendPosts.add(
+                FriendsPost(
+                  post,
+                  friend,
+                  postReactions,
+                ),
+              );
             }
           }
         }
 
-        friendsPostStream = Stream.value(friendPostPairs);
+        friendsPostStream = Stream.value(friendPosts);
         return friendsPostStream;
       } catch (e) {
         friendsPostStream = const Stream.empty();

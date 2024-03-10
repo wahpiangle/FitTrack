@@ -1,13 +1,22 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class Reaction {
-  String id;
+  String id; //this id is the user's id
   String imageUrl;
-  String postedByUserId;
   String postId;
 
   Reaction({
     required this.id,
     required this.imageUrl,
-    required this.postedByUserId,
     required this.postId,
   });
+
+  static Reaction fromDocument(
+      QueryDocumentSnapshot<Map<String, dynamic>> doc) {
+    return Reaction(
+      id: doc.id,
+      imageUrl: doc['imageUrl'],
+      postId: doc['postId'],
+    );
+  }
 }

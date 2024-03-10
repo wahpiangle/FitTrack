@@ -40,7 +40,7 @@ class _DisplayImageScreenState extends State<DisplayImageScreen> {
       MaterialPageRoute(
         builder: (context) {
           return const AppLayout(
-            currentIndex: Pages.HomePage,
+            currentIndex: Pages.HistoryPage,
           );
         },
       ),

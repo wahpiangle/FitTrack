@@ -24,7 +24,7 @@ class WorkoutPostedPage extends StatefulWidget {
 
 class _WorkoutPostedPageState extends State<WorkoutPostedPage> {
   int _current = 0;
-  late Stream<List<FriendPostPair>> friendsPostStream;
+  late Stream<List<FriendsPost>> friendsPostStream;
   FirebaseFriendsPost firebaseFriendsPost = FirebaseFriendsPost();
 
   @override

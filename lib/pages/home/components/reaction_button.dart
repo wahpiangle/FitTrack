@@ -6,10 +6,12 @@ import 'package:peek_and_pop_dialog/peek_and_pop_dialog.dart';
 class ReactionButton extends StatefulWidget {
   final void Function() showHoldInstruction;
   final Post post;
+  final void Function() toggleState;
 
   const ReactionButton({
     required this.showHoldInstruction,
     required this.post,
+    required this.toggleState,
     super.key,
   });
 
@@ -33,6 +35,7 @@ class _ReactionButtonState extends State<ReactionButton> {
         dialog: CaptureReactionDialog(
           pointerPosition: _pointerPosition,
           post: widget.post,
+          toggleState: widget.toggleState,
         ),
         child: IconButton(
           icon: const Icon(

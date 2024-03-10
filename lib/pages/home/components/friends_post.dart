@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:group_project/pages/home/components/reaction_button.dart';
+import 'package:group_project/pages/home/components/reaction_images.dart';
 import 'package:group_project/services/firebase/firebase_friends_post.dart';
 
 class FriendsPostCarousel extends StatefulWidget {
@@ -10,7 +11,7 @@ class FriendsPostCarousel extends StatefulWidget {
 }
 
 class _FriendsPostCarouselState extends State<FriendsPostCarousel> {
-  Stream<List<FriendPostPair>>? friendsPostStream;
+  Stream<List<FriendsPost>>? friendsPostStream;
   bool displayHoldInstruction = false;
 
   @override
@@ -38,22 +39,25 @@ class _FriendsPostCarouselState extends State<FriendsPostCarousel> {
     });
   }
 
+  void toggleState() {
+    fetchFriendsPosts();
+  }
+
   @override
   Widget build(BuildContext context) {
     return friendsPostStream != null
-        ? StreamBuilder<List<FriendPostPair>>(
+        ? StreamBuilder<List<FriendsPost>>(
             stream: friendsPostStream,
             builder: (context, snapshot) {
               if (snapshot.hasData) {
-                final List<FriendPostPair> friendPostPairs = snapshot.data!;
+                final List<FriendsPost> friendsPosts = snapshot.data!;
                 return ListView.builder(
                   physics: const NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
-                  itemCount: friendPostPairs.length,
+                  itemCount: friendsPosts.length,
                   itemBuilder: (context, index) {
-                    final friendPostPair = friendPostPairs[index];
-                    final post = friendPostPair.post;
-                    final friendName = friendPostPair.friendName;
+                    final friendPostData = friendsPosts[index];
+                    final postReactions = friendPostData.reactions;
                     return Container(
                       margin: const EdgeInsets.all(5),
                       padding: const EdgeInsets.all(8),
@@ -75,7 +79,7 @@ class _FriendsPostCarouselState extends State<FriendsPostCarousel> {
                                   ),
                                   const SizedBox(width: 10),
                                   Text(
-                                    friendName,
+                                    friendPostData.friend.displayName,
                                     style: const TextStyle(
                                       color: Colors.white,
                                       fontSize: 20,
@@ -99,7 +103,7 @@ class _FriendsPostCarouselState extends State<FriendsPostCarousel> {
                               ClipRRect(
                                 borderRadius: BorderRadius.circular(8.0),
                                 child: Image.network(
-                                  post.firstImageUrl,
+                                  friendPostData.post.firstImageUrl,
                                   fit: BoxFit.cover,
                                   width: double.infinity,
                                 ),
@@ -110,7 +114,7 @@ class _FriendsPostCarouselState extends State<FriendsPostCarousel> {
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(8.0),
                                   child: Image.network(
-                                    post.secondImageUrl,
+                                    friendPostData.post.secondImageUrl,
                                     fit: BoxFit.cover,
                                     width: 100,
                                   ),
@@ -156,18 +160,28 @@ class _FriendsPostCarouselState extends State<FriendsPostCarousel> {
                                         ]),
                                     const SizedBox(height: 10),
                                     ReactionButton(
-                                      post: post,
+                                      post: friendPostData.post,
                                       showHoldInstruction: showHoldInstruction,
+                                      toggleState: toggleState,
                                     ),
                                   ],
                                 ),
                               ),
+                              postReactions != null
+                                  ? Positioned(
+                                      bottom: 10,
+                                      left: 10,
+                                      child: ReactionImages(
+                                        postReactions: postReactions,
+                                      ),
+                                    )
+                                  : const SizedBox.shrink(),
                             ],
                           ),
                           const SizedBox(height: 10),
                           Center(
                             child: Text(
-                              post.caption,
+                              friendPostData.post.caption,
                               textAlign: TextAlign.center,
                               style: const TextStyle(
                                 color: Colors.grey,
