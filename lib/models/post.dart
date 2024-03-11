@@ -35,4 +35,16 @@ class Post {
       workoutSessionId: doc.data()['workoutSessionId'],
     );
   }
+
+  static fromDocumentSnapshot(DocumentSnapshot<Map<String, dynamic>> doc) {
+    return Post(
+      postId: doc.id,
+      caption: doc.data()!['caption'],
+      firstImageUrl: doc.data()!['firstImageUrl'],
+      secondImageUrl: doc.data()!['secondImageUrl'],
+      date: doc.data()!['date'].toDate(),
+      postedBy: doc.data()!['postedBy'],
+      workoutSessionId: doc.data()!['workoutSessionId'],
+    );
+  }
 }

@@ -2,17 +2,16 @@ import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:group_project/models/post.dart';
 
 class FrontBackImage extends StatelessWidget {
-  final String firstImageUrl;
-  final String secondImageUrl;
+  final Post post;
   final bool uploadError;
   final bool isLoading;
 
   const FrontBackImage({
     super.key,
-    required this.firstImageUrl,
-    required this.secondImageUrl,
+    required this.post,
     this.uploadError = false,
     this.isLoading = false,
   });
@@ -21,7 +20,7 @@ class FrontBackImage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        getImageBasedonType(firstImageUrl, false),
+        getImageBasedonType(post.firstImageUrl, false),
         Container(
           margin: const EdgeInsets.only(
             left: 5,
@@ -33,7 +32,7 @@ class FrontBackImage extends StatelessWidget {
             ),
             borderRadius: BorderRadius.circular(5),
           ),
-          child: getImageBasedonType(secondImageUrl, true),
+          child: getImageBasedonType(post.secondImageUrl, true),
         ),
       ],
     );
