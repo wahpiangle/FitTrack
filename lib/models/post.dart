@@ -11,7 +11,7 @@ class Post {
   final DateTime date;
   final String postedBy;
   final int workoutSessionId;
-  final String postId;
+  String postId;
 
   Post({
     this.id = 0,

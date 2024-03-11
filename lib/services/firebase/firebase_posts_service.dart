@@ -79,6 +79,7 @@ class FirebasePostsService {
       );
       objectBox.workoutSessionService
           .attachPostToWorkoutSession(post.workoutSessionId, doc.id);
+      objectBox.postService.addFirebasePostId(post.id, doc.id);
       return true;
     } catch (e) {
       uploadImageProvider.setUploadError(true);

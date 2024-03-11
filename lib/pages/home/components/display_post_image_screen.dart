@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:group_project/constants/themes/app_colours.dart';
 import 'package:group_project/models/post.dart';
 import 'package:group_project/pages/complete_workout/capture_image/components/interactive_image_viewer.dart';
+import 'package:intl/intl.dart';
 
 class DisplayPostImageScreen extends StatelessWidget {
   final Post post;
@@ -14,9 +15,24 @@ class DisplayPostImageScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'My Post',
-          style: TextStyle(color: Colors.white),
+        centerTitle: true,
+        title: Column(
+          children: [
+            const Text(
+              'My Post',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 16,
+              ),
+            ),
+            Text(
+              '${DateFormat.yMMMMd().format(post.date)} ${DateFormat.jm().format(post.date)}',
+              style: const TextStyle(
+                color: Colors.grey,
+                fontSize: 12,
+              ),
+            ),
+          ],
         ),
         backgroundColor: AppColours.primary,
         iconTheme: const IconThemeData(
@@ -25,13 +41,18 @@ class DisplayPostImageScreen extends StatelessWidget {
       ),
       backgroundColor: AppColours.primary,
       body: Container(
-        margin: const EdgeInsets.symmetric(
-          horizontal: 10,
-        ),
-        height: MediaQuery.of(context).size.height * 0.5,
-        child: InteractiveImageViewer(
-          imagePath: post.firstImageUrl,
-          imagePath2: post.secondImageUrl,
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          children: [
+            InteractiveImageViewer(
+              imagePath: post.firstImageUrl,
+              imagePath2: post.secondImageUrl,
+            ),
+            Divider(
+              height: 30,
+              color: AppColours.primaryBright,
+            ),
+          ],
         ),
       ),
     );

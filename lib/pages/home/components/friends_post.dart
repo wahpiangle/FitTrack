@@ -179,15 +179,12 @@ class _FriendsPostCarouselState extends State<FriendsPostCarousel> {
                             ],
                           ),
                           const SizedBox(height: 10),
-                          Center(
-                            child: Text(
-                              friendPostData.post.caption,
-                              textAlign: TextAlign.center,
-                              style: const TextStyle(
-                                color: Colors.grey,
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                              ),
+                          Text(
+                            friendPostData.post.caption,
+                            style: const TextStyle(
+                              color: Colors.grey,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
                         ],
