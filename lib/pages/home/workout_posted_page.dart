@@ -88,11 +88,7 @@ class _WorkoutPostedPageState extends State<WorkoutPostedPage> {
                   },
                 ),
                 itemBuilder: (context, index, realIndex) {
-                  final firstImage =
-                      widget.currentUserPosts[index].firstImageUrl;
-                  final secondImage =
-                      widget.currentUserPosts[index].secondImageUrl;
-                  final postId = widget.currentUserPosts[index].id;
+                  final post = widget.currentUserPosts[index];
                   return Container(
                     margin: const EdgeInsets.symmetric(horizontal: 5),
                     child: Column(
@@ -102,11 +98,10 @@ class _WorkoutPostedPageState extends State<WorkoutPostedPage> {
                             Radius.circular(8.0),
                           ),
                           child: DisplayImageStack(
-                            firstImageUrl: firstImage,
-                            secondImageUrl: secondImage,
+                            post: post,
                             index: index,
                             current: _current,
-                            postId: postId,
+                            objectBoxPostId: widget.currentUserPosts[index].id,
                           ),
                         ),
                         const SizedBox(height: 10),
@@ -134,7 +129,7 @@ class _WorkoutPostedPageState extends State<WorkoutPostedPage> {
                                 ),
                                 onChanged: (caption) {
                                   FirebasePostsService.saveCaption(
-                                    postId,
+                                    post.postId,
                                     caption,
                                   );
                                 },
@@ -155,12 +150,7 @@ class _WorkoutPostedPageState extends State<WorkoutPostedPage> {
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => DisplayPostImageScreen(
-                                    imagePath: widget
-                                        .currentUserPosts[index].firstImageUrl,
-                                    imagePath2: widget
-                                        .currentUserPosts[index].secondImageUrl,
-                                    workoutSessionId:
-                                        widget.currentUserPosts[index].id,
+                                    post: post,
                                   ),
                                 ),
                               );

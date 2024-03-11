@@ -94,38 +94,19 @@ class FirebasePostsService {
         .catchError((error) => print('Failed to delete post: $error'));
   }
 
-  static Future<bool> saveCaption(int workoutSessionId, String caption) async {
+  static Future<bool> saveCaption(String postId, String caption) async {
     try {
-      final User user = auth.currentUser!;
-
-      await postsCollectionRef
-          .doc(user.uid)
-          .collection('userPosts')
-          .doc(workoutSessionId.toString()) // Use workoutSessionId directly
-          .update({'caption': caption});
-
+      await postsCollectionRef.doc(postId).update({'caption': caption});
       return true;
     } catch (e) {
       return false;
     }
   }
 
-  static Future<String> getCaption(int workoutSessionId) async {
+  static Future<String> getCaption(String postId) async {
     try {
-      final User user = auth.currentUser!;
-
-      final docSnapshot = await postsCollectionRef
-          .doc(user.uid)
-          .collection('userPosts')
-          .doc(workoutSessionId.toString())
-          .get();
-
-      if (docSnapshot.exists) {
-        final caption = docSnapshot.data()?['caption'] ?? '';
-        return caption;
-      } else {
-        return '';
-      }
+      final Post post = await getPostById(postId);
+      return post.caption;
     } catch (e) {
       return '';
     }
@@ -185,6 +166,24 @@ class FirebasePostsService {
     } catch (e) {
       print(e);
       return [];
+    }
+  }
+
+  static Future<Post> getPostById(String postId) async {
+    try {
+      final doc = await postsCollectionRef.doc(postId).get();
+      return Post.fromDocumentSnapshot(doc);
+    } catch (e) {
+      print(e);
+      return Post(
+        caption: '',
+        date: DateTime.now(),
+        firstImageUrl: '',
+        secondImageUrl: '',
+        postedBy: '',
+        postId: '',
+        workoutSessionId: 0,
+      );
     }
   }
 }

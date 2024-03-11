@@ -1,16 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:group_project/constants/themes/app_colours.dart';
+import 'package:group_project/models/post.dart';
 import 'package:group_project/pages/complete_workout/capture_image/components/interactive_image_viewer.dart';
 
 class DisplayPostImageScreen extends StatelessWidget {
-  final String imagePath;
-  final String imagePath2;
-  final int workoutSessionId;
+  final Post post;
   const DisplayPostImageScreen({
     super.key,
-    required this.imagePath,
-    required this.imagePath2,
-    required this.workoutSessionId,
+    required this.post,
   });
   // TODO: display exercise details & comments
   @override
@@ -33,8 +30,8 @@ class DisplayPostImageScreen extends StatelessWidget {
         ),
         height: MediaQuery.of(context).size.height * 0.5,
         child: InteractiveImageViewer(
-          imagePath: imagePath,
-          imagePath2: imagePath2,
+          imagePath: post.firstImageUrl,
+          imagePath2: post.secondImageUrl,
         ),
       ),
     );
