@@ -5,7 +5,7 @@ import 'package:objectbox/objectbox.dart';
 class Post {
   @Id()
   int id;
-  final String caption;
+  String caption;
   final String firstImageUrl;
   final String secondImageUrl;
   final DateTime date;

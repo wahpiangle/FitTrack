@@ -5,9 +5,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:group_project/main.dart';
+import 'package:group_project/models/firebase/CurrentUserPost.dart';
+import 'package:group_project/models/firebase/comments.dart';
 import 'package:group_project/models/firebase/reaction.dart';
 import 'package:group_project/models/post.dart';
 import 'package:group_project/pages/complete_workout/capture_image/upload_image_provider.dart';
+import 'package:group_project/services/firebase/firebase_comment_service.dart';
 
 class FirebasePostsService {
   static final FirebaseFirestore db = FirebaseFirestore.instance;
@@ -128,9 +131,29 @@ class FirebasePostsService {
     }
   }
 
-  static Future<List<Post>> getCurrentUserPosts() async {
+  static Future<List<CurrentUserPost>> getCurrentUserPostsInfo() async {
     final currentUserUid = FirebaseAuth.instance.currentUser?.uid;
-    return await FirebasePostsService.getPostsByUserId(currentUserUid!);
+    final List<Post> posts = await getPostsByUserId(currentUserUid!);
+    List<CurrentUserPost> currentUserPosts = [];
+    for (var post in posts) {
+      final List<Reaction> reactions = await getReactionsByPostId(post.postId);
+      final List<Comment> comments =
+          await FirebaseCommentService.getCommentsByPostId(post.postId);
+      currentUserPosts.add(CurrentUserPost(
+        post: post,
+        reactions: reactions,
+        comments: comments,
+      ));
+    }
+    return currentUserPosts;
+  }
+
+  static Stream<QuerySnapshot<Map<String, dynamic>>>
+      getCurrentUserPostStream() {
+    final currentUserUid = FirebaseAuth.instance.currentUser?.uid;
+    return postsCollectionRef
+        .where('postedBy', isEqualTo: currentUserUid)
+        .snapshots();
   }
 
   static Future<void> addReactionToPost(String imagePath, Post post) async {
@@ -161,7 +184,9 @@ class FirebasePostsService {
           await postsCollectionRef.doc(postId).collection('reactions').get();
       List<Reaction> reactions = [];
       for (var doc in querySnapshot.docs) {
-        reactions.add(Reaction.fromDocument(doc));
+        Reaction reaction = Reaction.fromDocument(doc);
+        await Reaction.addUserInfo(reaction);
+        reactions.add(reaction);
       }
       return reactions;
     } catch (e) {

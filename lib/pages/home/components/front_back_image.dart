@@ -6,14 +6,10 @@ import 'package:group_project/models/post.dart';
 
 class FrontBackImage extends StatelessWidget {
   final Post post;
-  final bool uploadError;
-  final bool isLoading;
 
   const FrontBackImage({
     super.key,
     required this.post,
-    this.uploadError = false,
-    this.isLoading = false,
   });
 
   @override

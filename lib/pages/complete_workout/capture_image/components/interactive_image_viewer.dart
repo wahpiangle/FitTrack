@@ -41,6 +41,7 @@ class _InteractiveImageViewerState extends State<InteractiveImageViewer> {
                 hideSecondImage = true;
               });
             },
+            scaleEnabled: true,
             onInteractionEnd: (ScaleEndDetails details) {
               _transformationController.value = initialControllerValue;
               setState(() {
@@ -150,8 +151,8 @@ Widget getImageBasedonType(
     return CachedNetworkImage(
       imageUrl: displaySecondImage ? imagePath : imagePath2,
       width: MediaQuery.of(context).size.width * (isMainImage ? 1 : 0.25),
-      fit: isMainImage ? BoxFit.cover : BoxFit.fill,
-      placeholder: (context, url) => const CircularProgressIndicator(),
+      fit: BoxFit.contain,
+      placeholder: (context, url) => const SizedBox(),
       errorWidget: (context, url, error) => const Icon(Icons.error),
     );
   } else {

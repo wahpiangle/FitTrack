@@ -17,12 +17,10 @@ class FirebaseUserService {
     final formattedUsername = formatUsername(username);
 
     if (await checkIfUsernameExists(formattedUsername) == false) {
-      await user.updateDisplayName(formattedUsername);
-
       usersCollectionRef.doc(user.uid).set({
         'email': user.email,
         'username': formattedUsername,
-        'displayName': user.displayName,
+        'displayName': formattedUsername,
         'photoUrl': '',
         'createdAt': FieldValue.serverTimestamp(),
         'updatedAt': FieldValue.serverTimestamp(),
