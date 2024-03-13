@@ -1,5 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-
 class Comment {
   String id;
   String postId;
@@ -15,7 +13,7 @@ class Comment {
     required this.date,
   });
 
-  static fromDocument(DocumentSnapshot<Map<String, dynamic>> doc) {
+  static fromDocument(doc) {
     return Comment(
       id: doc.id,
       postId: doc.data()?['postId'] ?? '',
