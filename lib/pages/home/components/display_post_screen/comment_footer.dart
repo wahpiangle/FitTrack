@@ -56,12 +56,13 @@ class _CommentFooterState extends State<CommentFooter> {
             IconButton(
               onPressed: () {
                 try {
-                  commentTextController.text = '';
                   FirebaseCommentService.addCommentToPost(
                     widget.post.postId,
                     commentTextController.text,
                   );
+                  commentTextController.text = '';
                 } catch (e) {
+                  commentTextController.text = '';
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: Text('Error adding comment to post: $e'),

@@ -20,6 +20,7 @@ class InteractiveImageViewer extends StatefulWidget {
 }
 
 class _InteractiveImageViewerState extends State<InteractiveImageViewer> {
+  int _pointersCount = 0;
   double xOffset = 20.0;
   double yOffset = 20.0;
   bool displaySecondImage = false;
@@ -29,113 +30,117 @@ class _InteractiveImageViewerState extends State<InteractiveImageViewer> {
   Matrix4 initialControllerValue = Matrix4.identity();
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        ClipRRect(
-          borderRadius: BorderRadius.circular(20),
-          child: InteractiveViewer(
-            transformationController: _transformationController,
-            onInteractionStart: (ScaleStartDetails details) {
-              initialControllerValue = _transformationController.value;
-              setState(() {
-                hideSecondImage = true;
-              });
-            },
-            scaleEnabled: true,
-            onInteractionEnd: (ScaleEndDetails details) {
-              _transformationController.value = initialControllerValue;
-              setState(() {
-                hideSecondImage = false;
-              });
-            },
-            child: getImageBasedonType(
-              widget.imagePath,
-              true,
-              displaySecondImage,
-              widget.imagePath,
-              widget.imagePath2,
-              context,
+    return Listener(
+      onPointerDown: (_) => setState(() => _pointersCount++),
+      onPointerUp: (_) => setState(() => _pointersCount--),
+      child: Stack(
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.circular(20),
+            child: InteractiveViewer(
+              transformationController: _transformationController,
+              onInteractionStart: (ScaleStartDetails details) {
+                initialControllerValue = _transformationController.value;
+                setState(() {
+                  hideSecondImage = true;
+                });
+              },
+              scaleEnabled: true,
+              onInteractionEnd: (ScaleEndDetails details) {
+                _transformationController.value = initialControllerValue;
+                setState(() {
+                  hideSecondImage = false;
+                });
+              },
+              child: getImageBasedonType(
+                widget.imagePath,
+                true,
+                displaySecondImage,
+                widget.imagePath,
+                widget.imagePath2,
+                context,
+              ),
             ),
           ),
-        ),
-        widget.toggleRetake == null
-            ? Container()
-            : Positioned(
-                top: 5,
-                left: 5,
-                child: IconButton(
-                  onPressed: () {
-                    widget.toggleRetake!();
-                  },
-                  icon: const Icon(
-                    Icons.close,
-                    color: Colors.white,
+          widget.toggleRetake == null
+              ? Container()
+              : Positioned(
+                  top: 5,
+                  left: 5,
+                  child: IconButton(
+                    onPressed: () {
+                      widget.toggleRetake!();
+                    },
+                    icon: const Icon(
+                      Icons.close,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
-              ),
-        Positioned(
-          left: xOffset,
-          top: yOffset,
-          child: GestureDetector(
-            onTap: () {
-              HapticFeedback.vibrate();
-              setState(() {
-                displaySecondImage = !displaySecondImage;
-              });
-            },
-            onPanUpdate: (details) {
-              setState(() {
-                xOffset += details.delta.dx * 1;
-                yOffset += details.delta.dy * 1;
+          Positioned(
+            left: xOffset,
+            top: yOffset,
+            child: GestureDetector(
+              onTap: () {
+                HapticFeedback.vibrate();
+                setState(() {
+                  displaySecondImage = !displaySecondImage;
+                });
+              },
+              onPanUpdate: (details) {
+                setState(() {
+                  xOffset += details.delta.dx * 1;
+                  yOffset += details.delta.dy * 1;
 
-                xOffset =
-                    xOffset.clamp(20, MediaQuery.of(context).size.width * 0.6);
-                yOffset =
-                    yOffset.clamp(20, MediaQuery.of(context).size.height * 0.4);
-              });
-            },
-            onPanEnd: (details) {
-              if (xOffset > MediaQuery.of(context).size.width * 0.6 / 2) {
-                setState(() {
-                  xOffset = MediaQuery.of(context).size.width * 0.6;
+                  xOffset = xOffset.clamp(
+                      20, MediaQuery.of(context).size.width * 0.6);
+                  yOffset = yOffset.clamp(
+                      20, MediaQuery.of(context).size.height * 0.4);
                 });
-              } else {
-                setState(() {
-                  xOffset = 20;
-                });
-              }
-              if (yOffset > MediaQuery.of(context).size.height * 0.4 / 2) {
-                setState(() {
-                  yOffset = MediaQuery.of(context).size.height * 0.4;
-                });
-              } else {
-                setState(() {
-                  yOffset = 20;
-                });
-              }
-            },
-            child: hideSecondImage
-                ? Container()
-                : Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(),
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(20),
-                      child: getImageBasedonType(
-                        widget.imagePath,
-                        false,
-                        displaySecondImage,
-                        widget.imagePath,
-                        widget.imagePath2,
-                        context,
+              },
+              onPanEnd: (details) {
+                if (xOffset > MediaQuery.of(context).size.width * 0.6 / 2) {
+                  setState(() {
+                    xOffset = MediaQuery.of(context).size.width * 0.6;
+                  });
+                } else {
+                  setState(() {
+                    xOffset = 20;
+                  });
+                }
+                if (yOffset > MediaQuery.of(context).size.height * 0.4 / 2) {
+                  setState(() {
+                    yOffset = MediaQuery.of(context).size.height * 0.4;
+                  });
+                } else {
+                  setState(() {
+                    yOffset = 20;
+                  });
+                }
+              },
+              child: hideSecondImage
+                  ? Container()
+                  : Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(20),
+                        child: getImageBasedonType(
+                          widget.imagePath,
+                          false,
+                          displaySecondImage,
+                          widget.imagePath,
+                          widget.imagePath2,
+                          context,
+                        ),
                       ),
                     ),
-                  ),
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
