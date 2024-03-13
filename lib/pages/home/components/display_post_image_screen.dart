@@ -7,7 +7,7 @@ import 'package:intl/intl.dart'; // Import intl package for DateFormat
 class DisplayPostImageScreen extends StatelessWidget {
   final Post post;
   const DisplayPostImageScreen({
-    super.key,
+    Key? key,
     required this.post,
   });
 
@@ -20,37 +20,37 @@ class DisplayPostImageScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: AppColours.primary,
-        flexibleSpace: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Text(
-                'My Post',
-                style: TextStyle(color: Colors.white),
-              ),
-              SizedBox(height: 8),
-              Text(
-                '${formatDateTime(post.date)}',
-                style: TextStyle(color: Colors.grey),
-              ),
-            ],
-          ),
+        title: const Text(
+          'My Post',
+          style: TextStyle(color: Colors.white),
         ),
+        backgroundColor: AppColours.primary,
         iconTheme: const IconThemeData(
           color: Colors.white,
         ),
+        centerTitle: true, // Align the title in the middle
       ),
       backgroundColor: AppColours.primary,
       body: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 10),
-        child: SizedBox(
-          height: MediaQuery.of(context).size.height * 0.5,
-          child: InteractiveImageViewer(
-            imagePath: post.firstImageUrl,
-            imagePath2: post.secondImageUrl,
-          ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(
+              '${formatDateTime(post.date)}', // Display formatted date
+              style: const TextStyle(
+                color: Colors.grey,
+                fontSize: 16,
+              ),
+            ),
+            const SizedBox(height: 10),
+            SizedBox(
+              height: MediaQuery.of(context).size.height * 0.5, // Specify the desired height
+              child: InteractiveImageViewer(
+                imagePath: post.firstImageUrl,
+                imagePath2: post.secondImageUrl,
+              ),
+            ),
+          ],
         ),
       ),
     );
