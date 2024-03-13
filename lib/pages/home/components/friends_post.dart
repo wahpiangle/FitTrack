@@ -3,6 +3,7 @@ import 'package:group_project/pages/home/components/display_post_screen/display_
 import 'package:group_project/pages/home/components/reaction/reaction_button.dart';
 import 'package:group_project/pages/home/components/reaction/reaction_images.dart';
 import 'package:group_project/services/firebase/firebase_friends_post.dart';
+import 'package:intl/intl.dart';
 
 class FriendsPostCarousel extends StatefulWidget {
   const FriendsPostCarousel({super.key});
@@ -76,13 +77,25 @@ class _FriendsPostCarouselState extends State<FriendsPostCarousel> {
                                   ),
                                 ),
                                 const SizedBox(width: 10),
-                                Text(
-                                  friendPostData.friend.displayName,
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      friendPostData.friend.displayName,
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    Text(
+                                      DateFormat('EEEE, hh:mm:ss a')
+                                          .format(friendPostData.post.date),
+                                      style: const TextStyle(
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ],
                             ),

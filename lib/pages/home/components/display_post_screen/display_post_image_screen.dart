@@ -48,7 +48,7 @@ class _DisplayPostImageScreenState extends State<DisplayPostImageScreen> {
                   ),
                 ),
                 Text(
-                  '${DateFormat.yMMMMd().format(widget.post.date)} ${DateFormat.jm().format(widget.post.date)}',
+                  DateFormat('EEEE, hh:mm:ss a').format(widget.post.date),
                   style: const TextStyle(
                     color: Colors.grey,
                     fontSize: 12,
