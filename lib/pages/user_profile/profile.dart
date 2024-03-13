@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:group_project/models/firebase/firebase_user.dart';
+import 'package:group_project/models/post.dart';
 import 'package:group_project/services/firebase/firebase_friends_service.dart';
 import 'package:group_project/services/firebase/firebase_posts_service.dart';
 
@@ -17,11 +18,13 @@ class _UserProfilePageState extends State<UserProfilePage> {
   late int postsCount;
   late int friendsCount;
   late Future<void> dataFuture;
+  late Future<List<Post>> postsFuture;
 
   @override
   void initState() {
     super.initState();
     dataFuture = _loadData();
+    postsFuture = FirebasePostsService.getPostsByUserId(widget.user.uid);
   }
 
   Future<void> _loadData() async {
@@ -101,7 +104,62 @@ class _UserProfilePageState extends State<UserProfilePage> {
                       ],
                     ),
                   ),
-                  // Other profile related information here
+                  FutureBuilder<List<Post>>(
+                    future: postsFuture,
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return Center(child: CircularProgressIndicator());
+                      }
+                      if (snapshot.hasError) {
+                        return Text('Error: ${snapshot.error}');
+                      }
+                      if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+                        return GridView.builder(
+                          shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
+                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 3,
+                            crossAxisSpacing: 2,
+                            mainAxisSpacing: 2,
+                          ),
+                          itemCount: snapshot.data!.length,
+                          itemBuilder: (context, index) {
+                            Post post = snapshot.data![index];
+                            List<String> imageUrls = [post.firstImageUrl, post.secondImageUrl]; // Add more image URLs if needed
+
+                            // Show only the first image
+                            String firstImageUrl = imageUrls.isNotEmpty ? imageUrls[0] : '';
+
+                            return Stack(
+                              children: [
+                                Positioned.fill(
+                                  child: Image.network(
+                                    firstImageUrl,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                                if (imageUrls.length > 1)
+                                  Positioned(
+                                    top: 5,
+                                    right: 5,
+                                    child: Icon(
+                                      Icons.collections,
+                                      color: Colors.white,
+                                      size: 25,
+                                    ),
+                                  ),
+                              ],
+                            );
+                          },
+                        );
+
+
+
+                      } else {
+                        return Text('No posts found', style: TextStyle(color: Colors.white));
+                      }
+                    },
+                  ),
                 ],
               ),
             );
@@ -110,6 +168,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
           }
         },
       ),
+
     );
   }
 
