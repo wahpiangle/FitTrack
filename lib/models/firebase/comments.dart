@@ -3,7 +3,6 @@ class Comment {
   String postId;
   String postedBy;
   String comment;
-  String postedByImageUrl;
   DateTime date;
 
   Comment({
@@ -11,7 +10,6 @@ class Comment {
     required this.postId,
     required this.postedBy,
     required this.comment,
-    required this.postedByImageUrl,
     required this.date,
   });
 
@@ -21,7 +19,6 @@ class Comment {
       postId: doc.data()?['postId'] ?? '',
       postedBy: doc.data()?['postedBy'] ?? '',
       comment: doc.data()?['comment'] ?? '',
-      postedByImageUrl: doc.data()?['postedByImageUrl'] ?? '',
       date: doc.data()?['date'].toDate() ?? DateTime.now(),
     );
   }
