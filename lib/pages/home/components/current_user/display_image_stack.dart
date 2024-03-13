@@ -1,24 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:group_project/main.dart';
-import 'package:group_project/models/post.dart';
+import 'package:group_project/models/firebase/CurrentUserPost.dart';
 import 'package:group_project/pages/complete_workout/capture_image/upload_image_provider.dart';
-import 'package:group_project/pages/home/components/display_post_image_screen.dart';
+import 'package:group_project/pages/home/components/display_post_screen/display_post_image_screen.dart';
 import 'package:group_project/pages/home/components/front_back_image.dart';
 import 'package:group_project/services/firebase/firebase_posts_service.dart';
 import 'package:provider/provider.dart';
 
 class DisplayImageStack extends StatelessWidget {
-  final Post post;
+  final CurrentUserPost currentUserPostInfo;
   final int index;
   final int current;
-  final int objectBoxPostId;
 
   const DisplayImageStack({
     super.key,
-    required this.post,
+    required this.currentUserPostInfo,
     required this.index,
     required this.current,
-    required this.objectBoxPostId,
   });
 
   @override
@@ -32,14 +30,15 @@ class DisplayImageStack extends StatelessWidget {
         if (uploadError) {
           uploadImageProvider.reset();
           FirebasePostsService.createPost(
-            objectBox.postService.getPost(objectBoxPostId)!,
+            objectBox.postService.getPost(currentUserPostInfo.post.id)!,
             context.read<UploadImageProvider>(),
           );
         } else {
           Navigator.of(context).push(
             MaterialPageRoute(
               builder: (context) => DisplayPostImageScreen(
-                post: post,
+                post: currentUserPostInfo.post,
+                reactions: currentUserPostInfo.reactions,
               ),
             ),
           );
@@ -60,9 +59,7 @@ class DisplayImageStack extends StatelessWidget {
                         BlendMode.srcOver,
                       ),
                 child: FrontBackImage(
-                  post: post,
-                  uploadError: uploadError,
-                  isLoading: uploading,
+                  post: currentUserPostInfo.post,
                 ),
               ),
               uploadError

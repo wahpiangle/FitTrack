@@ -53,8 +53,7 @@ class FirebaseFriendsService {
         .doc(currentUserUid)
         .get();
 
-    final currentUserFriendsUids =
-        currentUserSnapshot.data()?['friends'] as List<dynamic>;
+    final currentUserFriendsUids = currentUserSnapshot.data()?['friends'];
     List<FirebaseUser> currentUserFriends = [];
     for (var friendUid in currentUserFriendsUids) {
       final friend = await FirebaseUserService.getUserByUid(friendUid);
@@ -165,8 +164,7 @@ class FirebaseFriendsService {
         .collection('users')
         .doc(currentUserUid)
         .get();
-    final requestsUids =
-        requests.data()?['requestReceived'] as List<dynamic>? ?? [];
+    final requestsUids = requests.data()?['requestReceived'] ?? [];
     final friendRequestsUserDocuments = <FirebaseUser>[];
     for (var requestUid in requestsUids) {
       final firebaseUser = await FirebaseUserService.getUserByUid(requestUid);

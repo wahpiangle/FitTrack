@@ -77,7 +77,7 @@ class _CaptureReactionDialogState extends State<CaptureReactionDialog> {
     Rect rectangle = Rect.fromCenter(
       center: Offset(
         MediaQuery.of(context).size.width / 2,
-        MediaQuery.of(context).size.height / 2 - 100,
+        MediaQuery.of(context).size.height / 2,
       ),
       width: 300,
       height: 300,

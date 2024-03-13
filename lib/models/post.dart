@@ -5,13 +5,13 @@ import 'package:objectbox/objectbox.dart';
 class Post {
   @Id()
   int id;
-  final String caption;
+  String caption;
   final String firstImageUrl;
   final String secondImageUrl;
   final DateTime date;
   final String postedBy;
   final int workoutSessionId;
-  final String postId;
+  String postId;
 
   Post({
     this.id = 0,
