@@ -104,23 +104,22 @@ class _SetTileState extends State<SetTile> with TickerProviderStateMixin {
       key: Key(widget.set.id.toString()),
       direction: DismissDirection.endToStart,
       onDismissed: (direction) {
-        final deletedSetIndex = widget.exercisesSetsInfo.exerciseSets.indexWhere((set) => set.id == widget.set.id);
-
         widget.removeSet(widget.set.id);
-
         setState(() {
-          // Update controller values with the data of the remaining sets
-          for (int i = deletedSetIndex; i < widget.exercisesSetsInfo.exerciseSets.length; i++) {
-            final remainingSet = widget.exercisesSetsInfo.exerciseSets[i];
-            weightController.text = remainingSet.weight?.toString() ?? '';
-            repsController.text = remainingSet.reps?.toString() ?? '';
-            remainingSet.id = i + 1;
+          final deletedIndex = widget.exercisesSetsInfo.exerciseSets.indexWhere((set) => set.id == widget.set.id);
+          final deletedId = widget.set.id;
+
+          for(int a = deletedIndex ; a<= widget.exercisesSetsInfo.exerciseSets.length; a++){
+            widget.exercisesSetsInfo.exerciseSets[a].weight = widget.exercisesSetsInfo.exerciseSets[a + 1].weight;
+            widget.exercisesSetsInfo.exerciseSets[a].reps = widget.exercisesSetsInfo.exerciseSets[a + 1].reps;
+            final set = widget.exercisesSetsInfo.exerciseSets[a];
+            weightController.text = set.weight?.toString() ?? '';
+            repsController.text = set.reps?.toString() ?? '';
           }
-          // Remove last set since it shifted
           widget.exercisesSetsInfo.exerciseSets.removeLast();
+
         });
       },
-
       background: Container(
         color: Colors.red,
         alignment: Alignment.centerRight,
