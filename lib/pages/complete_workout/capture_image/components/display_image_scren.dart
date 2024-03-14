@@ -8,7 +8,6 @@ import 'package:group_project/pages/complete_workout/capture_image/upload_image_
 import 'package:group_project/pages/layout/app_layout.dart';
 import 'package:group_project/services/firebase/firebase_posts_service.dart';
 import 'package:group_project/services/firebase/firebase_user_service.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class DisplayImageScreen extends StatefulWidget {
@@ -69,29 +68,6 @@ class _DisplayImageScreenState extends State<DisplayImageScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Text(
-          '${DateFormat.jm().format(widget.pictureTakenTime)}',
-          // Display time only
-          style: const TextStyle(
-            color: const Color(0xFFC1C1C1),
-            fontWeight: FontWeight.bold,
-            fontSize: 15,
-          ),
-        ),
-        const SizedBox(
-          height: 1,
-        ),
-        Text(
-          '${DateFormat.yMMMMd().format(widget.pictureTakenTime)}',
-          style: const TextStyle(
-            color: Color(0xFFC1C1C1),
-            fontWeight: FontWeight.bold,
-            fontSize: 15,
-          ),
-        ),
-        const SizedBox(
-          height: 20,
-        ),
         InteractiveImageViewer(
           toggleRetake: widget.toggleRetake,
           imagePath: widget.imagePath,

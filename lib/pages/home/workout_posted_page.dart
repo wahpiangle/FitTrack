@@ -1,11 +1,10 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:group_project/constants/upload_enums.dart';
-import 'package:group_project/models/firebase/reaction.dart';
-import 'package:group_project/models/post.dart';
+import 'package:group_project/models/firebase/CurrentUserPost.dart';
 import 'package:group_project/pages/complete_workout/capture_image/upload_image_provider.dart';
-import 'package:group_project/pages/home/components/display_image_stack.dart';
-import 'package:group_project/pages/home/components/display_post_image_screen.dart';
+import 'package:group_project/pages/home/components/current_user/display_image_stack.dart';
+import 'package:group_project/pages/home/components/display_post_screen/display_post_image_screen.dart';
 import 'package:group_project/pages/home/components/friends_post.dart';
 import 'package:group_project/pages/home/components/reaction/reaction_images.dart';
 import 'package:group_project/services/firebase/firebase_friends_post.dart';
@@ -14,7 +13,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class WorkoutPostedPage extends StatefulWidget {
-  final List<Post> currentUserPosts;
+  final List<CurrentUserPost> currentUserPosts;
   const WorkoutPostedPage({
     super.key,
     required this.currentUserPosts,
@@ -27,13 +26,13 @@ class WorkoutPostedPage extends StatefulWidget {
 class _WorkoutPostedPageState extends State<WorkoutPostedPage> {
   int _current = 0;
   late Stream<List<FriendsPost>> friendsPostStream;
-  List<Reaction> postReactions = [];
 
   @override
   void initState() {
     super.initState();
-    fetchPostReactions(widget.currentUserPosts[_current].postId);
-    fetchFriendsPosts();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      fetchFriendsPosts();
+    });
     context.read<UploadImageProvider>().getSharedPreferences();
     SharedPreferences.getInstance().then((prefs) {
       if (prefs.getBool(UploadEnums.isUploading) == true) {
@@ -48,14 +47,6 @@ class _WorkoutPostedPageState extends State<WorkoutPostedPage> {
       setState(() {
         friendsPostStream = stream;
       });
-    });
-  }
-
-  void fetchPostReactions(String postId) async {
-    final List<Reaction> reactions =
-        await FirebasePostsService.getReactionsByPostId(postId);
-    setState(() {
-      postReactions = reactions;
     });
   }
 
@@ -88,7 +79,7 @@ class _WorkoutPostedPageState extends State<WorkoutPostedPage> {
                   },
                 ),
                 itemBuilder: (context, index, realIndex) {
-                  final post = widget.currentUserPosts[index];
+                  final currentUserPostInfo = widget.currentUserPosts[index];
                   return Container(
                     margin: const EdgeInsets.symmetric(horizontal: 5),
                     child: Column(
@@ -98,17 +89,31 @@ class _WorkoutPostedPageState extends State<WorkoutPostedPage> {
                             Radius.circular(8.0),
                           ),
                           child: DisplayImageStack(
-                            post: post,
+                            currentUserPostInfo: currentUserPostInfo,
                             index: index,
                             current: _current,
-                            objectBoxPostId: widget.currentUserPosts[index].id,
                           ),
                         ),
                         const SizedBox(height: 10),
-                        postReactions.isNotEmpty
-                            ? ReactionImages(
-                                postReactions: postReactions,
-                                isCurrentUserPost: true,
+                        currentUserPostInfo.reactions.isNotEmpty
+                            ? GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          DisplayPostImageScreen(
+                                        post: currentUserPostInfo.post,
+                                        reactions:
+                                            currentUserPostInfo.reactions,
+                                      ),
+                                    ),
+                                  );
+                                },
+                                child: ReactionImages(
+                                  postReactions: currentUserPostInfo.reactions,
+                                  isCurrentUserPost: true,
+                                ),
                               )
                             : const SizedBox(),
                         uploadImageProvider.uploadError
@@ -129,36 +134,14 @@ class _WorkoutPostedPageState extends State<WorkoutPostedPage> {
                                 ),
                                 onChanged: (caption) {
                                   FirebasePostsService.saveCaption(
-                                    post.postId,
+                                    currentUserPostInfo.post.postId,
                                     caption,
                                   );
                                 },
                                 controller: TextEditingController(
-                                  text: widget.currentUserPosts[index].caption,
+                                  text: currentUserPostInfo.post.caption,
                                 ),
                               ),
-                        Container(
-                          margin: const EdgeInsets.all(5),
-                          padding: const EdgeInsets.all(8),
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            border: Border.all(color: Colors.grey),
-                          ),
-                          child: GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => DisplayPostImageScreen(
-                                    post: post,
-                                  ),
-                                ),
-                              );
-                            },
-                            child:
-                                const Icon(Icons.comment, color: Colors.grey),
-                          ),
-                        ),
                       ],
                     ),
                   );

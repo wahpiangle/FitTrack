@@ -8,6 +8,7 @@ import 'package:group_project/pages/complete_workout/capture_image/components/ca
 import 'package:group_project/pages/complete_workout/capture_image/components/capturing_loader.dart';
 import 'package:group_project/pages/complete_workout/capture_image/components/first_image_loader.dart';
 import 'package:group_project/pages/complete_workout/capture_image/components/display_image_scren.dart';
+import 'package:intl/intl.dart';
 
 class PostWorkoutPrompt extends StatefulWidget {
   final List<CameraDescription> cameras;
@@ -28,7 +29,6 @@ class PostWorkoutPromptState extends State<PostWorkoutPrompt> {
   XFile? firstImageState;
   XFile? secondImageState;
   DateTime? pictureTakenTime;
-
 
   @override
   void initState() {
@@ -128,11 +128,26 @@ class PostWorkoutPromptState extends State<PostWorkoutPrompt> {
         (ModalRoute.of(context)?.settings.arguments as WorkoutSession);
     return Scaffold(
       appBar: AppBar(
-
         backgroundColor: AppColours.primary,
-        title: const Text(
-          'FitTrack',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold ,fontFamily: 'Dancing Script'),
+        title: Column(
+          children: [
+            const Text(
+              'FitTrack',
+              style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'Dancing Script'),
+            ),
+            Text(
+              pictureTakenTime == null
+                  ? ''
+                  : '${DateFormat.yMMMMd().format(pictureTakenTime!)} ${DateFormat.jm().format(pictureTakenTime!)}',
+              style: const TextStyle(
+                color: Colors.grey,
+                fontSize: 12,
+              ),
+            )
+          ],
         ),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
@@ -148,20 +163,13 @@ class PostWorkoutPromptState extends State<PostWorkoutPrompt> {
         builder: (context, snapshot) {
           if (firstImageState != null && secondImageState != null) {
             return Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 20,
-                vertical: 20,
-              ),
-              child: Column(
-                children: [
-                  DisplayImageScreen(
-                    toggleRetake: toggleRetake,
-                    imagePath: firstImageState!.path,
-                    imagePath2: secondImageState!.path,
-                    workoutSession: workoutSession,
-                    pictureTakenTime: pictureTakenTime ?? DateTime.now(), // Pass the captured time
-                  ),
-                ],
+              padding: const EdgeInsets.all(20.0),
+              child: DisplayImageScreen(
+                toggleRetake: toggleRetake,
+                imagePath: firstImageState!.path,
+                imagePath2: secondImageState!.path,
+                workoutSession: workoutSession,
+                pictureTakenTime: pictureTakenTime ?? DateTime.now(),
               ),
             );
           } else {

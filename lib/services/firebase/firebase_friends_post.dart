@@ -2,18 +2,21 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:group_project/models/firebase/comments.dart';
 import 'package:group_project/models/firebase/firebase_user.dart';
 import 'package:group_project/models/firebase/reaction.dart';
 import 'package:group_project/models/post.dart';
+import 'package:group_project/services/firebase/firebase_comment_service.dart';
 import 'package:group_project/services/firebase/firebase_user_service.dart';
 import 'firebase_posts_service.dart';
 
 class FriendsPost {
   final Post post;
   final FirebaseUser friend;
-  final List<Reaction>? reactions;
+  final List<Reaction> reactions;
+  final List<Comment> comments;
 
-  FriendsPost(this.post, this.friend, this.reactions);
+  FriendsPost(this.post, this.friend, this.reactions, this.comments);
 }
 
 class FirebaseFriendsPost {
@@ -36,18 +39,19 @@ class FirebaseFriendsPost {
               await FirebaseUserService.getUserByUid(friendId);
 
           for (Post post in posts) {
-            String postIdentifier = post.postId;
-
-            if (!uniquePosts.contains(postIdentifier)) {
-              uniquePosts.add(postIdentifier);
+            if (!uniquePosts.contains(post.postId)) {
+              uniquePosts.add(post.postId);
               List<Reaction> postReactions =
-                  await FirebasePostsService.getReactionsByPostId(
-                      postIdentifier);
+                  await FirebasePostsService.getReactionsByPostId(post.postId);
+              List<Comment> postComments =
+                  await FirebaseCommentService.getCommentsByPostId(post.postId);
+
               friendPosts.add(
                 FriendsPost(
                   post,
                   friend,
                   postReactions,
+                  postComments,
                 ),
               );
             }

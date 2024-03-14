@@ -20,7 +20,8 @@ class InteractiveImageViewer extends StatefulWidget {
 }
 
 class _InteractiveImageViewerState extends State<InteractiveImageViewer> {
-  double xOffset = 30.0;
+  double xOffset = 20.0;
+  double yOffset = 20.0;
   bool displaySecondImage = false;
   bool hideSecondImage = false;
   final TransformationController _transformationController =
@@ -40,6 +41,7 @@ class _InteractiveImageViewerState extends State<InteractiveImageViewer> {
                 hideSecondImage = true;
               });
             },
+            scaleEnabled: true,
             onInteractionEnd: (ScaleEndDetails details) {
               _transformationController.value = initialControllerValue;
               setState(() {
@@ -73,7 +75,7 @@ class _InteractiveImageViewerState extends State<InteractiveImageViewer> {
               ),
         Positioned(
           left: xOffset,
-          top: 20,
+          top: yOffset,
           child: GestureDetector(
             onTap: () {
               HapticFeedback.vibrate();
@@ -83,11 +85,34 @@ class _InteractiveImageViewerState extends State<InteractiveImageViewer> {
             },
             onPanUpdate: (details) {
               setState(() {
-                xOffset += details.delta.dx * 1.5;
-
-                xOffset =
-                    xOffset.clamp(20, MediaQuery.of(context).size.width * 0.6);
+                xOffset += details.delta.dx * 1;
+                yOffset += details.delta.dy * 1;
+    
+                xOffset = xOffset.clamp(
+                    20, MediaQuery.of(context).size.width * 0.6);
+                yOffset = yOffset.clamp(
+                    20, MediaQuery.of(context).size.height * 0.4);
               });
+            },
+            onPanEnd: (details) {
+              if (xOffset > MediaQuery.of(context).size.width * 0.6 / 2) {
+                setState(() {
+                  xOffset = MediaQuery.of(context).size.width * 0.6;
+                });
+              } else {
+                setState(() {
+                  xOffset = 20;
+                });
+              }
+              if (yOffset > MediaQuery.of(context).size.height * 0.4 / 2) {
+                setState(() {
+                  yOffset = MediaQuery.of(context).size.height * 0.4;
+                });
+              } else {
+                setState(() {
+                  yOffset = 20;
+                });
+              }
             },
             child: hideSecondImage
                 ? Container()
@@ -123,42 +148,20 @@ Widget getImageBasedonType(
     String imagePath2,
     BuildContext context) {
   if (image.contains("http://") || image.contains("https://")) {
-    if (isMainImage) {
-      return CachedNetworkImage(
-        imageUrl: displaySecondImage ? imagePath : imagePath2,
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height * 0.65,
-        fit: BoxFit.cover,
-        placeholder: (context, url) => const CircularProgressIndicator(),
-        errorWidget: (context, url, error) => const Icon(Icons.error),
-      );
-    } else {
-      return CachedNetworkImage(
-        imageUrl: displaySecondImage ? imagePath2 : imagePath,
-        alignment: Alignment.topLeft,
-        width: MediaQuery.of(context).size.width * 0.25,
-        placeholder: (context, url) => const CircularProgressIndicator(),
-        errorWidget: (context, url, error) => const Icon(Icons.error),
-      );
-    }
+    return CachedNetworkImage(
+      imageUrl: displaySecondImage ? imagePath : imagePath2,
+      width: MediaQuery.of(context).size.width * (isMainImage ? 1 : 0.25),
+      fit: BoxFit.contain,
+      placeholder: (context, url) => const SizedBox(),
+      errorWidget: (context, url, error) => const Icon(Icons.error),
+    );
   } else {
-    if (isMainImage) {
-      return Image.file(
-        File(
-          displaySecondImage ? imagePath : imagePath2,
-        ),
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height * 0.65,
-        fit: BoxFit.cover,
-      );
-    } else {
-      return Image.file(
-        File(
-          displaySecondImage ? imagePath2 : imagePath,
-        ),
-        alignment: Alignment.topLeft,
-        width: MediaQuery.of(context).size.width * 0.25,
-      );
-    }
+    return Image.file(
+      File(
+        displaySecondImage ? imagePath : imagePath2,
+      ),
+      width: MediaQuery.of(context).size.width * (isMainImage ? 1 : 0.25),
+      fit: isMainImage ? BoxFit.cover : BoxFit.fill,
+    );
   }
 }

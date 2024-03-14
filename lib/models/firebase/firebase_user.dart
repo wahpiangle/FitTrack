@@ -31,7 +31,7 @@ class FirebaseUser {
     return Future.value(FirebaseUser(
       uid: doc.id,
       photoUrl: data['photoUrl'],
-      displayName: data['displayName'],
+      displayName: data['displayName'] ?? '',
       username: data['username'],
       requestSent: data['requestSent'] ?? [],
       requestReceived: data['requestReceived'] ?? [],
