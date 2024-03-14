@@ -11,6 +11,7 @@ import 'package:group_project/pages/home/components/display_post_screen/comment_
 import 'package:group_project/pages/home/components/display_post_screen/comment_tile.dart';
 import 'package:group_project/pages/home/components/display_post_screen/delete_comment_dialog.dart';
 import 'package:group_project/pages/home/components/display_post_screen/display_post_reaction_image.dart';
+import 'package:group_project/pages/home/components/display_post_screen/display_post_workout_info_screen.dart';
 import 'package:group_project/pages/home/components/display_post_screen/edit_caption_page.dart';
 import 'package:group_project/services/firebase/firebase_comment_service.dart';
 import 'package:intl/intl.dart';
@@ -68,6 +69,23 @@ class _DisplayPostImageScreenState extends State<DisplayPostImageScreen> {
           iconTheme: const IconThemeData(
             color: Colors.white,
           ),
+          actions: [
+            IconButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => DisplayPostWorkoutInfoScreen(
+                        post: widget.post,
+                      ),
+                    ),
+                  );
+                },
+                icon: const Icon(
+                  Icons.fitness_center_sharp,
+                  color: AppColours.secondary,
+                ))
+          ],
         ),
         backgroundColor: AppColours.primary,
         body: Listener(
