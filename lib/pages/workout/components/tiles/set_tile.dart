@@ -47,8 +47,8 @@ class _SetTileState extends State<SetTile> with TickerProviderStateMixin {
     super.initState();
     fetchRecentWeightAndReps();
     print('Set index of set ${widget.setIndex}');
-    weightController = TextEditingController();
-    repsController = TextEditingController();
+    weightController = TextEditingController(text: widget.set.weight?.toString() ?? '');
+    repsController = TextEditingController(text: widget.set.reps?.toString() ?? '');
 
   }
 
@@ -104,20 +104,23 @@ class _SetTileState extends State<SetTile> with TickerProviderStateMixin {
       key: Key(widget.set.id.toString()),
       direction: DismissDirection.endToStart,
       onDismissed: (direction) {
-        print(' before dismiss:');
-        for (final set in widget.exercisesSetsInfo.exerciseSets) {
-          print('Set ID: ${set.id}');
-        }
+        final deletedSetIndex = widget.exercisesSetsInfo.exerciseSets.indexWhere((set) => set.id == widget.set.id);
+
         widget.removeSet(widget.set.id);
+
         setState(() {
-          widget.exercisesSetsInfo.exerciseSets
-              .removeWhere((element) => element.id == widget.set.id);
+          // Update controller values with the data of the remaining sets
+          for (int i = deletedSetIndex; i < widget.exercisesSetsInfo.exerciseSets.length; i++) {
+            final remainingSet = widget.exercisesSetsInfo.exerciseSets[i];
+            weightController.text = remainingSet.weight?.toString() ?? '';
+            repsController.text = remainingSet.reps?.toString() ?? '';
+            remainingSet.id = i + 1;
+          }
+          // Remove last set since it shifted
+          widget.exercisesSetsInfo.exerciseSets.removeLast();
         });
-        print(' after dismiss:');
-        for (final set in widget.exercisesSetsInfo.exerciseSets) {
-          print('Set ID: ${set.id}');
-        }
       },
+
       background: Container(
         color: Colors.red,
         alignment: Alignment.centerRight,
@@ -241,6 +244,7 @@ class _SetTileState extends State<SetTile> with TickerProviderStateMixin {
                   textAlign: TextAlign.center,
                   keyboardType: TextInputType.number,
                   controller: repsController,
+
                   // initialValue: "${widget.set.reps ?? ''}",
                   decoration: const InputDecoration(
                     contentPadding: EdgeInsets.all(0),

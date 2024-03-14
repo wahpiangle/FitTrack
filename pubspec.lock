@@ -872,7 +872,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.8.1"
-<<<<<<< HEAD
   json_serializable:
     dependency: "direct main"
     description:
@@ -881,7 +880,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.7.1"
-=======
   keyboard_attachable:
     dependency: "direct main"
     description:
@@ -890,7 +888,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.2.0"
->>>>>>> 20b22bba3a9a24a361d8ee8da1831d0cc6195136
   lints:
     dependency: transitive
     description:
