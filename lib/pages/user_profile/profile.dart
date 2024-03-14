@@ -1,20 +1,20 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:group_project/constants/themes/app_colours.dart';
 import 'package:group_project/models/firebase/firebase_user.dart';
 import 'package:group_project/models/post.dart';
-import 'package:group_project/services/firebase/firebase_friends_service.dart';
 import 'package:group_project/services/firebase/firebase_posts_service.dart';
 
 class UserProfilePage extends StatefulWidget {
   final FirebaseUser user;
 
-  const UserProfilePage({Key? key, required this.user}) : super(key: key);
+  const UserProfilePage({super.key, required this.user});
 
   @override
-  _UserProfilePageState createState() => _UserProfilePageState();
+  UserProfilePageState createState() => UserProfilePageState();
 }
 
-class _UserProfilePageState extends State<UserProfilePage> {
+class UserProfilePageState extends State<UserProfilePage> {
   late int postsCount;
   late int friendsCount;
   late Future<void> dataFuture;
@@ -47,20 +47,21 @@ class _UserProfilePageState extends State<UserProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black, // Set the background color to black
+      backgroundColor: AppColours.primary,
       appBar: AppBar(
-        backgroundColor: Colors.black,
         title: Text(
-          widget.user.username,
-          style: TextStyle(color: Colors.white),
+          widget.user.displayName,
+          style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 23),
         ),
+        centerTitle: true,
+        backgroundColor: AppColours.primary,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.white),
+          icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
           onPressed: () => Navigator.of(context).pop(),
         ),
         actions: <Widget>[
           IconButton(
-            icon: Icon(Icons.more_vert, color: Colors.white),
+            icon: const Icon(Icons.more_vert, color: Colors.white),
             onPressed: () {
               // TODO: Implement more actions
             },
@@ -78,22 +79,15 @@ class _UserProfilePageState extends State<UserProfilePage> {
                     backgroundImage: NetworkImage(widget.user.photoUrl),
                     radius: 50,
                   ),
-                  SizedBox(height: 8),
+                  const SizedBox(height: 8),
                   Text(
-                    widget.user.username,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 24,
+                    "@${widget.user.username}",
+                    style: const TextStyle(
+                      color: Colors.grey,
+                      fontSize: 18,
                     ),
                   ),
-                  Text(
-                    'loves to workout',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 20.0),
                     child: Row(
@@ -108,7 +102,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                     future: postsFuture,
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
-                        return Center(child: CircularProgressIndicator());
+                        return const Center(child: CircularProgressIndicator());
                       }
                       if (snapshot.hasError) {
                         return Text('Error: ${snapshot.error}');
@@ -116,8 +110,8 @@ class _UserProfilePageState extends State<UserProfilePage> {
                       if (snapshot.hasData && snapshot.data!.isNotEmpty) {
                         return GridView.builder(
                           shrinkWrap: true,
-                          physics: NeverScrollableScrollPhysics(),
-                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          physics: const NeverScrollableScrollPhysics(),
+                          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount: 3,
                             crossAxisSpacing: 2,
                             mainAxisSpacing: 2,
@@ -139,7 +133,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                                   ),
                                 ),
                                 if (imageUrls.length > 1)
-                                  Positioned(
+                                  const Positioned(
                                     top: 5,
                                     right: 5,
                                     child: Icon(
@@ -156,7 +150,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
 
 
                       } else {
-                        return Text('No posts found', style: TextStyle(color: Colors.white));
+                        return const Text('No posts found', style: TextStyle(color: Colors.white));
                       }
                     },
                   ),
@@ -164,7 +158,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
               ),
             );
           } else {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           }
         },
       ),
@@ -179,7 +173,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
       children: <Widget>[
         Text(
           '$count',
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.bold,
             color: Colors.white,
@@ -187,7 +181,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
         ),
         Text(
           label,
-          style: TextStyle(
+          style: const TextStyle(
             color: Colors.grey,
             fontSize: 16,
           ),
