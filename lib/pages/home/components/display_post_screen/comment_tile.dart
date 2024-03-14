@@ -13,10 +13,17 @@ class CommentTile extends StatefulWidget {
 }
 
 class _CommentTileState extends State<CommentTile> {
+  late Future userFuture;
+  @override
+  void initState() {
+    userFuture = FirebaseUserService.getUserByUid(widget.comment.postedBy);
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: FirebaseUserService.getUserByUid(widget.comment.postedBy),
+      future: userFuture,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const SizedBox();
