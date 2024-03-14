@@ -31,7 +31,6 @@ class DisplayPostImageScreen extends StatefulWidget {
 }
 
 class _DisplayPostImageScreenState extends State<DisplayPostImageScreen> {
-  int _pointersCount = 0;
   Stream<QuerySnapshot>? _commentStream;
 
   @override
@@ -78,9 +77,6 @@ class _DisplayPostImageScreenState extends State<DisplayPostImageScreen> {
             child: Container(
               padding: const EdgeInsets.all(10),
               child: SingleChildScrollView(
-                physics: _pointersCount == 2
-                    ? const NeverScrollableScrollPhysics()
-                    : null,
                 child: Column(
                   children: [
                     // TODO: Make the image viewer a carousel
