@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:group_project/constants/themes/app_colours.dart';
@@ -46,11 +48,15 @@ class _SetTileState extends State<SetTile> with TickerProviderStateMixin {
   void initState() {
     super.initState();
     fetchRecentWeightAndReps();
-    print('Set index of set ${widget.setIndex}');
-    weightController = TextEditingController(text: widget.set.weight?.toString() ?? '');
-    repsController = TextEditingController(text: widget.set.reps?.toString() ?? '');
+    weightController = TextEditingController();
+    repsController = TextEditingController();
+    // weightController = TextEditingController(text: widget.set.weight?.toString() ?? '');
+    // repsController = TextEditingController(text: widget.set.reps?.toString() ?? '');
+    }
 
-  }
+
+
+
 
   @override
   void dispose() {
@@ -108,6 +114,9 @@ class _SetTileState extends State<SetTile> with TickerProviderStateMixin {
         setState(() {
           widget.exercisesSetsInfo.exerciseSets
               .removeWhere((element) => element.id == widget.set.id);
+          weightController = TextEditingController(text: widget.set.weight?.toString() ?? '');
+          repsController = TextEditingController(text: widget.set.reps?.toString() ?? '');
+
         });
       },
       background: Container(
@@ -147,7 +156,6 @@ class _SetTileState extends State<SetTile> with TickerProviderStateMixin {
                 onTap: () {
                   onTapPreviousTab(widget.exercisesSetsInfo);
                   _controller.forward(from: 0.0);
-
                   setState(() {
                     isTapped = true;
                   });
@@ -194,9 +202,8 @@ class _SetTileState extends State<SetTile> with TickerProviderStateMixin {
                     color: Colors.white,
                   ),
                   textAlign: TextAlign.center,
-                  // controller: weightController,
-                  initialValue: "${widget.set.weight ?? ''}",
-
+                  initialValue: isTapped ?  null: "${widget.set.weight ?? ''}",
+                  controller: isTapped ? weightController : null,
                   keyboardType: TextInputType.number,
                   decoration: const InputDecoration(
                     contentPadding: EdgeInsets.all(0),
@@ -234,9 +241,8 @@ class _SetTileState extends State<SetTile> with TickerProviderStateMixin {
                   ),
                   textAlign: TextAlign.center,
                   keyboardType: TextInputType.number,
-                  // controller: repsController,
-
-                  initialValue: "${widget.set.reps ?? ''}",
+                  initialValue: isTapped ?  null: "${widget.set.reps ?? ''}",
+                  controller: isTapped ? repsController : null,
                   decoration: const InputDecoration(
                     contentPadding: EdgeInsets.all(0),
                     filled: true,
