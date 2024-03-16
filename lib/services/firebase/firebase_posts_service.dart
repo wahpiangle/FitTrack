@@ -11,6 +11,7 @@ import 'package:group_project/models/firebase/reaction.dart';
 import 'package:group_project/models/post.dart';
 import 'package:group_project/pages/complete_workout/capture_image/upload_image_provider.dart';
 import 'package:group_project/services/firebase/firebase_comment_service.dart';
+import 'package:group_project/services/firebase/firebase_workouts_service.dart';
 
 class FirebasePostsService {
   static final FirebaseFirestore db = FirebaseFirestore.instance;
@@ -80,6 +81,8 @@ class FirebasePostsService {
           'caption': post.caption,
         },
       );
+      FirebaseWorkoutsService.attachPostIdToWorkoutSession(
+          post.workoutSessionId, post.postedBy, doc.id);
       objectBox.workoutSessionService
           .attachPostToWorkoutSession(post.workoutSessionId, doc.id);
       objectBox.postService.addFirebasePostId(post.id, doc.id);
@@ -91,11 +94,24 @@ class FirebasePostsService {
   }
 
   static void deletePost(String postId) async {
-    await postsCollectionRef
-        .doc(postId)
-        .delete()
-        .then((value) => print('Post Deleted'))
-        .catchError((error) => print('Failed to delete post: $error'));
+    final String uid = auth.currentUser!.uid;
+    try {
+      final documentToBeDeleted = await postsCollectionRef.doc(postId).get();
+      await documentToBeDeleted.reference
+          .delete()
+          .catchError((error) => print('Failed to delete post: $error'));
+      await storage
+          .ref(
+              'images/$uid/firstImage/${documentToBeDeleted.data()!['workoutSessionId']}.jpg')
+          .delete();
+      await storage
+          .ref(
+              'images/$uid/secondImage/${documentToBeDeleted.data()!['workoutSessionId']}.jpg')
+          .delete();
+      await storage.ref('posts/$postId').delete();
+    } catch (e) {
+      print(e);
+    }
   }
 
   static Future<bool> saveCaption(String postId, String caption) async {

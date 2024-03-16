@@ -41,7 +41,13 @@ Widget getImageBasedonType(String image, bool secondImage) {
       fit: BoxFit.fill,
       width: secondImage ? 50 : null,
       imageUrl: image,
-      placeholder: (context, url) => const CircularProgressIndicator(),
+      placeholder: (context, url) => const SizedBox(
+        height: 50,
+        width: 50,
+        child: Center(
+          child: CircularProgressIndicator(),
+        ),
+      ),
       errorWidget: (context, url, error) => const Icon(Icons.error),
     );
   } else {

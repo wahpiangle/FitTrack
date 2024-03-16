@@ -8,6 +8,7 @@ class ExerciseSet {
   int? weight;
   int? reps;
   bool isCompleted = false;
+  bool isPersonalRecord = false;
 
   final exerciseSetInfo = ToOne<ExercisesSetsInfo>();
 

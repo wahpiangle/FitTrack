@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:group_project/constants/themes/app_colours.dart';
+import 'package:group_project/main.dart';
 import 'package:group_project/models/workout_session.dart';
 import 'package:group_project/pages/history/components/workout_menu_anchor.dart';
 import 'package:intl/intl.dart';
@@ -116,7 +117,7 @@ class HistoryDetail extends StatelessWidget {
                           Padding(
                             padding: const EdgeInsets.symmetric(vertical: 6.0),
                             child: Text(
-                              exercisesSetInfo.exercise.target!.name,
+                              exercisesSetInfo.exercise.target?.name ?? '',
                               style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 18,
@@ -132,6 +133,9 @@ class HistoryDetail extends StatelessWidget {
                                     padding: const EdgeInsets.symmetric(
                                         vertical: 8.0),
                                     child: Row(
+                                      mainAxisSize: MainAxisSize.max,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
                                       children: [
                                         Padding(
                                           padding:
@@ -144,28 +148,47 @@ class HistoryDetail extends StatelessWidget {
                                             ),
                                           ),
                                         ),
-                                        Text(
-                                          ('${setInfo.value.weight} kg'),
-                                          style: TextStyle(
-                                            color: Colors.grey[300],
-                                            fontSize: 16,
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 5),
-                                          child: Text(
-                                            '×',
-                                            style: TextStyle(
-                                                color: Colors.grey[300],
-                                                fontSize: 16),
-                                          ),
-                                        ),
-                                        Text(
-                                          setInfo.value.reps.toString(),
-                                          style: TextStyle(
-                                            color: Colors.grey[300],
-                                            fontSize: 16,
+                                        Expanded(
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Row(
+                                                children: [
+                                                  Text(
+                                                    ('${setInfo.value.weight} kg × ${setInfo.value.reps}'),
+                                                    style: TextStyle(
+                                                      color: Colors.grey[300],
+                                                      fontSize: 16,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                              setInfo.value.isPersonalRecord
+                                                  ? Container(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              5),
+                                                      decoration:
+                                                          const BoxDecoration(
+                                                        color: AppColours
+                                                            .secondary,
+                                                        borderRadius:
+                                                            BorderRadius.all(
+                                                          Radius.circular(30),
+                                                        ),
+                                                      ),
+                                                      child: Text(
+                                                        '🏆 PR',
+                                                        style: TextStyle(
+                                                          color:
+                                                              Colors.green[900],
+                                                          fontSize: 12,
+                                                        ),
+                                                      ),
+                                                    )
+                                                  : const SizedBox(),
+                                            ],
                                           ),
                                         ),
                                       ],
