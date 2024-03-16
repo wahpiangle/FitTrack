@@ -106,18 +106,8 @@ class _SetTileState extends State<SetTile> with TickerProviderStateMixin {
       onDismissed: (direction) {
         widget.removeSet(widget.set.id);
         setState(() {
-          final deletedIndex = widget.exercisesSetsInfo.exerciseSets.indexWhere((set) => set.id == widget.set.id);
-          final deletedId = widget.set.id;
-
-          for(int a = deletedIndex ; a<= widget.exercisesSetsInfo.exerciseSets.length; a++){
-            widget.exercisesSetsInfo.exerciseSets[a].weight = widget.exercisesSetsInfo.exerciseSets[a + 1].weight;
-            widget.exercisesSetsInfo.exerciseSets[a].reps = widget.exercisesSetsInfo.exerciseSets[a + 1].reps;
-            final set = widget.exercisesSetsInfo.exerciseSets[a];
-            weightController.text = set.weight?.toString() ?? '';
-            repsController.text = set.reps?.toString() ?? '';
-          }
-          widget.exercisesSetsInfo.exerciseSets.removeLast();
-
+          widget.exercisesSetsInfo.exerciseSets
+              .removeWhere((element) => element.id == widget.set.id);
         });
       },
       background: Container(
@@ -204,7 +194,9 @@ class _SetTileState extends State<SetTile> with TickerProviderStateMixin {
                     color: Colors.white,
                   ),
                   textAlign: TextAlign.center,
-                  controller: weightController,
+                  // controller: weightController,
+                  initialValue: "${widget.set.weight ?? ''}",
+
                   keyboardType: TextInputType.number,
                   decoration: const InputDecoration(
                     contentPadding: EdgeInsets.all(0),
@@ -242,9 +234,9 @@ class _SetTileState extends State<SetTile> with TickerProviderStateMixin {
                   ),
                   textAlign: TextAlign.center,
                   keyboardType: TextInputType.number,
-                  controller: repsController,
+                  // controller: repsController,
 
-                  // initialValue: "${widget.set.reps ?? ''}",
+                  initialValue: "${widget.set.reps ?? ''}",
                   decoration: const InputDecoration(
                     contentPadding: EdgeInsets.all(0),
                     filled: true,
