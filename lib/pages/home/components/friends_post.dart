@@ -215,6 +215,7 @@ class _FriendsPostCarouselState extends State<FriendsPostCarousel> {
                                           DisplayPostImageScreen(
                                         post: friendPostData.post,
                                         reactions: postReactions,
+                                        posterInfo: friendPostData.friend,
                                       ),
                                     ),
                                   );
