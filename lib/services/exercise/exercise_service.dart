@@ -174,43 +174,27 @@ class ExerciseService {
 
 
   void updateRecentWeightAndReps(ExerciseSet exerciseSet, int recentWeight, int recentReps) {
-
-    print('updating recent weight and reps');
     exerciseSet.recentWeight = recentWeight;
     exerciseSet.recentReps = recentReps;
     exerciseSetBox.put(exerciseSet);
-    print('${exerciseSet.recentWeight}');
-    print('${exerciseSet.id}');
-
-
   }
 
   int? getRecentWeight(int exerciseId, int setIndex) {
     print('fetching');
     final allWorkoutSessions = workoutSessionBox.getAll();
-
-    // Sort WorkoutSession objects in descending order
     allWorkoutSessions.sort((a, b) => b.date.compareTo(a.date));
-    // Retrieve most recent WorkoutSession object
     final mostRecentWorkoutSession = allWorkoutSessions.first;
     final exerciseSetsInfo = mostRecentWorkoutSession.exercisesSetsInfo;
-
-    // Iterate through each ExerciseSetsInfo object
     for (final exerciseSetInfo in exerciseSetsInfo) {
-      // Retrieve the associated Exercise object for the ExerciseSetsInfo
       final exercise = exerciseSetInfo.exercise.target;
       if (exercise != null && exercise.id == exerciseId) {
         int counter = 0;
-        // Iterate through each ExerciseSet object in the exerciseSets list
         for (final exerciseSet in exerciseSetInfo.exerciseSets) {
-          // Check if the counter matches the setIndex
           if (counter == setIndex) {
-            // Return the ExerciseSet object at the given setIndex
             final recentWeight = exerciseSet.recentWeight;
             print("in exercise service recent weight is $recentWeight");
             return recentWeight;
           }
-          // Increment the counter
           counter++;
         }
       }
