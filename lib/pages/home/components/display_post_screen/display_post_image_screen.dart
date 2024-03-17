@@ -4,15 +4,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:group_project/constants/themes/app_colours.dart';
 import 'package:group_project/models/firebase/comments.dart';
+import 'package:group_project/models/firebase/firebase_user.dart';
 import 'package:group_project/models/firebase/reaction.dart';
 import 'package:group_project/models/post.dart';
 import 'package:group_project/pages/complete_workout/capture_image/components/interactive_image_viewer.dart';
-import 'package:group_project/pages/home/components/display_post_screen/comment_footer.dart';
-import 'package:group_project/pages/home/components/display_post_screen/comment_tile.dart';
-import 'package:group_project/pages/home/components/display_post_screen/delete_comment_dialog.dart';
+import 'package:group_project/pages/home/components/display_post_screen/comment/comment_footer.dart';
+import 'package:group_project/pages/home/components/display_post_screen/comment/comment_tile.dart';
+import 'package:group_project/pages/home/components/display_post_screen/comment/delete_comment_dialog.dart';
 import 'package:group_project/pages/home/components/display_post_screen/display_post_reaction_image.dart';
 import 'package:group_project/pages/home/components/display_post_screen/display_post_workout_info_screen.dart';
 import 'package:group_project/pages/home/components/display_post_screen/edit_caption_page.dart';
+import 'package:group_project/services/firebase/auth_service.dart';
 import 'package:group_project/services/firebase/firebase_comment_service.dart';
 import 'package:intl/intl.dart';
 import 'package:keyboard_attachable/keyboard_attachable.dart';
@@ -20,11 +22,13 @@ import 'package:keyboard_attachable/keyboard_attachable.dart';
 class DisplayPostImageScreen extends StatefulWidget {
   final Post post;
   final List<Reaction> reactions;
+  final FirebaseUser? posterInfo;
 
   const DisplayPostImageScreen({
     super.key,
     required this.post,
     required this.reactions,
+    this.posterInfo,
   });
 
   @override
@@ -44,14 +48,18 @@ class _DisplayPostImageScreenState extends State<DisplayPostImageScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isOwnPost =
+        AuthService().getCurrentUser()!.uid == widget.post.postedBy;
     return Scaffold(
         appBar: AppBar(
           centerTitle: true,
           title: Column(
             children: [
-              const Text(
-                'My Post',
-                style: TextStyle(
+              Text(
+                isOwnPost
+                    ? 'My Post'
+                    : '${widget.posterInfo?.username}\'s Post',
+                style: const TextStyle(
                   color: Colors.white,
                   fontSize: 16,
                 ),
@@ -77,6 +85,7 @@ class _DisplayPostImageScreenState extends State<DisplayPostImageScreen> {
                     MaterialPageRoute(
                       builder: (context) => DisplayPostWorkoutInfoScreen(
                         post: widget.post,
+                        posterInfo: widget.posterInfo,
                       ),
                     ),
                   );
