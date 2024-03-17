@@ -102,6 +102,7 @@ class _SetTileState extends State<SetTile> with TickerProviderStateMixin {
 
     // Update the weight and reps for exercise set
     objectBox.exerciseService.updateExerciseSet(widget.set);
+
   }
 
   @override
@@ -112,10 +113,9 @@ class _SetTileState extends State<SetTile> with TickerProviderStateMixin {
       onDismissed: (direction) {
         widget.removeSet(widget.set.id);
         setState(() {
+          isTapped = false;
           widget.exercisesSetsInfo.exerciseSets
               .removeWhere((element) => element.id == widget.set.id);
-          weightController = TextEditingController(text: widget.set.weight?.toString() ?? '');
-          repsController = TextEditingController(text: widget.set.reps?.toString() ?? '');
 
         });
       },
