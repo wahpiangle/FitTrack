@@ -8,7 +8,6 @@ import 'package:group_project/pages/home/components/display_post_screen/display_
 import 'package:group_project/pages/home/components/friends_post.dart';
 import 'package:group_project/pages/home/components/reaction/reaction_images.dart';
 import 'package:group_project/services/firebase/firebase_friends_post.dart';
-import 'package:group_project/services/firebase/firebase_posts_service.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -122,26 +121,13 @@ class _WorkoutPostedPageState extends State<WorkoutPostedPage> {
                                 style: TextStyle(color: Colors.red),
                                 textAlign: TextAlign.center,
                               )
-                            : TextField(
-                                textAlign: TextAlign.center,
+                            : Text(
+                                currentUserPostInfo.post.caption != ''
+                                    ? currentUserPostInfo.post.caption
+                                    : 'Add a caption...',
                                 style: const TextStyle(color: Colors.white),
-                                enableInteractiveSelection: false,
-                                decoration: const InputDecoration(
-                                  alignLabelWithHint: true,
-                                  hintText: 'Add a caption..',
-                                  hintStyle: TextStyle(color: Colors.grey),
-                                  border: InputBorder.none,
-                                ),
-                                onChanged: (caption) {
-                                  FirebasePostsService.saveCaption(
-                                    currentUserPostInfo.post.postId,
-                                    caption,
-                                  );
-                                },
-                                controller: TextEditingController(
-                                  text: currentUserPostInfo.post.caption,
-                                ),
-                              ),
+                                textAlign: TextAlign.center,
+                              )
                       ],
                     ),
                   );
