@@ -106,16 +106,21 @@ class FirebaseWorkoutsService {
 
   static Future<FirebaseWorkoutSession> getWorkoutSessionByUser(
       int workoutSessionId, String userId) async {
-    final workoutSessionDocument = await workoutsCollectionRef
-        .doc(userId)
-        .collection('workoutSessions')
-        .doc(workoutSessionId.toString())
-        .get();
+    try {
+      final workoutSessionDocument = await workoutsCollectionRef
+          .doc(userId)
+          .collection('workoutSessions')
+          .doc(workoutSessionId.toString())
+          .get();
 
-    final data = workoutSessionDocument.data();
-    FirebaseWorkoutSession workoutSession =
-        FirebaseWorkoutSession.fromJson(data!);
-    return workoutSession;
+      final data = workoutSessionDocument.data();
+      FirebaseWorkoutSession workoutSession =
+          FirebaseWorkoutSession.fromJson(data!);
+      return workoutSession;
+    } catch (e) {
+      print(e);
+      rethrow;
+    }
   }
 
   static Future<void> attachPostIdToWorkoutSession(

@@ -24,7 +24,7 @@ class FirebaseWorkoutSession {
           (exercisesSetsInfo) {
             return FirebaseExercisesSetsInfo(
               exerciseId: exercisesSetsInfo['exercise'],
-              exerciseName: exercisesSetsInfo['exerciseName'],
+              exerciseName: exercisesSetsInfo['exerciseName'] ?? '',
               exerciseSets:
                   (exercisesSetsInfo['exerciseSets'] as List<dynamic>).map(
                 (exerciseSet) {
@@ -37,9 +37,9 @@ class FirebaseWorkoutSession {
             );
           },
         ).toList(),
-        note = json['note'],
+        note = json['note'] ?? '',
         postId = json['postId'] ?? '',
-        title = json['title'];
+        title = json['title'] ?? '';
 }
 
 class FirebaseExercisesSetsInfo {
