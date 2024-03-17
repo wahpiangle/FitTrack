@@ -159,6 +159,11 @@ class _SetTileState extends State<SetTile> with TickerProviderStateMixin {
                   setState(() {
                     isTapped = true;
                   });
+                  Future.delayed(const Duration(milliseconds: 100), () {
+                    setState(() {
+                      isTapped = false;
+                    });
+                  });
                 },
                 child: AnimatedBuilder(
                   animation: _controller,
