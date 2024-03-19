@@ -79,7 +79,9 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
             showDialog(
               context: context,
               builder: (BuildContext context) {
-                return const RevertDialog();
+                return const RevertDialog(
+                  isWorkoutSession: true,
+                );
               },
             );
           },
@@ -110,6 +112,7 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
                           return SaveDialog(
                             workoutSessionId: widget.workoutSessionId,
                             fromDetailPage: widget.fromDetailPage,
+                            isWorkoutSession: true,
                           );
                         },
                       )

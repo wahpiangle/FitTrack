@@ -87,17 +87,17 @@ class _InteractiveImageViewerState extends State<InteractiveImageViewer> {
               setState(() {
                 xOffset += details.delta.dx * 1;
                 yOffset += details.delta.dy * 1;
-    
-                xOffset = xOffset.clamp(
-                    20, MediaQuery.of(context).size.width * 0.6);
-                yOffset = yOffset.clamp(
-                    20, MediaQuery.of(context).size.height * 0.4);
+
+                xOffset =
+                    xOffset.clamp(20, MediaQuery.of(context).size.width * 0.65);
+                yOffset =
+                    yOffset.clamp(20, MediaQuery.of(context).size.height * 0.4);
               });
             },
             onPanEnd: (details) {
-              if (xOffset > MediaQuery.of(context).size.width * 0.6 / 2) {
+              if (xOffset > MediaQuery.of(context).size.width * 0.65 / 2) {
                 setState(() {
-                  xOffset = MediaQuery.of(context).size.width * 0.6;
+                  xOffset = MediaQuery.of(context).size.width * 0.65;
                 });
               } else {
                 setState(() {

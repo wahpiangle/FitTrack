@@ -5,11 +5,13 @@ import 'package:group_project/services/firebase/firebase_workouts_service.dart';
 
 class SaveDialog extends StatelessWidget {
   final int workoutSessionId;
+  final bool isWorkoutSession;
   final bool fromDetailPage;
   const SaveDialog({
     super.key,
     required this.workoutSessionId,
     required this.fromDetailPage,
+    this.isWorkoutSession = false,
   });
 
   @override
@@ -17,10 +19,10 @@ class SaveDialog extends StatelessWidget {
     return AlertDialog(
       backgroundColor: AppColours.primary,
       surfaceTintColor: Colors.transparent,
-      title: const Center(
+      title: Center(
         child: Text(
-          'Save Template?',
-          style: TextStyle(
+          'Save ${isWorkoutSession ? 'Workout Session' : 'Template'}?',
+          style: const TextStyle(
             color: Colors.white,
             fontSize: 18,
             fontWeight: FontWeight.bold,
@@ -28,7 +30,7 @@ class SaveDialog extends StatelessWidget {
         ),
       ),
       content: Text(
-        'Are you sure you want to save this template?',
+        'Are you sure you want to save this ${isWorkoutSession ? 'workout session' : 'template'}?',
         style: TextStyle(
           color: Colors.grey[500],
           fontSize: 16,

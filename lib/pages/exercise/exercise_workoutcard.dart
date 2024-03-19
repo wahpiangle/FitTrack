@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:group_project/constants/themes/app_colours.dart';
 import 'package:group_project/models/workout_session.dart';
 import 'package:group_project/pages/complete_workout/complete_history_detail.dart';
 import 'package:intl/intl.dart';
-
 
 class ExerciseWorkoutCard extends StatelessWidget {
   final WorkoutSession workoutSession;
@@ -89,87 +89,122 @@ class ExerciseWorkoutCard extends StatelessWidget {
                     workoutSession.note == ''
                         ? const SizedBox()
                         : Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 8.0),
-                      child: Text(
-                        workoutSession.note == ''
-                            ? 'No notes'
-                            : workoutSession.note.toString(),
-                        style: const TextStyle(
-                          color: Colors.grey,
-                          fontSize: 16,
-                        ),
-                      ),
-                    ),
+                            padding: const EdgeInsets.symmetric(vertical: 8.0),
+                            child: Text(
+                              workoutSession.note == ''
+                                  ? 'No notes'
+                                  : workoutSession.note.toString(),
+                              style: const TextStyle(
+                                color: Colors.grey,
+                                fontSize: 16,
+                              ),
+                            ),
+                          ),
                     Column(
                       children: filteredSetsInfo
                           .map(
                             (exercisesSetInfo) => Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Padding(
-                              padding: EdgeInsets.symmetric(vertical: 6.0),
-                              child: Text(
-                                "Sets Performed",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 18,
-                                ),
-                              ),
-                            ),
-                            Column(
-                              children: exercisesSetInfo.exerciseSets
-                                  .asMap()
-                                  .entries
-                                  .map(
-                                    (setInfo) => Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      vertical: 8.0),
-                                  child: Row(
-                                    children: [
-                                      Padding(
-                                        padding:
-                                        const EdgeInsets.only(right: 20),
-                                        child: Text(
-                                          (setInfo.key + 1).toString(),
-                                          style: TextStyle(
-                                            color: Colors.grey[300],
-                                            fontSize: 16,
-                                          ),
-                                        ),
-                                      ),
-                                      Text(
-                                        ('${setInfo.value.weight} kg'),
-                                        style: TextStyle(
-                                          color: Colors.grey[300],
-                                          fontSize: 16,
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 5),
-                                        child: Text(
-                                          '×',
-                                          style: TextStyle(
-                                              color: Colors.grey[300],
-                                              fontSize: 16),
-                                        ),
-                                      ),
-                                      Text(
-                                        setInfo.value.reps.toString(),
-                                        style: TextStyle(
-                                          color: Colors.grey[300],
-                                          fontSize: 16,
-                                        ),
-                                      ),
-                                    ],
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Padding(
+                                  padding: EdgeInsets.symmetric(vertical: 6.0),
+                                  child: Text(
+                                    "Sets Performed",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 18,
+                                    ),
                                   ),
                                 ),
-                              )
-                                  .toList(),
+                                Column(
+                                  children: exercisesSetInfo.exerciseSets
+                                      .asMap()
+                                      .entries
+                                      .map(
+                                        (setInfo) => Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 8.0),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Row(
+                                                children: [
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            right: 20),
+                                                    child: Text(
+                                                      (setInfo.key + 1)
+                                                          .toString(),
+                                                      style: TextStyle(
+                                                        color: Colors.grey[300],
+                                                        fontSize: 16,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  Text(
+                                                    ('${setInfo.value.weight} kg'),
+                                                    style: TextStyle(
+                                                      color: Colors.grey[300],
+                                                      fontSize: 16,
+                                                    ),
+                                                  ),
+                                                  Padding(
+                                                    padding: const EdgeInsets
+                                                        .symmetric(
+                                                        horizontal: 5),
+                                                    child: Text(
+                                                      '×',
+                                                      style: TextStyle(
+                                                          color:
+                                                              Colors.grey[300],
+                                                          fontSize: 16),
+                                                    ),
+                                                  ),
+                                                  Text(
+                                                    setInfo.value.reps
+                                                        .toString(),
+                                                    style: TextStyle(
+                                                      color: Colors.grey[300],
+                                                      fontSize: 16,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                              setInfo.value.isPersonalRecord
+                                                  ? Container(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              5),
+                                                      decoration:
+                                                          const BoxDecoration(
+                                                        color: AppColours
+                                                            .secondary,
+                                                        borderRadius:
+                                                            BorderRadius.all(
+                                                          Radius.circular(30),
+                                                        ),
+                                                      ),
+                                                      child: Text(
+                                                        '🏆 PR',
+                                                        style: TextStyle(
+                                                          color:
+                                                              Colors.green[900],
+                                                          fontSize: 12,
+                                                        ),
+                                                      ),
+                                                    )
+                                                  : const SizedBox(),
+                                            ],
+                                          ),
+                                        ),
+                                      )
+                                      .toList(),
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
-                      )
+                          )
                           .toList(),
                     )
                   ],

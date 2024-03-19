@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:group_project/main.dart';
+import 'package:group_project/models/firebase/firebase_workout_session.dart';
 import 'package:group_project/models/workout_session.dart';
 
 class FirebaseWorkoutsService {
@@ -11,33 +12,33 @@ class FirebaseWorkoutsService {
 
   static void createWorkoutSession(WorkoutSession workoutSession) async {
     final User user = auth.currentUser!;
-    if (!user.isAnonymous) {
-      final uid = user.uid;
-      await workoutsCollectionRef
-          .doc(uid)
-          .collection('workoutSessions')
-          .doc(workoutSession.id.toString())
-          .set(
-        {
-          'date': DateTime.now(),
-          'title': workoutSession.title,
-          'note': workoutSession.note,
-          'duration': workoutSession.duration,
-          'post': workoutSession.postId,
-          'exercisesSetsInfo': workoutSession.exercisesSetsInfo
-              .map((exercisesSetsInfo) => {
-                    'exercise': exercisesSetsInfo.exercise.targetId,
-                    'exerciseSets': exercisesSetsInfo.exerciseSets
-                        .map((exerciseSet) => {
-                              'reps': exerciseSet.reps,
-                              'weight': exerciseSet.weight,
-                            })
-                        .toList(),
-                  })
-              .toList(),
-        },
-      );
-    }
+    final uid = user.uid;
+    await workoutsCollectionRef
+        .doc(uid)
+        .collection('workoutSessions')
+        .doc(workoutSession.id.toString())
+        .set(
+      {
+        'date': DateTime.now(),
+        'title': workoutSession.title,
+        'note': workoutSession.note,
+        'duration': workoutSession.duration,
+        'post': workoutSession.postId,
+        'exercisesSetsInfo': workoutSession.exercisesSetsInfo
+            .map((exercisesSetsInfo) => {
+                  'exercise': exercisesSetsInfo.exercise.targetId,
+                  'exerciseName': exercisesSetsInfo.exercise.target!.name,
+                  'exerciseSets': exercisesSetsInfo.exerciseSets
+                      .map((exerciseSet) => {
+                            'reps': exerciseSet.reps,
+                            'weight': exerciseSet.weight,
+                            'isPersonalRecord': exerciseSet.isPersonalRecord,
+                          })
+                      .toList(),
+                })
+            .toList(),
+      },
+    );
   }
 
   static Future<void> deleteWorkoutSession(int workoutSessionId) async {
@@ -103,5 +104,31 @@ class FirebaseWorkoutsService {
     });
   }
 
-  static void addImageToWorkoutSession() {}
+  static Future<FirebaseWorkoutSession> getWorkoutSessionByUser(
+      int workoutSessionId, String userId) async {
+    try {
+      final workoutSessionDocument = await workoutsCollectionRef
+          .doc(userId)
+          .collection('workoutSessions')
+          .doc(workoutSessionId.toString())
+          .get();
+
+      final data = workoutSessionDocument.data();
+      FirebaseWorkoutSession workoutSession =
+          FirebaseWorkoutSession.fromJson(data!);
+      return workoutSession;
+    } catch (e) {
+      print(e);
+      rethrow;
+    }
+  }
+
+  static Future<void> attachPostIdToWorkoutSession(
+      int workoutSessionId, String userId, String postId) async {
+    await workoutsCollectionRef
+        .doc(userId)
+        .collection('workoutSessions')
+        .doc(workoutSessionId.toString())
+        .update({'post': postId});
+  }
 }
