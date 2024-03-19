@@ -225,7 +225,11 @@ class _SetTileState extends State<SetTile> with TickerProviderStateMixin {
                   onChanged: (value) {
                     setState(() {
                       widget.set.weight = int.tryParse(value);
-                      objectBox.exerciseService.updateExerciseSet(widget.set);
+                      if (widget.set.weight == null)
+                      {
+                        widget.set.isCompleted = false,
+                      },
+                    objectBox.exerciseService.updateExerciseSet(widget.set);
                     });
                   },
                 ),
@@ -263,7 +267,11 @@ class _SetTileState extends State<SetTile> with TickerProviderStateMixin {
                   onChanged: (value) {
                     setState(() {
                       widget.set.reps = int.tryParse(value);
-                      objectBox.exerciseService.updateExerciseSet(widget.set);
+                      if (widget.set.reps == null)
+                      {
+                        widget.set.isCompleted = false,
+                      },
+                    objectBox.exerciseService.updateExerciseSet(widget.set);
                     });
                   },
                 ),

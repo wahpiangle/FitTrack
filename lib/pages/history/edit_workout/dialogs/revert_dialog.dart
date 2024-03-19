@@ -3,7 +3,11 @@ import 'package:group_project/constants/themes/app_colours.dart';
 import 'package:group_project/main.dart';
 
 class RevertDialog extends StatelessWidget {
-  const RevertDialog({super.key});
+  final bool isWorkoutSession;
+  const RevertDialog({
+    super.key,
+    this.isWorkoutSession = false,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +25,7 @@ class RevertDialog extends StatelessWidget {
         ),
       ),
       content: Text(
-        'Are you sure you want to discard changes to this template? All changes will be lost.',
+        'Are you sure you want to discard changes to this ${isWorkoutSession ? 'workout session' : 'exercise'}? All changes will be lost.',
         style: TextStyle(
           color: Colors.grey[500],
           fontSize: 16,

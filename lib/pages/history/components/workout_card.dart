@@ -88,8 +88,9 @@ class WorkoutCard extends StatelessWidget {
                       ),
                       const SizedBox(width: 10),
                       Text(
-                        workoutSession
-                            .exercisesSetsInfo[index].exercise.target!.name,
+                        workoutSession.exercisesSetsInfo[index].exercise.target
+                                ?.name ??
+                            '',
                         style: const TextStyle(
                           color: Colors.white,
                           fontSize: 15,

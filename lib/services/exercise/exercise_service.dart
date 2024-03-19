@@ -16,14 +16,13 @@ class ExerciseService {
   Box<ExercisesSetsInfo> exercisesSetsInfoBox;
   Box<WorkoutSession> workoutSessionBox;
 
-  ExerciseService({
-    required this.exerciseBox,
-    required this.categoryBox,
-    required this.bodyPartBox,
-    required this.exerciseSetBox,
-    required this.exercisesSetsInfoBox,
-    required this.workoutSessionBox
-  });
+  ExerciseService(
+      {required this.exerciseBox,
+      required this.categoryBox,
+      required this.bodyPartBox,
+      required this.exerciseSetBox,
+      required this.exercisesSetsInfoBox,
+      required this.workoutSessionBox});
 
   //exercises
   Stream<List<Exercise>> watchAllExercise() {
@@ -38,7 +37,6 @@ class ExerciseService {
   }
 
   List<Exercise> getAllExercises() {
-    // Filter out exercises based on visibility
     return exerciseBox
         .getAll()
         .where((exercise) => exercise.isVisible)
@@ -80,21 +78,20 @@ class ExerciseService {
       final List<dynamic> addednewExercises =
           await FirebaseExercisesService.getAllCustomExercises();
 
-      // Retrieve existing exercise names from ObjectBox or another storage solution
       final List<String> existingExerciseNames = getExistingExerciseNames();
 
-      // Proceed with data population from Firebase
       for (var exerciseData in addednewExercises) {
         final exerciseName = exerciseData['name'];
 
-        // Check if exercise name already exists, if so, skip
         if (existingExerciseNames.contains(exerciseName)) {
           continue;
         }
 
         final newCustomExercise = Exercise(
+          id: exerciseData['id'],
           name: exerciseName,
           isCustom: true,
+          isVisible: exerciseData['isVisible'] ?? true,
         );
 
         final categoryId = exerciseData['categoryId'];
@@ -102,39 +99,34 @@ class ExerciseService {
         final categoryName = exerciseData['categoryName'];
         final bodyPartName = exerciseData['bodyPartName'];
 
-        // Fetch the category and body part directly from Firebase data
         final category = categoryId != null
             ? Category(id: categoryId, name: categoryName)
             : null;
         final bodyPart = bodyPartId != null
             ? BodyPart(id: bodyPartId, name: bodyPartName ?? 'Chest')
-            : BodyPart(
-                id: bodyPartId, name: 'Chest'); // Assign default body part name
+            : BodyPart(id: bodyPartId, name: 'Chest');
 
-        // Associate Category and BodyPart with the exercise
         newCustomExercise.category.target = category;
         newCustomExercise.bodyPart.target = bodyPart;
 
-        // Add exercise to ObjectBox using addExerciseToList method
         addExerciseToList(newCustomExercise, category!, bodyPart);
-
-        // Update existingExerciseNames list
-        existingExerciseNames.add(exerciseName);
       }
     } catch (error) {
-      // Handle the error further based on your application's requirements.
+      print(error);
     }
   }
 
   List<String> getExistingExerciseNames() {
-    // Retrieve existing exercises from ObjectBox
     final List<Exercise> existingExercises = exerciseBox.getAll();
 
-    // Extract exercise names from existing exercises
     final List<String> existingExerciseNames =
         existingExercises.map((exercise) => exercise.name).toList();
 
     return existingExerciseNames;
+  }
+
+  Exercise? getExerciseById(int id) {
+    return exerciseBox.get(id);
   }
 
   void addSetToExercise(ExercisesSetsInfo exercisesSetsInfo) {
@@ -159,7 +151,23 @@ class ExerciseService {
       return;
     }
     exerciseSet.isCompleted = !exerciseSet.isCompleted;
+    if (isPersonalRecord(exerciseSet) == true) {
+      exerciseSet.isPersonalRecord = true;
+      setOtherSetsAsNotPersonalRecord(exerciseSet);
+    }
+
     exerciseSetBox.put(exerciseSet);
+  }
+
+  void setOtherSetsAsNotPersonalRecord(ExerciseSet exerciseSet) {
+    ExercisesSetsInfo exercisesSetsInfo = exerciseSet.exerciseSetInfo.target!;
+    List<ExerciseSet> exerciseSets = exercisesSetsInfo.exerciseSets;
+    for (ExerciseSet set in exerciseSets) {
+      if (set.id != exerciseSet.id) {
+        set.isPersonalRecord = false;
+        exerciseSetBox.put(set);
+      }
+    }
   }
 
   void updateExerciseSet(ExerciseSet exerciseSet) {
@@ -171,9 +179,38 @@ class ExerciseService {
     exerciseBox.put(exercise);
   }
 
+  int getOneRepMaxValue(int weight, int reps) {
+    return (weight * (1 + reps / 30)).toInt();
+  }
 
+  bool isPersonalRecord(ExerciseSet exerciseSet) {
+    ExercisesSetsInfo exercisesSetsInfo = exerciseSet.exerciseSetInfo.target!;
+    List<ExerciseSet> exerciseSets = exercisesSetsInfo.exerciseSets;
+    int currentOneRepMax =
+        getOneRepMaxValue(exerciseSet.weight!, exerciseSet.reps!);
+    for (ExerciseSet set in exerciseSets) {
+      if (set.id != exerciseSet.id) {
+        int oneRepMax = getOneRepMaxValue(set.weight!, set.reps!);
+        if (oneRepMax > currentOneRepMax) {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
 
-  void updateRecentWeightAndReps(ExerciseSet exerciseSet, int recentWeight, int recentReps) {
+  ExerciseSet getBestSet(WorkoutSession workoutSession) {
+    List<ExerciseSet> allSets = [];
+    for (var exerciseSetInfo in workoutSession.exercisesSetsInfo) {
+      allSets.addAll(exerciseSetInfo.exerciseSets);
+    }
+    allSets.sort((a, b) => getOneRepMaxValue(b.weight!, b.reps!)
+        .compareTo(getOneRepMaxValue(a.weight!, a.reps!)));
+    return allSets.first;
+  }
+
+  void updateRecentWeightAndReps(
+      ExerciseSet exerciseSet, int recentWeight, int recentReps) {
     exerciseSet.recentWeight = recentWeight;
     exerciseSet.recentReps = recentReps;
     exerciseSetBox.put(exerciseSet);
@@ -201,8 +238,6 @@ class ExerciseService {
     }
     print('No match found for exerciseId: $exerciseId and setIndex: $setIndex');
   }
-
-
 
   int? getRecentReps(int exerciseId, int setIndex) {
     print('fetching');

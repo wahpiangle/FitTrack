@@ -11,6 +11,7 @@ class ExerciseSet {
   bool isCompleted = false;
   int? recentWeight;
   int? recentReps;
+  bool isPersonalRecord;
 
   final exerciseSetInfo = ToOne<ExercisesSetsInfo>();
 
@@ -20,5 +21,6 @@ class ExerciseSet {
     this.reps,
     this.recentReps,
     this.recentWeight,
+    this.isPersonalRecord = false,
   });
 }

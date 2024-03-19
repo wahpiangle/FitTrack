@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:group_project/constants/themes/app_colours.dart';
 import 'package:group_project/models/firebase/CurrentUserPost.dart';
@@ -13,8 +14,17 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  late Stream<QuerySnapshot<Map<String, dynamic>>> currentUserPostStream;
+
+  @override
+  void initState() {
+    currentUserPostStream = FirebasePostsService.getCurrentUserPostStream();
+    super.initState();
+  }
+
   @override
   void dispose() {
+    currentUserPostStream.drain();
     super.dispose();
   }
 
@@ -23,7 +33,7 @@ class _HomeState extends State<Home> {
     return Scaffold(
       backgroundColor: AppColours.primary,
       body: StreamBuilder(
-        stream: FirebasePostsService.getCurrentUserPostStream(),
+        stream: currentUserPostStream,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(

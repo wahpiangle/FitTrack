@@ -1,3 +1,4 @@
+import 'package:group_project/main.dart';
 import 'package:group_project/models/exercise.dart';
 import 'package:group_project/models/exercise_set.dart';
 import 'package:group_project/models/exercises_sets_info.dart';
@@ -175,7 +176,20 @@ class WorkoutSessionService {
       }
       workoutSession.exercisesSetsInfo.add(newExercisesSetsInfo);
     }
+
     workoutSessionBox.put(workoutSession);
+
+    // set personal records for sets
+    workoutSession.exercisesSetsInfo.forEach((exerciseSetInfo) {
+      exerciseSetInfo.exerciseSets.forEach((exerciseSet) {
+        if (objectBox.exerciseService.isPersonalRecord(exerciseSet)) {
+          exerciseSet.isPersonalRecord = true;
+          objectBox.exerciseService
+              .setOtherSetsAsNotPersonalRecord(exerciseSet);
+          exerciseSetBox.put(exerciseSet);
+        }
+      });
+    });
     deleteEditingWorkoutSession();
   }
 
@@ -202,6 +216,7 @@ class WorkoutSessionService {
           note: workoutSession['note'],
           title: workoutSession['title'],
           duration: workoutSession['duration'],
+          postId: workoutSession['post'],
           isCurrentEditing: false,
         );
 
@@ -214,6 +229,8 @@ class WorkoutSessionService {
             final newExerciseSet = ExerciseSet();
             newExerciseSet.reps = exerciseSet['reps'];
             newExerciseSet.weight = exerciseSet['weight'];
+            newExerciseSet.isPersonalRecord =
+                exerciseSet['isPersonalRecord'] ?? false;
             newExerciseSet.exerciseSetInfo.target = newExercisesSetsInfo;
             newExercisesSetsInfo.exerciseSets.add(newExerciseSet);
           }
