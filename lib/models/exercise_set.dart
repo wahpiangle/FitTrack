@@ -1,4 +1,3 @@
-import 'package:group_project/models/exercise.dart';
 import 'package:group_project/models/exercises_sets_info.dart';
 import 'package:objectbox/objectbox.dart';
 
