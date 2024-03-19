@@ -4,6 +4,7 @@ import 'package:group_project/models/category.dart';
 import 'package:group_project/models/exercise.dart';
 import 'package:group_project/models/exercise_set.dart';
 import 'package:group_project/models/exercises_sets_info.dart';
+import 'package:group_project/models/workout_session.dart';
 import 'package:group_project/objectbox.g.dart';
 import 'package:group_project/services/firebase/firebase_customexercise_service.dart';
 import 'package:objectbox/objectbox.dart';
@@ -124,6 +125,10 @@ class ExerciseService {
     return existingExerciseNames;
   }
 
+  Exercise? getExerciseById(int id) {
+    return exerciseBox.get(id);
+  }
+
   void addSetToExercise(ExercisesSetsInfo exercisesSetsInfo) {
     ExerciseSet exerciseSet = ExerciseSet();
     exerciseSet.exerciseSetInfo.target = exercisesSetsInfo;
@@ -192,5 +197,15 @@ class ExerciseService {
       }
     }
     return true;
+  }
+
+  ExerciseSet getBestSet(WorkoutSession workoutSession) {
+    List<ExerciseSet> allSets = [];
+    for (var exerciseSetInfo in workoutSession.exercisesSetsInfo) {
+      allSets.addAll(exerciseSetInfo.exerciseSets);
+    }
+    allSets.sort((a, b) => getOneRepMaxValue(b.weight!, b.reps!)
+        .compareTo(getOneRepMaxValue(a.weight!, a.reps!)));
+    return allSets.first;
   }
 }

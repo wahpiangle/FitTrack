@@ -21,6 +21,8 @@ class OwnPostWorkoutInfo extends StatelessWidget {
         .getWorkoutSession(post.workoutSessionId);
     final UserProfileProvider userProfileProvider =
         context.watch<UserProfileProvider>();
+    final bestSet = objectBox.exerciseService.getBestSet(workoutSession!);
+
     return Column(
       children: [
         ListTile(
@@ -71,7 +73,7 @@ class OwnPostWorkoutInfo extends StatelessWidget {
         ),
         const SizedBox(height: 10),
         Text(
-          workoutSession?.title ?? '',
+          workoutSession.title,
           style: const TextStyle(
             color: Colors.white,
             fontSize: 20,
@@ -101,7 +103,7 @@ class OwnPostWorkoutInfo extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      formatDuration(workoutSession!.duration),
+                      formatDuration(workoutSession.duration),
                       style: const TextStyle(
                         color: AppColours.secondary,
                         fontSize: 12,
@@ -111,17 +113,17 @@ class OwnPostWorkoutInfo extends StatelessWidget {
                 )
               ],
             ),
-            const Row(
+            Row(
               children: [
-                Icon(
+                const Icon(
                   Icons.emoji_events_sharp,
                   color: Colors.white,
                 ),
-                SizedBox(width: 10),
+                const SizedBox(width: 10),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
+                    const Text(
                       'Best',
                       style: TextStyle(
                         color: Colors.white,
@@ -130,17 +132,15 @@ class OwnPostWorkoutInfo extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      // TODO: Display best exercise name
-                      'Best Exercise Name',
-                      style: TextStyle(
+                      bestSet.exerciseSetInfo.target!.exercise.target!.name,
+                      style: const TextStyle(
                         color: AppColours.secondary,
                         fontSize: 12,
                       ),
                     ),
                     Text(
-                      // TODO: Display best exercise value
-                      'Best Exercise Weight & Reps',
-                      style: TextStyle(
+                      '${bestSet.weight} kg x ${bestSet.reps}',
+                      style: const TextStyle(
                         color: AppColours.secondary,
                         fontSize: 12,
                       ),

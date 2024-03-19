@@ -12,7 +12,7 @@ import 'package:group_project/pages/home/components/display_post_screen/comment/
 import 'package:group_project/pages/home/components/display_post_screen/comment/comment_tile.dart';
 import 'package:group_project/pages/home/components/display_post_screen/comment/delete_comment_dialog.dart';
 import 'package:group_project/pages/home/components/display_post_screen/display_post_reaction_image.dart';
-import 'package:group_project/pages/home/components/display_post_screen/display_post_workout_info_screen.dart';
+import 'package:group_project/pages/home/components/display_post_screen/workout_info/display_post_workout_info_screen.dart';
 import 'package:group_project/pages/home/components/display_post_screen/edit_caption_page.dart';
 import 'package:group_project/services/firebase/auth_service.dart';
 import 'package:group_project/services/firebase/firebase_comment_service.dart';

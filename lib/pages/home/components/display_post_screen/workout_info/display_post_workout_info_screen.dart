@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:group_project/constants/themes/app_colours.dart';
 import 'package:group_project/models/firebase/firebase_user.dart';
 import 'package:group_project/models/post.dart';
-import 'package:group_project/pages/home/components/display_post_screen/friend_post_workout_info.dart';
-import 'package:group_project/pages/home/components/display_post_screen/own_post_workout_info.dart';
+import 'package:group_project/pages/home/components/display_post_screen/workout_info/friend_post_workout_info.dart';
+import 'package:group_project/pages/home/components/display_post_screen/workout_info/own_post_workout_info.dart';
 import 'package:group_project/services/firebase/auth_service.dart';
 
 class DisplayPostWorkoutInfoScreen extends StatelessWidget {

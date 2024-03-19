@@ -1,3 +1,4 @@
+import 'package:group_project/main.dart';
 import 'package:group_project/models/exercise_set.dart';
 
 class FirebaseWorkoutSession {
@@ -31,6 +32,7 @@ class FirebaseWorkoutSession {
                   return ExerciseSet(
                     reps: exerciseSet['reps'],
                     weight: exerciseSet['weight'],
+                    isPersonalRecord: exerciseSet['isPersonalRecord'],
                   );
                 },
               ).toList(),
@@ -52,4 +54,13 @@ class FirebaseExercisesSetsInfo {
     required this.exerciseName,
     required this.exerciseSets,
   });
+
+  ExerciseSet getBestSet() {
+    return exerciseSets.reduce((a, b) => objectBox.exerciseService
+                .getOneRepMaxValue(a.weight ?? 0, a.reps ?? 0) >
+            objectBox.exerciseService
+                .getOneRepMaxValue(b.weight ?? 0, b.reps ?? 0)
+        ? a
+        : b);
+  }
 }

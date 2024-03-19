@@ -8,7 +8,7 @@ class ExerciseSet {
   int? weight;
   int? reps;
   bool isCompleted = false;
-  bool isPersonalRecord = false;
+  bool isPersonalRecord;
 
   final exerciseSetInfo = ToOne<ExercisesSetsInfo>();
 
@@ -16,5 +16,6 @@ class ExerciseSet {
     this.id = 0,
     this.weight,
     this.reps,
+    this.isPersonalRecord = false,
   });
 }
