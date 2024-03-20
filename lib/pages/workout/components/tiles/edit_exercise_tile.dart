@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:group_project/main.dart';
 import 'package:group_project/models/exercise.dart';
 import 'package:group_project/models/exercises_sets_info.dart';
 import 'package:group_project/pages/workout/components/tiles/add_exercise_button.dart';
@@ -24,6 +25,17 @@ class EditExerciseTile extends StatefulWidget {
 }
 
 class _EditExerciseTileState extends State<EditExerciseTile> {
+  @override
+  void initState() {
+    super.initState();
+    isEditing = true;
+  }
+
+  @override
+  void dispose() {
+    isEditing = false;
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     if (widget.exercisesSetsInfoList.isEmpty) {

@@ -34,7 +34,6 @@ class _SetTileState extends State<SetTile> with TickerProviderStateMixin {
   late TextEditingController weightController;
   late TextEditingController repsController;
   bool isTapped = false;
-  bool isEditing = false;
 
   late final AnimationController _controller = AnimationController(
     vsync: this,

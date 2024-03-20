@@ -23,6 +23,7 @@ import 'package:group_project/pages/workout/components/timer/providers/timer_pro
 late ObjectBox objectBox;
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 late PhoneNotification notificationManager;
+bool isEditing = false;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
