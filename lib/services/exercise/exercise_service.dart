@@ -180,7 +180,6 @@ class ExerciseService {
   }
 
   int? getRecentWeight(int exerciseId, int setIndex) {
-    print('fetching');
     final allWorkoutSessions = workoutSessionBox.getAll();
     allWorkoutSessions.sort((a, b) => b.date.compareTo(a.date));
     final mostRecentWorkoutSession = allWorkoutSessions.first;
@@ -192,20 +191,18 @@ class ExerciseService {
         for (final exerciseSet in exerciseSetInfo.exerciseSets) {
           if (counter == setIndex) {
             final recentWeight = exerciseSet.recentWeight;
-            print("in exercise service recent weight is $recentWeight");
             return recentWeight;
           }
           counter++;
         }
       }
     }
-    print('No match found for exerciseId: $exerciseId and setIndex: $setIndex');
+    return null;
   }
 
 
 
   int? getRecentReps(int exerciseId, int setIndex) {
-    print('fetching');
     final allWorkoutSessions = workoutSessionBox.getAll();
     allWorkoutSessions.sort((a, b) => b.date.compareTo(a.date));
     final mostRecentWorkoutSession = allWorkoutSessions.first;
@@ -218,13 +215,12 @@ class ExerciseService {
         for (final exerciseSet in exerciseSetInfo.exerciseSets) {
           if (counter == setIndex) {
             final recentReps = exerciseSet.recentReps;
-            print("in exercise service recent reps is $recentReps");
             return recentReps;
           }
           counter++;
         }
       }
     }
-    print('No match found for exerciseId: $exerciseId and setIndex: $setIndex');
+    return null;
   }
 }
