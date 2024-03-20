@@ -222,9 +222,11 @@ class WorkoutSessionService {
 
         for (var exercisesSetsInfo in workoutSession['exercisesSetsInfo']) {
           final newExercisesSetsInfo = ExercisesSetsInfo();
-          newExercisesSetsInfo.exercise.target = exerciseBox.get(
+          final Exercise? exercise = exerciseBox.get(
             (exercisesSetsInfo['exercise']),
           );
+          exercise?.exercisesSetsInfo.add(newExercisesSetsInfo);
+          newExercisesSetsInfo.exercise.target = exercise;
           for (var exerciseSet in exercisesSetsInfo['exerciseSets']) {
             final newExerciseSet = ExerciseSet();
             newExerciseSet.reps = exerciseSet['reps'];
@@ -234,6 +236,7 @@ class WorkoutSessionService {
             newExerciseSet.exerciseSetInfo.target = newExercisesSetsInfo;
             newExercisesSetsInfo.exerciseSets.add(newExerciseSet);
           }
+          exerciseBox.put(exercise!);
           newWorkoutSession.exercisesSetsInfo.add(newExercisesSetsInfo);
         }
 
