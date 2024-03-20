@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:group_project/pages/auth/email_verification_screen.dart';
 import 'package:group_project/pages/auth/login_screen.dart';
 import 'package:group_project/pages/layout/app_layout.dart';
-import 'package:group_project/pages/workout/workout_screen.dart';
 import 'package:provider/provider.dart';
 
 class Wrapper extends StatelessWidget {

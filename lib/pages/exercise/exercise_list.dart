@@ -8,6 +8,7 @@ import 'package:group_project/pages/exercise/components/filter_label.dart';
 import 'package:group_project/pages/exercise/components/exercise_list_item.dart';
 import 'package:group_project/pages/workout/State/timer_sheet_manager.dart';
 import 'package:group_project/pages/workout/components/timer/providers/timer_provider.dart';
+import 'package:group_project/services/firebase/firebase_customexercise_service.dart';
 import 'package:provider/provider.dart';
 
 class ExerciseListScreen extends StatefulWidget {
@@ -23,7 +24,7 @@ class ExerciseListScreenState extends State<ExerciseListScreen> {
   String selectedBodyPart = '';
   Map<String, List<Exercise>> exerciseGroups = {};
   Stream<List<Exercise>> streamExercises =
-  objectBox.exerciseService.watchAllExercise();
+      objectBox.exerciseService.watchAllExercise();
   final categories = objectBox.exerciseService.getCategories();
 
   @override
@@ -77,6 +78,7 @@ class ExerciseListScreenState extends State<ExerciseListScreen> {
       setState(() {
         exercise.isVisible = !exercise.isVisible;
         objectBox.exerciseService.updateExerciselist(exercise);
+        FirebaseExercisesService.setExerciseToNotVisible(exercise.id);
       });
     } else {
       // Handle non-custom exercise case, maybe show a message or take some other action
@@ -85,7 +87,7 @@ class ExerciseListScreenState extends State<ExerciseListScreen> {
 
   void _handleTimerActive(BuildContext context) {
     TimerProvider? timerProvider =
-    Provider.of<TimerProvider>(context, listen: false);
+        Provider.of<TimerProvider>(context, listen: false);
 
     void handleTimerStateChanged() {
       if (timerProvider.isTimerRunning &&
@@ -206,17 +208,12 @@ class ExerciseListScreenState extends State<ExerciseListScreen> {
                       itemCount: groupedExercise.length,
                       itemBuilder: (context, index) {
                         final exercises =
-                        groupedExercise.values.elementAt(index);
+                            groupedExercise.values.elementAt(index);
                         final key = groupedExercise.keys.elementAt(index);
 
                         final visibleExercises = exercises
                             .where((exercise) => exercise.isVisible)
                             .toList();
-
-                        if (visibleExercises.isEmpty) {
-                          return Container(); // Return an empty container if there are no visible exercises
-                        }
-
                         return Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -224,12 +221,12 @@ class ExerciseListScreenState extends State<ExerciseListScreen> {
                               margin: const EdgeInsets.symmetric(vertical: 3),
                               child: searchText == ''
                                   ? Text(
-                                key,
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              )
+                                      key,
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    )
                                   : Container(),
                             ),
                             for (final exercise in visibleExercises)
@@ -250,28 +247,32 @@ class ExerciseListScreenState extends State<ExerciseListScreen> {
                                 ),
                                 confirmDismiss: (direction) async {
                                   if (!exercise.isCustom) {
-                                    // Handle non-custom exercise case, show a message
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(
-                                        content: Text("${exercise.name} can't be hidden"),
+                                        content: Text(
+                                            "${exercise.name} can't be hidden"),
                                         duration: const Duration(seconds: 2),
                                       ),
                                     );
-                                    return false; // Return false to prevent dismissing non-custom exercises
+                                    return false;
                                   }
                                   if (exercise.isCustom) {
                                     return await showDialog(
                                       context: context,
                                       builder: (BuildContext context) {
                                         return AlertDialog(
-                                          surfaceTintColor: const Color(0xFF1A1A1A),
-                                          backgroundColor: const Color(0xFF1A1A1A),
+                                          surfaceTintColor:
+                                              const Color(0xFF1A1A1A),
+                                          backgroundColor:
+                                              const Color(0xFF1A1A1A),
                                           title: Text(
                                             "Hide ${exercise.name}",
-                                            style: const TextStyle(color: Colors.white),
+                                            style: const TextStyle(
+                                                color: Colors.white),
                                           ),
                                           content: const Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
                                             mainAxisSize: MainAxisSize.min,
                                             children: [
                                               Text(
@@ -293,23 +294,30 @@ class ExerciseListScreenState extends State<ExerciseListScreen> {
                                               SizedBox(height: 15),
                                             ],
                                           ),
-                                          contentPadding: const EdgeInsets.fromLTRB(24.0, 20.0, 24.0, 0),
+                                          contentPadding:
+                                              const EdgeInsets.fromLTRB(
+                                                  24.0, 20.0, 24.0, 0),
                                           actions: [
                                             Container(
                                               width: double.infinity,
-                                              padding: const EdgeInsets.symmetric(vertical: 1.0),
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      vertical: 1.0),
                                               decoration: BoxDecoration(
                                                 color: Colors.red,
-                                                borderRadius: BorderRadius.circular(10.0),
+                                                borderRadius:
+                                                    BorderRadius.circular(10.0),
                                               ),
                                               child: Center(
                                                 child: TextButton(
                                                   onPressed: () {
-                                                    Navigator.pop(context, true);
+                                                    Navigator.pop(
+                                                        context, true);
                                                   },
                                                   child: const Text(
                                                     "Hide",
-                                                    style: TextStyle(color: Colors.white),
+                                                    style: TextStyle(
+                                                        color: Colors.white),
                                                   ),
                                                 ),
                                               ),
@@ -320,15 +328,20 @@ class ExerciseListScreenState extends State<ExerciseListScreen> {
                                                 Expanded(
                                                   child: Container(
                                                     decoration: BoxDecoration(
-                                                      borderRadius: BorderRadius.circular(10.0),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10.0),
                                                     ),
                                                     child: TextButton(
                                                       onPressed: () {
-                                                        Navigator.pop(context, false);
+                                                        Navigator.pop(
+                                                            context, false);
                                                       },
                                                       child: const Text(
                                                         "Cancel",
-                                                        style: TextStyle(color: Colors.white),
+                                                        style: TextStyle(
+                                                            color:
+                                                                Colors.white),
                                                       ),
                                                     ),
                                                   ),
@@ -340,13 +353,12 @@ class ExerciseListScreenState extends State<ExerciseListScreen> {
                                       },
                                     );
                                   } else {
-                                    // Return false to prevent dismissing non-custom exercises
                                     return false;
                                   }
                                 },
-
                                 onDismissed: (direction) {
-                                  if (direction == DismissDirection.endToStart) {
+                                  if (direction ==
+                                      DismissDirection.endToStart) {
                                     toggleExerciseVisibility(exercise);
                                   }
                                 },
@@ -355,7 +367,7 @@ class ExerciseListScreenState extends State<ExerciseListScreen> {
                                   searchText: searchText,
                                   onToggleVisibility: () =>
                                       toggleExerciseVisibility(exercise),
-                                  isCustom : exercise.isCustom,
+                                  isCustom: exercise.isCustom,
                                 ),
                               ),
                           ],

@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:group_project/constants/themes/app_colours.dart';
@@ -52,11 +50,7 @@ class _SetTileState extends State<SetTile> with TickerProviderStateMixin {
     repsController = TextEditingController();
     // weightController = TextEditingController(text: widget.set.weight?.toString() ?? '');
     // repsController = TextEditingController(text: widget.set.reps?.toString() ?? '');
-    }
-
-
-
-
+  }
 
   @override
   void dispose() {
@@ -65,7 +59,6 @@ class _SetTileState extends State<SetTile> with TickerProviderStateMixin {
     super.dispose();
   }
 
-
   Future<void> fetchRecentWeightAndReps() async {
     final exercisesSetsInfo = widget.set.exerciseSetInfo.target;
     if (exercisesSetsInfo != null) {
@@ -73,9 +66,11 @@ class _SetTileState extends State<SetTile> with TickerProviderStateMixin {
       final exercise = exercisesSetsInfo.exercise.target;
       if (exercise != null) {
         print('hi 2');
-        final recentWeight = await objectBox.exerciseService.getRecentWeight(exercise.id, widget.setIndex);
+        final recentWeight = await objectBox.exerciseService
+            .getRecentWeight(exercise.id, widget.setIndex);
         print('$recentWeight in fetchRecentWeightAndReps');
-        final recentReps = await objectBox.exerciseService.getRecentReps(exercise.id, widget.setIndex);
+        final recentReps = await objectBox.exerciseService
+            .getRecentReps(exercise.id, widget.setIndex);
         setState(() {
           this.recentWeight = recentWeight;
           this.recentReps = recentReps;
@@ -88,9 +83,6 @@ class _SetTileState extends State<SetTile> with TickerProviderStateMixin {
     }
   }
 
-
-
-
   void onTapPreviousTab(ExercisesSetsInfo exercisesSetsInfo) {
     weightController.text = recentWeight?.toString() ?? '';
     repsController.text = recentReps?.toString() ?? '';
@@ -102,7 +94,6 @@ class _SetTileState extends State<SetTile> with TickerProviderStateMixin {
 
     // Update the weight and reps for exercise set
     objectBox.exerciseService.updateExerciseSet(widget.set);
-
   }
 
   @override
@@ -116,7 +107,6 @@ class _SetTileState extends State<SetTile> with TickerProviderStateMixin {
           isTapped = false;
           widget.exercisesSetsInfo.exerciseSets
               .removeWhere((element) => element.id == widget.set.id);
-
         });
       },
       background: Container(
@@ -181,8 +171,10 @@ class _SetTileState extends State<SetTile> with TickerProviderStateMixin {
                   child: Container(
                     padding: const EdgeInsets.symmetric(horizontal: 8.0),
                     child: Text(
-                      recentWeight != null ? '${this.recentWeight}kg x ${this.recentReps}' : '-',
-                      style:  TextStyle(
+                      recentWeight != null
+                          ? '${this.recentWeight}kg x ${this.recentReps}'
+                          : '-',
+                      style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.bold,
                         color: isTapped ? Colors.grey : Colors.white,
@@ -207,7 +199,7 @@ class _SetTileState extends State<SetTile> with TickerProviderStateMixin {
                     color: Colors.white,
                   ),
                   textAlign: TextAlign.center,
-                  initialValue: isTapped ?  null: "${widget.set.weight ?? ''}",
+                  initialValue: isTapped ? null : "${widget.set.weight ?? ''}",
                   controller: isTapped ? weightController : null,
                   keyboardType: TextInputType.number,
                   decoration: const InputDecoration(
@@ -225,6 +217,9 @@ class _SetTileState extends State<SetTile> with TickerProviderStateMixin {
                   onChanged: (value) {
                     setState(() {
                       widget.set.weight = int.tryParse(value);
+                      if (widget.set.weight == null) {
+                        widget.set.isCompleted = false;
+                      }
                       objectBox.exerciseService.updateExerciseSet(widget.set);
                     });
                   },
@@ -246,7 +241,7 @@ class _SetTileState extends State<SetTile> with TickerProviderStateMixin {
                   ),
                   textAlign: TextAlign.center,
                   keyboardType: TextInputType.number,
-                  initialValue: isTapped ?  null: "${widget.set.reps ?? ''}",
+                  initialValue: isTapped ? null : "${widget.set.reps ?? ''}",
                   controller: isTapped ? repsController : null,
                   decoration: const InputDecoration(
                     contentPadding: EdgeInsets.all(0),
@@ -263,6 +258,9 @@ class _SetTileState extends State<SetTile> with TickerProviderStateMixin {
                   onChanged: (value) {
                     setState(() {
                       widget.set.reps = int.tryParse(value);
+                      if (widget.set.reps == null) {
+                        widget.set.isCompleted = false;
+                      }
                       objectBox.exerciseService.updateExerciseSet(widget.set);
                     });
                   },
@@ -283,17 +281,17 @@ class _SetTileState extends State<SetTile> with TickerProviderStateMixin {
                           ? Colors.green[300]
                           : AppColours.primaryBright,
                       child: InkWell(
-                        onTap: () async {
+                          onTap: () async {
+                            // Get the associated ExercisesSetsInfo
+                            final exercisesSetsInfo =
+                                widget.set.exerciseSetInfo.target;
 
-                          // Get the associated ExercisesSetsInfo
-                          final exercisesSetsInfo =
-                              widget.set.exerciseSetInfo.target;
-
-                          // Update the recent weight and reps for the associated Exercise
-                          if (exercisesSetsInfo != null) {
-                            final exercise = exercisesSetsInfo.exercise.target;
-                            if (exercise != null) {
-                              // Call method to update recent weight and reps for the Exercise
+                            // Update the recent weight and reps for the associated Exercise
+                            if (exercisesSetsInfo != null) {
+                              final exercise =
+                                  exercisesSetsInfo.exercise.target;
+                              if (exercise != null) {
+                                // Call method to update recent weight and reps for the Exercise
                                 objectBox.exerciseService
                                     .updateRecentWeightAndReps(
                                   widget.set,
@@ -310,15 +308,13 @@ class _SetTileState extends State<SetTile> with TickerProviderStateMixin {
                             }
                             widget.setIsCompleted!(widget.set.id);
                           },
-                          child:
-                          const Padding(
+                          child: const Padding(
                             padding: EdgeInsets.all(8.0),
                             child: Icon(
                               Icons.check,
                               color: Colors.white,
                             ),
-                          )
-                        ),
+                          )),
                     )
                   : GestureDetector(
                       onTap: () {

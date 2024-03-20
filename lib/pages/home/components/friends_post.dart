@@ -19,7 +19,9 @@ class _FriendsPostCarouselState extends State<FriendsPostCarousel> {
   @override
   void initState() {
     super.initState();
-    fetchFriendsPosts();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      fetchFriendsPosts();
+    });
   }
 
   void fetchFriendsPosts() async {
@@ -213,6 +215,7 @@ class _FriendsPostCarouselState extends State<FriendsPostCarousel> {
                                           DisplayPostImageScreen(
                                         post: friendPostData.post,
                                         reactions: postReactions,
+                                        posterInfo: friendPostData.friend,
                                       ),
                                     ),
                                   );

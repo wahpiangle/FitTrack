@@ -1,4 +1,3 @@
-import 'package:group_project/models/exercise.dart';
 import 'package:group_project/models/exercises_sets_info.dart';
 import 'package:objectbox/objectbox.dart';
 
@@ -11,6 +10,7 @@ class ExerciseSet {
   bool isCompleted = false;
   int? recentWeight;
   int? recentReps;
+  bool isPersonalRecord;
 
   final exerciseSetInfo = ToOne<ExercisesSetsInfo>();
 
@@ -20,5 +20,6 @@ class ExerciseSet {
     this.reps,
     this.recentReps,
     this.recentWeight,
+    this.isPersonalRecord = false,
   });
 }
