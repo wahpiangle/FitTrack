@@ -34,6 +34,7 @@ class _SetTileState extends State<SetTile> with TickerProviderStateMixin {
   late TextEditingController weightController;
   late TextEditingController repsController;
   bool isTapped = false;
+  bool isEditing = false;
 
   late final AnimationController _controller = AnimationController(
     vsync: this,
@@ -48,8 +49,7 @@ class _SetTileState extends State<SetTile> with TickerProviderStateMixin {
     fetchRecentWeightAndReps();
     weightController = TextEditingController();
     repsController = TextEditingController();
-    // weightController = TextEditingController(text: widget.set.weight?.toString() ?? '');
-    // repsController = TextEditingController(text: widget.set.reps?.toString() ?? '');
+
   }
 
   @override
@@ -62,14 +62,10 @@ class _SetTileState extends State<SetTile> with TickerProviderStateMixin {
   Future<void> fetchRecentWeightAndReps() async {
     final exercisesSetsInfo = widget.set.exerciseSetInfo.target;
     if (exercisesSetsInfo != null) {
-      print('hi');
       final exercise = exercisesSetsInfo.exercise.target;
       if (exercise != null) {
-        print('hi 2');
         final recentWeight = await objectBox.exerciseService
-            .getRecentWeight(exercise.id, widget.setIndex);
-        print('$recentWeight in fetchRecentWeightAndReps');
-        final recentReps = await objectBox.exerciseService
+            .getRecentWeight(exercise.id, widget.setIndex);final recentReps = await objectBox.exerciseService
             .getRecentReps(exercise.id, widget.setIndex);
         setState(() {
           this.recentWeight = recentWeight;
@@ -86,13 +82,10 @@ class _SetTileState extends State<SetTile> with TickerProviderStateMixin {
   void onTapPreviousTab(ExercisesSetsInfo exercisesSetsInfo) {
     weightController.text = recentWeight?.toString() ?? '';
     repsController.text = recentReps?.toString() ?? '';
-
     setState(() {
       widget.set.weight = recentWeight;
       widget.set.reps = recentReps;
     });
-
-    // Update the weight and reps for exercise set
     objectBox.exerciseService.updateExerciseSet(widget.set);
   }
 
@@ -144,17 +137,18 @@ class _SetTileState extends State<SetTile> with TickerProviderStateMixin {
               flex: 1,
               child: GestureDetector(
                 onTap: () {
-                  onTapPreviousTab(widget.exercisesSetsInfo);
-                  _controller.forward(from: 0.0);
-                  setState(() {
-                    isTapped = true;
-                  });
-                  Future.delayed(const Duration(milliseconds: 100), () {
+                  if(!isEditing) {
+                    onTapPreviousTab(widget.exercisesSetsInfo);
+                    _controller.forward(from: 0.0);
                     setState(() {
-                      isTapped = false;
+                      isTapped = true;
                     });
-                  });
-                },
+                    Future.delayed(const Duration(milliseconds: 100), () {
+                      setState(() {
+                        isTapped = false;
+                      });
+                    });
+                  }},
                 child: AnimatedBuilder(
                   animation: _controller,
                   builder: (context, child) {
