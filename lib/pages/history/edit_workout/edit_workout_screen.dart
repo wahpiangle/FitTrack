@@ -214,6 +214,7 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
                 removeSet: removeSet,
                 addSet: addSet,
                 exercisesSetsInfoList: editingWorkoutSession!.exercisesSetsInfo,
+                isEditing: false,
               )
             ],
           ),

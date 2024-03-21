@@ -147,6 +147,7 @@ class _ExerciseTileState extends State<ExerciseTile> {
                       removeSet: widget.removeSet,
                       addSet: addSet,
                       setIsCompleted: setIsCompleted,
+                      isEditing: false,
                     )
                   ],
                 ),
@@ -187,6 +188,8 @@ class _ExerciseTileState extends State<ExerciseTile> {
                     removeSet: widget.removeSet,
                     addSet: addSet,
                     setIsCompleted: setIsCompleted,
+                    isEditing: false,
+
                   ),
                 ],
               ),

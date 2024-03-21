@@ -399,6 +399,7 @@ class _CreateTemplatePageState extends State<CreateTemplatePage> {
                 removeSet: removeSet,
                 addSet: addSet,
                 exercisesSetsInfoList: editingWorkoutTemplate.exercisesSetsInfo,
+                isEditing: false,
               )
             ],
           ),

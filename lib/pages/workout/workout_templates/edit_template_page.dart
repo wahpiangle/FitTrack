@@ -407,6 +407,7 @@ class _EditTemplatePageState extends State<EditTemplatePage> {
                 removeSet: removeSet,
                 addSet: addSet,
                 exercisesSetsInfoList: editingWorkoutTemplate.exercisesSetsInfo,
+                isEditing: false,
               )
             ],
           ),

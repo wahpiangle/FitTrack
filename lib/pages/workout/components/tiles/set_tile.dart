@@ -13,6 +13,7 @@ class SetTile extends StatefulWidget {
   final void Function(int exerciseSetId) removeSet;
   final void Function(ExercisesSetsInfo exercisesSetsInfo) addSet;
   final void Function(int exerciseSetId)? setIsCompleted;
+  final bool isEditing;
 
   const SetTile({
     super.key,
@@ -22,6 +23,7 @@ class SetTile extends StatefulWidget {
     required this.removeSet,
     required this.addSet,
     this.setIsCompleted,
+    required this.isEditing,
   });
 
   @override
@@ -136,7 +138,7 @@ class _SetTileState extends State<SetTile> with TickerProviderStateMixin {
               flex: 1,
               child: GestureDetector(
                 onTap: () {
-                  if(!isEditing) {
+                  if(!widget.isEditing) {
                     onTapPreviousTab(widget.exercisesSetsInfo);
                     _controller.forward(from: 0.0);
                     setState(() {

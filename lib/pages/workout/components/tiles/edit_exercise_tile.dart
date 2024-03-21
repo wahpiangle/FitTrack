@@ -11,6 +11,7 @@ class EditExerciseTile extends StatefulWidget {
   final void Function(int exerciseSetId) removeSet;
   final void Function(ExercisesSetsInfo exercisesSetsInfo) addSet;
   final List<ExercisesSetsInfo> exercisesSetsInfoList;
+  final bool isEditing;
   const EditExerciseTile({
     super.key,
     required this.exerciseData,
@@ -18,6 +19,7 @@ class EditExerciseTile extends StatefulWidget {
     required this.addSet,
     required this.removeSet,
     required this.exercisesSetsInfoList,
+    required this.isEditing,
   });
 
   @override
@@ -25,6 +27,8 @@ class EditExerciseTile extends StatefulWidget {
 }
 
 class _EditExerciseTileState extends State<EditExerciseTile> {
+  late bool isEditing;
+
   @override
   void initState() {
     super.initState();
@@ -73,6 +77,7 @@ class _EditExerciseTileState extends State<EditExerciseTile> {
                         exercisesSetsInfo: exercisesSetsInfo,
                         removeSet: widget.removeSet,
                         addSet: widget.addSet,
+                        isEditing: isEditing,
                       ),
                     ],
                   ),
