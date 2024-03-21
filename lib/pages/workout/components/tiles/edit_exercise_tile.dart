@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:group_project/main.dart';
 import 'package:group_project/models/exercise.dart';
 import 'package:group_project/models/exercises_sets_info.dart';
+import 'package:group_project/models/workout_session.dart';
 import 'package:group_project/pages/workout/components/tiles/add_exercise_button.dart';
 import 'package:group_project/pages/workout/components/tiles/set_tiles.dart';
 
@@ -11,7 +11,7 @@ class EditExerciseTile extends StatefulWidget {
   final void Function(int exerciseSetId) removeSet;
   final void Function(ExercisesSetsInfo exercisesSetsInfo) addSet;
   final List<ExercisesSetsInfo> exercisesSetsInfoList;
-  final bool isEditing;
+  final WorkoutSession workoutSession;
   const EditExerciseTile({
     super.key,
     required this.exerciseData,
@@ -19,7 +19,7 @@ class EditExerciseTile extends StatefulWidget {
     required this.addSet,
     required this.removeSet,
     required this.exercisesSetsInfoList,
-    required this.isEditing,
+   required this.workoutSession,
   });
 
   @override
@@ -27,18 +27,19 @@ class EditExerciseTile extends StatefulWidget {
 }
 
 class _EditExerciseTileState extends State<EditExerciseTile> {
-  late bool isEditing;
 
   @override
   void initState() {
     super.initState();
-    isEditing = true;
+    widget.workoutSession.isCurrentEditing = true;
+    // print("${widget.workoutSession.isCurrentEditing}");
+
   }
 
   @override
   void dispose() {
-    isEditing = false;
     super.dispose();
+    widget.workoutSession.isCurrentEditing = false;
   }
   @override
   Widget build(BuildContext context) {
@@ -77,7 +78,7 @@ class _EditExerciseTileState extends State<EditExerciseTile> {
                         exercisesSetsInfo: exercisesSetsInfo,
                         removeSet: widget.removeSet,
                         addSet: widget.addSet,
-                        isEditing: isEditing,
+                        isCurrentEditing:  widget.workoutSession.isCurrentEditing,
                       ),
                     ],
                   ),

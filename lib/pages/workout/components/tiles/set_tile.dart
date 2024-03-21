@@ -6,6 +6,8 @@ import 'package:group_project/models/exercise_set.dart';
 import 'package:group_project/models/exercises_sets_info.dart';
 import 'dart:math';
 
+import 'package:group_project/models/workout_session.dart';
+
 class SetTile extends StatefulWidget {
   final ExerciseSet set;
   final int setIndex;
@@ -13,7 +15,7 @@ class SetTile extends StatefulWidget {
   final void Function(int exerciseSetId) removeSet;
   final void Function(ExercisesSetsInfo exercisesSetsInfo) addSet;
   final void Function(int exerciseSetId)? setIsCompleted;
-  final bool isEditing;
+  final bool isCurrentEditing;
 
   const SetTile({
     super.key,
@@ -23,7 +25,7 @@ class SetTile extends StatefulWidget {
     required this.removeSet,
     required this.addSet,
     this.setIsCompleted,
-    required this.isEditing,
+    required this.isCurrentEditing,
   });
 
   @override
@@ -138,7 +140,7 @@ class _SetTileState extends State<SetTile> with TickerProviderStateMixin {
               flex: 1,
               child: GestureDetector(
                 onTap: () {
-                  if(!widget.isEditing) {
+                  if(!widget.isCurrentEditing) {
                     onTapPreviousTab(widget.exercisesSetsInfo);
                     _controller.forward(from: 0.0);
                     setState(() {
