@@ -279,30 +279,30 @@ class _SetTileState extends State<SetTile> with TickerProviderStateMixin {
                           : AppColours.primaryBright,
                       child: InkWell(
                           onTap: () async {
-                            // Get the associated ExercisesSetsInfo
-                            final exercisesSetsInfo =
-                                widget.set.exerciseSetInfo.target;
-
-                            // Update the recent weight and reps for the associated Exercise
-                            if (exercisesSetsInfo != null) {
-                              final exercise =
-                                  exercisesSetsInfo.exercise.target;
-                              if (exercise != null) {
-                                // Call method to update recent weight and reps for the Exercise
-                                objectBox.exerciseService
-                                    .updateRecentWeightAndReps(
-                                  widget.set,
-                                  widget.set.weight!,
-                                  widget.set.reps!,
-                                );
-
-                                // Update the state after updating recentWeight and recentReps
-                                // setState(() {
-                                //   recentWeight = widget.set.recentWeight;
-                                //   recentReps = widget.set.recentReps;
-                                // });
-                              }
-                            }
+                            // // Get the associated ExercisesSetsInfo
+                            // final exercisesSetsInfo =
+                            //     widget.set.exerciseSetInfo.target;
+                            //
+                            // // Update the recent weight and reps for the associated Exercise
+                            // if (exercisesSetsInfo != null) {
+                            //   final exercise =
+                            //       exercisesSetsInfo.exercise.target;
+                            //   if (exercise != null) {
+                            //     // Call method to update recent weight and reps for the Exercise
+                            //     objectBox.exerciseService
+                            //         .updateRecentWeightAndReps(
+                            //       widget.set,
+                            //       widget.set.weight!,
+                            //       widget.set.reps!,
+                            //     );
+                            //
+                            //     // Update the state after updating recentWeight and recentReps
+                            //     // setState(() {
+                            //     //   recentWeight = widget.set.recentWeight;
+                            //     //   recentReps = widget.set.recentReps;
+                            //     // });
+                            //   }
+                            // }
                             widget.setIsCompleted!(widget.set.id);
                           },
                           child: const Padding(

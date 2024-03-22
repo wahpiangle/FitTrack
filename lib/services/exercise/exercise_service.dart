@@ -212,12 +212,12 @@ class ExerciseService {
     return allSets.first;
   }
 
-  void updateRecentWeightAndReps(
-      ExerciseSet exerciseSet, int recentWeight, int recentReps) {
-    exerciseSet.recentWeight = recentWeight;
-    exerciseSet.recentReps = recentReps;
-    exerciseSetBox.put(exerciseSet);
-  }
+  // void updateRecentWeightAndReps(
+  //     ExerciseSet exerciseSet, int recentWeight, int recentReps) {
+  //   exerciseSet.recentWeight = recentWeight;
+  //   exerciseSet.recentReps = recentReps;
+  //   exerciseSetBox.put(exerciseSet);
+  // }
 
   int? getRecentWeight(int exerciseId, int setIndex) {
     final allWorkoutSessions = workoutSessionBox.getAll();
@@ -230,7 +230,7 @@ class ExerciseService {
         int counter = 0;
         for (final exerciseSet in exerciseSetInfo.exerciseSets) {
           if (counter == setIndex) {
-            final recentWeight = exerciseSet.recentWeight;
+            final recentWeight = exerciseSet.weight;
             return recentWeight;
           }
           counter++;
@@ -252,7 +252,7 @@ class ExerciseService {
         int counter = 0;
         for (final exerciseSet in exerciseSetInfo.exerciseSets) {
           if (counter == setIndex) {
-            final recentReps = exerciseSet.recentReps;
+            final recentReps = exerciseSet.reps;
             return recentReps;
           }
           counter++;

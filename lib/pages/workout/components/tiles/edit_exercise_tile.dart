@@ -32,7 +32,6 @@ class _EditExerciseTileState extends State<EditExerciseTile> {
   void initState() {
     super.initState();
     widget.workoutSession.isCurrentEditing = true;
-    // print("${widget.workoutSession.isCurrentEditing}");
 
   }
 

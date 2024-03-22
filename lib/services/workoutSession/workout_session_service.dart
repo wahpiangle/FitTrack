@@ -231,6 +231,8 @@ class WorkoutSessionService {
             final newExerciseSet = ExerciseSet();
             newExerciseSet.reps = exerciseSet['reps'];
             newExerciseSet.weight = exerciseSet['weight'];
+            newExerciseSet.recentReps = exerciseSet['recentReps'];
+            newExerciseSet.recentWeight = exerciseSet['recentWeight'];
             newExerciseSet.isPersonalRecord =
                 exerciseSet['isPersonalRecord'] ?? false;
             newExerciseSet.exerciseSetInfo.target = newExercisesSetsInfo;
