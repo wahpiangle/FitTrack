@@ -212,12 +212,6 @@ class ExerciseService {
     return allSets.first;
   }
 
-  // void updateRecentWeightAndReps(
-  //     ExerciseSet exerciseSet, int recentWeight, int recentReps) {
-  //   exerciseSet.recentWeight = recentWeight;
-  //   exerciseSet.recentReps = recentReps;
-  //   exerciseSetBox.put(exerciseSet);
-  // }
 
   int? getRecentWeight(int exerciseId, int setIndex) {
     final allWorkoutSessions = workoutSessionBox.getAll();

@@ -62,13 +62,13 @@ class _SetTileState extends State<SetTile> with TickerProviderStateMixin {
     super.dispose();
   }
 
-  Future<void> fetchRecentWeightAndReps() async {
+  void fetchRecentWeightAndReps() {
     final exercisesSetsInfo = widget.set.exerciseSetInfo.target;
     if (exercisesSetsInfo != null) {
       final exercise = exercisesSetsInfo.exercise.target;
       if (exercise != null) {
-        final recentWeight = await objectBox.exerciseService
-            .getRecentWeight(exercise.id, widget.setIndex);final recentReps = await objectBox.exerciseService
+        final recentWeight = objectBox.exerciseService
+            .getRecentWeight(exercise.id, widget.setIndex);final recentReps = objectBox.exerciseService
             .getRecentReps(exercise.id, widget.setIndex);
         setState(() {
           this.recentWeight = recentWeight;
@@ -278,31 +278,7 @@ class _SetTileState extends State<SetTile> with TickerProviderStateMixin {
                           ? Colors.green[300]
                           : AppColours.primaryBright,
                       child: InkWell(
-                          onTap: () async {
-                            // // Get the associated ExercisesSetsInfo
-                            // final exercisesSetsInfo =
-                            //     widget.set.exerciseSetInfo.target;
-                            //
-                            // // Update the recent weight and reps for the associated Exercise
-                            // if (exercisesSetsInfo != null) {
-                            //   final exercise =
-                            //       exercisesSetsInfo.exercise.target;
-                            //   if (exercise != null) {
-                            //     // Call method to update recent weight and reps for the Exercise
-                            //     objectBox.exerciseService
-                            //         .updateRecentWeightAndReps(
-                            //       widget.set,
-                            //       widget.set.weight!,
-                            //       widget.set.reps!,
-                            //     );
-                            //
-                            //     // Update the state after updating recentWeight and recentReps
-                            //     // setState(() {
-                            //     //   recentWeight = widget.set.recentWeight;
-                            //     //   recentReps = widget.set.recentReps;
-                            //     // });
-                            //   }
-                            // }
+                          onTap: ()  {
                             widget.setIsCompleted!(widget.set.id);
                           },
                           child: const Padding(
