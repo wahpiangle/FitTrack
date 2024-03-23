@@ -5,7 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:group_project/constants/themes/app_colours.dart';
 import 'package:group_project/models/firebase/comments.dart';
 import 'package:group_project/models/firebase/firebase_user.dart';
-import 'package:group_project/models/firebase/reaction.dart';
+import 'package:group_project/models/firebase/firebase_user_post.dart';
 import 'package:group_project/models/post.dart';
 import 'package:group_project/pages/complete_workout/capture_image/components/interactive_image_viewer.dart';
 import 'package:group_project/pages/home/components/display_post_screen/comment/comment_footer.dart';
@@ -21,14 +21,16 @@ import 'package:keyboard_attachable/keyboard_attachable.dart';
 
 class DisplayPostImageScreen extends StatefulWidget {
   final Post post;
-  final List<Reaction> reactions;
   final FirebaseUser? posterInfo;
+  final List<FirebaseUserPost> firebaseUserPosts;
+  final int index;
 
   const DisplayPostImageScreen({
     super.key,
     required this.post,
-    required this.reactions,
     this.posterInfo,
+    this.index = 0,
+    required this.firebaseUserPosts,
   });
 
   @override
@@ -37,13 +39,32 @@ class DisplayPostImageScreen extends StatefulWidget {
 
 class _DisplayPostImageScreenState extends State<DisplayPostImageScreen> {
   int _pointerCount = 0;
-  Stream<QuerySnapshot>? _commentStream;
+  bool _isScrollDisabled = false;
+  int _streamIndex = 0;
+  List<Stream<QuerySnapshot<Map<String, dynamic>>>>? _commentStreams;
+  late PageController controller;
 
   @override
   void initState() {
     super.initState();
-    _commentStream =
-        FirebaseCommentService.getCommentStreamById(widget.post.postId);
+    controller = PageController(initialPage: widget.index);
+    _streamIndex = widget.index;
+    _commentStreams = widget.firebaseUserPosts.map((currentUserPost) {
+      return FirebaseCommentService.getCommentStreamById(
+          currentUserPost.post.postId);
+    }).toList();
+  }
+
+  void disableScroll() {
+    setState(() {
+      _isScrollDisabled = true;
+    });
+  }
+
+  void enableScroll() {
+    setState(() {
+      _isScrollDisabled = false;
+    });
   }
 
   @override
@@ -84,7 +105,7 @@ class _DisplayPostImageScreenState extends State<DisplayPostImageScreen> {
                     context,
                     MaterialPageRoute(
                       builder: (context) => DisplayPostWorkoutInfoScreen(
-                        post: widget.post,
+                        post: widget.firebaseUserPosts[_streamIndex].post,
                         posterInfo: widget.posterInfo,
                       ),
                     ),
@@ -120,10 +141,42 @@ class _DisplayPostImageScreenState extends State<DisplayPostImageScreen> {
                       : null,
                   child: Column(
                     children: [
-                      // TODO: Make the image viewer a carousel
-                      InteractiveImageViewer(
-                        imagePath: widget.post.firstImageUrl,
-                        imagePath2: widget.post.secondImageUrl,
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width,
+                        height: MediaQuery.of(context).size.height * 0.6,
+                        child: PageView.builder(
+                          pageSnapping: true,
+                          scrollDirection: Axis.horizontal,
+                          physics: _isScrollDisabled
+                              ? const NeverScrollableScrollPhysics()
+                              : null,
+                          itemCount: widget.firebaseUserPosts.length,
+                          controller: controller,
+                          onPageChanged: (index) {
+                            if (index == 0) {
+                              disableScroll();
+                            } else {
+                              enableScroll();
+                            }
+                            setState(() {
+                              _streamIndex = index;
+                            });
+                          },
+                          itemBuilder: (context, index) {
+                            return Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 10.0),
+                              child: InteractiveImageViewer(
+                                imagePath: widget.firebaseUserPosts[index].post
+                                    .firstImageUrl,
+                                imagePath2: widget.firebaseUserPosts[index].post
+                                    .secondImageUrl,
+                                disableScroll: disableScroll,
+                                enableScroll: enableScroll,
+                              ),
+                            );
+                          },
+                        ),
                       ),
                       Padding(
                         padding: const EdgeInsets.only(top: 10),
@@ -142,11 +195,15 @@ class _DisplayPostImageScreenState extends State<DisplayPostImageScreen> {
                             }
                           },
                           child: Text(
-                            widget.post.caption == '' &&
-                                    widget.post.postedBy ==
+                            widget.firebaseUserPosts[_streamIndex].post
+                                            .caption ==
+                                        '' &&
+                                    widget.firebaseUserPosts[_streamIndex].post
+                                            .postedBy ==
                                         FirebaseAuth.instance.currentUser!.uid
                                 ? 'Add a caption...'
-                                : widget.post.caption,
+                                : widget.firebaseUserPosts[_streamIndex].post
+                                    .caption,
                             style: const TextStyle(
                               color: Colors.white,
                               fontSize: 16,
@@ -161,10 +218,13 @@ class _DisplayPostImageScreenState extends State<DisplayPostImageScreen> {
                       ),
                       SingleChildScrollView(
                         child: Row(
-                          children: widget.reactions.map((reaction) {
+                          children: widget
+                              .firebaseUserPosts[_streamIndex].reactions
+                              .map((reaction) {
                             return DisplayPostReactionImage(
                               reaction: reaction,
-                              fullReactionList: widget.reactions,
+                              fullReactionList: widget
+                                  .firebaseUserPosts[_streamIndex].reactions,
                             );
                           }).toList(),
                         ),
@@ -175,7 +235,7 @@ class _DisplayPostImageScreenState extends State<DisplayPostImageScreen> {
                         height: 30,
                       ),
                       StreamBuilder(
-                        stream: _commentStream,
+                        stream: _commentStreams![_streamIndex],
                         builder: (context, snapshot) {
                           if (snapshot.connectionState ==
                               ConnectionState.waiting) {

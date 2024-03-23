@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:group_project/constants/themes/app_colours.dart';
-import 'package:group_project/models/firebase/CurrentUserPost.dart';
+import 'package:group_project/models/firebase/firebase_user_post.dart';
 import 'package:group_project/pages/home/no_workout_posted_page.dart';
 import 'package:group_project/pages/home/workout_posted_page.dart';
 import 'package:group_project/services/firebase/firebase_posts_service.dart';
@@ -49,7 +49,7 @@ class _HomeState extends State<Home> {
           if (snapshot.connectionState == ConnectionState.active &&
               snapshot.hasData) {
             final currentUserPosts =
-                CurrentUserPost.convertStreamDataToCurrentUserPost(
+                FirebaseUserPost.convertStreamDataToCurrentUserPost(
               snapshot.data!.docs,
             );
             return FutureBuilder(
@@ -69,7 +69,7 @@ class _HomeState extends State<Home> {
                 if (snapshot.connectionState == ConnectionState.done &&
                     snapshot.hasData) {
                   final currentUserPosts =
-                      snapshot.data as List<CurrentUserPost>;
+                      snapshot.data as List<FirebaseUserPost>;
                   if (currentUserPosts.isEmpty) {
                     return const NoWorkoutPostedPage();
                   } else {
