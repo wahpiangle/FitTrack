@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:group_project/main.dart';
-import 'package:group_project/models/firebase/CurrentUserPost.dart';
+import 'package:group_project/models/firebase/firebase_user_post.dart';
 import 'package:group_project/pages/complete_workout/capture_image/upload_image_provider.dart';
 import 'package:group_project/pages/home/components/display_post_screen/display_post_image_screen.dart';
 import 'package:group_project/pages/home/components/front_back_image.dart';
@@ -8,12 +8,14 @@ import 'package:group_project/services/firebase/firebase_posts_service.dart';
 import 'package:provider/provider.dart';
 
 class DisplayImageStack extends StatelessWidget {
-  final CurrentUserPost currentUserPostInfo;
+  final List<FirebaseUserPost>? currentUserPosts;
+  final FirebaseUserPost currentUserPostInfo;
   final int index;
   final int current;
 
   const DisplayImageStack({
     super.key,
+    this.currentUserPosts,
     required this.currentUserPostInfo,
     required this.index,
     required this.current,
@@ -38,7 +40,8 @@ class DisplayImageStack extends StatelessWidget {
             MaterialPageRoute(
               builder: (context) => DisplayPostImageScreen(
                 post: currentUserPostInfo.post,
-                reactions: currentUserPostInfo.reactions,
+                firebaseUserPosts: currentUserPosts!,
+                index: index,
               ),
             ),
           );

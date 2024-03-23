@@ -185,12 +185,15 @@ class ExerciseService {
 
   bool isPersonalRecord(ExerciseSet exerciseSet) {
     ExercisesSetsInfo exercisesSetsInfo = exerciseSet.exerciseSetInfo.target!;
-    List<ExerciseSet> exerciseSets = exercisesSetsInfo.exerciseSets;
+    Exercise exercise = exercisesSetsInfo.exercise.target!;
+    List<ExerciseSet> exerciseSets = exercise.exercisesSetsInfo
+        .expand((element) => element.exerciseSets)
+        .toList();
     int currentOneRepMax =
-        getOneRepMaxValue(exerciseSet.weight!, exerciseSet.reps!);
+        getOneRepMaxValue(exerciseSet.weight ?? 0, exerciseSet.reps ?? 0);
     for (ExerciseSet set in exerciseSets) {
       if (set.id != exerciseSet.id) {
-        int oneRepMax = getOneRepMaxValue(set.weight!, set.reps!);
+        int oneRepMax = getOneRepMaxValue(set.weight ?? 0, set.reps ?? 0);
         if (oneRepMax > currentOneRepMax) {
           return false;
         }
