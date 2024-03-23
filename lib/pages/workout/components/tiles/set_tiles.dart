@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:group_project/constants/themes/app_colours.dart';
 import 'package:group_project/models/exercise_set.dart';
 import 'package:group_project/models/exercises_sets_info.dart';
+import 'package:group_project/models/workout_session.dart';
 import 'package:group_project/pages/workout/components/tiles/set_labels.dart';
 import 'package:group_project/pages/workout/components/tiles/set_tile.dart';
 
@@ -10,6 +11,7 @@ class SetTiles extends StatefulWidget {
   final void Function(int exerciseSetId) removeSet;
   final void Function(ExercisesSetsInfo exercisesSetsInfo) addSet;
   final void Function(int exerciseSetId)? setIsCompleted;
+  final bool isCurrentEditing;
 
   const SetTiles({
     super.key,
@@ -17,6 +19,7 @@ class SetTiles extends StatefulWidget {
     required this.removeSet,
     required this.addSet,
     this.setIsCompleted,
+    required this.isCurrentEditing,
   });
 
   @override
@@ -49,6 +52,7 @@ class _SetTilesState extends State<SetTiles> {
                       removeSet: widget.removeSet,
                       addSet: widget.addSet,
                       setIsCompleted: widget.setIsCompleted,
+                      isCurrentEditing: widget.isCurrentEditing,
                     )
                   ],
                 );
@@ -60,6 +64,9 @@ class _SetTilesState extends State<SetTiles> {
                 removeSet: widget.removeSet,
                 addSet: widget.addSet,
                 setIsCompleted: widget.setIsCompleted,
+                isCurrentEditing: widget.isCurrentEditing,
+
+
               );
             },
           ),

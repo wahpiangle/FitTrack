@@ -7,7 +7,6 @@ import 'package:group_project/models/exercises_sets_info.dart';
 import 'package:group_project/models/workout_session.dart';
 import 'package:group_project/objectbox.g.dart';
 import 'package:group_project/services/firebase/firebase_customexercise_service.dart';
-import 'package:objectbox/objectbox.dart';
 
 class ExerciseService {
   Box<Exercise> exerciseBox;
@@ -15,14 +14,15 @@ class ExerciseService {
   Box<BodyPart> bodyPartBox;
   Box<ExerciseSet> exerciseSetBox;
   Box<ExercisesSetsInfo> exercisesSetsInfoBox;
+  Box<WorkoutSession> workoutSessionBox;
 
-  ExerciseService({
-    required this.exerciseBox,
-    required this.categoryBox,
-    required this.bodyPartBox,
-    required this.exerciseSetBox,
-    required this.exercisesSetsInfoBox,
-  });
+  ExerciseService(
+      {required this.exerciseBox,
+      required this.categoryBox,
+      required this.bodyPartBox,
+      required this.exerciseSetBox,
+      required this.exercisesSetsInfoBox,
+      required this.workoutSessionBox});
 
   //exercises
   Stream<List<Exercise>> watchAllExercise() {
@@ -210,5 +210,49 @@ class ExerciseService {
     allSets.sort((a, b) => getOneRepMaxValue(b.weight!, b.reps!)
         .compareTo(getOneRepMaxValue(a.weight!, a.reps!)));
     return allSets.first;
+  }
+
+
+  int? getRecentWeight(int exerciseId, int setIndex) {
+    final allWorkoutSessions = workoutSessionBox.getAll();
+    allWorkoutSessions.sort((a, b) => b.date.compareTo(a.date));
+    final mostRecentWorkoutSession = allWorkoutSessions.first;
+    final exerciseSetsInfo = mostRecentWorkoutSession.exercisesSetsInfo;
+    for (final exerciseSetInfo in exerciseSetsInfo) {
+      final exercise = exerciseSetInfo.exercise.target;
+      if (exercise != null && exercise.id == exerciseId) {
+        int counter = 0;
+        for (final exerciseSet in exerciseSetInfo.exerciseSets) {
+          if (counter == setIndex) {
+            final recentWeight = exerciseSet.weight;
+            return recentWeight;
+          }
+          counter++;
+        }
+      }
+    }
+    return null;
+  }
+
+  int? getRecentReps(int exerciseId, int setIndex) {
+    final allWorkoutSessions = workoutSessionBox.getAll();
+    allWorkoutSessions.sort((a, b) => b.date.compareTo(a.date));
+    final mostRecentWorkoutSession = allWorkoutSessions.first;
+    final exerciseSetsInfo = mostRecentWorkoutSession.exercisesSetsInfo;
+
+    for (final exerciseSetInfo in exerciseSetsInfo) {
+      final exercise = exerciseSetInfo.exercise.target;
+      if (exercise != null && exercise.id == exerciseId) {
+        int counter = 0;
+        for (final exerciseSet in exerciseSetInfo.exerciseSets) {
+          if (counter == setIndex) {
+            final recentReps = exerciseSet.reps;
+            return recentReps;
+          }
+          counter++;
+        }
+      }
+    }
+    return null;
   }
 }

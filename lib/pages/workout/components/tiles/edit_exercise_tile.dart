@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:group_project/models/exercise.dart';
 import 'package:group_project/models/exercises_sets_info.dart';
+import 'package:group_project/models/workout_session.dart';
 import 'package:group_project/pages/workout/components/tiles/add_exercise_button.dart';
 import 'package:group_project/pages/workout/components/tiles/set_tiles.dart';
 
@@ -10,6 +11,7 @@ class EditExerciseTile extends StatefulWidget {
   final void Function(int exerciseSetId) removeSet;
   final void Function(ExercisesSetsInfo exercisesSetsInfo) addSet;
   final List<ExercisesSetsInfo> exercisesSetsInfoList;
+  final WorkoutSession workoutSession;
   const EditExerciseTile({
     super.key,
     required this.exerciseData,
@@ -17,6 +19,7 @@ class EditExerciseTile extends StatefulWidget {
     required this.addSet,
     required this.removeSet,
     required this.exercisesSetsInfoList,
+   required this.workoutSession,
   });
 
   @override
@@ -24,6 +27,19 @@ class EditExerciseTile extends StatefulWidget {
 }
 
 class _EditExerciseTileState extends State<EditExerciseTile> {
+
+  @override
+  void initState() {
+    super.initState();
+    widget.workoutSession.isCurrentEditing = true;
+
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    widget.workoutSession.isCurrentEditing = false;
+  }
   @override
   Widget build(BuildContext context) {
     if (widget.exercisesSetsInfoList.isEmpty) {
@@ -61,6 +77,7 @@ class _EditExerciseTileState extends State<EditExerciseTile> {
                         exercisesSetsInfo: exercisesSetsInfo,
                         removeSet: widget.removeSet,
                         addSet: widget.addSet,
+                        isCurrentEditing:  widget.workoutSession.isCurrentEditing,
                       ),
                     ],
                   ),

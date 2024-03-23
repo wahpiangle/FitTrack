@@ -130,6 +130,7 @@ class CurrentWorkoutSessionService {
     clearCurrentWorkoutSession();
     return workoutSession;
   }
+  
 
   void startCurrentWorkoutFromTemplate(WorkoutTemplate workoutTemplate) {
     CurrentWorkoutSession currentWorkoutSession = getCurrentWorkoutSession();

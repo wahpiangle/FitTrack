@@ -156,7 +156,7 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              TextFormField(
+               TextFormField(
                 initialValue: editingWorkoutSession!.title,
                 onChanged: (value) {
                   objectBox.workoutSessionService
@@ -214,6 +214,9 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
                 removeSet: removeSet,
                 addSet: addSet,
                 exercisesSetsInfoList: editingWorkoutSession!.exercisesSetsInfo,
+                workoutSession: WorkoutSession(
+                  date: DateTime.now(),
+                )
               )
             ],
           ),

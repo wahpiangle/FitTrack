@@ -97,6 +97,7 @@ class ObjectBox {
         bodyPartBox: _bodyPartBox,
         exerciseSetBox: _exerciseSetBox,
         exercisesSetsInfoBox: _exercisesSetsInfoBox,
+        workoutSessionBox: _workoutSessionBox
       );
 
   PostService get postService => PostService(
