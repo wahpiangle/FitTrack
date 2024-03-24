@@ -20,7 +20,6 @@ class FirebaseFriendsPost {
       List<String> friendIds = await getFriendsIds(currentUserUid);
 
       Set<String> uniquePosts = {};
-      List<FirebaseUserPost> friendPosts = [];
 
       for (String friendId in friendIds) {
         List<Post> posts =
@@ -36,10 +35,9 @@ class FirebaseFriendsPost {
                 await FirebaseCommentService.getCommentsByPostId(post.postId);
             FirebaseUserPost friendsPost =
                 FirebaseUserPost(post, friend, postReactions, postComments);
-            friendPosts.add(friendsPost);
 
             if (friendsPostMap.containsKey(friend)) {
-              friendsPostMap[friend]!.add(friendsPost);
+              friendsPostMap[friend]!.insert(0, friendsPost);
             } else {
               friendsPostMap[friend] = [friendsPost];
             }
