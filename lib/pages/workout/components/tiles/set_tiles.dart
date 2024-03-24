@@ -10,6 +10,7 @@ class SetTiles extends StatefulWidget {
   final void Function(int exerciseSetId) removeSet;
   final void Function(ExercisesSetsInfo exercisesSetsInfo) addSet;
   final void Function(int exerciseSetId)? setIsCompleted;
+  final bool isCurrentEditing;
 
   const SetTiles({
     super.key,
@@ -17,6 +18,7 @@ class SetTiles extends StatefulWidget {
     required this.removeSet,
     required this.addSet,
     this.setIsCompleted,
+    required this.isCurrentEditing,
   });
 
   @override
@@ -49,6 +51,7 @@ class _SetTilesState extends State<SetTiles> {
                       removeSet: widget.removeSet,
                       addSet: widget.addSet,
                       setIsCompleted: widget.setIsCompleted,
+                      isCurrentEditing: widget.isCurrentEditing,
                     )
                   ],
                 );
@@ -60,6 +63,7 @@ class _SetTilesState extends State<SetTiles> {
                 removeSet: widget.removeSet,
                 addSet: widget.addSet,
                 setIsCompleted: widget.setIsCompleted,
+                isCurrentEditing: widget.isCurrentEditing,
               );
             },
           ),

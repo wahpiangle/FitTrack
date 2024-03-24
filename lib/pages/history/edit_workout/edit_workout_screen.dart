@@ -79,7 +79,9 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
             showDialog(
               context: context,
               builder: (BuildContext context) {
-                return const RevertDialog();
+                return const RevertDialog(
+                  isWorkoutSession: true,
+                );
               },
             );
           },
@@ -110,6 +112,7 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
                           return SaveDialog(
                             workoutSessionId: widget.workoutSessionId,
                             fromDetailPage: widget.fromDetailPage,
+                            isWorkoutSession: true,
                           );
                         },
                       )
@@ -153,7 +156,7 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              TextFormField(
+               TextFormField(
                 initialValue: editingWorkoutSession!.title,
                 onChanged: (value) {
                   objectBox.workoutSessionService
@@ -211,6 +214,9 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
                 removeSet: removeSet,
                 addSet: addSet,
                 exercisesSetsInfoList: editingWorkoutSession!.exercisesSetsInfo,
+                workoutSession: WorkoutSession(
+                  date: DateTime.now(),
+                )
               )
             ],
           ),

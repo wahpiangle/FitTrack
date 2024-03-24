@@ -59,7 +59,8 @@ class FirebaseCommentService {
     }
   }
 
-  static Stream<QuerySnapshot<Map<String, dynamic>>> getCommentStreamById(String postId) {
+  static Stream<QuerySnapshot<Map<String, dynamic>>> getCommentStreamById(
+      String postId) {
     return FirebaseFirestore.instance
         .collection('posts')
         .doc(postId)

@@ -52,6 +52,7 @@ class FirebaseExercisesService {
         exercises[index]['categoryName'] = exercise.category.target?.name;
         exercises[index]['bodyPartId'] = exercise.bodyPart.targetId;
         exercises[index]['bodyPartName'] = exercise.bodyPart.target?.name;
+        exercises[index]['isVisible'] = exercise.isVisible;
 
         // Rewrite the entire array with the updated exercise
         await collectionRef.doc(uid).update({'addednewExercises': exercises});
@@ -74,5 +75,19 @@ class FirebaseExercisesService {
     return [];
   }
 
-// TODO: add delete exercise method
+  static Future<void> setExerciseToNotVisible(int exerciseId) async {
+    final uid = auth.currentUser!.uid;
+    final collectionRef = db.collection('exercises');
+
+    final docSnapshot = await collectionRef.doc(uid).get();
+    final exercises = docSnapshot.data()?['addednewExercises'] ?? [];
+
+    // Find the index of the exercise to update
+    final index = exercises.indexWhere((ex) => ex['id'] == exerciseId);
+    if (index != -1) {
+      exercises[index]['isVisible'] = false;
+
+      await collectionRef.doc(uid).update({'addednewExercises': exercises});
+    }
+  }
 }

@@ -115,6 +115,7 @@ class CurrentWorkoutSessionService {
   // save to history
   WorkoutSession saveCurrentWorkoutSession({required int timeInSeconds}) {
     CurrentWorkoutSession currentWorkoutSession = getCurrentWorkoutSession();
+
     WorkoutSession workoutSession = WorkoutSession(
       date: DateTime.now(),
       duration: timeInSeconds,
@@ -129,6 +130,7 @@ class CurrentWorkoutSessionService {
     clearCurrentWorkoutSession();
     return workoutSession;
   }
+  
 
   void startCurrentWorkoutFromTemplate(WorkoutTemplate workoutTemplate) {
     CurrentWorkoutSession currentWorkoutSession = getCurrentWorkoutSession();

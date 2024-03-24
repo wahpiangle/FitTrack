@@ -8,11 +8,15 @@ class InteractiveImageViewer extends StatefulWidget {
   final Function? toggleRetake;
   final String imagePath;
   final String imagePath2;
+  final Function? disableScroll;
+  final Function? enableScroll;
   const InteractiveImageViewer({
     super.key,
     this.toggleRetake,
     required this.imagePath,
     required this.imagePath2,
+    this.disableScroll,
+    this.enableScroll,
   });
 
   @override
@@ -36,6 +40,9 @@ class _InteractiveImageViewerState extends State<InteractiveImageViewer> {
           child: InteractiveViewer(
             transformationController: _transformationController,
             onInteractionStart: (ScaleStartDetails details) {
+              if (widget.disableScroll != null) {
+                widget.disableScroll!();
+              }
               initialControllerValue = _transformationController.value;
               setState(() {
                 hideSecondImage = true;
@@ -44,6 +51,9 @@ class _InteractiveImageViewerState extends State<InteractiveImageViewer> {
             scaleEnabled: true,
             onInteractionEnd: (ScaleEndDetails details) {
               _transformationController.value = initialControllerValue;
+              if (widget.enableScroll != null) {
+                widget.enableScroll!();
+              }
               setState(() {
                 hideSecondImage = false;
               });
@@ -83,21 +93,32 @@ class _InteractiveImageViewerState extends State<InteractiveImageViewer> {
                 displaySecondImage = !displaySecondImage;
               });
             },
+            onTapDown: (details) {
+              if (widget.disableScroll != null) {
+                widget.disableScroll!();
+              }
+            },
             onPanUpdate: (details) {
+              if (widget.disableScroll != null) {
+                widget.disableScroll!();
+              }
               setState(() {
                 xOffset += details.delta.dx * 1;
                 yOffset += details.delta.dy * 1;
 
                 xOffset =
-                    xOffset.clamp(20, MediaQuery.of(context).size.width * 0.6);
+                    xOffset.clamp(20, MediaQuery.of(context).size.width * 0.65);
                 yOffset =
                     yOffset.clamp(20, MediaQuery.of(context).size.height * 0.4);
               });
             },
             onPanEnd: (details) {
-              if (xOffset > MediaQuery.of(context).size.width * 0.6 / 2) {
+              if (widget.enableScroll != null) {
+                widget.enableScroll!();
+              }
+              if (xOffset > MediaQuery.of(context).size.width * 0.65 / 2) {
                 setState(() {
-                  xOffset = MediaQuery.of(context).size.width * 0.6;
+                  xOffset = MediaQuery.of(context).size.width * 0.65;
                 });
               } else {
                 setState(() {

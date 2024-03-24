@@ -1,26 +1,36 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:group_project/constants/themes/app_colours.dart';
 import 'package:group_project/models/firebase/comments.dart';
-import 'package:group_project/models/firebase/reaction.dart';
+import 'package:group_project/models/firebase/firebase_user.dart';
+import 'package:group_project/models/firebase/firebase_user_post.dart';
 import 'package:group_project/models/post.dart';
 import 'package:group_project/pages/complete_workout/capture_image/components/interactive_image_viewer.dart';
-import 'package:group_project/pages/home/components/display_post_screen/comment_footer.dart';
+import 'package:group_project/pages/home/components/display_post_screen/comment/comment_footer.dart';
+import 'package:group_project/pages/home/components/display_post_screen/comment/comment_tile.dart';
+import 'package:group_project/pages/home/components/display_post_screen/comment/delete_comment_dialog.dart';
 import 'package:group_project/pages/home/components/display_post_screen/display_post_reaction_image.dart';
+import 'package:group_project/pages/home/components/display_post_screen/workout_info/display_post_workout_info_screen.dart';
 import 'package:group_project/pages/home/components/display_post_screen/edit_caption_page.dart';
+import 'package:group_project/services/firebase/auth_service.dart';
 import 'package:group_project/services/firebase/firebase_comment_service.dart';
 import 'package:intl/intl.dart';
 import 'package:keyboard_attachable/keyboard_attachable.dart';
 
 class DisplayPostImageScreen extends StatefulWidget {
   final Post post;
-  final List<Reaction> reactions;
+  final FirebaseUser? posterInfo;
+  final List<FirebaseUserPost> firebaseUserPosts;
+  final int index;
 
   const DisplayPostImageScreen({
     super.key,
     required this.post,
-    required this.reactions,
+    this.posterInfo,
+    this.index = 0,
+    required this.firebaseUserPosts,
   });
 
   @override
@@ -28,27 +38,49 @@ class DisplayPostImageScreen extends StatefulWidget {
 }
 
 class _DisplayPostImageScreenState extends State<DisplayPostImageScreen> {
-  int _pointersCount = 0;
-  Stream<QuerySnapshot>? _commentStream;
+  int _pointerCount = 0;
+  bool _isScrollDisabled = false;
+  int _streamIndex = 0;
+  List<Stream<QuerySnapshot<Map<String, dynamic>>>>? _commentStreams;
+  late PageController controller;
 
   @override
   void initState() {
     super.initState();
-    _commentStream =
-        FirebaseCommentService.getCommentStreamById(widget.post.postId);
+    controller = PageController(initialPage: widget.index);
+    _streamIndex = widget.index;
+    _commentStreams = widget.firebaseUserPosts.map((currentUserPost) {
+      return FirebaseCommentService.getCommentStreamById(
+          currentUserPost.post.postId);
+    }).toList();
   }
 
-  // TODO: display exercise details & comments
+  void disableScroll() {
+    setState(() {
+      _isScrollDisabled = true;
+    });
+  }
+
+  void enableScroll() {
+    setState(() {
+      _isScrollDisabled = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    final isOwnPost =
+        AuthService().getCurrentUser()!.uid == widget.post.postedBy;
     return Scaffold(
         appBar: AppBar(
           centerTitle: true,
           title: Column(
             children: [
-              const Text(
-                'My Post',
-                style: TextStyle(
+              Text(
+                isOwnPost
+                    ? 'My Post'
+                    : '${widget.posterInfo?.username}\'s Post',
+                style: const TextStyle(
                   color: Colors.white,
                   fontSize: 16,
                 ),
@@ -66,27 +98,85 @@ class _DisplayPostImageScreenState extends State<DisplayPostImageScreen> {
           iconTheme: const IconThemeData(
             color: Colors.white,
           ),
+          actions: [
+            IconButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => DisplayPostWorkoutInfoScreen(
+                        post: widget.firebaseUserPosts[_streamIndex].post,
+                        posterInfo: widget.posterInfo,
+                      ),
+                    ),
+                  );
+                },
+                icon: const Icon(
+                  Icons.fitness_center_sharp,
+                  color: AppColours.secondary,
+                ))
+          ],
         ),
         backgroundColor: AppColours.primary,
         body: Listener(
-          onPointerDown: (_) => setState(() => _pointersCount++),
-          onPointerUp: (_) => setState(() => _pointersCount--),
+          onPointerDown: (event) {
+            setState(() {
+              _pointerCount++;
+            });
+          },
+          onPointerUp: (event) {
+            setState(() {
+              _pointerCount--;
+            });
+          },
           child: SafeArea(
             maintainBottomViewPadding: true,
             child: FooterLayout(
               footer: CommentFooter(post: widget.post),
               child: Container(
-                padding: const EdgeInsets.all(20),
+                padding: const EdgeInsets.all(10),
                 child: SingleChildScrollView(
-                  physics: _pointersCount == 2
+                  physics: _pointerCount == 2
                       ? const NeverScrollableScrollPhysics()
                       : null,
                   child: Column(
                     children: [
-                      // TODO: Make the image viewer a carousel
-                      InteractiveImageViewer(
-                        imagePath: widget.post.firstImageUrl,
-                        imagePath2: widget.post.secondImageUrl,
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width,
+                        height: MediaQuery.of(context).size.height * 0.6,
+                        child: PageView.builder(
+                          pageSnapping: true,
+                          scrollDirection: Axis.horizontal,
+                          physics: _isScrollDisabled
+                              ? const NeverScrollableScrollPhysics()
+                              : null,
+                          itemCount: widget.firebaseUserPosts.length,
+                          controller: controller,
+                          onPageChanged: (index) {
+                            if (index == 0) {
+                              disableScroll();
+                            } else {
+                              enableScroll();
+                            }
+                            setState(() {
+                              _streamIndex = index;
+                            });
+                          },
+                          itemBuilder: (context, index) {
+                            return Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 10.0),
+                              child: InteractiveImageViewer(
+                                imagePath: widget.firebaseUserPosts[index].post
+                                    .firstImageUrl,
+                                imagePath2: widget.firebaseUserPosts[index].post
+                                    .secondImageUrl,
+                                disableScroll: disableScroll,
+                                enableScroll: enableScroll,
+                              ),
+                            );
+                          },
+                        ),
                       ),
                       Padding(
                         padding: const EdgeInsets.only(top: 10),
@@ -105,11 +195,15 @@ class _DisplayPostImageScreenState extends State<DisplayPostImageScreen> {
                             }
                           },
                           child: Text(
-                            widget.post.caption == '' &&
-                                    widget.post.postedBy ==
+                            widget.firebaseUserPosts[_streamIndex].post
+                                            .caption ==
+                                        '' &&
+                                    widget.firebaseUserPosts[_streamIndex].post
+                                            .postedBy ==
                                         FirebaseAuth.instance.currentUser!.uid
                                 ? 'Add a caption...'
-                                : widget.post.caption,
+                                : widget.firebaseUserPosts[_streamIndex].post
+                                    .caption,
                             style: const TextStyle(
                               color: Colors.white,
                               fontSize: 16,
@@ -124,10 +218,13 @@ class _DisplayPostImageScreenState extends State<DisplayPostImageScreen> {
                       ),
                       SingleChildScrollView(
                         child: Row(
-                          children: widget.reactions.map((reaction) {
+                          children: widget
+                              .firebaseUserPosts[_streamIndex].reactions
+                              .map((reaction) {
                             return DisplayPostReactionImage(
                               reaction: reaction,
-                              fullReactionList: widget.reactions,
+                              fullReactionList: widget
+                                  .firebaseUserPosts[_streamIndex].reactions,
                             );
                           }).toList(),
                         ),
@@ -138,7 +235,7 @@ class _DisplayPostImageScreenState extends State<DisplayPostImageScreen> {
                         height: 30,
                       ),
                       StreamBuilder(
-                        stream: _commentStream,
+                        stream: _commentStreams![_streamIndex],
                         builder: (context, snapshot) {
                           if (snapshot.connectionState ==
                               ConnectionState.waiting) {
@@ -167,42 +264,20 @@ class _DisplayPostImageScreenState extends State<DisplayPostImageScreen> {
                                       widget.post.postedBy ==
                                           FirebaseAuth
                                               .instance.currentUser!.uid) {
-                                    // TODO: display delete comment dialog / menu anchor to ask to delete comment
+                                    HapticFeedback.heavyImpact();
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return DeleteCommentDialog(
+                                          comment: comment,
+                                          post: widget.post,
+                                        );
+                                      },
+                                    );
                                   }
                                 },
-                                child: ListTile(
-                                  leading: const CircleAvatar(
-                                    // TODO: display user profile image
-                                    backgroundColor: AppColours.primaryBright,
-                                    radius: 20,
-                                  ),
-                                  title: Row(
-                                    children: [
-                                      const Text(
-                                        // TODO: display user name
-                                        'display user name',
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      const SizedBox(width: 10),
-                                      Text(
-                                        DateFormat.MMMMEEEEd()
-                                            .format(comment.date),
-                                        style: const TextStyle(
-                                          color: Colors.grey,
-                                          fontSize: 13,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  subtitle: Text(
-                                    comment.comment,
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                    ),
-                                  ),
+                                child: CommentTile(
+                                  comment: comment,
                                 ),
                               );
                             }).toList(),

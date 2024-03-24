@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:group_project/models/exercise.dart';
 import 'package:group_project/pages/exercise/exercise_detail.dart';
@@ -21,9 +20,6 @@ class ExerciseListItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final exerciseName = exercise.name;
     final exerciseBodyPart = exercise.bodyPart.target?.name ?? '';
-
-
-    // Check if the exercise name or category contains the search text
     final containsSearchText =
         exerciseName.toLowerCase().contains(searchText.toLowerCase());
     if (searchText.isEmpty || containsSearchText) {

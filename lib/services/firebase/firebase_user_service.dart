@@ -86,9 +86,14 @@ class FirebaseUserService {
   }
 
   static Future<FirebaseUser> getUserByUid(String uid) async {
-    final DocumentSnapshot<Map<String, dynamic>> doc =
-        await usersCollectionRef.doc(uid).get();
-    return FirebaseUser.fromDocument(doc);
+    try {
+      final DocumentSnapshot<Map<String, dynamic>> doc =
+          await usersCollectionRef.doc(uid).get();
+      return FirebaseUser.fromDocument(doc);
+    } catch (e) {
+      print(e);
+      rethrow;
+    }
   }
 
   static Future<List<dynamic>> getUserFriendsUidsByUid(String uid) async {

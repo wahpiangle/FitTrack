@@ -4,6 +4,7 @@ import 'package:group_project/constants/themes/app_colours.dart';
 import 'package:group_project/main.dart';
 import 'package:group_project/models/exercise_set.dart';
 import 'package:group_project/models/exercises_sets_info.dart';
+import 'dart:math';
 
 class SetTile extends StatefulWidget {
   final ExerciseSet set;
@@ -12,6 +13,7 @@ class SetTile extends StatefulWidget {
   final void Function(int exerciseSetId) removeSet;
   final void Function(ExercisesSetsInfo exercisesSetsInfo) addSet;
   final void Function(int exerciseSetId)? setIsCompleted;
+  final bool isCurrentEditing;
 
   const SetTile({
     super.key,
@@ -21,13 +23,73 @@ class SetTile extends StatefulWidget {
     required this.removeSet,
     required this.addSet,
     this.setIsCompleted,
+    required this.isCurrentEditing,
   });
 
   @override
   State<SetTile> createState() => _SetTileState();
 }
 
-class _SetTileState extends State<SetTile> {
+class _SetTileState extends State<SetTile> with TickerProviderStateMixin {
+  int? recentWeight;
+  int? recentReps;
+  late TextEditingController weightController;
+  late TextEditingController repsController;
+  bool isTapped = false;
+
+  late final AnimationController _controller = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 500),
+  );
+
+  double shakeOffset = 1.0;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchRecentWeightAndReps();
+    weightController = TextEditingController();
+    repsController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    weightController.dispose();
+    repsController.dispose();
+    super.dispose();
+  }
+
+  void fetchRecentWeightAndReps() {
+    final exercisesSetsInfo = widget.set.exerciseSetInfo.target;
+    if (exercisesSetsInfo != null) {
+      final exercise = exercisesSetsInfo.exercise.target;
+      if (exercise != null) {
+        final recentWeight = objectBox.exerciseService
+            .getRecentWeight(exercise.id, widget.setIndex);
+        final recentReps = objectBox.exerciseService
+            .getRecentReps(exercise.id, widget.setIndex);
+        setState(() {
+          this.recentWeight = recentWeight;
+          this.recentReps = recentReps;
+        });
+      } else {
+        print('Exercise associated with the exercise set is null.');
+      }
+    } else {
+      print('ExerciseSetsInfo associated with the exercise set is null.');
+    }
+  }
+
+  void onTapPreviousTab(ExercisesSetsInfo exercisesSetsInfo) {
+    weightController.text = recentWeight?.toString() ?? '';
+    repsController.text = recentReps?.toString() ?? '';
+    setState(() {
+      widget.set.weight = recentWeight;
+      widget.set.reps = recentReps;
+    });
+    objectBox.exerciseService.updateExerciseSet(widget.set);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Dismissible(
@@ -36,6 +98,7 @@ class _SetTileState extends State<SetTile> {
       onDismissed: (direction) {
         widget.removeSet(widget.set.id);
         setState(() {
+          isTapped = false;
           widget.exercisesSetsInfo.exerciseSets
               .removeWhere((element) => element.id == widget.set.id);
         });
@@ -70,7 +133,55 @@ class _SetTileState extends State<SetTile> {
                 ),
               ),
             ),
-            const SizedBox(width: 20),
+            const SizedBox(width: 10),
+            Expanded(
+              flex: 1,
+              child: GestureDetector(
+                onTap: () {
+                  if (!widget.isCurrentEditing) {
+                    onTapPreviousTab(widget.exercisesSetsInfo);
+                    _controller.forward(from: 0.0);
+                    setState(() {
+                      isTapped = true;
+                    });
+                    Future.delayed(const Duration(milliseconds: 100), () {
+                      setState(() {
+                        isTapped = false;
+                      });
+                    });
+                  }
+                },
+                child: AnimatedBuilder(
+                  animation: _controller,
+                  builder: (context, child) {
+                    return Transform.translate(
+                      offset: Offset(
+                        CurveTween(curve: const SineCurve())
+                                .transform(_controller.value) *
+                            shakeOffset,
+                        0.0,
+                      ),
+                      child: child,
+                    );
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: Text(
+                      recentWeight != null
+                          ? '${this.recentWeight}kg x ${this.recentReps}'
+                          : '-',
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                        color: isTapped ? Colors.grey : Colors.white,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(width: 10),
             Expanded(
               flex: 1,
               child: Container(
@@ -84,7 +195,8 @@ class _SetTileState extends State<SetTile> {
                     color: Colors.white,
                   ),
                   textAlign: TextAlign.center,
-                  initialValue: "${widget.set.weight ?? ''}",
+                  initialValue: isTapped ? null : "${widget.set.weight ?? ''}",
+                  controller: isTapped ? weightController : null,
                   keyboardType: TextInputType.number,
                   decoration: const InputDecoration(
                     contentPadding: EdgeInsets.all(0),
@@ -98,9 +210,14 @@ class _SetTileState extends State<SetTile> {
                       color: Colors.grey,
                     ),
                   ),
-                  onChanged: (value) => {
-                    widget.set.weight = int.tryParse(value),
-                    objectBox.exerciseService.updateExerciseSet(widget.set),
+                  onChanged: (value) {
+                    setState(() {
+                      widget.set.weight = int.tryParse(value);
+                      if (widget.set.weight == null) {
+                        widget.set.isCompleted = false;
+                      }
+                      objectBox.exerciseService.updateExerciseSet(widget.set);
+                    });
                   },
                 ),
               ),
@@ -120,7 +237,8 @@ class _SetTileState extends State<SetTile> {
                   ),
                   textAlign: TextAlign.center,
                   keyboardType: TextInputType.number,
-                  initialValue: "${widget.set.reps ?? ''}",
+                  initialValue: isTapped ? null : "${widget.set.reps ?? ''}",
+                  controller: isTapped ? repsController : null,
                   decoration: const InputDecoration(
                     contentPadding: EdgeInsets.all(0),
                     filled: true,
@@ -133,9 +251,14 @@ class _SetTileState extends State<SetTile> {
                       color: Colors.grey,
                     ),
                   ),
-                  onChanged: (value) => {
-                    widget.set.reps = int.tryParse(value),
-                    objectBox.exerciseService.updateExerciseSet(widget.set),
+                  onChanged: (value) {
+                    setState(() {
+                      widget.set.reps = int.tryParse(value);
+                      if (widget.set.reps == null) {
+                        widget.set.isCompleted = false;
+                      }
+                      objectBox.exerciseService.updateExerciseSet(widget.set);
+                    });
                   },
                 ),
               ),
@@ -154,17 +277,16 @@ class _SetTileState extends State<SetTile> {
                           ? Colors.green[300]
                           : AppColours.primaryBright,
                       child: InkWell(
-                        onTap: () {
-                          widget.setIsCompleted!(widget.set.id);
-                        },
-                        child: const Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: Icon(
-                            Icons.check,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
+                          onTap: () {
+                            widget.setIsCompleted!(widget.set.id);
+                          },
+                          child: const Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: Icon(
+                              Icons.check,
+                              color: Colors.white,
+                            ),
+                          )),
                     )
                   : GestureDetector(
                       onTap: () {
@@ -180,5 +302,15 @@ class _SetTileState extends State<SetTile> {
         ),
       ),
     );
+  }
+}
+
+class SineCurve extends Curve {
+  const SineCurve({this.count = 3});
+  final double count;
+
+  @override
+  double transformInternal(double t) {
+    return sin(count * 2 * pi * t);
   }
 }

@@ -26,9 +26,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
       backgroundColor: const Color(0xFF1A1A1A),
       appBar: AppBar(
         backgroundColor: const Color(0xFF1A1A1A),
-        centerTitle: true,
         elevation: 0.0,
-        title: const Text('Register'),
+        title: const Text(
+          'Register',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 18,
+          ),
+        ),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () {

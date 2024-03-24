@@ -1,19 +1,17 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:group_project/constants/upload_enums.dart';
-import 'package:group_project/models/firebase/CurrentUserPost.dart';
+import 'package:group_project/models/firebase/firebase_user_post.dart';
 import 'package:group_project/pages/complete_workout/capture_image/upload_image_provider.dart';
 import 'package:group_project/pages/home/components/current_user/display_image_stack.dart';
 import 'package:group_project/pages/home/components/display_post_screen/display_post_image_screen.dart';
-import 'package:group_project/pages/home/components/friends_post.dart';
+import 'package:group_project/pages/home/components/friends_post/friends_post_list.dart';
 import 'package:group_project/pages/home/components/reaction/reaction_images.dart';
-import 'package:group_project/services/firebase/firebase_friends_post.dart';
-import 'package:group_project/services/firebase/firebase_posts_service.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class WorkoutPostedPage extends StatefulWidget {
-  final List<CurrentUserPost> currentUserPosts;
+  final List<FirebaseUserPost> currentUserPosts;
   const WorkoutPostedPage({
     super.key,
     required this.currentUserPosts,
@@ -25,28 +23,16 @@ class WorkoutPostedPage extends StatefulWidget {
 
 class _WorkoutPostedPageState extends State<WorkoutPostedPage> {
   int _current = 0;
-  late Stream<List<FriendsPost>> friendsPostStream;
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      fetchFriendsPosts();
-    });
     context.read<UploadImageProvider>().getSharedPreferences();
     SharedPreferences.getInstance().then((prefs) {
       if (prefs.getBool(UploadEnums.isUploading) == true) {
         context.read<UploadImageProvider>().setUploadError(true);
         context.read<UploadImageProvider>().setIsUploading(false);
       }
-    });
-  }
-
-  void fetchFriendsPosts() async {
-    FirebaseFriendsPost().initFriendsPostStream().then((stream) {
-      setState(() {
-        friendsPostStream = stream;
-      });
     });
   }
 
@@ -89,6 +75,7 @@ class _WorkoutPostedPageState extends State<WorkoutPostedPage> {
                             Radius.circular(8.0),
                           ),
                           child: DisplayImageStack(
+                            currentUserPosts: widget.currentUserPosts,
                             currentUserPostInfo: currentUserPostInfo,
                             index: index,
                             current: _current,
@@ -103,9 +90,9 @@ class _WorkoutPostedPageState extends State<WorkoutPostedPage> {
                                     MaterialPageRoute(
                                       builder: (context) =>
                                           DisplayPostImageScreen(
+                                        firebaseUserPosts:
+                                            widget.currentUserPosts,
                                         post: currentUserPostInfo.post,
-                                        reactions:
-                                            currentUserPostInfo.reactions,
                                       ),
                                     ),
                                   );
@@ -122,32 +109,19 @@ class _WorkoutPostedPageState extends State<WorkoutPostedPage> {
                                 style: TextStyle(color: Colors.red),
                                 textAlign: TextAlign.center,
                               )
-                            : TextField(
-                                textAlign: TextAlign.center,
+                            : Text(
+                                currentUserPostInfo.post.caption != ''
+                                    ? currentUserPostInfo.post.caption
+                                    : 'Add a caption...',
                                 style: const TextStyle(color: Colors.white),
-                                enableInteractiveSelection: false,
-                                decoration: const InputDecoration(
-                                  alignLabelWithHint: true,
-                                  hintText: 'Add a caption..',
-                                  hintStyle: TextStyle(color: Colors.grey),
-                                  border: InputBorder.none,
-                                ),
-                                onChanged: (caption) {
-                                  FirebasePostsService.saveCaption(
-                                    currentUserPostInfo.post.postId,
-                                    caption,
-                                  );
-                                },
-                                controller: TextEditingController(
-                                  text: currentUserPostInfo.post.caption,
-                                ),
-                              ),
+                                textAlign: TextAlign.center,
+                              )
                       ],
                     ),
                   );
                 },
               ),
-              const FriendsPostCarousel(),
+              const FriendsPostList(),
             ],
           ),
         ),

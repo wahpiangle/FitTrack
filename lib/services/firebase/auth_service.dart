@@ -27,8 +27,8 @@ class AuthService {
           email: email, password: password);
       User? user = result.user;
       objectBox.initializeObjectBoxUponLogin();
-      objectBox.workoutSessionService.populateDataFromFirebase();
-      objectBox.exerciseService.populateDataFromFirebase();
+      await objectBox.exerciseService.populateDataFromFirebase();
+      await objectBox.workoutSessionService.populateDataFromFirebase();
       Provider.of<UserProfileProvider>(navigatorKey.currentContext!,
               listen: false)
           .loadAll();
@@ -83,9 +83,22 @@ class AuthService {
       );
       UserCredential result = await _auth.signInWithCredential(credential);
       User? user = result.user;
-      objectBox.workoutSessionService.populateDataFromFirebase();
-      objectBox.exerciseService.populateDataFromFirebase();
+      objectBox.initializeObjectBoxUponLogin();
+      await objectBox.exerciseService.populateDataFromFirebase();
+      await objectBox.workoutSessionService.populateDataFromFirebase();
+      Provider.of<UserProfileProvider>(navigatorKey.currentContext!,
+              listen: false)
+          .loadAll();
       return user;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  //forgot password
+  Future forgotPassword(String email) async {
+    try {
+      await _auth.sendPasswordResetEmail(email: email);
     } catch (e) {
       rethrow;
     }
