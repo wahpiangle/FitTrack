@@ -4,6 +4,7 @@ import 'package:group_project/models/firebase/firebase_user.dart';
 import 'package:group_project/models/firebase/firebase_user_post.dart';
 import 'package:group_project/pages/home/components/display_post_screen/display_post_image_screen.dart';
 import 'package:group_project/pages/home/components/friends_post/friend_post_carousel.dart';
+import 'package:group_project/pages/user_profile/profile.dart';
 import 'package:intl/intl.dart';
 
 class FriendPost extends StatefulWidget {
@@ -42,44 +43,54 @@ class _FriendPostState extends State<FriendPost> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Row(
-              children: [
-                CachedNetworkImage(
-                  imageUrl: widget.friend.photoUrl,
-                  imageBuilder: (context, imageProvider) => CircleAvatar(
-                    backgroundImage: imageProvider,
-                    radius: 20,
+            GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => UserProfilePage(user: widget.friend),
                   ),
-                  placeholder: (context, url) =>
-                      const CircularProgressIndicator(),
-                  errorWidget: (context, url, error) => const CircleAvatar(
-                    backgroundImage: AssetImage(
-                      'assets/icons/defaultimage.jpg',
+                );
+              },
+              child: Row(
+                children: [
+                  CachedNetworkImage(
+                    imageUrl: widget.friend.photoUrl,
+                    imageBuilder: (context, imageProvider) => CircleAvatar(
+                      backgroundImage: imageProvider,
+                      radius: 20,
                     ),
-                  ),
-                ),
-                const SizedBox(width: 10),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      widget.friendPostData.postedBy.displayName,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
+                    placeholder: (context, url) =>
+                        const CircularProgressIndicator(),
+                    errorWidget: (context, url, error) => const CircleAvatar(
+                      backgroundImage: AssetImage(
+                        'assets/icons/defaultimage.jpg',
                       ),
                     ),
-                    Text(
-                      DateFormat('EEEE, dd MMMM yyyy, hh:mm:ss a').format(
-                          widget.friendPostDataList[_currentIndex].post.date),
-                      style: const TextStyle(
-                        color: Colors.grey,
+                  ),
+                  const SizedBox(width: 10),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        widget.friendPostData.postedBy.displayName,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-              ],
+                      Text(
+                        DateFormat('EEEE, dd MMMM yyyy, hh:mm:ss a').format(
+                            widget.friendPostDataList[_currentIndex].post.date),
+                        style: const TextStyle(
+                          color: Colors.grey,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
             IconButton(
               icon: const Icon(Icons.more_vert),

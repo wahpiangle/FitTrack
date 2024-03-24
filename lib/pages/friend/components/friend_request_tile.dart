@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:group_project/constants/themes/app_colours.dart';
 import 'package:group_project/models/firebase/firebase_user.dart';
 import 'package:group_project/pages/friend/search/user_image_display.dart';
+import 'package:group_project/pages/user_profile/profile.dart';
 import 'package:group_project/services/firebase/firebase_friends_service.dart';
 
 class FriendRequestTile extends StatelessWidget {
@@ -47,6 +48,11 @@ class FriendRequestTile extends StatelessWidget {
           ),
         ),
       ),
+      onTap: () {
+        Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => UserProfilePage(user: userData),
+        ));
+      },
     );
   }
 }
