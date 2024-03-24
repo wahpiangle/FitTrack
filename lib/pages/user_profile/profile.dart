@@ -2,7 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:group_project/constants/themes/app_colours.dart';
 import 'package:group_project/models/firebase/firebase_user.dart';
+import 'package:group_project/models/firebase/firebase_user_post.dart';
 import 'package:group_project/models/post.dart';
+import 'package:group_project/pages/home/components/display_post_screen/display_post_image_screen.dart';
 import 'package:group_project/services/firebase/firebase_posts_service.dart';
 
 class UserProfilePage extends StatefulWidget {
@@ -119,34 +121,37 @@ class UserProfilePageState extends State<UserProfilePage> {
                           itemCount: snapshot.data!.length,
                           itemBuilder: (context, index) {
                             Post post = snapshot.data![index];
-                            List<String> imageUrls = [post.firstImageUrl, post.secondImageUrl]; // Add more image URLs if needed
+                            List<String> imageUrls = [post.firstImageUrl, post.secondImageUrl];
 
-                            // Show only the first image
                             String firstImageUrl = imageUrls.isNotEmpty ? imageUrls[0] : '';
 
-                            return Stack(
-                              children: [
-                                Positioned.fill(
-                                  child: Image.network(
-                                    firstImageUrl,
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                                if (imageUrls.length > 1)
-                                  const Positioned(
-                                    top: 5,
-                                    right: 5,
-                                    child: Icon(
-                                      Icons.collections,
-                                      color: Colors.white,
-                                      size: 25,
+                            return GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => DisplayPostImageScreen(
+                                      post: post,
+                                      posterInfo: widget.user,
+                                      index: 0,
+                                      firebaseUserPosts: [FirebaseUserPost(post, widget.user, [], [])],
                                     ),
                                   ),
-                              ],
+                                );
+                              },
+                              child: Stack(
+                                children: [
+                                  Positioned.fill(
+                                    child: Image.network(
+                                      firstImageUrl,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             );
                           },
                         );
-
 
 
                       } else {
