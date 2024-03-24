@@ -24,16 +24,22 @@ class _EmailPasswordLoginState extends State<EmailPasswordLogin> {
     return Scaffold(
       backgroundColor: const Color(0xFF1A1A1A),
       appBar: AppBar(
-          backgroundColor: const Color(0xFF1A1A1A),
-          elevation: 0.0,
-          title: const Text('Login'),
-          centerTitle: true,
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back, color: Colors.white),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          )),
+        backgroundColor: const Color(0xFF1A1A1A),
+        elevation: 0.0,
+        title: const Text(
+          'Login',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 18,
+          ),
+        ),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
+      ),
       body: Container(
         constraints: const BoxConstraints.expand(),
         padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 50.0),
@@ -149,7 +155,7 @@ class _EmailPasswordLoginState extends State<EmailPasswordLogin> {
                       )),
                 ),
               ),
-              const SizedBox(height: 20.0),
+              const SizedBox(height: 10.0),
               Center(
                 child: TextButton(
                   child: const Text('Don\'t have an account? Create one now',
@@ -161,12 +167,25 @@ class _EmailPasswordLoginState extends State<EmailPasswordLogin> {
                   },
                 ),
               ),
+              Center(
+                child: TextButton(
+                  child: const Text('Forgot Password?',
+                      style: TextStyle(
+                        color: Colors.white,
+                      )),
+                  onPressed: () {
+                    Navigator.of(context).pushNamed("forgot-password");
+                  },
+                ),
+              ),
               const SizedBox(height: 12.0),
               Center(
-                child: Text(errorMessage,
-                    style: const TextStyle(
-                      color: Colors.red,
-                    )),
+                child: Text(
+                  errorMessage,
+                  style: const TextStyle(
+                    color: Colors.red,
+                  ),
+                ),
               ),
             ],
           ),
