@@ -3,6 +3,7 @@ import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:group_project/pages/auth/email_password_login.dart';
+import 'package:group_project/pages/auth/forgot_password.dart';
 import 'package:group_project/pages/auth/register_screen.dart';
 import 'package:group_project/pages/auth_wrapper.dart';
 import 'package:group_project/pages/complete_workout/capture_image/upload_image_provider.dart';
@@ -96,6 +97,7 @@ class MyApp extends StatelessWidget {
           "post_workout_prompt": (context) => PostWorkoutPrompt(
                 cameras: cameras,
               ),
+          "forgot-password": (context) => const ForgotPassword(),
         },
         theme: ThemeData(
           bottomNavigationBarTheme: const BottomNavigationBarThemeData(

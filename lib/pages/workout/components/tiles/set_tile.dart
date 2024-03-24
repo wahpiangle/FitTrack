@@ -6,8 +6,6 @@ import 'package:group_project/models/exercise_set.dart';
 import 'package:group_project/models/exercises_sets_info.dart';
 import 'dart:math';
 
-import 'package:group_project/models/workout_session.dart';
-
 class SetTile extends StatefulWidget {
   final ExerciseSet set;
   final int setIndex;
@@ -52,7 +50,6 @@ class _SetTileState extends State<SetTile> with TickerProviderStateMixin {
     fetchRecentWeightAndReps();
     weightController = TextEditingController();
     repsController = TextEditingController();
-
   }
 
   @override
@@ -68,7 +65,8 @@ class _SetTileState extends State<SetTile> with TickerProviderStateMixin {
       final exercise = exercisesSetsInfo.exercise.target;
       if (exercise != null) {
         final recentWeight = objectBox.exerciseService
-            .getRecentWeight(exercise.id, widget.setIndex);final recentReps = objectBox.exerciseService
+            .getRecentWeight(exercise.id, widget.setIndex);
+        final recentReps = objectBox.exerciseService
             .getRecentReps(exercise.id, widget.setIndex);
         setState(() {
           this.recentWeight = recentWeight;
@@ -140,7 +138,7 @@ class _SetTileState extends State<SetTile> with TickerProviderStateMixin {
               flex: 1,
               child: GestureDetector(
                 onTap: () {
-                  if(!widget.isCurrentEditing) {
+                  if (!widget.isCurrentEditing) {
                     onTapPreviousTab(widget.exercisesSetsInfo);
                     _controller.forward(from: 0.0);
                     setState(() {
@@ -151,7 +149,8 @@ class _SetTileState extends State<SetTile> with TickerProviderStateMixin {
                         isTapped = false;
                       });
                     });
-                  }},
+                  }
+                },
                 child: AnimatedBuilder(
                   animation: _controller,
                   builder: (context, child) {
@@ -278,7 +277,7 @@ class _SetTileState extends State<SetTile> with TickerProviderStateMixin {
                           ? Colors.green[300]
                           : AppColours.primaryBright,
                       child: InkWell(
-                          onTap: ()  {
+                          onTap: () {
                             widget.setIsCompleted!(widget.set.id);
                           },
                           child: const Padding(
