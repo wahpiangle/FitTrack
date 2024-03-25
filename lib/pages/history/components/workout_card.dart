@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:group_project/models/workout_session.dart';
-import 'package:group_project/pages/history/components/workout_menu_anchor.dart';
+import 'package:group_project/pages/history/menu_anchor/workout_menu_anchor.dart';
 import 'package:group_project/pages/history/history_detail.dart';
 import 'package:intl/intl.dart';
 

@@ -144,7 +144,6 @@ class _FriendPostState extends State<FriendPost> {
                     MaterialPageRoute(
                       builder: (context) => DisplayPostImageScreen(
                         index: _currentIndex,
-                        post: widget.friendPostData.post,
                         posterInfo: widget.friendPostData.postedBy,
                         firebaseUserPosts: widget.friendPostDataList,
                       ),
