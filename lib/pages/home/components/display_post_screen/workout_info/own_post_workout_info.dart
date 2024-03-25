@@ -65,7 +65,8 @@ class OwnPostWorkoutInfo extends StatelessWidget {
             ),
           ),
           subtitle: Text(
-            DateFormat('EEEE, hh:mm:ss a').format(post.date),
+            DateFormat('EEEE, dd MMMM yyyy, hh:mm:ss a')
+                .format(workoutSession.date),
             style: const TextStyle(
               color: Colors.grey,
             ),

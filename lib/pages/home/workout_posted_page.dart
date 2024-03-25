@@ -92,7 +92,6 @@ class _WorkoutPostedPageState extends State<WorkoutPostedPage> {
                                           DisplayPostImageScreen(
                                         firebaseUserPosts:
                                             widget.currentUserPosts,
-                                        post: currentUserPostInfo.post,
                                       ),
                                     ),
                                   );

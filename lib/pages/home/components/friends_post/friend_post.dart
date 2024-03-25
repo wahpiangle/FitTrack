@@ -71,7 +71,7 @@ class _FriendPostState extends State<FriendPost> {
                       ),
                     ),
                     Text(
-                      DateFormat('EEEE, hh:mm:ss a').format(
+                      DateFormat('EEEE, dd MMMM yyyy, hh:mm:ss a').format(
                           widget.friendPostDataList[_currentIndex].post.date),
                       style: const TextStyle(
                         color: Colors.grey,
@@ -144,7 +144,6 @@ class _FriendPostState extends State<FriendPost> {
                     MaterialPageRoute(
                       builder: (context) => DisplayPostImageScreen(
                         index: _currentIndex,
-                        post: widget.friendPostData.post,
                         posterInfo: widget.friendPostData.postedBy,
                         firebaseUserPosts: widget.friendPostDataList,
                       ),
