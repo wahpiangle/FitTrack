@@ -39,7 +39,6 @@ class DisplayImageStack extends StatelessWidget {
           Navigator.of(context).push(
             MaterialPageRoute(
               builder: (context) => DisplayPostImageScreen(
-                post: currentUserPostInfo.post,
                 firebaseUserPosts: currentUserPosts!,
                 index: index,
               ),

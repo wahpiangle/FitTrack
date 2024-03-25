@@ -6,7 +6,6 @@ import 'package:group_project/constants/themes/app_colours.dart';
 import 'package:group_project/models/firebase/comments.dart';
 import 'package:group_project/models/firebase/firebase_user.dart';
 import 'package:group_project/models/firebase/firebase_user_post.dart';
-import 'package:group_project/models/post.dart';
 import 'package:group_project/pages/complete_workout/capture_image/components/interactive_image_viewer.dart';
 import 'package:group_project/pages/home/components/display_post_screen/comment/comment_footer.dart';
 import 'package:group_project/pages/home/components/display_post_screen/comment/comment_tile.dart';
@@ -20,14 +19,12 @@ import 'package:intl/intl.dart';
 import 'package:keyboard_attachable/keyboard_attachable.dart';
 
 class DisplayPostImageScreen extends StatefulWidget {
-  final Post post;
   final FirebaseUser? posterInfo;
   final List<FirebaseUserPost> firebaseUserPosts;
   final int index;
 
   const DisplayPostImageScreen({
     super.key,
-    required this.post,
     this.posterInfo,
     this.index = 0,
     required this.firebaseUserPosts,
@@ -69,8 +66,8 @@ class _DisplayPostImageScreenState extends State<DisplayPostImageScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final isOwnPost =
-        AuthService().getCurrentUser()!.uid == widget.post.postedBy;
+    final isOwnPost = AuthService().getCurrentUser()!.uid ==
+        widget.firebaseUserPosts[_streamIndex].postedBy.uid;
     return Scaffold(
         appBar: AppBar(
           centerTitle: true,
@@ -86,7 +83,8 @@ class _DisplayPostImageScreenState extends State<DisplayPostImageScreen> {
                 ),
               ),
               Text(
-                DateFormat('EEEE, hh:mm:ss a').format(widget.post.date),
+                DateFormat('EEEE, dd MMMM yyyy, hh:mm:ss a')
+                    .format(widget.firebaseUserPosts[_streamIndex].post.date),
                 style: const TextStyle(
                   color: Colors.grey,
                   fontSize: 12,
@@ -132,7 +130,8 @@ class _DisplayPostImageScreenState extends State<DisplayPostImageScreen> {
           child: SafeArea(
             maintainBottomViewPadding: true,
             child: FooterLayout(
-              footer: CommentFooter(post: widget.post),
+              footer: CommentFooter(
+                  post: widget.firebaseUserPosts[_streamIndex].post),
               child: Container(
                 padding: const EdgeInsets.all(10),
                 child: SingleChildScrollView(
@@ -182,13 +181,15 @@ class _DisplayPostImageScreenState extends State<DisplayPostImageScreen> {
                         padding: const EdgeInsets.only(top: 10),
                         child: GestureDetector(
                           onTap: () {
-                            if (widget.post.postedBy ==
+                            if (widget.firebaseUserPosts[_streamIndex].post
+                                    .postedBy ==
                                 FirebaseAuth.instance.currentUser!.uid) {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => EditCaptionPage(
-                                    post: widget.post,
+                                    post: widget
+                                        .firebaseUserPosts[_streamIndex].post,
                                   ),
                                 ),
                               );
@@ -261,7 +262,8 @@ class _DisplayPostImageScreenState extends State<DisplayPostImageScreen> {
                                   if (comment.postedBy ==
                                           FirebaseAuth
                                               .instance.currentUser!.uid ||
-                                      widget.post.postedBy ==
+                                      widget.firebaseUserPosts[_streamIndex]
+                                              .post.postedBy ==
                                           FirebaseAuth
                                               .instance.currentUser!.uid) {
                                     HapticFeedback.heavyImpact();
@@ -270,7 +272,9 @@ class _DisplayPostImageScreenState extends State<DisplayPostImageScreen> {
                                       builder: (context) {
                                         return DeleteCommentDialog(
                                           comment: comment,
-                                          post: widget.post,
+                                          post: widget
+                                              .firebaseUserPosts[_streamIndex]
+                                              .post,
                                         );
                                       },
                                     );
