@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:group_project/models/firebase/firebase_user_post.dart';
 import 'package:group_project/pages/home/components/reaction/reaction_button.dart';
@@ -38,10 +39,11 @@ class _InteractiveFriendsPostImageState
       children: [
         ClipRRect(
           borderRadius: BorderRadius.circular(8.0),
-          child: Image.network(
-            widget.friendPostData.post.firstImageUrl,
+          child: CachedNetworkImage(
+            imageUrl: widget.friendPostData.post.firstImageUrl,
             fit: BoxFit.cover,
             width: double.infinity,
+            errorWidget: (context, url, error) => const Center(child: Text('An error has occurred')),
           ),
         ),
         Positioned(
@@ -49,10 +51,11 @@ class _InteractiveFriendsPostImageState
           left: 20,
           child: ClipRRect(
             borderRadius: BorderRadius.circular(8.0),
-            child: Image.network(
-              widget.friendPostData.post.secondImageUrl,
+            child: CachedNetworkImage(
+              imageUrl: widget.friendPostData.post.secondImageUrl,
               fit: BoxFit.cover,
               width: 100,
+              errorWidget: (context, url, error) => const SizedBox.shrink(),
             ),
           ),
         ),

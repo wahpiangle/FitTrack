@@ -25,8 +25,7 @@ class _HomeState extends State<Home> {
 
   @override
   void dispose() {
-    currentUserPostStream.drain();
-    super.dispose();
+    currentUserPostStream.drain();super.dispose();
   }
 
   bool setUserHasPostedPastDay(List<FirebaseUserPost> currentUserPosts) {
@@ -53,8 +52,9 @@ class _HomeState extends State<Home> {
             );
           }
           if (snapshot.hasError) {
+            print("1 Error is ${snapshot.error}");
             return const Center(
-              child: Text('An error occurred',
+              child: Text('An error occurred 1',
                   style: TextStyle(fontSize: 20, color: Colors.white)),
             );
           }
@@ -73,8 +73,9 @@ class _HomeState extends State<Home> {
                   );
                 }
                 if (snapshot.hasError) {
+                  print("2 Error is ${snapshot.error}");
                   return const Center(
-                    child: Text('An error occurred',
+                    child: Text('An error occurred 2',
                         style: TextStyle(fontSize: 20, color: Colors.white)),
                   );
                 }
