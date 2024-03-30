@@ -36,14 +36,29 @@ class _InteractiveFriendsPostImageState
 
   @override
   Widget build(BuildContext context) {
+    if (widget.friendPostData == null ||
+        widget.friendPostData!.post.firstImageUrl == null ||
+        widget.friendPostData!.post.secondImageUrl == null) {
+      return const Center(
+        child: Text(
+          'An error occurred',
+          style: TextStyle(
+            color: Colors.red,
+            fontSize: 16,
+          ),
+        ),
+      );
+    }
     return Stack(
       children: [
         InteractiveImageViewer(
-          imagePath: widget.friendPostData.post.firstImageUrl,
-          imagePath2: widget.friendPostData.post.secondImageUrl,
+          imagePath: widget.friendPostData!.post.firstImageUrl!,
+          imagePath2: widget.friendPostData!.post.secondImageUrl!,
           disableScroll: () {
+            // Implement disableScroll logic if needed
           },
           enableScroll: () {
+            // Implement enableScroll logic if needed
           },
         ),
         displayHoldInstruction
