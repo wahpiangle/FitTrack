@@ -64,6 +64,12 @@ class _DisplayPostImageScreenState extends State<DisplayPostImageScreen> {
     });
   }
 
+  List<FirebaseUserPost> filterPostsByLast24Hours(List<FirebaseUserPost> posts) {
+    final DateTime now = DateTime.now();
+    final DateTime yesterday = now.subtract(const Duration(days: 1));
+    return posts.where((post) => post.post.date.isAfter(yesterday)).toList();
+  }
+
   @override
   Widget build(BuildContext context) {
     final isOwnPost = AuthService().getCurrentUser()!.uid ==
