@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:group_project/models/firebase/firebase_user_post.dart';
+import 'package:group_project/pages/complete_workout/capture_image/components/interactive_image_viewer.dart';
 import 'package:group_project/pages/home/components/reaction/reaction_button.dart';
 import 'package:group_project/pages/home/components/reaction/reaction_images.dart';
 
@@ -37,27 +38,13 @@ class _InteractiveFriendsPostImageState
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        ClipRRect(
-          borderRadius: BorderRadius.circular(8.0),
-          child: CachedNetworkImage(
-            imageUrl: widget.friendPostData.post.firstImageUrl,
-            fit: BoxFit.cover,
-            width: double.infinity,
-            errorWidget: (context, url, error) => const Center(child: Text('An error has occurred')),
-          ),
-        ),
-        Positioned(
-          top: 20,
-          left: 20,
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(8.0),
-            child: CachedNetworkImage(
-              imageUrl: widget.friendPostData.post.secondImageUrl,
-              fit: BoxFit.cover,
-              width: 100,
-              errorWidget: (context, url, error) => const Center(child: Text('An error has occured')),
-            ),
-          ),
+        InteractiveImageViewer(
+          imagePath: widget.friendPostData.post.firstImageUrl,
+          imagePath2: widget.friendPostData.post.secondImageUrl,
+          disableScroll: () {
+          },
+          enableScroll: () {
+          },
         ),
         displayHoldInstruction
             ? Positioned.fill(

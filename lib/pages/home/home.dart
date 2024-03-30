@@ -25,7 +25,8 @@ class _HomeState extends State<Home> {
 
   @override
   void dispose() {
-    currentUserPostStream.drain();super.dispose();
+    currentUserPostStream.drain();
+    super.dispose();
   }
 
   bool setUserHasPostedPastDay(List<FirebaseUserPost> currentUserPosts) {
