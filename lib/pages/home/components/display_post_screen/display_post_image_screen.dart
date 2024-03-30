@@ -41,12 +41,19 @@ class _DisplayPostImageScreenState extends State<DisplayPostImageScreen> {
   List<Stream<QuerySnapshot<Map<String, dynamic>>>>? _commentStreams;
   late PageController controller;
 
+  List<FirebaseUserPost> filterPostsByLast24Hours(List<FirebaseUserPost> posts) {
+    final DateTime now = DateTime.now();
+    final DateTime yesterday = now.subtract(const Duration(days: 1));
+    return posts.where((post) => post.post.date.isAfter(yesterday)).toList();
+  }
+
   @override
   void initState() {
     super.initState();
     controller = PageController(initialPage: widget.index);
     _streamIndex = widget.index;
-    _commentStreams = widget.firebaseUserPosts.map((currentUserPost) {
+    _commentStreams = filterPostsByLast24Hours(widget.firebaseUserPosts)
+        .map((currentUserPost) {
       return FirebaseCommentService.getCommentStreamById(
           currentUserPost.post.postId);
     }).toList();
@@ -64,11 +71,7 @@ class _DisplayPostImageScreenState extends State<DisplayPostImageScreen> {
     });
   }
 
-  List<FirebaseUserPost> filterPostsByLast24Hours(List<FirebaseUserPost> posts) {
-    final DateTime now = DateTime.now();
-    final DateTime yesterday = now.subtract(const Duration(days: 1));
-    return posts.where((post) => post.post.date.isAfter(yesterday)).toList();
-  }
+
 
   @override
   Widget build(BuildContext context) {

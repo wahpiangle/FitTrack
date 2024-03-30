@@ -18,8 +18,6 @@ class FirebaseCommentService {
         comments.addAll(
           commentsSnapshot.docs.map((doc) => Comment.fromDocument(doc)),
         );
-      } else {
-        print('No comments found for post ID: $postId');
       }
     } catch (e) {
       print('Error fetching comments: $e');
