@@ -88,6 +88,7 @@ class _InteractiveImageViewerState extends State<InteractiveImageViewer> {
           top: yOffset,
           child: GestureDetector(
             onTap: () {
+              print("tap");
               HapticFeedback.vibrate();
               setState(() {
                 displaySecondImage = !displaySecondImage;
