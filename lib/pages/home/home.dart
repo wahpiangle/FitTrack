@@ -51,12 +51,6 @@ class _HomeState extends State<Home> {
               child: CircularProgressIndicator(),
             );
           }
-          if (snapshot.hasError) {
-            return const Center(
-              child: Text('An error occurred',
-                  style: TextStyle(fontSize: 20, color: Colors.white)),
-            );
-          }
           if (snapshot.connectionState == ConnectionState.active &&
               snapshot.hasData) {
             final currentUserPosts =
@@ -93,13 +87,15 @@ class _HomeState extends State<Home> {
                   }
                 }
                 return const Center(
-                  child: Text('An error occurred'),
+                  child: Text('An error occurred',
+                      style: TextStyle(fontSize: 20, color: Colors.white)),
                 );
               }),
             );
           }
           return const Center(
-            child: Text('An error occurred'),
+            child: Text('An error occurred',
+                style: TextStyle(fontSize: 20, color: Colors.white)),
           );
         },
       ),
