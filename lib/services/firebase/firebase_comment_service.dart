@@ -8,16 +8,18 @@ class FirebaseCommentService {
 
     try {
       QuerySnapshot<Map<String, dynamic>> commentsSnapshot =
-          await FirebaseFirestore.instance
-              .collection('posts')
-              .doc(postId)
-              .collection('comments')
-              .get();
+      await FirebaseFirestore.instance
+          .collection('posts')
+          .doc(postId)
+          .collection('comments')
+          .get();
 
       if (commentsSnapshot.docs.isNotEmpty) {
         comments.addAll(
           commentsSnapshot.docs.map((doc) => Comment.fromDocument(doc)),
         );
+      } else {
+        print('No comments found for post ID: $postId');
       }
     } catch (e) {
       print('Error fetching comments: $e');
@@ -25,6 +27,7 @@ class FirebaseCommentService {
 
     return comments;
   }
+
 
   static Future<void> addCommentToPost(String postId, String comment) async {
     final currentUser = FirebaseAuth.instance.currentUser;

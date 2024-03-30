@@ -59,15 +59,17 @@ class _HomeState extends State<Home> {
             );
           }
           if (snapshot.connectionState == ConnectionState.active &&
-              snapshot.hasData) {
+              snapshot.data != null) {
+            print("snapshot data");
             final currentUserPosts =
                 FirebaseUserPost.convertStreamDataToCurrentUserPost(
-              snapshot.data!.docs,
+              snapshot.data!.docs
             );
             return FutureBuilder(
               future: currentUserPosts,
               builder: ((context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
+                  print("dino");
                   return const Center(
                     child: CircularProgressIndicator(),
                   );
