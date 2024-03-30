@@ -52,15 +52,13 @@ class _HomeState extends State<Home> {
             );
           }
           if (snapshot.hasError) {
-            print("1 Error is ${snapshot.error}");
             return const Center(
-              child: Text('An error occurred 1',
+              child: Text('An error occurred',
                   style: TextStyle(fontSize: 20, color: Colors.white)),
             );
           }
           if (snapshot.connectionState == ConnectionState.active &&
               snapshot.data != null) {
-            print("snapshot data");
             final currentUserPosts =
                 FirebaseUserPost.convertStreamDataToCurrentUserPost(
               snapshot.data!.docs
@@ -69,15 +67,13 @@ class _HomeState extends State<Home> {
               future: currentUserPosts,
               builder: ((context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  print("dino");
                   return const Center(
                     child: CircularProgressIndicator(),
                   );
                 }
                 if (snapshot.hasError) {
-                  print("2 Error is ${snapshot.error}");
                   return const Center(
-                    child: Text('An error occurred 2',
+                    child: Text('An error occurred',
                         style: TextStyle(fontSize: 20, color: Colors.white)),
                   );
                 }

@@ -55,7 +55,7 @@ class _InteractiveFriendsPostImageState
               imageUrl: widget.friendPostData.post.secondImageUrl,
               fit: BoxFit.cover,
               width: 100,
-              errorWidget: (context, url, error) => const SizedBox.shrink(),
+              errorWidget: (context, url, error) => const Center(child: Text('An error has occured')),
             ),
           ),
         ),
