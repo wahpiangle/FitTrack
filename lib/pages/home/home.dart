@@ -97,13 +97,15 @@ class _HomeState extends State<Home> {
                   }
                 }
                 return const Center(
-                  child: Text('An error occurred'),
+                  child: Text('An error occurred',
+                      style: TextStyle(fontSize: 20, color: Colors.white)),
                 );
               }),
             );
           }
           return const Center(
-            child: Text('An error occurred'),
+            child: Text('An error occurred',
+                style: TextStyle(fontSize: 20, color: Colors.white)),
           );
         },
       ),

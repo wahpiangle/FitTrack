@@ -21,12 +21,27 @@ class FirebaseUserService {
         'email': user.email,
         'username': formattedUsername,
         'displayName': formattedUsername,
-        'photoUrl': '',
+        'photoUrl': user.photoURL ?? '',
         'createdAt': FieldValue.serverTimestamp(),
         'updatedAt': FieldValue.serverTimestamp(),
       });
     } else {
       throw Exception('User already exists');
+    }
+  }
+
+  static Future<void> createGoogleUserInFirestore(User user) async {
+    final DocumentSnapshot<Map<String, dynamic>> doc =
+        await usersCollectionRef.doc(user.uid).get();
+    if (!doc.exists) {
+      usersCollectionRef.doc(user.uid).set({
+        'email': user.email,
+        'username': user.email,
+        'displayName': user.displayName,
+        'photoUrl': user.photoURL ?? '',
+        'createdAt': FieldValue.serverTimestamp(),
+        'updatedAt': FieldValue.serverTimestamp(),
+      });
     }
   }
 

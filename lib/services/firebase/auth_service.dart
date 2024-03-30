@@ -82,6 +82,10 @@ class AuthService {
         idToken: googleSignInAuthentication.idToken,
       );
       UserCredential result = await _auth.signInWithCredential(credential);
+      bool isFirstTime = result.additionalUserInfo!.isNewUser;
+      if (isFirstTime) {
+        await FirebaseUserService.createGoogleUserInFirestore(result.user!);
+      }
       User? user = result.user;
       objectBox.initializeObjectBoxUponLogin();
       await objectBox.exerciseService.populateDataFromFirebase();
