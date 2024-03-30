@@ -1,12 +1,8 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:group_project/constants/themes/app_colours.dart';
-import 'package:group_project/models/firebase/reaction.dart';
-import 'package:group_project/models/post.dart';
 import 'package:group_project/models/workout_session.dart';
 import 'package:group_project/pages/history/menu_anchor/workout_menu_anchor.dart';
-import 'package:group_project/pages/home/components/front_back_image.dart';
-import 'package:group_project/services/firebase/firebase_posts_service.dart';
+import 'package:group_project/pages/history/post_display.dart';
 import 'package:intl/intl.dart';
 
 class HistoryDetail extends StatefulWidget {
@@ -64,13 +60,13 @@ class _HistoryDetailState extends State<HistoryDetail> {
         ),
         actions: [
           WorkoutMenuAnchor(
-              workoutSessionId: widget.workoutSession.id, isDetailPage: true)
+            workoutSessionId: widget.workoutSession.id,
+            isDetailPage: true,
+          ),
         ],
       ),
       body: Container(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 10,
-        ),
+        padding: const EdgeInsets.symmetric(horizontal: 10),
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -135,8 +131,8 @@ class _HistoryDetailState extends State<HistoryDetail> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Padding(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 6.0),
+                        padding:
+                        const EdgeInsets.symmetric(vertical: 6.0),
                         child: Text(
                           exercisesSetInfo.exercise.target?.name ?? '',
                           style: const TextStyle(
@@ -151,7 +147,8 @@ class _HistoryDetailState extends State<HistoryDetail> {
                             .entries
                             .map(
                               (setInfo) => Padding(
-                            padding: const EdgeInsets.symmetric(
+                            padding:
+                            const EdgeInsets.symmetric(
                                 vertical: 8.0),
                             child: Row(
                               mainAxisSize: MainAxisSize.max,
@@ -162,7 +159,8 @@ class _HistoryDetailState extends State<HistoryDetail> {
                                   padding: const EdgeInsets.only(
                                       right: 20),
                                   child: Text(
-                                    (setInfo.key + 1).toString(),
+                                    (setInfo.key + 1)
+                                        .toString(),
                                     style: TextStyle(
                                       color: Colors.grey[300],
                                       fontSize: 16,
@@ -180,7 +178,8 @@ class _HistoryDetailState extends State<HistoryDetail> {
                                           Text(
                                             ('${setInfo.value.weight} kg × ${setInfo.value.reps}'),
                                             style: TextStyle(
-                                              color: Colors.grey[300],
+                                              color:
+                                              Colors.grey[300],
                                               fontSize: 16,
                                             ),
                                           ),
@@ -203,8 +202,7 @@ class _HistoryDetailState extends State<HistoryDetail> {
                                         child: Text(
                                           '🏆 PR',
                                           style: TextStyle(
-                                            color:
-                                            Colors.green[900],
+                                            color: Colors.green[900],
                                             fontSize: 12,
                                           ),
                                         ),
@@ -225,122 +223,10 @@ class _HistoryDetailState extends State<HistoryDetail> {
                     .toList(),
               ),
               SizedBox(height: 50),
-              AnimatedOpacity(
-                opacity: _isVisible ? 1.0 : 0.0,
-                duration: Duration(milliseconds: 500),
-                curve: Curves.easeInOut,
-                child: Transform.translate(
-                  offset: _isVisible ? Offset(0.0, 0.0) : Offset(0.0, 50.0),
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 20.0),
-                      child: Text(
-                        'Your Memories',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 30,
-                          fontWeight: FontWeight.bold,
-                          fontFamily: 'Dancing Script',
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
+              PostDisplay(
+                postId: widget.workoutSession.postId,
+                isVisible: _isVisible,
               ),
-              AnimatedOpacity(
-                opacity: _isVisible ? 1.0 : 0.0,
-                duration: Duration(milliseconds: 500),
-                curve: Curves.easeInOut,
-                child: Transform.translate(
-                  offset: _isVisible ? Offset(0.0, 0.0) : Offset(0.0, 50.0),
-                  child: Container(
-                    height: MediaQuery.of(context).size.height * 0.35,
-                    width: MediaQuery.of(context).size.width * 1,
-                    margin: const EdgeInsets.symmetric(vertical: 8),
-                    child: FutureBuilder<Post>(
-                      future: FirebasePostsService.getPostById(widget.workoutSession.postId),
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState == ConnectionState.waiting) {
-                          return Center(child: CircularProgressIndicator());
-                        } else if (snapshot.hasError) {
-                          return Center(child: Text('Error: ${snapshot.error}'));
-                        } else if (snapshot.hasData) {
-                          final post = snapshot.data!;
-                          return ClipRRect(
-                            borderRadius: BorderRadius.circular(20),
-                            child: Stack(
-                              children: [
-                                Positioned(
-                                  top: 0,
-                                  left: 5,
-                                  right: 0,
-                                  child: getImageBasedonType(post.firstImageUrl, false),
-                                ),
-                                Positioned(
-                                  top: 20,
-                                  left: 20,
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(5),
-                                    child: getImageBasedonType(post.secondImageUrl, true),
-                                  ),
-                                ),
-                                Positioned(
-                                  bottom: 10,
-                                  right: 10,
-                                  child: FutureBuilder<List<Reaction>>(
-                                    future: FirebasePostsService.getReactionsByPostId(widget.workoutSession.postId),
-                                    builder: (context, snapshot) {
-                                      if (snapshot.connectionState == ConnectionState.waiting) {
-                                        return CircularProgressIndicator();
-                                      } else if (snapshot.hasError) {
-                                        return Text('Error: ${snapshot.error}');
-                                      } else if (snapshot.hasData) {
-                                        final reactions = snapshot.data!;
-                                        final reactionImageUrl = reactions.isNotEmpty ? reactions[0].imageUrl : '';
-                                        return reactionImageUrl.isNotEmpty
-                                            ? Container(
-                                          width: 50,
-                                          height: 50,
-                                          decoration: BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            border: Border.all(color: Colors.black),
-                                          ),
-                                          child: ClipOval(
-                                            child: CachedNetworkImage(
-                                              imageUrl: reactionImageUrl,
-                                              width: 50,
-                                              height: 50,
-                                              fit: BoxFit.cover,
-                                              placeholder: (context, url) => CircularProgressIndicator(),
-                                              errorWidget: (context, url, error) => Icon(Icons.error),
-                                            ),
-                                          ),
-                                        )
-                                            : SizedBox();
-                                      } else {
-                                        return SizedBox();
-                                      }
-                                    },
-                                  ),
-                                ),
-                              ],
-                            ),
-
-                          );
-
-
-                        } else {
-                          return Center(child: Text('No data available'));
-                        }
-                      },
-                    ),
-                  ),
-
-                ),
-              ),
-
-
             ],
           ),
         ),
