@@ -55,10 +55,8 @@ class _InteractiveFriendsPostImageState
           imagePath: widget.friendPostData!.post.firstImageUrl!,
           imagePath2: widget.friendPostData!.post.secondImageUrl!,
           disableScroll: () {
-            // Implement disableScroll logic if needed
           },
           enableScroll: () {
-            // Implement enableScroll logic if needed
           },
         ),
         displayHoldInstruction
