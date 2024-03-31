@@ -6,6 +6,7 @@ import 'package:group_project/models/firebase/firebase_user.dart';
 import 'package:group_project/models/post.dart';
 import 'package:group_project/pages/home/components/display_post_screen/display_post_image_screen.dart';
 import 'package:group_project/models/firebase/firebase_user_post.dart';
+import 'package:group_project/services/firebase/firebase_friends_service.dart';
 import 'package:group_project/services/firebase/firebase_posts_service.dart';
 
 class UserProfilePage extends StatefulWidget {
@@ -112,8 +113,12 @@ class UserProfilePageState extends State<UserProfilePage> {
                       }else if (statusSnapshot.data == FriendStatus.requestReceived) {
                         // If friend request is received, show accept button
                         return ElevatedButton(
-                          onPressed: () {
-                            // TODO: Implement add friend functionality
+                          onPressed: ()  async {
+                            await FirebaseFriendsService.acceptFriendRequest(widget.user.uid, () {
+                               setState(() {
+                                // refresh the page
+                              });
+                            });
                           },
                           child: const Text(
                             'Accept Friend Request',
@@ -129,8 +134,13 @@ class UserProfilePageState extends State<UserProfilePage> {
                       } else {
                         // If they are not connected, show add friend button
                         return ElevatedButton(
-                          onPressed: () {
-                            // TODO: Implement add friend functionality
+                          onPressed: () async{
+                            await FirebaseFriendsService.addFriend(widget.user.uid);
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text('Friend request sent to ${widget.user.displayName}')),
+                            );
+                            setState(() {
+                                });
                           },
                           child: const Text(
                             'Add Friend to See Posts',

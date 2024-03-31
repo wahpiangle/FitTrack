@@ -25,7 +25,7 @@ class FirebaseFriendsService {
     return results;
   }
 
-  static void addFriend(String friendUid) async {
+  static addFriend(String friendUid) async {
     final currentUserUid = FirebaseAuth.instance.currentUser?.uid;
 
     if (currentUserUid != null) {
