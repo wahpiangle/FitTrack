@@ -212,11 +212,13 @@ class ExerciseService {
     return allSets.first;
   }
 
-
   int? getRecentWeight(int exerciseId, int setIndex) {
     final allWorkoutSessions = workoutSessionBox.getAll();
     allWorkoutSessions.sort((a, b) => b.date.compareTo(a.date));
-    final mostRecentWorkoutSession = allWorkoutSessions.first;
+    final mostRecentWorkoutSession = allWorkoutSessions.firstOrNull;
+    if (mostRecentWorkoutSession == null) {
+      return null;
+    }
     final exerciseSetsInfo = mostRecentWorkoutSession.exercisesSetsInfo;
     for (final exerciseSetInfo in exerciseSetsInfo) {
       final exercise = exerciseSetInfo.exercise.target;
@@ -237,7 +239,10 @@ class ExerciseService {
   int? getRecentReps(int exerciseId, int setIndex) {
     final allWorkoutSessions = workoutSessionBox.getAll();
     allWorkoutSessions.sort((a, b) => b.date.compareTo(a.date));
-    final mostRecentWorkoutSession = allWorkoutSessions.first;
+    final mostRecentWorkoutSession = allWorkoutSessions.firstOrNull;
+    if (mostRecentWorkoutSession == null) {
+      return null;
+    }
     final exerciseSetsInfo = mostRecentWorkoutSession.exercisesSetsInfo;
 
     for (final exerciseSetInfo in exerciseSetsInfo) {

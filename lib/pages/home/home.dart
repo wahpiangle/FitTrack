@@ -28,6 +28,17 @@ class _HomeState extends State<Home> {
     super.dispose();
   }
 
+  bool setUserHasPostedPastDay(List<FirebaseUserPost> currentUserPosts) {
+    final DateTime now = DateTime.now();
+    final DateTime yesterday = now.subtract(const Duration(days: 1));
+    for (FirebaseUserPost post in currentUserPosts) {
+      if (post.post.date.isAfter(yesterday)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,12 +49,6 @@ class _HomeState extends State<Home> {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(
               child: CircularProgressIndicator(),
-            );
-          }
-          if (snapshot.hasError) {
-            return const Center(
-              child: Text('An error occurred',
-                  style: TextStyle(fontSize: 20, color: Colors.white)),
             );
           }
           if (snapshot.connectionState == ConnectionState.active &&
@@ -68,9 +73,12 @@ class _HomeState extends State<Home> {
                 }
                 if (snapshot.connectionState == ConnectionState.done &&
                     snapshot.hasData) {
-                  final currentUserPosts =
-                      snapshot.data as List<FirebaseUserPost>;
-                  if (currentUserPosts.isEmpty) {
+                  final currentUserPosts = snapshot.data
+                      as List<FirebaseUserPost>
+                    ..sort((a, b) => b.post.date.compareTo(a.post.date));
+                  final bool userHasPostedPastDay =
+                      setUserHasPostedPastDay(currentUserPosts);
+                  if (currentUserPosts.isEmpty || !userHasPostedPastDay) {
                     return const NoWorkoutPostedPage();
                   } else {
                     return WorkoutPostedPage(
@@ -79,13 +87,15 @@ class _HomeState extends State<Home> {
                   }
                 }
                 return const Center(
-                  child: Text('An error occurred'),
+                  child: Text('An error occurred',
+                      style: TextStyle(fontSize: 20, color: Colors.white)),
                 );
               }),
             );
           }
           return const Center(
-            child: Text('An error occurred'),
+            child: Text('An error occurred',
+                style: TextStyle(fontSize: 20, color: Colors.white)),
           );
         },
       ),

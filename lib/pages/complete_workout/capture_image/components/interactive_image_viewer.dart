@@ -107,7 +107,7 @@ class _InteractiveImageViewerState extends State<InteractiveImageViewer> {
                 yOffset += details.delta.dy * 1;
 
                 xOffset =
-                    xOffset.clamp(20, MediaQuery.of(context).size.width * 0.65);
+                    xOffset.clamp(20, MediaQuery.of(context).size.width * 0.62);
                 yOffset =
                     yOffset.clamp(20, MediaQuery.of(context).size.height * 0.4);
               });
@@ -116,9 +116,9 @@ class _InteractiveImageViewerState extends State<InteractiveImageViewer> {
               if (widget.enableScroll != null) {
                 widget.enableScroll!();
               }
-              if (xOffset > MediaQuery.of(context).size.width * 0.65 / 2) {
+              if (xOffset > MediaQuery.of(context).size.width * 0.62 / 2) {
                 setState(() {
-                  xOffset = MediaQuery.of(context).size.width * 0.65;
+                  xOffset = MediaQuery.of(context).size.width * 0.62;
                 });
               } else {
                 setState(() {

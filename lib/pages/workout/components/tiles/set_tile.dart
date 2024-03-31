@@ -4,7 +4,7 @@ import 'package:group_project/constants/themes/app_colours.dart';
 import 'package:group_project/main.dart';
 import 'package:group_project/models/exercise_set.dart';
 import 'package:group_project/models/exercises_sets_info.dart';
-import 'dart:math';
+import 'package:group_project/pages/workout/components/tiles/set_tile_components/recent_values.dart';
 
 class SetTile extends StatefulWidget {
   final ExerciseSet set;
@@ -30,19 +30,12 @@ class SetTile extends StatefulWidget {
   State<SetTile> createState() => _SetTileState();
 }
 
-class _SetTileState extends State<SetTile> with TickerProviderStateMixin {
+class _SetTileState extends State<SetTile> {
   int? recentWeight;
   int? recentReps;
   late TextEditingController weightController;
   late TextEditingController repsController;
   bool isTapped = false;
-
-  late final AnimationController _controller = AnimationController(
-    vsync: this,
-    duration: const Duration(milliseconds: 500),
-  );
-
-  double shakeOffset = 1.0;
 
   @override
   void initState() {
@@ -72,22 +65,23 @@ class _SetTileState extends State<SetTile> with TickerProviderStateMixin {
           this.recentWeight = recentWeight;
           this.recentReps = recentReps;
         });
-      } else {
-        print('Exercise associated with the exercise set is null.');
       }
-    } else {
-      print('ExerciseSetsInfo associated with the exercise set is null.');
     }
   }
 
-  void onTapPreviousTab(ExercisesSetsInfo exercisesSetsInfo) {
-    weightController.text = recentWeight?.toString() ?? '';
-    repsController.text = recentReps?.toString() ?? '';
-    setState(() {
-      widget.set.weight = recentWeight;
-      widget.set.reps = recentReps;
-    });
-    objectBox.exerciseService.updateExerciseSet(widget.set);
+  void onTapPreviousTab(
+      ExercisesSetsInfo exercisesSetsInfo, AnimationController controller) {
+    if (!widget.isCurrentEditing) {
+      weightController.text = recentWeight?.toString() ?? '';
+      repsController.text = recentReps?.toString() ?? '';
+      setState(() {
+        widget.set.weight = recentWeight;
+        widget.set.reps = recentReps;
+        isTapped = true;
+      });
+      objectBox.exerciseService.updateExerciseSet(widget.set);
+      controller.forward(from: 0.0);
+    }
   }
 
   @override
@@ -134,53 +128,13 @@ class _SetTileState extends State<SetTile> with TickerProviderStateMixin {
               ),
             ),
             const SizedBox(width: 10),
-            Expanded(
-              flex: 1,
-              child: GestureDetector(
-                onTap: () {
-                  if (!widget.isCurrentEditing) {
-                    onTapPreviousTab(widget.exercisesSetsInfo);
-                    _controller.forward(from: 0.0);
-                    setState(() {
-                      isTapped = true;
-                    });
-                    Future.delayed(const Duration(milliseconds: 100), () {
-                      setState(() {
-                        isTapped = false;
-                      });
-                    });
-                  }
-                },
-                child: AnimatedBuilder(
-                  animation: _controller,
-                  builder: (context, child) {
-                    return Transform.translate(
-                      offset: Offset(
-                        CurveTween(curve: const SineCurve())
-                                .transform(_controller.value) *
-                            shakeOffset,
-                        0.0,
-                      ),
-                      child: child,
-                    );
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                    child: Text(
-                      recentWeight != null
-                          ? '${this.recentWeight}kg x ${this.recentReps}'
-                          : '-',
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                        color: isTapped ? Colors.grey : Colors.white,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                ),
-              ),
-            ),
+            RecentValues(
+                isCurrentEditing: widget.isCurrentEditing,
+                exercisesSetsInfo: widget.exercisesSetsInfo,
+                isTapped: isTapped,
+                onTapPreviousTab: onTapPreviousTab,
+                recentWeight: recentWeight,
+                recentReps: recentReps),
             const SizedBox(width: 10),
             Expanded(
               flex: 1,
@@ -212,6 +166,7 @@ class _SetTileState extends State<SetTile> with TickerProviderStateMixin {
                   ),
                   onChanged: (value) {
                     setState(() {
+                      isTapped = false;
                       widget.set.weight = int.tryParse(value);
                       if (widget.set.weight == null) {
                         widget.set.isCompleted = false;
@@ -253,6 +208,7 @@ class _SetTileState extends State<SetTile> with TickerProviderStateMixin {
                   ),
                   onChanged: (value) {
                     setState(() {
+                      isTapped = false;
                       widget.set.reps = int.tryParse(value);
                       if (widget.set.reps == null) {
                         widget.set.isCompleted = false;
@@ -302,15 +258,5 @@ class _SetTileState extends State<SetTile> with TickerProviderStateMixin {
         ),
       ),
     );
-  }
-}
-
-class SineCurve extends Curve {
-  const SineCurve({this.count = 3});
-  final double count;
-
-  @override
-  double transformInternal(double t) {
-    return sin(count * 2 * pi * t);
   }
 }
