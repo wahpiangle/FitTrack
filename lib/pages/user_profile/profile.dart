@@ -107,7 +107,7 @@ class UserProfilePageState extends State<UserProfilePage> {
                       if (statusSnapshot.connectionState == ConnectionState.waiting) {
                         return const CircularProgressIndicator();
                       }
-                      if (statusSnapshot.data == FriendStatus.friends || statusSnapshot.data == FriendStatus.requestSent) {
+                      if (statusSnapshot.data == FriendStatus.friends ) {
                         // If they are friends or request is sent, show posts
                         return _buildPostsGrid();
                       }else if (statusSnapshot.data == FriendStatus.requestReceived) {
@@ -122,6 +122,28 @@ class UserProfilePageState extends State<UserProfilePage> {
                           },
                           child: const Text(
                             'Accept Friend Request',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColours.secondary,
+                            foregroundColor: AppColours.primary,
+                          ),
+                        );
+                      } else if ( statusSnapshot.data == FriendStatus.requestSent) {
+                        // If friend request is received, show accept button
+                        return ElevatedButton(
+                          onPressed: () async{
+                            await FirebaseFriendsService.cancelFriendRequest(widget.user.uid);
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text('Friend request sent to ${widget.user.displayName}')),
+                            );
+                            setState(() {
+                            });
+                          },
+                          child: const Text(
+                            'Cancel friend request',
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                             ),

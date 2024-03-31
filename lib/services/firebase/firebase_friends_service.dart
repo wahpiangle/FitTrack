@@ -25,6 +25,40 @@ class FirebaseFriendsService {
     return results;
   }
 
+  static Future<bool> checkFriendRequestStatus(String friendUid) async {
+    final currentUserUid = FirebaseAuth.instance.currentUser?.uid;
+    if (currentUserUid == null) return false;
+
+    final currentUserDoc = await FirebaseFirestore.instance.collection('users').doc(currentUserUid).get();
+    final userData = currentUserDoc.data();
+    final requestsSent = userData?['requestSent'] as List<dynamic>? ?? [];
+    final requestsReceived = userData?['requestReceived'] as List<dynamic>? ?? [];
+
+    if (requestsSent.contains(friendUid)) {
+      // A request has been sent to this user
+      return true;
+    } else if (requestsReceived.contains(friendUid)) {
+      // A request has been received from this user
+      return true;
+    }
+    return false;
+  }
+
+
+  static Future<void> cancelFriendRequest(String friendUid) async {
+    final currentUserUid = FirebaseAuth.instance.currentUser?.uid;
+    if (currentUserUid == null) return;
+
+    // Canceling the friend request
+    await FirebaseFirestore.instance.collection('users').doc(currentUserUid).update({
+      'requestSent': FieldValue.arrayRemove([friendUid]),
+    });
+    await FirebaseFirestore.instance.collection('users').doc(friendUid).update({
+      'requestReceived': FieldValue.arrayRemove([currentUserUid]),
+    });
+  }
+
+
   static addFriend(String friendUid) async {
     final currentUserUid = FirebaseAuth.instance.currentUser?.uid;
 
@@ -44,6 +78,7 @@ class FirebaseFriendsService {
       }, SetOptions(merge: true));
     }
   }
+
 
   static Future<Map<FirebaseUser, int>> getFriendSuggestions() async {
     final currentUserUid = FirebaseAuth.instance.currentUser?.uid;

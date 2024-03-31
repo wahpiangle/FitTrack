@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:group_project/constants/themes/app_colours.dart';
@@ -27,55 +26,13 @@ class SearchBarResultState extends State<SearchBarResult> {
   @override
   void initState() {
     super.initState();
-    checkFriendRequestStatus();
+    FirebaseFriendsService.checkFriendRequestStatus(widget.friendUser.uid).then((exists) {
+      setState(() {
+        friendRequestSent = exists;
+      });
+    });
   }
 
-  Future<void> checkFriendRequestStatus() async {
-    final currentUserUid = FirebaseAuth.instance.currentUser?.uid;
-    if (currentUserUid != null) {
-      final currentUserRef =
-          FirebaseFirestore.instance.collection('users').doc(currentUserUid);
-      final currentUserData = (await currentUserRef.get()).data();
-      final friendUid = widget.friendUser.uid;
-
-      if (currentUserData != null &&
-          currentUserData.containsKey('requestSent')) {
-        final requestsSent = currentUserData['requestSent'] as List<dynamic>;
-        setState(() {
-          friendRequestSent = requestsSent.contains(friendUid);
-        });
-      }
-    }
-  }
-
-  Future<void> addOrCancelFriend() async {
-    final currentUserUid = FirebaseAuth.instance.currentUser?.uid;
-    if (currentUserUid != null) {
-      final friendUid = widget.friendUser.uid;
-      final currentUserRef =
-          FirebaseFirestore.instance.collection('users').doc(currentUserUid);
-
-      if (friendRequestSent) {
-        await currentUserRef.set({
-          'requestSent': FieldValue.arrayRemove([friendUid]),
-        }, SetOptions(merge: true));
-
-        setState(() {
-          friendRequestSent = false;
-        });
-      } else {
-        await currentUserRef.set({
-          'requestSent': FieldValue.arrayUnion([friendUid]),
-        }, SetOptions(merge: true));
-
-        setState(() {
-          friendRequestSent = true;
-        });
-
-        FirebaseFriendsService.addFriend(widget.friendUser.uid);
-      }
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -108,33 +65,32 @@ class SearchBarResultState extends State<SearchBarResult> {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   ElevatedButton(
-                    onPressed: addOrCancelFriend,
+                    onPressed: () async {
+                      if (friendRequestSent) {
+                        await FirebaseFriendsService.cancelFriendRequest(widget.friendUser.uid);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('Friend request to ${widget.friendUser.displayName} canceled')),
+                        );
+                      } else {
+                        await FirebaseFriendsService.addFriend(widget.friendUser.uid);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('Friend request sent to ${widget.friendUser.displayName}')),
+                        );
+                      }
+
+                      // Update the state to reflect the change
+                      setState(() {
+                        friendRequestSent = !friendRequestSent;
+                      });
+                    },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: friendRequestSent
-                          ? AppColours.secondaryLight
-                          : AppColours.secondary,
+                      backgroundColor: friendRequestSent ? AppColours.secondaryLight : AppColours.secondary,
                       padding: const EdgeInsets.all(8),
                       textStyle: const TextStyle(fontSize: 10),
                     ),
-                    child: AnimatedSwitcher(
-                      duration: const Duration(milliseconds: 300),
-                      child: friendRequestSent
-                          ? const Text(
-                              'Cancel',
-                              key: Key('requestedText'),
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.bold),
-                            )
-                          : const Text(
-                              'Add',
-                              key: Key('addText'),
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                    ),
+                    child: Text(friendRequestSent ? 'Cancel' : 'Add', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
                   ),
+
                 ],
               ),
       ),
