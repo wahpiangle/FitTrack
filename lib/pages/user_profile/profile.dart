@@ -1,19 +1,17 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:group_project/constants/themes/app_colours.dart';
 import 'package:group_project/models/firebase/firebase_user.dart';
 import 'package:group_project/models/post.dart';
 import 'package:group_project/pages/friend/search/user_image_display.dart';
-import 'package:group_project/pages/home/components/display_post_screen/display_post_image_screen.dart';
-import 'package:group_project/models/firebase/firebase_user_post.dart';
+import 'package:group_project/pages/user_profile/user_post_grid.dart';
 import 'package:group_project/services/firebase/firebase_friends_service.dart';
 import 'package:group_project/services/firebase/firebase_posts_service.dart';
+import 'package:group_project/services/firebase/firebase_user_profile_service.dart';
 
 class UserProfilePage extends StatefulWidget {
   final FirebaseUser user;
 
-  const UserProfilePage({Key? key, required this.user}) : super(key: key);
+  const UserProfilePage({super.key, required this.user});
 
   @override
   UserProfilePageState createState() => UserProfilePageState();
@@ -33,43 +31,10 @@ class UserProfilePageState extends State<UserProfilePage> {
   }
 
   Future<void> _loadData() async {
-    postsCount = await _getPostsCount(widget.user.uid);
-    friendsCount = await _getFriendsCount(widget.user.uid);
+    postsCount = await FirebaseUserProfileService.getPostsCount(widget.user.uid);
+    friendsCount = await FirebaseUserProfileService.getFriendsCount(widget.user.uid);
   }
 
-  Future<int> _getPostsCount(String userId) async {
-    final posts = await FirebasePostsService.getPostsByUserId(userId);
-    return posts.length;
-  }
-
-  Future<int> _getFriendsCount(String userId) async {
-    final userDoc = await FirebaseFirestore.instance.collection('users').doc(userId).get();
-    final friendsUids = userDoc.data()?['friends'] as List<dynamic>? ?? [];
-    return friendsUids.length;
-  }
-
-  Future<FriendStatus> checkFriendshipStatus(String friendUid) async {
-    final currentUserUid = FirebaseAuth.instance.currentUser?.uid;
-
-    // Fetch the current user document
-    final currentUserDocSnapshot = await FirebaseFirestore.instance.collection('users').doc(currentUserUid).get();
-    final Map<String, dynamic> currentUserDocData = currentUserDocSnapshot.data() as Map<String, dynamic>? ?? {};
-
-    // Fetch the friend user document
-    final friendUserDocSnapshot = await FirebaseFirestore.instance.collection('users').doc(friendUid).get();
-    final Map<String, dynamic> friendUserDocData = friendUserDocSnapshot.data() as Map<String, dynamic>? ?? {};
-
-    // Check the friendship status based on the documents
-    if ((currentUserDocData['friends'] as List<dynamic>?)?.contains(friendUid) ?? false) {
-      return FriendStatus.friends;
-    } else if ((currentUserDocData['requestSent'] as List<dynamic>?)?.contains(friendUid) ?? false) {
-      return FriendStatus.requestSent;
-    } else if ((currentUserDocData['requestReceived'] as List<dynamic>?)?.contains(friendUid) ?? false) {
-      return FriendStatus.requestReceived;
-    } else {
-      return FriendStatus.none;
-    }
-  }
 
 
   @override
@@ -104,16 +69,15 @@ class UserProfilePageState extends State<UserProfilePage> {
                     ),
                   ),
                   FutureBuilder<FriendStatus>(
-                    future: checkFriendshipStatus(widget.user.uid),
+                    future: FirebaseUserProfileService.checkFriendshipStatus(widget.user.uid),
                     builder: (context, statusSnapshot) {
                       if (statusSnapshot.connectionState == ConnectionState.waiting) {
                         return const CircularProgressIndicator();
                       }
                       if (statusSnapshot.data == FriendStatus.friends ) {
-                        // If they are friends or request is sent, show posts
-                        return _buildPostsGrid();
+                        return UserPostsGrid(postsFuture: postsFuture, user: widget.user);
+
                       }else if (statusSnapshot.data == FriendStatus.requestReceived) {
-                        // If friend request is received, show accept button
                         return ElevatedButton(
                           onPressed: ()  async {
                             await FirebaseFriendsService.acceptFriendRequest(widget.user.uid, () {
@@ -122,19 +86,18 @@ class UserProfilePageState extends State<UserProfilePage> {
                               });
                             });
                           },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColours.secondary,
+                            foregroundColor: AppColours.primary,
+                          ),
                           child: const Text(
                             'Accept Friend Request',
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColours.secondary,
-                            foregroundColor: AppColours.primary,
-                          ),
                         );
                       } else if ( statusSnapshot.data == FriendStatus.requestSent) {
-                        // If friend request is received, show accept button
                         return ElevatedButton(
                           onPressed: () async{
                             await FirebaseFriendsService.cancelFriendRequest(widget.user.uid);
@@ -144,15 +107,15 @@ class UserProfilePageState extends State<UserProfilePage> {
                             setState(() {
                             });
                           },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColours.secondary,
+                            foregroundColor: AppColours.primary,
+                          ),
                           child: const Text(
                             'Cancel friend request',
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                             ),
-                          ),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColours.secondary,
-                            foregroundColor: AppColours.primary,
                           ),
                         );
                       } else {
@@ -166,15 +129,15 @@ class UserProfilePageState extends State<UserProfilePage> {
                             setState(() {
                                 });
                           },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColours.secondary,
+                            foregroundColor: AppColours.primary,
+                          ),
                           child: const Text(
                             'Add Friend to See Posts',
                             style: TextStyle(
                             fontWeight: FontWeight.bold,
                               ),
-                          ),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColours.secondary,
-                            foregroundColor: AppColours.primary,
                           ),
                         );
                       }
@@ -202,65 +165,6 @@ class UserProfilePageState extends State<UserProfilePage> {
     );
   }
 
-  Widget _buildPostsGrid() {
-    // Returning only the FutureBuilder that builds the post grid
-    return FutureBuilder<List<Post>>(
-      future: postsFuture,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        }
-        if (snapshot.hasError) {
-          return Text('Error: ${snapshot.error}');
-        }
-        if (snapshot.hasData && snapshot.data!.isNotEmpty) {
-          return GridView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 3,
-              crossAxisSpacing: 2,
-              mainAxisSpacing: 2,
-            ),
-            itemCount: snapshot.data!.length,
-            itemBuilder: (context, index) {
-              Post post = snapshot.data![index];
-              List<String> imageUrls = [post.firstImageUrl, post.secondImageUrl];
-
-              String firstImageUrl = imageUrls.isNotEmpty ? imageUrls[0] : '';
-
-              return GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => DisplayPostImageScreen(
-                        posterInfo: widget.user,
-                        index: 0,
-                        firebaseUserPosts: [FirebaseUserPost(post, widget.user, [], [])],
-                      ),
-                    ),
-                  );
-                },
-                child: Stack(
-                  children: [
-                    Positioned.fill(
-                      child: Image.network(
-                        firstImageUrl,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            },
-          );
-        } else {
-          return const Text('No posts found', style: TextStyle(color: Colors.white));
-        }
-      },
-    );
-  }
 
 }
 

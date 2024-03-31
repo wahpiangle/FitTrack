@@ -7,21 +7,21 @@ class ImageDisplay {
     return GestureDetector(
       onLongPress: () {
         if (context != null && isValidUrl) {
-          _showFullImage(context, imageUrl!);
+          _showFullImage(context, imageUrl);
         }
       },
       child: Stack(
         children: [
           CircleAvatar(
             radius: radius,
-            backgroundImage: AssetImage('assets/icons/defaultimage.jpg'),
+            backgroundImage: const AssetImage('assets/icons/defaultimage.jpg'),
             backgroundColor: Colors.transparent,
           ),
           if (isValidUrl)
             Positioned.fill(
               child: CircleAvatar(
                 radius: radius,
-                backgroundImage: NetworkImage(imageUrl!),
+                backgroundImage: NetworkImage(imageUrl),
                 backgroundColor: Colors.transparent,
               ),
             ),
@@ -37,7 +37,7 @@ class ImageDisplay {
       builder: (context) => Dialog(
         child: InteractiveViewer(
           panEnabled: false,
-          boundaryMargin: EdgeInsets.all(20),
+          boundaryMargin: const EdgeInsets.all(20),
           minScale: 0.5,
           maxScale: 4,
           child: Image.network(imageUrl),
