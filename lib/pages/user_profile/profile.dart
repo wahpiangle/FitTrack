@@ -62,7 +62,7 @@ class UserProfilePageState extends State<UserProfilePage> {
       return FriendStatus.friends;
     } else if ((currentUserDocData['requestSent'] as List<dynamic>?)?.contains(friendUid) ?? false) {
       return FriendStatus.requestSent;
-    } else if ((friendUserDocData['requestReceived'] as List<dynamic>?)?.contains(currentUserUid) ?? false) {
+    } else if ((currentUserDocData['requestReceived'] as List<dynamic>?)?.contains(friendUid) ?? false) {
       return FriendStatus.requestReceived;
     } else {
       return FriendStatus.none;
@@ -109,13 +109,22 @@ class UserProfilePageState extends State<UserProfilePage> {
                       if (statusSnapshot.data == FriendStatus.friends || statusSnapshot.data == FriendStatus.requestSent) {
                         // If they are friends or request is sent, show posts
                         return _buildPostsGrid();
-                      } else if (statusSnapshot.data == FriendStatus.requestReceived) {
+                      }else if (statusSnapshot.data == FriendStatus.requestReceived) {
                         // If friend request is received, show accept button
                         return ElevatedButton(
                           onPressed: () {
-                            // Logic to accept friend request
+                            // TODO: Implement add friend functionality
                           },
-                          child: const Text('Accept Friend Request'),
+                          child: const Text(
+                            'Accept Friend Request',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColours.secondary,
+                            foregroundColor: AppColours.primary,
+                          ),
                         );
                       } else {
                         // If they are not connected, show add friend button
