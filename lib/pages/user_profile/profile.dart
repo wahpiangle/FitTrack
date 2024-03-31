@@ -90,7 +90,7 @@ class UserProfilePageState extends State<UserProfilePage> {
               child: Column(
                 children: <Widget>[
                   const SizedBox(height: 12),
-                  ImageDisplay.buildUserProfileImage(widget.user.photoUrl, radius: 50.0),
+                  ImageDisplay.buildUserProfileImage(widget.user.photoUrl, radius: 50.0, context: context),
                   const SizedBox(height: 12),
                   Text("@${widget.user.username}", style: const TextStyle(color: Colors.grey, fontSize: 18)),
                   Padding(

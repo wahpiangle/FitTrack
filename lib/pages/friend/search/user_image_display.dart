@@ -1,25 +1,48 @@
 import 'package:flutter/material.dart';
 
 class ImageDisplay {
-  static Widget buildUserProfileImage(String? imageUrl, {double radius = 22.0}) {
+  static Widget buildUserProfileImage(String? imageUrl, {double radius = 22.0, BuildContext? context}) {
     bool isValidUrl = imageUrl != null && imageUrl.isNotEmpty && Uri.tryParse(imageUrl)?.hasAbsolutePath == true;
 
-    return Stack(
-      children: [
-        CircleAvatar(
-          radius: radius,
-          backgroundImage: AssetImage('assets/icons/defaultimage.jpg'),
-          backgroundColor: Colors.transparent,
-        ),
-        if (isValidUrl)
-          Positioned.fill(
-            child: CircleAvatar(
-              radius: radius,
-              backgroundImage: NetworkImage(imageUrl!),
-              backgroundColor: Colors.transparent,
-            ),
+    return GestureDetector(
+      onLongPress: () {
+        if (context != null && isValidUrl) {
+          _showFullImage(context, imageUrl!);
+        }
+      },
+      child: Stack(
+        children: [
+          CircleAvatar(
+            radius: radius,
+            backgroundImage: AssetImage('assets/icons/defaultimage.jpg'),
+            backgroundColor: Colors.transparent,
           ),
-      ],
+          if (isValidUrl)
+            Positioned.fill(
+              child: CircleAvatar(
+                radius: radius,
+                backgroundImage: NetworkImage(imageUrl!),
+                backgroundColor: Colors.transparent,
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+
+  //when long press the profile image in user profile page, will show the full image
+  static void _showFullImage(BuildContext context, String imageUrl) {
+    showDialog(
+      context: context,
+      builder: (context) => Dialog(
+        child: InteractiveViewer(
+          panEnabled: false,
+          boundaryMargin: EdgeInsets.all(20),
+          minScale: 0.5,
+          maxScale: 4,
+          child: Image.network(imageUrl),
+        ),
+      ),
     );
   }
 }
