@@ -119,7 +119,7 @@ class FirebaseFriendsService {
     return friendsOfFriends;
   }
 
-  static void removeFriend(String friendUid, VoidCallback onRemoved) async {
+  static removeFriend(String friendUid, VoidCallback onRemoved) async {
     final currentUserUid = FirebaseAuth.instance.currentUser?.uid;
 
     if (currentUserUid != null) {

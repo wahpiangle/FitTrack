@@ -11,7 +11,7 @@ import 'package:group_project/services/firebase/firebase_user_profile_service.da
 class UserProfilePage extends StatefulWidget {
   final FirebaseUser user;
 
-  const UserProfilePage({super.key, required this.user});
+  const UserProfilePage({Key? key, required this.user}) : super(key: key);
 
   @override
   UserProfilePageState createState() => UserProfilePageState();
@@ -22,20 +22,20 @@ class UserProfilePageState extends State<UserProfilePage> {
   late int friendsCount;
   late Future<void> dataFuture;
   late Future<List<Post>> postsFuture;
+  late Future<FriendStatus> friendStatusFuture;
 
   @override
   void initState() {
     super.initState();
     dataFuture = _loadData();
     postsFuture = FirebasePostsService.getPostsByUserId(widget.user.uid);
+    friendStatusFuture = FirebaseUserProfileService.checkFriendshipStatus(widget.user.uid);
   }
 
   Future<void> _loadData() async {
     postsCount = await FirebaseUserProfileService.getPostsCount(widget.user.uid);
     friendsCount = await FirebaseUserProfileService.getFriendsCount(widget.user.uid);
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -58,15 +58,21 @@ class UserProfilePageState extends State<UserProfilePage> {
                   ImageDisplay.buildUserProfileImage(widget.user.photoUrl, radius: 50.0, context: context),
                   const SizedBox(height: 12),
                   Text("@${widget.user.username}", style: const TextStyle(color: Colors.grey, fontSize: 18)),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 20.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: <Widget>[
-                        _buildStatItem("Posts", postsCount),
-                        _buildStatItem("Friends", friendsCount),
-                      ],
-                    ),
+                  FutureBuilder<FriendStatus>(
+                    future: friendStatusFuture,
+                    builder: (context, statusSnapshot) {
+                      final isFriend = statusSnapshot.data == FriendStatus.friends;
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 20.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: <Widget>[
+                            _buildStatItem("Posts", postsCount),
+                            _buildStatItem("Friends", friendsCount, isFriend: isFriend),
+                          ],
+                        ),
+                      );
+                    },
                   ),
                   FutureBuilder<FriendStatus>(
                     future: FirebaseUserProfileService.checkFriendshipStatus(widget.user.uid),
@@ -81,8 +87,8 @@ class UserProfilePageState extends State<UserProfilePage> {
                         return ElevatedButton(
                           onPressed: ()  async {
                             await FirebaseFriendsService.acceptFriendRequest(widget.user.uid, () {
-                               setState(() {
-                                // refresh the page
+                              setState(() {
+
                               });
                             });
                           },
@@ -127,7 +133,7 @@ class UserProfilePageState extends State<UserProfilePage> {
                               SnackBar(content: Text('Friend request sent to ${widget.user.displayName}')),
                             );
                             setState(() {
-                                });
+                            });
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: AppColours.secondary,
@@ -136,8 +142,8 @@ class UserProfilePageState extends State<UserProfilePage> {
                           child: const Text(
                             'Add Friend to See Posts',
                             style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                              ),
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         );
                       }
@@ -154,18 +160,39 @@ class UserProfilePageState extends State<UserProfilePage> {
     );
   }
 
-  Widget _buildStatItem(String label, int count) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      mainAxisAlignment: MainAxisAlignment.center,
+  Widget _buildStatItem(String label, int count, {bool isFriend = false}) {
+    return Row(
       children: <Widget>[
-        Text('$count', style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white)),
-        Text(label, style: const TextStyle(color: Colors.grey, fontSize: 16)),
+        Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text('$count', style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white)),
+            Text(label, style: const TextStyle(color: Colors.grey, fontSize: 16)),
+          ],
+        ),
+        if (isFriend)
+          PopupMenuButton<String>(
+            icon: const Icon(Icons.more_vert, color: Colors.white),
+            onSelected: (String value) {
+              if (value == 'remove_friend') {
+                FirebaseFriendsService.removeFriend(widget.user.uid, () {
+                  setState(() {
+                    // refresh the page
+                  });
+                });
+              }
+            },
+            itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+              const PopupMenuItem<String>(
+                value: 'remove_friend',
+                child: Text('Remove Friend'),
+              ),
+            ],
+          ),
       ],
     );
   }
-
-
 }
 
 enum FriendStatus { friends, requestSent, requestReceived, none }
