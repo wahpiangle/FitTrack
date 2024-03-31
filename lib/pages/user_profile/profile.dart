@@ -131,7 +131,6 @@ class UserProfilePageState extends State<UserProfilePage> {
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) => DisplayPostImageScreen(
-                                      post: post,
                                       posterInfo: widget.user,
                                       index: 0,
                                       firebaseUserPosts: [FirebaseUserPost(post, widget.user, [], [])],
