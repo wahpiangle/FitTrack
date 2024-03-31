@@ -62,37 +62,37 @@ class SearchBarResultState extends State<SearchBarResult> {
         child: isCurrentUser || isCurrentUserFriend
             ? const SizedBox.shrink()
             : Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  ElevatedButton(
-                    onPressed: () async {
-                      if (friendRequestSent) {
-                        await FirebaseFriendsService.cancelFriendRequest(widget.friendUser.uid);
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('Friend request to ${widget.friendUser.displayName} canceled')),
-                        );
-                      } else {
-                        await FirebaseFriendsService.addFriend(widget.friendUser.uid);
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('Friend request sent to ${widget.friendUser.displayName}')),
-                        );
-                      }
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            ElevatedButton(
+              onPressed: () async {
+                if (friendRequestSent) {
+                  await FirebaseFriendsService.cancelFriendRequest(widget.friendUser.uid);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Friend request to ${widget.friendUser.displayName} canceled')),
+                  );
+                } else {
+                  await FirebaseFriendsService.addFriend(widget.friendUser.uid);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Friend request sent to ${widget.friendUser.displayName}')),
+                  );
+                }
 
-                      // Update the state to reflect the change
-                      setState(() {
-                        friendRequestSent = !friendRequestSent;
-                      });
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: friendRequestSent ? AppColours.secondaryLight : AppColours.secondary,
-                      padding: const EdgeInsets.all(8),
-                      textStyle: const TextStyle(fontSize: 10),
-                    ),
-                    child: Text(friendRequestSent ? 'Cancel' : 'Add', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
-                  ),
-
-                ],
+                // Update the state to reflect the change
+                setState(() {
+                  friendRequestSent = !friendRequestSent;
+                });
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: friendRequestSent ? AppColours.secondaryLight : AppColours.secondary,
+                padding: const EdgeInsets.all(8),
+                textStyle: const TextStyle(fontSize: 10),
               ),
+              child: Text(friendRequestSent ? 'Cancel' : 'Add', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
+            ),
+
+          ],
+        ),
       ),
       isThreeLine: true,
       onTap: () {

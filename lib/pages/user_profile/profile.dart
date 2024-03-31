@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:group_project/constants/themes/app_colours.dart';
 import 'package:group_project/models/firebase/firebase_user.dart';
 import 'package:group_project/models/post.dart';
+import 'package:group_project/pages/friend/search/user_image_display.dart';
 import 'package:group_project/pages/home/components/display_post_screen/display_post_image_screen.dart';
 import 'package:group_project/models/firebase/firebase_user_post.dart';
 import 'package:group_project/services/firebase/firebase_friends_service.dart';
@@ -88,8 +89,9 @@ class UserProfilePageState extends State<UserProfilePage> {
             return SingleChildScrollView(
               child: Column(
                 children: <Widget>[
-                  CircleAvatar(backgroundImage: NetworkImage(widget.user.photoUrl), radius: 50),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 12),
+                  ImageDisplay.buildUserProfileImage(widget.user.photoUrl, radius: 50.0),
+                  const SizedBox(height: 12),
                   Text("@${widget.user.username}", style: const TextStyle(color: Colors.grey, fontSize: 18)),
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 20.0),

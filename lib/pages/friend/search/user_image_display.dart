@@ -1,21 +1,24 @@
 import 'package:flutter/material.dart';
 
 class ImageDisplay {
-  static Widget buildUserProfileImage(String imageUrl) {
+  static Widget buildUserProfileImage(String? imageUrl, {double radius = 22.0}) {
+    bool isValidUrl = imageUrl != null && imageUrl.isNotEmpty && Uri.tryParse(imageUrl)?.hasAbsolutePath == true;
+
     return Stack(
       children: [
-        const CircleAvatar(
-          radius: 22,
+        CircleAvatar(
+          radius: radius,
           backgroundImage: AssetImage('assets/icons/defaultimage.jpg'),
           backgroundColor: Colors.transparent,
         ),
-        Positioned.fill(
-          child: CircleAvatar(
-            radius: 22,
-            backgroundImage:  NetworkImage(imageUrl),
-            backgroundColor: Colors.transparent,
+        if (isValidUrl)
+          Positioned.fill(
+            child: CircleAvatar(
+              radius: radius,
+              backgroundImage: NetworkImage(imageUrl!),
+              backgroundColor: Colors.transparent,
+            ),
           ),
-        ),
       ],
     );
   }
