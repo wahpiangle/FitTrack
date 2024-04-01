@@ -26,8 +26,7 @@ class UserProfilePageState extends State<UserProfilePage> {
   late Future<void> dataFuture;
   late Future<List<Post>> postsFuture;
   late Future<FriendStatus> friendStatusFuture;
-  late Future<ExerciseSet?> bestSetFuture;
-
+  Pair<ExerciseSet, String>? overallBestSetPair;
 
   @override
   void initState() {
@@ -36,14 +35,22 @@ class UserProfilePageState extends State<UserProfilePage> {
     postsFuture = FirebasePostsService.getPostsByUserId(widget.user.uid);
     friendStatusFuture =
         FirebaseUserProfileService.checkFriendshipStatus(widget.user.uid);
-    bestSetFuture = _calculateOverallBestSet();
+    loadOverallBestSet();
   }
 
-  Future<ExerciseSet?> _calculateOverallBestSet() async {
-    // Fetch workout sessions and calculate the best set
-    List<FirebaseWorkoutSession> sessions = await FirebaseWorkoutsService.getWorkoutSessionsByUserId(widget.user.uid);
-    // Use your logic or a manager class to calculate the best set across these sessions
-    return WorkoutSessionsManager(sessions: sessions).getOverallBestSet();
+
+  Future<void> loadOverallBestSet() async {
+    try {
+      List<FirebaseWorkoutSession> sessions = await FirebaseWorkoutsService.getWorkoutSessionsByUserId(widget.user.uid);
+
+      final manager = WorkoutSessionsManager(sessions: sessions);
+      final bestSetPair = manager.getOverallBestSet();
+      setState(() {
+        overallBestSetPair = bestSetPair;
+      });
+    } catch (e) {
+      print(e.toString());
+    }
   }
 
   Future<void> _loadData() async {
@@ -86,23 +93,18 @@ class UserProfilePageState extends State<UserProfilePage> {
                         ],
                       ),
                       const SizedBox(width: 20), // Spacer
-                      FutureBuilder<ExerciseSet?>(
-                        future: bestSetFuture,
-                        builder: (context, bestSetSnapshot) {
-                          if (bestSetSnapshot.connectionState == ConnectionState.waiting) {
-                            return const CircularProgressIndicator(color: Colors.white);
-                          }
-                          if (bestSetSnapshot.hasData && bestSetSnapshot.data != null) {
-                            return Column( // Display the best set information
-                              children: <Widget>[
-                                Icon(Icons.fitness_center, size: 24.0, color: Colors.white), // Dumbbell icon
-                                Text('Best Set: ${bestSetSnapshot.data!.weight} kg for ${bestSetSnapshot.data!.reps} reps', style: TextStyle(color: Colors.white, fontSize: 16)), // Display best set info
+                      Column( // New column for the barbell icon and text
+                        children: <Widget>[
+                          Icon(Icons.fitness_center, size: 24.0, color: Colors.white), // Barbell icon
+                          Text('Overall Best Exercise Set', style: TextStyle(color: Colors.white, fontSize: 16)), // Exercise text
+                          if (overallBestSetPair != null)
+                            Column(
+                              children: [
+                                Text('Best Set: ${overallBestSetPair!.first.weight} lbs x ${overallBestSetPair!.first.reps}', style: TextStyle(color: Colors.white)),
+                                Text('Exercise: ${overallBestSetPair!.second}', style: TextStyle(color: Colors.white)),
                               ],
-                            );
-                          } else {
-                            return Text('No Best Set Found', style: TextStyle(color: Colors.white, fontSize: 16));
-                          }
-                        },
+                            ),
+                        ],
                       ),
                     ],
                   ),
