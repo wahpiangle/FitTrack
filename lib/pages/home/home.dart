@@ -41,7 +41,7 @@ class _HomeState extends State<Home> {
     return false;
   }
 
-  void modifyCurrentUserPostsTo24h(List<FirebaseUserPost> currentUserPosts) {
+  List<FirebaseUserPost> modifyCurrentUserPostsTo24h(List<FirebaseUserPost> currentUserPosts) {
     final List<FirebaseUserPost> filteredPosts = [];
     final DateTime now = DateTime.now();
     final DateTime yesterday = now.subtract(const Duration(days: 1));
@@ -53,6 +53,7 @@ class _HomeState extends State<Home> {
     }
     currentUserPosts.clear();
     currentUserPosts.addAll(filteredPosts);
+    return currentUserPosts;
   }
 
 
@@ -106,8 +107,7 @@ class _HomeState extends State<Home> {
                     return const NoWorkoutPostedPage();
                   } else {
                     return WorkoutPostedPage(
-                      currentUserPosts: currentUserPosts,
-
+                      currentUserPosts: modifyCurrentUserPostsTo24h(currentUserPosts),
                     );
                   }
                 }
