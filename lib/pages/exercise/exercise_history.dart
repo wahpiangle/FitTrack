@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:group_project/models/exercise.dart';
+import 'package:group_project/pages/exercise/components/edit_exercise.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
 import 'package:group_project/constants/themes/app_colours.dart';
 import 'package:group_project/main.dart';
@@ -17,6 +18,13 @@ class ExerciseHistory extends StatefulWidget {
 
 class _ExerciseHistoryState extends State<ExerciseHistory> {
   final AutoScrollController _scrollController = AutoScrollController();
+  String exerciseName = '';
+
+  void updateExerciseName(String newName) {
+    setState(() {
+      exerciseName = newName;
+    });
+  }
 
   void scrollToItem(int index) async {
     await _scrollController.scrollToIndex(
@@ -34,18 +42,25 @@ class _ExerciseHistoryState extends State<ExerciseHistory> {
       appBar: AppBar(
         backgroundColor: const Color(0xFF1A1A1A),
         actions: <Widget>[
-          TextButton(
-            onPressed: () {
-              // Add edit functionality here
-            },
-            child: const Text(
-              'Edit',
-              style: TextStyle(
-                fontSize: 18,
-                color: AppColours.secondary,
-              ),
-            ),
-          )
+          widget.exercise.isCustom
+              ? TextButton(
+                  onPressed: () async {
+                    final newExerciseName =
+                        await EditExerciseDialog.editExercise(
+                            context, objectBox, widget.exercise);
+                    if (newExerciseName != null) {
+                      updateExerciseName(newExerciseName);
+                    }
+                  },
+                  child: const Text(
+                    'Edit',
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: AppColours.secondary,
+                    ),
+                  ),
+                )
+              : Container(),
         ],
         leading: IconButton(
           onPressed: () {},

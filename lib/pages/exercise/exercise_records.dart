@@ -14,6 +14,14 @@ class ExerciseRecords extends StatefulWidget {
 
 class _ExerciseRecordsState extends State<ExerciseRecords> {
   int selectedPageIndex = 3;
+  String exerciseName = '';
+
+  void updateExerciseName(String newName) {
+    setState(() {
+      exerciseName = newName;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
