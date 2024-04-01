@@ -22,14 +22,19 @@ class SearchBarResult extends StatefulWidget {
 
 class SearchBarResultState extends State<SearchBarResult> {
   bool friendRequestSent = false;
+  bool friendRequestReceived = false;
 
   @override
   void initState() {
     super.initState();
-    FirebaseFriendsService.checkFriendRequestStatus(widget.friendUser.uid).then((exists) {
-      setState(() {
-        friendRequestSent = exists;
-      });
+    checkFriendRequestStatus();
+  }
+
+  void checkFriendRequestStatus() async {
+    final status = await FirebaseFriendsService.checkFriendRequestStatus(widget.friendUser.uid);
+    setState(() {
+      friendRequestSent = status['sent']!;
+      friendRequestReceived = status['received']!;
     });
   }
 
@@ -66,7 +71,12 @@ class SearchBarResultState extends State<SearchBarResult> {
           children: [
             ElevatedButton(
               onPressed: () async {
-                if (friendRequestSent) {
+                if (friendRequestReceived) {
+                  await FirebaseFriendsService.acceptFriendRequest(widget.friendUser.uid, () { });
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Accepted ${widget.friendUser.displayName} as your friend !')),
+                  );
+                }else if (friendRequestSent) {
                   await FirebaseFriendsService.cancelFriendRequest(widget.friendUser.uid);
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(content: Text('Friend request to ${widget.friendUser.displayName} canceled')),
@@ -77,8 +87,6 @@ class SearchBarResultState extends State<SearchBarResult> {
                     SnackBar(content: Text('Friend request sent to ${widget.friendUser.displayName}')),
                   );
                 }
-
-                // Update the state to reflect the change
                 setState(() {
                   friendRequestSent = !friendRequestSent;
                 });
@@ -88,7 +96,7 @@ class SearchBarResultState extends State<SearchBarResult> {
                 padding: const EdgeInsets.all(8),
                 textStyle: const TextStyle(fontSize: 10),
               ),
-              child: Text(friendRequestSent ? 'Cancel' : 'Add', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
+              child: Text(friendRequestReceived ? 'Accept' : (friendRequestSent ? 'Cancel' : 'Add'), style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
             ),
 
           ],
