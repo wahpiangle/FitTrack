@@ -3,6 +3,7 @@ import 'package:group_project/constants/themes/app_colours.dart';
 import 'package:group_project/models/workout_session.dart';
 import 'package:group_project/pages/history/menu_anchor/workout_menu_anchor.dart';
 import 'package:intl/intl.dart';
+import '../../models/exercise_set.dart';
 
 class HistoryDetail extends StatelessWidget {
   final WorkoutSession workoutSession;
@@ -152,87 +153,7 @@ class HistoryDetail extends StatelessWidget {
                                             mainAxisAlignment:
                                                 MainAxisAlignment.spaceBetween,
                                             children: [
-                                              Row(
-                                                children: [
-                                                  if (exercisesSetInfo.exercise
-                                                      .target?.category
-                                                      .target?.name ==
-                                                      "Barbell" || exercisesSetInfo.exercise
-                                                      .target?.category
-                                                      .target?.name ==
-                                                      "Dumbbell" || exercisesSetInfo.exercise
-                                                      .target?.category
-                                                      .target?.name ==
-                                                      "Machine" || exercisesSetInfo.exercise
-                                                      .target?.category
-                                                      .target?.name ==
-                                                      "Cable"|| exercisesSetInfo.exercise
-                                                      .target?.category
-                                                      .target?.name ==
-                                                      "Band" )
-                                                    Text(
-                                                      ('${setInfo.value.weight} kg  × ${setInfo.value.reps}'),
-                                                      style: TextStyle(
-                                                        color: Colors.grey[300],
-                                                        fontSize: 16,
-                                                      ),
-                                                    ),
-                                                  if (exercisesSetInfo.exercise
-                                                      .target?.category
-                                                      .target?.name ==
-                                                      "Assisted Bodyweight")
-                                                    Text(
-                                                      ('-${setInfo.value.weight} kg × ${setInfo.value.reps}'),
-                                                      style: TextStyle(
-                                                        color: Colors.grey[300],
-                                                        fontSize: 16,
-                                                      ),
-                                                    ),
-                                                  if (exercisesSetInfo.exercise
-                                                      .target?.category
-                                                      .target?.name ==
-                                                      "Weighted Bodyweight")
-                                                    Text(
-                                                      ('+${setInfo.value.weight} kg  × ${setInfo.value.reps}'),
-                                                      style: TextStyle(
-                                                        color: Colors.grey[300],
-                                                        fontSize: 16,
-                                                      ),
-                                                    ),
-                                                  if (exercisesSetInfo.exercise
-                                                      .target?.category
-                                                      .target?.name ==
-                                                      "Reps Only")
-                                                    Text(
-                                                      ('${setInfo.value.reps} reps'),
-                                                      style: TextStyle(
-                                                        color: Colors.grey[300],
-                                                        fontSize: 16,
-                                                      ),
-                                                    ),
-                                                  if (exercisesSetInfo.exercise
-                                                      .target?.category
-                                                      .target?.name ==
-                                                      "Duration")
-                                                    Text(
-                                                      (setInfo.value.time != null
-                                                          ? (setInfo.value.time.toString().length == 3
-                                                            ? '${setInfo.value.time.toString()[0]}:${setInfo.value.time.toString()[1]}${setInfo.value.time.toString()[2]}'
-                                                            : (setInfo.value.time.toString().length == 4)
-                                                              ? '${setInfo.value.time.toString()[0]}${setInfo.value.time.toString()[1]}:${setInfo.value.time.toString()[2]}${setInfo.value.time.toString()[3]}'
-                                                              : (setInfo.value.time.toString().length == 5)
-                                                                ? '${setInfo.value.time.toString()[0]}:${setInfo.value.time.toString()[1]}${setInfo.value.time.toString()[2]}:${setInfo.value.time.toString()[3]}${setInfo.value.time.toString()[3]}'
-                                                                : '-')
-                                                          : '-'),
-                                                      style: TextStyle(
-                                                        color: Colors.grey[300],
-                                                        fontSize: 16,
-                                                      ),
-                                                    ),
-
-
-                                                ],
-                                              ),
+                                              renderExerciseInfo(exercisesSetInfo, setInfo),
                                               setInfo.value.isPersonalRecord
                                                   ? Container(
                                                       padding:
@@ -276,5 +197,66 @@ class HistoryDetail extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+Widget renderExerciseInfo(exercisesSetInfo, MapEntry<int, ExerciseSet> setInfo) {
+  String category = exercisesSetInfo.exercise.target?.category?.target?.name ?? '';
+
+  switch (category) {
+    case "Barbell":
+    case "Dumbbell":
+    case "Machine":
+    case "Cable":
+    case "Band":
+      return Text(
+        '${setInfo.value.weight} kg  × ${setInfo.value.reps}',
+        style: TextStyle(
+          color: Colors.grey[300],
+          fontSize: 16,
+        ),
+      );
+    case "Assisted Bodyweight":
+      return Text(
+        '-${setInfo.value.weight} kg × ${setInfo.value.reps}',
+        style: TextStyle(
+          color: Colors.grey[300],
+          fontSize: 16,
+        ),
+      );
+    case "Weighted Bodyweight":
+      return Text(
+        '+${setInfo.value.weight} kg  × ${setInfo.value.reps}',
+        style: TextStyle(
+          color: Colors.grey[300],
+          fontSize: 16,
+        ),
+      );
+    case "Reps Only":
+      return Text(
+        '${setInfo.value.reps} reps',
+        style: TextStyle(
+          color: Colors.grey[300],
+          fontSize: 16,
+        ),
+      );
+    case "Duration":
+      return Text(
+        setInfo.value.time != null
+            ? (setInfo.value.time.toString().length == 3
+            ? '${setInfo.value.time.toString()[0]}:${setInfo.value.time.toString()[1]}${setInfo.value.time.toString()[2]}'
+            : (setInfo.value.time.toString().length == 4)
+            ? '${setInfo.value.time.toString()[0]}${setInfo.value.time.toString()[1]}:${setInfo.value.time.toString()[2]}${setInfo.value.time.toString()[3]}'
+            : (setInfo.value.time.toString().length == 5)
+            ? '${setInfo.value.time.toString()[0]}:${setInfo.value.time.toString()[1]}${setInfo.value.time.toString()[2]}:${setInfo.value.time.toString()[3]}${setInfo.value.time.toString()[4]}'
+            : '-')
+            : '-',
+        style: TextStyle(
+          color: Colors.grey[300],
+          fontSize: 16,
+        ),
+      );
+    default:
+      return SizedBox();
   }
 }
