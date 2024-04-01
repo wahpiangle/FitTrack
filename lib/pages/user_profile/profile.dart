@@ -11,7 +11,7 @@ import 'package:group_project/services/firebase/firebase_user_profile_service.da
 class UserProfilePage extends StatefulWidget {
   final FirebaseUser user;
 
-  const UserProfilePage({Key? key, required this.user}) : super(key: key);
+  const UserProfilePage({super.key, required this.user});
 
   @override
   UserProfilePageState createState() => UserProfilePageState();
@@ -29,12 +29,15 @@ class UserProfilePageState extends State<UserProfilePage> {
     super.initState();
     dataFuture = _loadData();
     postsFuture = FirebasePostsService.getPostsByUserId(widget.user.uid);
-    friendStatusFuture = FirebaseUserProfileService.checkFriendshipStatus(widget.user.uid);
+    friendStatusFuture =
+        FirebaseUserProfileService.checkFriendshipStatus(widget.user.uid);
   }
 
   Future<void> _loadData() async {
-    postsCount = await FirebaseUserProfileService.getPostsCount(widget.user.uid);
-    friendsCount = await FirebaseUserProfileService.getFriendsCount(widget.user.uid);
+    postsCount =
+    await FirebaseUserProfileService.getPostsCount(widget.user.uid);
+    friendsCount =
+    await FirebaseUserProfileService.getFriendsCount(widget.user.uid);
   }
 
   @override
@@ -42,10 +45,13 @@ class UserProfilePageState extends State<UserProfilePage> {
     return Scaffold(
       backgroundColor: AppColours.primary,
       appBar: AppBar(
-        title: Text(widget.user.displayName, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 23)),
+        title: Text(widget.user.displayName, style: const TextStyle(
+            color: Colors.white, fontWeight: FontWeight.bold, fontSize: 23)),
         centerTitle: true,
         backgroundColor: AppColours.primary,
-        leading: IconButton(icon: const Icon(Icons.arrow_back_ios, color: Colors.white), onPressed: () => Navigator.of(context).pop()),
+        leading: IconButton(
+            icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
+            onPressed: () => Navigator.of(context).pop()),
       ),
       body: FutureBuilder<void>(
         future: dataFuture,
@@ -55,38 +61,46 @@ class UserProfilePageState extends State<UserProfilePage> {
               child: Column(
                 children: <Widget>[
                   const SizedBox(height: 12),
-                  ImageDisplay.buildUserProfileImage(widget.user.photoUrl, radius: 50.0, context: context),
+                  ImageDisplay.buildUserProfileImage(
+                      widget.user.photoUrl, radius: 50.0, context: context),
                   const SizedBox(height: 12),
-                  Text("@${widget.user.username}", style: const TextStyle(color: Colors.grey, fontSize: 18)),
+                  Text("@${widget.user.username}",
+                      style: const TextStyle(color: AppColours.secondaryLight, fontSize: 18)),
                   FutureBuilder<FriendStatus>(
                     future: friendStatusFuture,
                     builder: (context, statusSnapshot) {
-                      final isFriend = statusSnapshot.data == FriendStatus.friends;
+                      final isFriend = statusSnapshot.data ==
+                          FriendStatus.friends;
                       return Padding(
                         padding: const EdgeInsets.symmetric(vertical: 20.0),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: <Widget>[
                             _buildStatItem("Posts", postsCount),
-                            _buildStatItem("Friends", friendsCount, isFriend: isFriend),
+                            _buildStatItem(
+                                "Friends", friendsCount, isFriend: isFriend),
                           ],
                         ),
                       );
                     },
                   ),
                   FutureBuilder<FriendStatus>(
-                    future: FirebaseUserProfileService.checkFriendshipStatus(widget.user.uid),
+                    future: FirebaseUserProfileService.checkFriendshipStatus(
+                        widget.user.uid),
                     builder: (context, statusSnapshot) {
-                      if (statusSnapshot.connectionState == ConnectionState.waiting) {
+                      if (statusSnapshot.connectionState ==
+                          ConnectionState.waiting) {
                         return const CircularProgressIndicator();
                       }
-                      if (statusSnapshot.data == FriendStatus.friends ) {
-                        return UserPostsGrid(postsFuture: postsFuture, user: widget.user);
-
-                      }else if (statusSnapshot.data == FriendStatus.requestReceived) {
+                      if (statusSnapshot.data == FriendStatus.friends) {
+                        return UserPostsGrid(
+                            postsFuture: postsFuture, user: widget.user);
+                      } else
+                      if (statusSnapshot.data == FriendStatus.requestReceived) {
                         return ElevatedButton(
-                          onPressed: ()  async {
-                            await FirebaseFriendsService.acceptFriendRequest(widget.user.uid, () {
+                          onPressed: () async {
+                            await FirebaseFriendsService.acceptFriendRequest(
+                                widget.user.uid, () {
                               setState(() {
 
                               });
@@ -103,15 +117,18 @@ class UserProfilePageState extends State<UserProfilePage> {
                             ),
                           ),
                         );
-                      } else if ( statusSnapshot.data == FriendStatus.requestSent) {
+                      } else
+                      if (statusSnapshot.data == FriendStatus.requestSent) {
                         return ElevatedButton(
-                          onPressed: () async{
-                            await FirebaseFriendsService.cancelFriendRequest(widget.user.uid);
+                          onPressed: () async {
+                            await FirebaseFriendsService.cancelFriendRequest(
+                                widget.user.uid);
                             ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text('Friend request sent to ${widget.user.displayName}')),
+                              SnackBar(content: Text(
+                                  'Friend request sent to ${widget.user
+                                      .displayName}')),
                             );
-                            setState(() {
-                            });
+                            setState(() {});
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: AppColours.secondary,
@@ -127,13 +144,15 @@ class UserProfilePageState extends State<UserProfilePage> {
                       } else {
                         // If they are not connected, show add friend button
                         return ElevatedButton(
-                          onPressed: () async{
-                            await FirebaseFriendsService.addFriend(widget.user.uid);
+                          onPressed: () async {
+                            await FirebaseFriendsService.addFriend(
+                                widget.user.uid);
                             ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text('Friend request sent to ${widget.user.displayName}')),
+                              SnackBar(content: Text(
+                                  'Friend request sent to ${widget.user
+                                      .displayName}')),
                             );
-                            setState(() {
-                            });
+                            setState(() {});
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: AppColours.secondary,
@@ -161,38 +180,60 @@ class UserProfilePageState extends State<UserProfilePage> {
   }
 
   Widget _buildStatItem(String label, int count, {bool isFriend = false}) {
+    double screenWidth = MediaQuery.of(context).size.width;
+
     return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
-        Column(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text('$count', style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white)),
-            Text(label, style: const TextStyle(color: Colors.grey, fontSize: 16)),
-          ],
+        SizedBox(
+          width: screenWidth * 0.30,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Text('$count', style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white)),
+              Text(label, style: const TextStyle(color: AppColours.secondaryLight, fontSize: 16)),
+            ],
+          ),
         ),
         if (isFriend)
-          PopupMenuButton<String>(
-            icon: const Icon(Icons.more_vert, color: Colors.white),
-            onSelected: (String value) {
-              if (value == 'remove_friend') {
-                FirebaseFriendsService.removeFriend(widget.user.uid, () {
-                  setState(() {
-                    // refresh the page
-                  });
-                });
-              }
-            },
-            itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-              const PopupMenuItem<String>(
-                value: 'remove_friend',
-                child: Text('Remove Friend'),
+          Container(
+            width: screenWidth * 0.25,
+            alignment: Alignment.topCenter,
+            child: PopupMenuButton<String>(
+              shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(15.0))),
+              color: AppColours.secondaryLight,
+              child: const Row(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Text('Friends', style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)),
+                  Icon(Icons.expand_more_outlined, color: Colors.white),
+                ],
               ),
-            ],
+              onSelected: (String value) {
+                if (value == 'remove_friend') {
+                  FirebaseFriendsService.removeFriend(widget.user.uid, () {
+                    setState(() {});
+                  });
+                }
+              },
+              itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+                const PopupMenuItem<String>(
+                  value: 'remove_friend',
+                  child: ListTile(
+                    contentPadding: EdgeInsets.symmetric(horizontal: 5),
+                    leading: Icon(Icons.person_off, color: AppColours.primary), // Icon
+                    title: Text('Remove Friend', style: TextStyle(fontWeight: FontWeight.bold, color: AppColours.primary)), // Text style
+                  ),
+                ),
+              ],
+            ),
           ),
       ],
     );
   }
+
 }
+
 
 enum FriendStatus { friends, requestSent, requestReceived, none }
