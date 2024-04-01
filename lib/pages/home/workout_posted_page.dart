@@ -12,11 +12,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class WorkoutPostedPage extends StatefulWidget {
   final List<FirebaseUserPost> currentUserPosts;
-  final bool isWithinADay;
   const WorkoutPostedPage({
     super.key,
     required this.currentUserPosts,
-    required this.isWithinADay,
   });
 
   @override
@@ -36,7 +34,6 @@ class _WorkoutPostedPageState extends State<WorkoutPostedPage> {
         context.read<UploadImageProvider>().setIsUploading(false);
       }
     });
-    print("${widget.isWithinADay}");
   }
 
 
@@ -70,7 +67,6 @@ class _WorkoutPostedPageState extends State<WorkoutPostedPage> {
                 ),
                 itemBuilder: (context, index, realIndex) {
                   final currentUserPostInfo = widget.currentUserPosts[index];
-                  if (widget.isWithinADay) {
                     return Container(
                       margin: const EdgeInsets.symmetric(horizontal: 5),
                       child: Column(
@@ -123,9 +119,6 @@ class _WorkoutPostedPageState extends State<WorkoutPostedPage> {
                         ],
                       ),
                     );
-                  } else {
-                    return Container();
-                  }
                 },
               ),
               const FriendsPostList(),

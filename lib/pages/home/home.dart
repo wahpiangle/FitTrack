@@ -71,7 +71,8 @@ class _HomeState extends State<Home> {
           if (snapshot.hasError) {
             return const Center(
               child: Text('An error occurred',
-                  style: TextStyle(fontSize: 20, color: Colors.white)),
+                  style: TextStyle(fontSize: 20, color: Colors.white)
+              ),
             );
           }
           if (snapshot.connectionState == ConnectionState.active &&
@@ -106,7 +107,7 @@ class _HomeState extends State<Home> {
                   } else {
                     return WorkoutPostedPage(
                       currentUserPosts: currentUserPosts,
-                      isWithinADay: setUserHasPostedPastDay(currentUserPosts),
+
                     );
                   }
                 }
