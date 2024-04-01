@@ -36,11 +36,10 @@ class _WorkoutPostedPageState extends State<WorkoutPostedPage> {
         context.read<UploadImageProvider>().setIsUploading(false);
       }
     });
+    print("${widget.isWithinADay}");
   }
 
-  void isWithin24Hrs(){
 
-  }
   @override
   Widget build(BuildContext context) {
     final UploadImageProvider uploadImageProvider =
@@ -71,58 +70,62 @@ class _WorkoutPostedPageState extends State<WorkoutPostedPage> {
                 ),
                 itemBuilder: (context, index, realIndex) {
                   final currentUserPostInfo = widget.currentUserPosts[index];
-                  return Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 5),
-                    child: Column(
-                      children: [
-                        ClipRRect(
-                          borderRadius: const BorderRadius.all(
-                            Radius.circular(8.0),
+                  if (widget.isWithinADay) {
+                    return Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 5),
+                      child: Column(
+                        children: [
+                          ClipRRect(
+                            borderRadius: const BorderRadius.all(
+                              Radius.circular(8.0),
+                            ),
+                            child: DisplayImageStack(
+                              currentUserPosts: widget.currentUserPosts,
+                              currentUserPostInfo: currentUserPostInfo,
+                              index: index,
+                              current: _current,
+                            ),
                           ),
-                          child: DisplayImageStack(
-                            currentUserPosts: widget.currentUserPosts,
-                            currentUserPostInfo: currentUserPostInfo,
-                            index: index,
-                            current: _current,
-                          ),
-                        ),
-                        const SizedBox(height: 10),
-                        currentUserPostInfo.reactions.isNotEmpty
-                            ? GestureDetector(
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          DisplayPostImageScreen(
+                          const SizedBox(height: 10),
+                          currentUserPostInfo.reactions.isNotEmpty
+                              ? GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      DisplayPostImageScreen(
                                         firebaseUserPosts:
-                                            widget.currentUserPosts,
+                                        widget.currentUserPosts,
                                       ),
-                                    ),
-                                  );
-                                },
-                                child: ReactionImages(
-                                  postReactions: currentUserPostInfo.reactions,
-                                  isCurrentUserPost: true,
                                 ),
-                              )
-                            : const SizedBox(),
-                        uploadImageProvider.uploadError
-                            ? const Text(
-                                'There was an error uploading your workout. Please try again.',
-                                style: TextStyle(color: Colors.red),
-                                textAlign: TextAlign.center,
-                              )
-                            : Text(
-                                currentUserPostInfo.post.caption != ''
-                                    ? currentUserPostInfo.post.caption
-                                    : 'Add a caption...',
-                                style: const TextStyle(color: Colors.white),
-                                textAlign: TextAlign.center,
-                              )
-                      ],
-                    ),
-                  );
+                              );
+                            },
+                            child: ReactionImages(
+                              postReactions: currentUserPostInfo.reactions,
+                              isCurrentUserPost: true,
+                            ),
+                          )
+                              : const SizedBox(),
+                          uploadImageProvider.uploadError
+                              ? const Text(
+                            'There was an error uploading your workout. Please try again.',
+                            style: TextStyle(color: Colors.red),
+                            textAlign: TextAlign.center,
+                          )
+                              : Text(
+                            currentUserPostInfo.post.caption != ''
+                                ? currentUserPostInfo.post.caption
+                                : 'Add a caption...',
+                            style: const TextStyle(color: Colors.white),
+                            textAlign: TextAlign.center,
+                          )
+                        ],
+                      ),
+                    );
+                  } else {
+                    return Container();
+                  }
                 },
               ),
               const FriendsPostList(),
@@ -130,6 +133,7 @@ class _WorkoutPostedPageState extends State<WorkoutPostedPage> {
           ),
         ),
       ),
+
     );
   }
 }

@@ -41,6 +41,21 @@ class _HomeState extends State<Home> {
     return false;
   }
 
+  void modifyCurrentUserPostsTo24h(List<FirebaseUserPost> currentUserPosts) {
+    final List<FirebaseUserPost> filteredPosts = [];
+    final DateTime now = DateTime.now();
+    final DateTime yesterday = now.subtract(const Duration(days: 1));
+
+    for (FirebaseUserPost post in currentUserPosts) {
+      if (post.post.date.isAfter(yesterday)) {
+        filteredPosts.add(post);
+      }
+    }
+    currentUserPosts.clear();
+    currentUserPosts.addAll(filteredPosts);
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
