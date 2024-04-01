@@ -35,11 +35,12 @@ class _FriendPostState extends State<FriendPost> {
 
   @override
   void initState() {
-    // TODO: Call function that updates friendPostDataList to be only 24 hr
     super.initState();
+    modifyFriendPostDataListTo24h(widget.friendPostDataList);
+
   }
 
-  List<FirebaseUserPost> modifyFriendPostDataListTo24h(List<FirebaseUserPost> friendPostDataList){
+void modifyFriendPostDataListTo24h(List<FirebaseUserPost> friendPostDataList){
     final List<FirebaseUserPost> filteredPosts = [];
     final DateTime now = DateTime.now();
     final DateTime yesterday = now.subtract(const Duration(days: 1));
@@ -51,7 +52,6 @@ class _FriendPostState extends State<FriendPost> {
     }
     friendPostDataList.clear();
     friendPostDataList.addAll(filteredPosts);
-    return friendPostDataList;
   }
 
 
