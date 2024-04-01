@@ -8,6 +8,8 @@ import 'package:group_project/pages/layout/user_profile_provider.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../../models/exercise_set.dart';
+
 class OwnPostWorkoutInfo extends StatelessWidget {
   final Post post;
   const OwnPostWorkoutInfo({
@@ -139,8 +141,9 @@ class OwnPostWorkoutInfo extends StatelessWidget {
                         fontSize: 12,
                       ),
                     ),
+
                     Text(
-                      '${bestSet.weight} kg x ${bestSet.reps}',
+                      getWeightRepsText(bestSet),
                       style: const TextStyle(
                         color: AppColours.secondary,
                         fontSize: 12,
@@ -214,6 +217,26 @@ class OwnPostWorkoutInfo extends StatelessWidget {
                             itemCount: exercisesSetInfo.exerciseSets.length,
                             itemBuilder: (context, index) {
                               final set = exercisesSetInfo.exerciseSets[index];
+                              String weightrepsText = '';
+                              if (exercisesSetInfo.exercise.target?.category.target?.name == 'Weighted Bodyweight') {
+                                weightrepsText = '+${set.weight} kg x ${set.reps}';
+                              } else if (exercisesSetInfo.exercise.target?.category.target?.name == 'Assisted Bodyweight') {
+                                weightrepsText = '-${set.weight} kg x ${set.reps}';
+                              } else if (exercisesSetInfo.exercise.target?.category.target?.name == 'Reps Only') {
+                                weightrepsText = '${set.reps} reps';
+                              }else if (exercisesSetInfo.exercise.target?.category.target?.name == 'Duration') {
+                                final timeString = bestSet.time.toString();
+                                if (timeString.length == 3) {
+                                  weightrepsText = '${set.time.toString()[0]}:${set.time.toString()[1]}${set.time.toString()[2]}';
+                                } else if (timeString.length == 4) {
+                                  weightrepsText = '${set.time.toString()[0]}${set.time.toString()[1]}:${set.time.toString()[2]}${set.time.toString()[3]}';
+                                } else if (timeString.length == 5) {
+                                  weightrepsText = '${set.time.toString()[0]}:${set.time.toString()[1]}${set.time.toString()[2]}:${set.time.toString()[3]}${set.time.toString()[3]}';
+                                }
+
+                              }else {
+                                weightrepsText = '${set.weight} kg x ${set.reps}';
+                              }
                               return Padding(
                                 padding:
                                     const EdgeInsets.symmetric(vertical: 6.0),
@@ -235,15 +258,7 @@ class OwnPostWorkoutInfo extends StatelessWidget {
                                           ),
                                         ),
                                         Text(
-                                          '${set.weight} kg',
-                                          style: const TextStyle(
-                                            color: Colors.grey,
-                                            fontSize: 14,
-                                          ),
-                                        ),
-                                        const SizedBox(width: 10),
-                                        Text(
-                                          'x  ${set.reps}',
+                                          weightrepsText, // Using the modified weightrepsText here
                                           style: const TextStyle(
                                             color: Colors.grey,
                                             fontSize: 14,
@@ -285,6 +300,48 @@ class OwnPostWorkoutInfo extends StatelessWidget {
     );
   }
 }
+
+
+enum ExerciseCategory {
+  AssistedBodyweight,
+  WeightedBodyweight,
+  RepsOnly,
+  Duration,
+  Other,
+}
+
+String getTimeString(String timeString) {
+  if (timeString.length == 3) {
+    return '${timeString[0]}:${timeString[1]}${timeString[2]}';
+  } else if (timeString.length == 4) {
+    return '${timeString[0]}${timeString[1]}:${timeString[2]}${timeString[3]}';
+  } else if (timeString.length == 5) {
+    return '${timeString[0]}:${timeString[1]}${timeString[2]}:${timeString[3]}${timeString[4]}';
+  }
+  return '-';
+}
+
+String getWeightRepsText(ExerciseSet bestSet) {
+  final category = bestSet.exerciseSetInfo.target?.exercise.target?.category.target?.name;
+  final weight = bestSet.weight;
+  final reps = bestSet.reps;
+  final timeString = bestSet.time.toString();
+
+  switch (category) {
+    case 'Assisted Bodyweight':
+      return '-$weight kg x $reps';
+    case 'Weighted Bodyweight':
+      return '+$weight kg x $reps';
+    case 'Reps Only':
+      return '$reps reps';
+    case 'Duration':
+      return getTimeString(timeString);
+    default:
+      return '$weight kg x $reps';
+  }
+}
+
+
 
 String formatDuration(int totalSeconds) {
   final duration = Duration(seconds: totalSeconds);
