@@ -140,30 +140,104 @@ class CompleteHistoryDetail extends StatelessWidget {
                                               ),
                                             ),
                                           ),
-                                          Text(
-                                            ('${setInfo.value.weight} kg'),
-                                            style: TextStyle(
-                                              color: Colors.grey[300],
-                                              fontSize: 16,
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 5),
-                                            child: Text(
-                                              '×',
+                                          if (exercisesSetInfo.exercise
+                                              .target?.category
+                                              .target?.name ==
+                                              "Barbell" || exercisesSetInfo.exercise
+                                              .target?.category
+                                              .target?.name ==
+                                              "Dumbbell" || exercisesSetInfo.exercise
+                                              .target?.category
+                                              .target?.name ==
+                                              "Machine" || exercisesSetInfo.exercise
+                                              .target?.category
+                                              .target?.name ==
+                                              "Cable"|| exercisesSetInfo.exercise
+                                              .target?.category
+                                              .target?.name ==
+                                              "Band" )
+                                            Text(
+                                              ('${setInfo.value.weight} kg  × ${setInfo.value.reps}'),
                                               style: TextStyle(
-                                                  color: Colors.grey[300],
-                                                  fontSize: 16),
+                                                color: Colors.grey[300],
+                                                fontSize: 16,
+                                              ),
                                             ),
-                                          ),
-                                          Text(
-                                            setInfo.value.reps.toString(),
-                                            style: TextStyle(
-                                              color: Colors.grey[300],
-                                              fontSize: 16,
+                                          if (exercisesSetInfo.exercise
+                                              .target?.category
+                                              .target?.name ==
+                                              "Assisted Bodyweight")
+                                            Text(
+                                              ('-${setInfo.value.weight} kg × ${setInfo.value.reps}'),
+                                              style: TextStyle(
+                                                color: Colors.grey[300],
+                                                fontSize: 16,
+                                              ),
                                             ),
-                                          ),
+                                          if (exercisesSetInfo.exercise
+                                              .target?.category
+                                              .target?.name ==
+                                              "Weighted Bodyweight")
+                                            Text(
+                                              ('+${setInfo.value.weight} kg  × ${setInfo.value.reps}'),
+                                              style: TextStyle(
+                                                color: Colors.grey[300],
+                                                fontSize: 16,
+                                              ),
+                                            ),
+                                          if (exercisesSetInfo.exercise
+                                              .target?.category
+                                              .target?.name ==
+                                              "Reps Only")
+                                            Text(
+                                              ('${setInfo.value.reps} reps'),
+                                              style: TextStyle(
+                                                color: Colors.grey[300],
+                                                fontSize: 16,
+                                              ),
+                                            ),
+                                          if (exercisesSetInfo.exercise.target?.category.target?.name ==
+                                              "Duration")
+                                            Text(
+                                              (setInfo.value.time != null
+                                                  ? (setInfo.value.time.toString().length == 3
+                                                      ? '${setInfo.value.time.toString()[0]}:${setInfo.value.time.toString()[1]}${setInfo.value.time.toString()[2]}'
+                                                      : (setInfo.value.time.toString().length == 4)
+                                                          ? '${setInfo.value.time.toString()[0]}${setInfo.value.time.toString()[1]}:${setInfo.value.time.toString()[2]}${setInfo.value.time.toString()[3]}'
+                                                          : (setInfo.value.time.toString().length == 5)
+                                                              ? '${setInfo.value.time.toString()[0]}:${setInfo.value.time.toString()[1]}${setInfo.value.time.toString()[2]}:${setInfo.value.time.toString()[3]}${setInfo.value.time.toString()[3]}'
+                                                              : '-')
+                                                  : '-'),
+                                              style: TextStyle(
+                                                color: Colors.grey[300],
+                                                fontSize: 16,
+                                              ),
+                                            ),
+                                          const SizedBox(width: 10),
+                                          setInfo.value.isPersonalRecord
+                                              ? Container(
+                                            padding:
+                                            const EdgeInsets.all(
+                                                5),
+                                            decoration:
+                                            const BoxDecoration(
+                                              color: AppColours
+                                                  .secondary,
+                                              borderRadius:
+                                              BorderRadius.all(
+                                                Radius.circular(30),
+                                              ),
+                                            ),
+                                            child: Text(
+                                              '🏆 PR',
+                                              style: TextStyle(
+                                                color:
+                                                Colors.green[900],
+                                                fontSize: 12,
+                                              ),
+                                            ),
+                                          )
+                                              : const SizedBox(),
                                         ],
                                       ),
                                     ),

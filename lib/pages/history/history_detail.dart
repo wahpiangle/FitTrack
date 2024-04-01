@@ -154,13 +154,83 @@ class HistoryDetail extends StatelessWidget {
                                             children: [
                                               Row(
                                                 children: [
-                                                  Text(
-                                                    ('${setInfo.value.weight} kg × ${setInfo.value.reps}'),
-                                                    style: TextStyle(
-                                                      color: Colors.grey[300],
-                                                      fontSize: 16,
+                                                  if (exercisesSetInfo.exercise
+                                                      .target?.category
+                                                      .target?.name ==
+                                                      "Barbell" || exercisesSetInfo.exercise
+                                                      .target?.category
+                                                      .target?.name ==
+                                                      "Dumbbell" || exercisesSetInfo.exercise
+                                                      .target?.category
+                                                      .target?.name ==
+                                                      "Machine" || exercisesSetInfo.exercise
+                                                      .target?.category
+                                                      .target?.name ==
+                                                      "Cable"|| exercisesSetInfo.exercise
+                                                      .target?.category
+                                                      .target?.name ==
+                                                      "Band" )
+                                                    Text(
+                                                      ('${setInfo.value.weight} kg  × ${setInfo.value.reps}'),
+                                                      style: TextStyle(
+                                                        color: Colors.grey[300],
+                                                        fontSize: 16,
+                                                      ),
                                                     ),
-                                                  ),
+                                                  if (exercisesSetInfo.exercise
+                                                      .target?.category
+                                                      .target?.name ==
+                                                      "Assisted Bodyweight")
+                                                    Text(
+                                                      ('-${setInfo.value.weight} kg × ${setInfo.value.reps}'),
+                                                      style: TextStyle(
+                                                        color: Colors.grey[300],
+                                                        fontSize: 16,
+                                                      ),
+                                                    ),
+                                                  if (exercisesSetInfo.exercise
+                                                      .target?.category
+                                                      .target?.name ==
+                                                      "Weighted Bodyweight")
+                                                    Text(
+                                                      ('+${setInfo.value.weight} kg  × ${setInfo.value.reps}'),
+                                                      style: TextStyle(
+                                                        color: Colors.grey[300],
+                                                        fontSize: 16,
+                                                      ),
+                                                    ),
+                                                  if (exercisesSetInfo.exercise
+                                                      .target?.category
+                                                      .target?.name ==
+                                                      "Reps Only")
+                                                    Text(
+                                                      ('${setInfo.value.reps} reps'),
+                                                      style: TextStyle(
+                                                        color: Colors.grey[300],
+                                                        fontSize: 16,
+                                                      ),
+                                                    ),
+                                                  if (exercisesSetInfo.exercise
+                                                      .target?.category
+                                                      .target?.name ==
+                                                      "Duration")
+                                                    Text(
+                                                      (setInfo.value.time != null
+                                                          ? (setInfo.value.time.toString().length == 3
+                                                            ? '${setInfo.value.time.toString()[0]}:${setInfo.value.time.toString()[1]}${setInfo.value.time.toString()[2]}'
+                                                            : (setInfo.value.time.toString().length == 4)
+                                                              ? '${setInfo.value.time.toString()[0]}${setInfo.value.time.toString()[1]}:${setInfo.value.time.toString()[2]}${setInfo.value.time.toString()[3]}'
+                                                              : (setInfo.value.time.toString().length == 5)
+                                                                ? '${setInfo.value.time.toString()[0]}:${setInfo.value.time.toString()[1]}${setInfo.value.time.toString()[2]}:${setInfo.value.time.toString()[3]}${setInfo.value.time.toString()[3]}'
+                                                                : '-')
+                                                          : '-'),
+                                                      style: TextStyle(
+                                                        color: Colors.grey[300],
+                                                        fontSize: 16,
+                                                      ),
+                                                    ),
+
+
                                                 ],
                                               ),
                                               setInfo.value.isPersonalRecord
