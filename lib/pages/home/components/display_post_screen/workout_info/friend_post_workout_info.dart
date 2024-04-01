@@ -204,6 +204,26 @@ class _FriendPostWorkoutInfoState extends State<FriendPostWorkoutInfo> {
                               itemBuilder: (context, index) {
                                 final set =
                                     exercisesSetInfo.exerciseSets[index];
+                                String weightrepsText = '';
+                                // Determine how to display weight based on exercise category
+                                if (exercise?.category.target?.name == 'Assisted Bodyweight') {
+                                  weightrepsText = '-${set.weight} kg x ${set.reps}';
+                                } else if (exercise?.category.target?.name == 'Weighted Bodyweight') {
+                                  weightrepsText = '+${set.weight} kg x ${set.reps}';
+                                } else if (exercise?.category.target?.name == 'Reps Only') {
+                                  weightrepsText = '+${set.reps} reps';
+                                } else if (exercise?.category.target?.name == 'Duration') {
+                                  if (set.time.toString().length == 3) {
+                                    weightrepsText = '${set.time.toString()[0]}:${set.time.toString()[1]}${set.time.toString()[2]}';
+                                  } else if (set.time.toString().length == 4) {
+                                    weightrepsText = '${set.time.toString()[0]}${set.time.toString()[1]}:${set.time.toString()[2]}${set.time.toString()[3]}';
+                                  } else if (set.time.toString().length == 5) {
+                                    weightrepsText = '${set.time.toString()[0]}:${set.time.toString()[1]}${set.time.toString()[2]}:${set.time.toString()[3]}${set.time.toString()[3]}';
+                                  }
+
+                                } else {
+                                  weightrepsText = '${set.weight} kg x ${set.reps}';
+                                }
                                 return Padding(
                                   padding:
                                       const EdgeInsets.symmetric(vertical: 6.0),
@@ -225,15 +245,7 @@ class _FriendPostWorkoutInfoState extends State<FriendPostWorkoutInfo> {
                                             ),
                                           ),
                                           Text(
-                                            '${set.weight} kg',
-                                            style: const TextStyle(
-                                              color: Colors.grey,
-                                              fontSize: 14,
-                                            ),
-                                          ),
-                                          const SizedBox(width: 10),
-                                          Text(
-                                            'x  ${set.reps}',
+                                            weightrepsText,
                                             style: const TextStyle(
                                               color: Colors.grey,
                                               fontSize: 14,
