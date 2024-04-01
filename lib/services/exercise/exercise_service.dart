@@ -147,9 +147,48 @@ class ExerciseService {
 
   void completeExerciseSet(int exerciseSetId) {
     ExerciseSet exerciseSet = exerciseSetBox.get(exerciseSetId)!;
-    if (exerciseSet.reps == null || exerciseSet.weight == null) {
+    ExercisesSetsInfo? exercisesSetsInfo = exerciseSet.exerciseSetInfo.target;
+
+
+    if (exercisesSetsInfo?.exercise.target?.category.target?.name == "Reps Only") {
+      if (exerciseSet.reps == null) {
+        return;
+      }
+    }
+
+    else if (exercisesSetsInfo?.exercise.target?.category.target?.name == "Duration") {
+      String timeString = exerciseSet.time.toString();
+      if (exerciseSet.time == null || exerciseSet.time.toString().length < 3) {
+        return;
+      }
+      else if (exerciseSet.time.toString().length == 3 && ['6', '7', '8', '9'].contains(timeString[1])) {
+          return;
+      }
+      else if (exerciseSet.time.toString().length == 4  ) {
+        if (['6', '7', '8', '9'].contains(timeString[0])) {
+          return;
+        }
+        else if (['6', '7', '8', '9'].contains(timeString[2])) {
+          return;
+        }
+      }
+      else if (exerciseSet.time.toString().length == 5  ) {
+        if (['6', '7', '8', '9'].contains(timeString[1])) {
+        return;
+        }
+        else if (['6', '7', '8', '9'].contains(timeString[3])) {
+          return;
+        }
+      }
+    }
+
+    else if (exerciseSet.reps == null || exerciseSet.weight == null) {
       return;
     }
+
+
+
+
     exerciseSet.isCompleted = !exerciseSet.isCompleted;
     if (isPersonalRecord(exerciseSet) == true) {
       exerciseSet.isPersonalRecord = true;
@@ -179,7 +218,7 @@ class ExerciseService {
     exerciseBox.put(exercise);
   }
 
-  int getOneRepMaxValue(int weight, int reps) {
+  int getOneRepMaxValue(int weight, int reps, int time) {
     return (weight * (1 + reps / 30)).toInt();
   }
 
@@ -190,10 +229,10 @@ class ExerciseService {
         .expand((element) => element.exerciseSets)
         .toList();
     int currentOneRepMax =
-        getOneRepMaxValue(exerciseSet.weight ?? 0, exerciseSet.reps ?? 0);
+        getOneRepMaxValue(exerciseSet.weight ?? 0, exerciseSet.reps ?? 0, exerciseSet.time ?? 0);
     for (ExerciseSet set in exerciseSets) {
       if (set.id != exerciseSet.id) {
-        int oneRepMax = getOneRepMaxValue(set.weight ?? 0, set.reps ?? 0);
+        int oneRepMax = getOneRepMaxValue(set.weight ?? 0, set.reps ?? 0, exerciseSet.time ?? 0);
         if (oneRepMax > currentOneRepMax) {
           return false;
         }
@@ -207,8 +246,8 @@ class ExerciseService {
     for (var exerciseSetInfo in workoutSession.exercisesSetsInfo) {
       allSets.addAll(exerciseSetInfo.exerciseSets);
     }
-    allSets.sort((a, b) => getOneRepMaxValue(b.weight!, b.reps!)
-        .compareTo(getOneRepMaxValue(a.weight!, a.reps!)));
+    allSets.sort((a, b) => getOneRepMaxValue(b.weight!, b.reps!, b.time!)
+        .compareTo(getOneRepMaxValue(a.weight!, a.reps!, a.time!)));
     return allSets.first;
   }
 
@@ -253,6 +292,31 @@ class ExerciseService {
           if (counter == setIndex) {
             final recentReps = exerciseSet.reps;
             return recentReps;
+          }
+          counter++;
+        }
+      }
+    }
+    return null;
+  }
+
+  int? getRecentTime(int exerciseId, int setIndex) {
+    final allWorkoutSessions = workoutSessionBox.getAll();
+    allWorkoutSessions.sort((a, b) => b.date.compareTo(a.date));
+    final mostRecentWorkoutSession = allWorkoutSessions.firstOrNull;
+    if (mostRecentWorkoutSession == null) {
+      return null;
+    }
+    final exerciseSetsInfo = mostRecentWorkoutSession.exercisesSetsInfo;
+
+    for (final exerciseSetInfo in exerciseSetsInfo) {
+      final exercise = exerciseSetInfo.exercise.target;
+      if (exercise != null && exercise.id == exerciseId) {
+        int counter = 0;
+        for (final exerciseSet in exerciseSetInfo.exerciseSets) {
+          if (counter == setIndex) {
+            final recentTime = exerciseSet.time;
+            return recentTime;
           }
           counter++;
         }
