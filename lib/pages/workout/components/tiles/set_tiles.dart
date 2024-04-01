@@ -3,7 +3,15 @@ import 'package:group_project/constants/themes/app_colours.dart';
 import 'package:group_project/models/exercise_set.dart';
 import 'package:group_project/models/exercises_sets_info.dart';
 import 'package:group_project/pages/workout/components/tiles/set_labels.dart';
+import 'package:group_project/pages/workout/components/tiles/set_labels_assisted.dart';
+import 'package:group_project/pages/workout/components/tiles/set_labels_duration.dart';
+import 'package:group_project/pages/workout/components/tiles/set_labels_repsonly.dart';
+import 'package:group_project/pages/workout/components/tiles/set_labels_weighted.dart';
 import 'package:group_project/pages/workout/components/tiles/set_tile.dart';
+import 'package:group_project/pages/workout/components/tiles/set_tile_assisted.dart';
+import 'package:group_project/pages/workout/components/tiles/set_tile_duration.dart';
+import 'package:group_project/pages/workout/components/tiles/set_tile_repsonly.dart';
+import 'package:group_project/pages/workout/components/tiles/set_tile_weighted.dart';
 
 class SetTiles extends StatefulWidget {
   final ExercisesSetsInfo exercisesSetsInfo;
@@ -39,32 +47,145 @@ class _SetTilesState extends State<SetTiles> {
               int setIndex = index;
               ExerciseSet set = widget.exercisesSetsInfo.exerciseSets[setIndex];
               if (index == 0) {
-                return Column(
-                  children: [
-                    SetLabels(
-                      setIsCompleted: widget.setIsCompleted,
-                    ),
-                    SetTile(
-                      set: set,
-                      setIndex: setIndex,
-                      exercisesSetsInfo: widget.exercisesSetsInfo,
-                      removeSet: widget.removeSet,
-                      addSet: widget.addSet,
-                      setIsCompleted: widget.setIsCompleted,
-                      isCurrentEditing: widget.isCurrentEditing,
-                    )
-                  ],
+                if (widget.exercisesSetsInfo.exercise.target?.category.target?.name == "Assisted Bodyweight") {
+                  return Column(
+                    children: [
+                      SetLabelsAssisted(
+                        setIsCompleted: widget.setIsCompleted,
+                      ),
+                      SetTileAssisted(
+                        set: set,
+                        setIndex: setIndex,
+                        exercisesSetsInfo: widget.exercisesSetsInfo,
+                        removeSet: widget.removeSet,
+                        addSet: widget.addSet,
+                        setIsCompleted: widget.setIsCompleted,
+                        isCurrentEditing: widget.isCurrentEditing,
+                      )
+                    ],
+                  );
+                } else if (widget.exercisesSetsInfo.exercise.target?.category.target?.name == "Weighted Bodyweight") {
+                  return Column(
+                    children: [
+                      SetLabelsWeighted(
+                        setIsCompleted: widget.setIsCompleted,
+                      ),
+                      SetTileWeighted(
+                        set: set,
+                        setIndex: setIndex,
+                        exercisesSetsInfo: widget.exercisesSetsInfo,
+                        removeSet: widget.removeSet,
+                        addSet: widget.addSet,
+                        setIsCompleted: widget.setIsCompleted,
+                        isCurrentEditing: widget.isCurrentEditing,
+                      )
+                    ],
+                  );
+                } else if (widget.exercisesSetsInfo.exercise.target?.category.target?.name == "Reps Only") {
+                  return Column(
+                    children: [
+                      SetLabelsRepsOnly(
+                        setIsCompleted: widget.setIsCompleted,
+                      ),
+                      SetTileRepsOnly(
+                        set: set,
+                        setIndex: setIndex,
+                        exercisesSetsInfo: widget.exercisesSetsInfo,
+                        removeSet: widget.removeSet,
+                        addSet: widget.addSet,
+                        setIsCompleted: widget.setIsCompleted,
+                        isCurrentEditing: widget.isCurrentEditing,
+                      )
+                    ],
+                  );
+                } else if (widget.exercisesSetsInfo.exercise.target?.category.target?.name == "Duration") {
+                  return Column(
+                    children: [
+                      SetLabelsDuration(
+                        setIsCompleted: widget.setIsCompleted,
+                      ),
+                      SetTileDuration(
+                        set: set,
+                        setIndex: setIndex,
+                        exercisesSetsInfo: widget.exercisesSetsInfo,
+                        removeSet: widget.removeSet,
+                        addSet: widget.addSet,
+                        setIsCompleted: widget.setIsCompleted,
+                        isCurrentEditing: widget.isCurrentEditing,
+                      )
+                    ],
+                  );
+                } else{
+                  return Column(
+                    children: [
+                      SetLabels(
+                        setIsCompleted: widget.setIsCompleted,
+                      ),
+                      SetTile(
+                        set: set,
+                        setIndex: setIndex,
+                        exercisesSetsInfo: widget.exercisesSetsInfo,
+                        removeSet: widget.removeSet,
+                        addSet: widget.addSet,
+                        setIsCompleted: widget.setIsCompleted,
+                        isCurrentEditing: widget.isCurrentEditing,
+                      )
+                    ],
+                  );
+
+                }
+              }
+              if (widget.exercisesSetsInfo.exercise.target?.category.target?.name == "Assisted Bodyweight") {
+                return SetTileAssisted(
+                  set: set,
+                  setIndex: setIndex,
+                  exercisesSetsInfo: widget.exercisesSetsInfo,
+                  removeSet: widget.removeSet,
+                  addSet: widget.addSet,
+                  setIsCompleted: widget.setIsCompleted,
+                  isCurrentEditing: widget.isCurrentEditing,
+                );
+              }else if (widget.exercisesSetsInfo.exercise.target?.category.target?.name == "weighted Bodyweight") {
+                return SetTileWeighted(
+                  set: set,
+                  setIndex: setIndex,
+                  exercisesSetsInfo: widget.exercisesSetsInfo,
+                  removeSet: widget.removeSet,
+                  addSet: widget.addSet,
+                  setIsCompleted: widget.setIsCompleted,
+                  isCurrentEditing: widget.isCurrentEditing,
+                );
+              }else if (widget.exercisesSetsInfo.exercise.target?.category.target?.name == "Reps Only") {
+                return SetTileRepsOnly(
+                  set: set,
+                  setIndex: setIndex,
+                  exercisesSetsInfo: widget.exercisesSetsInfo,
+                  removeSet: widget.removeSet,
+                  addSet: widget.addSet,
+                  setIsCompleted: widget.setIsCompleted,
+                  isCurrentEditing: widget.isCurrentEditing,
+                );
+              }else if (widget.exercisesSetsInfo.exercise.target?.category.target?.name == "Duration") {
+                return SetTileDuration(
+                  set: set,
+                  setIndex: setIndex,
+                  exercisesSetsInfo: widget.exercisesSetsInfo,
+                  removeSet: widget.removeSet,
+                  addSet: widget.addSet,
+                  setIsCompleted: widget.setIsCompleted,
+                  isCurrentEditing: widget.isCurrentEditing,
+                );
+              }else {
+                return SetTile(
+                  set: set,
+                  setIndex: setIndex,
+                  exercisesSetsInfo: widget.exercisesSetsInfo,
+                  removeSet: widget.removeSet,
+                  addSet: widget.addSet,
+                  setIsCompleted: widget.setIsCompleted,
+                  isCurrentEditing: widget.isCurrentEditing,
                 );
               }
-              return SetTile(
-                set: set,
-                setIndex: setIndex,
-                exercisesSetsInfo: widget.exercisesSetsInfo,
-                removeSet: widget.removeSet,
-                addSet: widget.addSet,
-                setIsCompleted: widget.setIsCompleted,
-                isCurrentEditing: widget.isCurrentEditing,
-              );
             },
           ),
         ),
