@@ -64,3 +64,35 @@ class FirebaseExercisesSetsInfo {
         : b);
   }
 }
+
+class WorkoutSessionsManager {
+  final List<FirebaseWorkoutSession> sessions;
+
+  WorkoutSessionsManager({required this.sessions});
+
+  ExerciseSet getOverallBestSet() {
+    ExerciseSet? overallBestSet;
+
+    for (var session in sessions) {
+      for (var exercisesSetsInfo in session.exercisesSetsInfo) {
+        var bestSet = exercisesSetsInfo.getBestSet();
+        if (overallBestSet == null) {
+          overallBestSet = bestSet;
+        } else {
+          bool isCurrentBestSetBetter = objectBox.exerciseService.getOneRepMaxValue(bestSet.weight ?? 0, bestSet.reps ?? 0) >
+              objectBox.exerciseService.getOneRepMaxValue(overallBestSet.weight ?? 0, overallBestSet.reps ?? 0);
+
+          if (isCurrentBestSetBetter) {
+            overallBestSet = bestSet;
+          }
+        }
+      }
+    }
+
+    if (overallBestSet != null) {
+      return overallBestSet;
+    } else {
+      throw Exception('No best set found');
+    }
+  }
+}

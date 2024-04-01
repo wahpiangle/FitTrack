@@ -24,6 +24,7 @@ class UserProfilePageState extends State<UserProfilePage> {
   late Future<List<Post>> postsFuture;
   late Future<FriendStatus> friendStatusFuture;
 
+
   @override
   void initState() {
     super.initState();
@@ -61,11 +62,27 @@ class UserProfilePageState extends State<UserProfilePage> {
               child: Column(
                 children: <Widget>[
                   const SizedBox(height: 12),
-                  ImageDisplay.buildUserProfileImage(
-                      widget.user.photoUrl, radius: 50.0, context: context),
-                  const SizedBox(height: 12),
-                  Text("@${widget.user.username}",
-                      style: const TextStyle(color: AppColours.secondaryLight, fontSize: 18)),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Column(
+                        children: <Widget>[
+                          ImageDisplay.buildUserProfileImage(widget.user.photoUrl, radius: 50.0, context: context),
+                          const SizedBox(height: 12),
+                          Text("@${widget.user.username}", style: const TextStyle(color: AppColours.secondaryLight, fontSize: 18)),
+                        ],
+                      ),
+                      const SizedBox(width: 20), // Spacer
+                      Column( // New column for the barbell icon and text
+                        children: <Widget>[
+                          Icon(Icons.fitness_center, size: 24.0, color: Colors.white), // Barbell icon
+                          Text('Overall Best Exercise Set', style: TextStyle(color: Colors.white, fontSize: 16)), // Exercise text
+                        ],
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
                   FutureBuilder<FriendStatus>(
                     future: friendStatusFuture,
                     builder: (context, statusSnapshot) {
