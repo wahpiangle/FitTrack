@@ -58,9 +58,9 @@ class FirebaseExercisesSetsInfo {
 
   ExerciseSet getBestSet() {
     return exerciseSets.reduce((a, b) => objectBox.exerciseService
-                .getOneRepMaxValue(a.weight ?? 0, a.reps ?? 0, a.time ?? 0) >
+                .getOneRepMaxValue(a.weight ?? 0, a.reps ?? 0) >
             objectBox.exerciseService
-                .getOneRepMaxValue(b.weight ?? 0, b.reps ?? 0, b.time ?? 0)
+                .getOneRepMaxValue(b.weight ?? 0, b.reps ?? 0)
         ? a
         : b);
   }

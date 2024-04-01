@@ -218,7 +218,7 @@ class ExerciseService {
     exerciseBox.put(exercise);
   }
 
-  int getOneRepMaxValue(int weight, int reps, int time) {
+  int getOneRepMaxValue(int weight, int reps) {
     return (weight * (1 + reps / 30)).toInt();
   }
 
@@ -229,10 +229,10 @@ class ExerciseService {
         .expand((element) => element.exerciseSets)
         .toList();
     int currentOneRepMax =
-        getOneRepMaxValue(exerciseSet.weight ?? 0, exerciseSet.reps ?? 0, exerciseSet.time ?? 0);
+        getOneRepMaxValue(exerciseSet.weight ?? 0, exerciseSet.reps ?? 0);
     for (ExerciseSet set in exerciseSets) {
       if (set.id != exerciseSet.id) {
-        int oneRepMax = getOneRepMaxValue(set.weight ?? 0, set.reps ?? 0, exerciseSet.time ?? 0);
+        int oneRepMax = getOneRepMaxValue(set.weight ?? 0, set.reps ?? 0);
         if (oneRepMax > currentOneRepMax) {
           return false;
         }
@@ -246,8 +246,8 @@ class ExerciseService {
     for (var exerciseSetInfo in workoutSession.exercisesSetsInfo) {
       allSets.addAll(exerciseSetInfo.exerciseSets);
     }
-    allSets.sort((a, b) => getOneRepMaxValue(b.weight!, b.reps!, b.time!)
-        .compareTo(getOneRepMaxValue(a.weight!, a.reps!, a.time!)));
+    allSets.sort((a, b) => getOneRepMaxValue(b.weight!, b.reps!)
+        .compareTo(getOneRepMaxValue(a.weight!, a.reps!)));
     return allSets.first;
   }
 

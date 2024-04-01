@@ -15,11 +15,9 @@ class FriendPostBestSet extends StatelessWidget {
       final aOneRepMax = objectBox.exerciseService.getOneRepMaxValue(
         a.exerciseSets[0].weight ?? 0,
         a.exerciseSets[0].reps ?? 0,
-        a.exerciseSets[0].time ?? 0,
       );
       final bOneRepMax = objectBox.exerciseService.getOneRepMaxValue(
         b.exerciseSets[0].weight ?? 0,
-        b.exerciseSets[0].reps ?? 0,
         b.exerciseSets[0].reps ?? 0,
       );
       return aOneRepMax > bOneRepMax ? a : b;
@@ -28,12 +26,10 @@ class FriendPostBestSet extends StatelessWidget {
       final aOneRepMax = objectBox.exerciseService.getOneRepMaxValue(
         a.weight ?? 0,
         a.reps ?? 0,
-        a.time ?? 0,
       );
       final bOneRepMax = objectBox.exerciseService.getOneRepMaxValue(
         b.weight ?? 0,
         b.reps ?? 0,
-        b.time ?? 0,
       );
       return aOneRepMax > bOneRepMax ? a : b;
     });
