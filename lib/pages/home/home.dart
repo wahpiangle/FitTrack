@@ -20,7 +20,6 @@ class _HomeState extends State<Home> {
   void initState() {
     currentUserPostStream = FirebasePostsService.getCurrentUserPostStream();
     super.initState();
-    print("home hi");
   }
 
   @override
