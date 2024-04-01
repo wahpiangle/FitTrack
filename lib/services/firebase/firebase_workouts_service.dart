@@ -142,12 +142,11 @@ class FirebaseWorkoutsService {
 
       List<FirebaseWorkoutSession> sessions = [];
       for (var doc in querySnapshot.docs) {
-        var session = FirebaseWorkoutSession.fromJson(doc.data() as Map<String, dynamic>);
+        var session = FirebaseWorkoutSession.fromJson(doc.data());
         sessions.add(session);
       }
       return sessions;
     } catch (e) {
-      print(e);
       rethrow;
     }
   }

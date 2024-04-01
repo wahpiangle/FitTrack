@@ -5,6 +5,7 @@ import 'package:group_project/models/firebase/firebase_user.dart';
 import 'package:group_project/models/firebase/firebase_workout_session.dart';
 import 'package:group_project/models/post.dart';
 import 'package:group_project/pages/friend/search/user_image_display.dart';
+import 'package:group_project/pages/user_profile/overall_workout_best_set.dart';
 import 'package:group_project/pages/user_profile/user_post_grid.dart';
 import 'package:group_project/services/firebase/firebase_friends_service.dart';
 import 'package:group_project/services/firebase/firebase_posts_service.dart';
@@ -43,7 +44,7 @@ class UserProfilePageState extends State<UserProfilePage> {
     try {
       List<FirebaseWorkoutSession> sessions = await FirebaseWorkoutsService.getWorkoutSessionsByUserId(widget.user.uid);
 
-      final manager = WorkoutSessionsManager(sessions: sessions);
+      final manager = OverallWorkoutBestSet(sessions: sessions);
       final bestSetPair = manager.getOverallBestSet();
       setState(() {
         overallBestSetPair = bestSetPair;
@@ -102,12 +103,12 @@ class UserProfilePageState extends State<UserProfilePage> {
                           children: [
                             Row(
                               children: [
-                                const SizedBox(width: 10),
+                                const SizedBox(width: 20),
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     const SizedBox(height: 10),
-                                    Text(
+                                    const Text(
                                       '🏆',
                                       style: TextStyle(
                                         fontSize: 26,
@@ -125,10 +126,10 @@ class UserProfilePageState extends State<UserProfilePage> {
                                     overallBestSetPair != null ? Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
-                                        Text('${overallBestSetPair!.second}', style: TextStyle(color: AppColours.secondaryLight, fontSize: 14)),
-                                        Text('${overallBestSetPair!.first.weight} kg x ${overallBestSetPair!.first.reps}', style: TextStyle(color: AppColours.secondaryLight, fontSize: 14)),
+                                        Text(overallBestSetPair!.second, style: const TextStyle(color: AppColours.secondaryLight, fontSize: 14)),
+                                        Text('${overallBestSetPair!.first.weight} kg x ${overallBestSetPair!.first.reps}', style: const TextStyle(color: AppColours.secondaryLight, fontSize: 14)),
                                       ],
-                                    ) : Text('No best set', style: TextStyle(color: AppColours.secondaryLight, fontSize: 14)),
+                                    ) : const Text('No best set', style: TextStyle(color: AppColours.secondaryLight, fontSize: 14)),
                                   ],
                                 ),
                               ],
