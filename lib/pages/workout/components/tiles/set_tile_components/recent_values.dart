@@ -12,6 +12,7 @@ class RecentValues extends StatefulWidget {
       onTapPreviousTab;
   final int? recentWeight;
   final int? recentReps;
+  final int? recentTime;
   const RecentValues({
     super.key,
     required this.isCurrentEditing,
@@ -20,6 +21,7 @@ class RecentValues extends StatefulWidget {
     required this.onTapPreviousTab,
     required this.recentWeight,
     required this.recentReps,
+    this.recentTime,
   });
   @override
   State<RecentValues> createState() => _RecentValuesState();
@@ -59,8 +61,22 @@ class _RecentValuesState extends State<RecentValues>
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
             child: Text(
-              widget.recentWeight != null
-                  ? '${widget.recentWeight}kg x ${widget.recentReps}'
+              widget.recentWeight != null || widget.recentTime != null || widget.recentReps != null
+                  ? (widget.exercisesSetsInfo.exercise.target?.category.target?.name == "Assisted Bodyweight"
+                    ? '-${widget.recentWeight}kg x ${widget.recentReps}'
+                    : (widget.exercisesSetsInfo.exercise.target?.category.target?.name == "Weighted Bodyweight"
+                      ? '+${widget.recentWeight}kg x ${widget.recentReps}'
+                      : (widget.exercisesSetsInfo.exercise.target?.category.target?.name == "Reps Only"
+                        ? '${widget.recentReps} reps'
+                        : (widget.exercisesSetsInfo.exercise.target?.category.target?.name == "Duration"
+                          ? (widget.recentTime.toString().length == 3
+                            ? '${widget.recentTime.toString()[0]}:${widget.recentTime.toString()[1]}${widget.recentTime.toString()[2]}'
+                            : (widget.recentTime.toString().length == 4)
+                              ? '${widget.recentTime.toString()[0]}${widget.recentTime.toString()[1]}:${widget.recentTime.toString()[2]}${widget.recentTime.toString()[3]}'
+                              : (widget.recentTime.toString().length == 5)
+                                ? '${widget.recentTime.toString()[0]}:${widget.recentTime.toString()[1]}${widget.recentTime.toString()[2]}:${widget.recentTime.toString()[3]}${widget.recentTime.toString()[3]}'
+                                : '${widget.recentWeight} kg x ${widget.recentReps}')
+                            : '${widget.recentWeight} kg x ${widget.recentReps}'))))
                   : '-',
               style: TextStyle(
                 fontSize: 14,
