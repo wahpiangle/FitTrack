@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:group_project/constants/themes/app_colours.dart';
+import 'package:group_project/models/exercise_set.dart';
 import 'package:group_project/models/firebase/firebase_user.dart';
+import 'package:group_project/models/firebase/firebase_workout_session.dart';
 import 'package:group_project/models/post.dart';
 import 'package:group_project/pages/friend/search/user_image_display.dart';
 import 'package:group_project/pages/user_profile/user_post_grid.dart';
 import 'package:group_project/services/firebase/firebase_friends_service.dart';
 import 'package:group_project/services/firebase/firebase_posts_service.dart';
 import 'package:group_project/services/firebase/firebase_user_profile_service.dart';
+import 'package:group_project/services/firebase/firebase_workouts_service.dart';
 
 class UserProfilePage extends StatefulWidget {
   final FirebaseUser user;
@@ -23,6 +26,7 @@ class UserProfilePageState extends State<UserProfilePage> {
   late Future<void> dataFuture;
   late Future<List<Post>> postsFuture;
   late Future<FriendStatus> friendStatusFuture;
+  late Future<ExerciseSet?> bestSetFuture;
 
 
   @override
@@ -32,6 +36,14 @@ class UserProfilePageState extends State<UserProfilePage> {
     postsFuture = FirebasePostsService.getPostsByUserId(widget.user.uid);
     friendStatusFuture =
         FirebaseUserProfileService.checkFriendshipStatus(widget.user.uid);
+    bestSetFuture = _calculateOverallBestSet();
+  }
+
+  Future<ExerciseSet?> _calculateOverallBestSet() async {
+    // Fetch workout sessions and calculate the best set
+    List<FirebaseWorkoutSession> sessions = await FirebaseWorkoutsService.getWorkoutSessionsByUserId(widget.user.uid);
+    // Use your logic or a manager class to calculate the best set across these sessions
+    return WorkoutSessionsManager(sessions: sessions).getOverallBestSet();
   }
 
   Future<void> _loadData() async {
@@ -74,11 +86,23 @@ class UserProfilePageState extends State<UserProfilePage> {
                         ],
                       ),
                       const SizedBox(width: 20), // Spacer
-                      Column( // New column for the barbell icon and text
-                        children: <Widget>[
-                          Icon(Icons.fitness_center, size: 24.0, color: Colors.white), // Barbell icon
-                          Text('Overall Best Exercise Set', style: TextStyle(color: Colors.white, fontSize: 16)), // Exercise text
-                        ],
+                      FutureBuilder<ExerciseSet?>(
+                        future: bestSetFuture,
+                        builder: (context, bestSetSnapshot) {
+                          if (bestSetSnapshot.connectionState == ConnectionState.waiting) {
+                            return const CircularProgressIndicator(color: Colors.white);
+                          }
+                          if (bestSetSnapshot.hasData && bestSetSnapshot.data != null) {
+                            return Column( // Display the best set information
+                              children: <Widget>[
+                                Icon(Icons.fitness_center, size: 24.0, color: Colors.white), // Dumbbell icon
+                                Text('Best Set: ${bestSetSnapshot.data!.weight} kg for ${bestSetSnapshot.data!.reps} reps', style: TextStyle(color: Colors.white, fontSize: 16)), // Display best set info
+                              ],
+                            );
+                          } else {
+                            return Text('No Best Set Found', style: TextStyle(color: Colors.white, fontSize: 16));
+                          }
+                        },
                       ),
                     ],
                   ),

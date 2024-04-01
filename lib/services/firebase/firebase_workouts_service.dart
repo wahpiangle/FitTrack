@@ -131,4 +131,24 @@ class FirebaseWorkoutsService {
         .doc(workoutSessionId.toString())
         .update({'post': postId});
   }
+
+
+  static Future<List<FirebaseWorkoutSession>> getWorkoutSessionsByUserId(String userId) async {
+    try {
+      final querySnapshot = await workoutsCollectionRef
+          .doc(userId)
+          .collection('workoutSessions')
+          .get();
+
+      List<FirebaseWorkoutSession> sessions = [];
+      for (var doc in querySnapshot.docs) {
+        var session = FirebaseWorkoutSession.fromJson(doc.data() as Map<String, dynamic>);
+        sessions.add(session);
+      }
+      return sessions;
+    } catch (e) {
+      print(e);
+      rethrow;
+    }
+  }
 }
