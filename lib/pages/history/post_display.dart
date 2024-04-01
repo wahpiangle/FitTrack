@@ -5,7 +5,6 @@ import 'package:group_project/pages/home/components/front_back_image.dart';
 import 'package:group_project/services/firebase/firebase_posts_service.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
-
 class PostDisplay extends StatelessWidget {
   final String postId;
   final bool isVisible;
@@ -31,14 +30,22 @@ class PostDisplay extends StatelessWidget {
               alignment: Alignment.centerLeft,
               child: Padding(
                 padding: const EdgeInsets.only(left: 20.0),
-                child: Text(
-                  'Your Memories',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 30,
-                    fontWeight: FontWeight.bold,
-                    fontFamily: 'Dancing Script',
-                  ),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.lock,
+                      color: Colors.grey,
+                    ),
+                    SizedBox(width: 5),
+                    Text(
+                      'Your Memories',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 25,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -143,7 +150,7 @@ class PostDisplay extends StatelessWidget {
                           return Center(child: Text('Error: ${snapshot.error}'));
                         } else if (snapshot.hasData) {
                           final post = snapshot.data!;
-                          if ( post.caption.isNotEmpty) {
+                          if (post.caption.isNotEmpty) {
                             return Container(
                               padding: EdgeInsets.all(8),
                               decoration: BoxDecoration(
@@ -164,14 +171,12 @@ class PostDisplay extends StatelessWidget {
                           } else {
                             return SizedBox();
                           }
-
                         } else {
                           return SizedBox();
                         }
                       },
                     ),
                   ),
-
                 ],
               ),
             ),
@@ -186,13 +191,13 @@ class PostDisplay extends StatelessWidget {
               onPressed: () {
                 // Handle onPressed action
               },
-                child: Text(
-                  'View Comments',
-                  style: TextStyle(
-                    color: Colors.grey,
-                    fontSize: 16,
-                  ),
+              child: Text(
+                'View Comments',
+                style: TextStyle(
+                  color: Colors.grey,
+                  fontSize: 16,
                 ),
+              ),
             ),
           ),
         ),
