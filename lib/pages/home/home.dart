@@ -35,6 +35,7 @@ class _HomeState extends State<Home> {
     for (FirebaseUserPost post in currentUserPosts) {
       if (post.post.date.isAfter(yesterday)) {
         return true;
+
       }
     }
     return false;
@@ -90,6 +91,7 @@ class _HomeState extends State<Home> {
                   } else {
                     return WorkoutPostedPage(
                       currentUserPosts: currentUserPosts,
+                      isWithinADay: setUserHasPostedPastDay(currentUserPosts),
                     );
                   }
                 }

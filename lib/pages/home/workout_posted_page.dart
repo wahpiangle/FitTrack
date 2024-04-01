@@ -12,9 +12,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class WorkoutPostedPage extends StatefulWidget {
   final List<FirebaseUserPost> currentUserPosts;
+  final bool isWithinADay;
   const WorkoutPostedPage({
     super.key,
     required this.currentUserPosts,
+    required this.isWithinADay,
   });
 
   @override
@@ -36,6 +38,9 @@ class _WorkoutPostedPageState extends State<WorkoutPostedPage> {
     });
   }
 
+  void isWithin24Hrs(){
+
+  }
   @override
   Widget build(BuildContext context) {
     final UploadImageProvider uploadImageProvider =
