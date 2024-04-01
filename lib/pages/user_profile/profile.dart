@@ -85,26 +85,56 @@ class UserProfilePageState extends State<UserProfilePage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Column(
-                        children: <Widget>[
-                          ImageDisplay.buildUserProfileImage(widget.user.photoUrl, radius: 50.0, context: context),
-                          const SizedBox(height: 12),
-                          Text("@${widget.user.username}", style: const TextStyle(color: AppColours.secondaryLight, fontSize: 18)),
-                        ],
+                      Expanded(
+                        flex: 4,
+                        child: Column(
+                          children: <Widget>[
+                            ImageDisplay.buildUserProfileImage(widget.user.photoUrl, radius: 50.0, context: context),
+                            const SizedBox(height: 12),
+                            Text("@${widget.user.username}", style: const TextStyle(color: AppColours.secondaryLight, fontSize: 18)),
+                          ],
+                        ),
                       ),
-                      const SizedBox(width: 20), // Spacer
-                      Column( // New column for the barbell icon and text
-                        children: <Widget>[
-                          Icon(Icons.fitness_center, size: 24.0, color: Colors.white), // Barbell icon
-                          Text('Overall Best Exercise Set', style: TextStyle(color: Colors.white, fontSize: 16)), // Exercise text
-                          if (overallBestSetPair != null)
-                            Column(
+                      Expanded(
+                        flex: 6,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Row(
                               children: [
-                                Text('Best Set: ${overallBestSetPair!.first.weight} lbs x ${overallBestSetPair!.first.reps}', style: TextStyle(color: Colors.white)),
-                                Text('Exercise: ${overallBestSetPair!.second}', style: TextStyle(color: Colors.white)),
+                                const SizedBox(width: 10),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const SizedBox(height: 10),
+                                    Text(
+                                      '🏆',
+                                      style: TextStyle(
+                                        fontSize: 26,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    const Text(
+                                      'Best',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 18,
+                                      ),
+                                    ),
+                                    overallBestSetPair != null ? Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text('${overallBestSetPair!.second}', style: TextStyle(color: AppColours.secondaryLight, fontSize: 14)),
+                                        Text('${overallBestSetPair!.first.weight} kg x ${overallBestSetPair!.first.reps}', style: TextStyle(color: AppColours.secondaryLight, fontSize: 14)),
+                                      ],
+                                    ) : Text('No best set', style: TextStyle(color: AppColours.secondaryLight, fontSize: 14)),
+                                  ],
+                                ),
                               ],
                             ),
-                        ],
+                          ],
+                        ),
                       ),
                     ],
                   ),
@@ -185,7 +215,6 @@ class UserProfilePageState extends State<UserProfilePage> {
                           ),
                         );
                       } else {
-                        // If they are not connected, show add friend button
                         return ElevatedButton(
                           onPressed: () async {
                             await FirebaseFriendsService.addFriend(
@@ -245,12 +274,12 @@ class UserProfilePageState extends State<UserProfilePage> {
             alignment: Alignment.topCenter,
             child: PopupMenuButton<String>(
               shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(15.0))),
-              color: AppColours.secondaryLight,
+              color: Colors.red,
               child: const Row(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
-                  Text('Friends', style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)),
-                  Icon(Icons.expand_more_outlined, color: Colors.white),
+                  Text('Friends', style: TextStyle(color: AppColours.secondaryDark, fontSize: 16, fontWeight: FontWeight.bold)),
+                  Icon(Icons.expand_more_outlined, color: AppColours.secondaryDark),
                 ],
               ),
               onSelected: (String value) {
@@ -265,8 +294,8 @@ class UserProfilePageState extends State<UserProfilePage> {
                   value: 'remove_friend',
                   child: ListTile(
                     contentPadding: EdgeInsets.symmetric(horizontal: 5),
-                    leading: Icon(Icons.person_off, color: AppColours.primary), // Icon
-                    title: Text('Remove Friend', style: TextStyle(fontWeight: FontWeight.bold, color: AppColours.primary)), // Text style
+                    leading: Icon(Icons.person_off, color: Colors.white),
+                    title: Text('Remove Friend', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
                   ),
                 ),
               ],
