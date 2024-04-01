@@ -52,12 +52,13 @@ class _DisplayPostImageScreenState extends State<DisplayPostImageScreen> {
     super.initState();
     controller = PageController(initialPage: widget.index);
     _streamIndex = widget.index;
-    _commentStreams = filterPostsByLast24Hours(widget.firebaseUserPosts)
-        .map((currentUserPost) {
+    _commentStreams = widget.firebaseUserPosts.map((currentUserPost) {
       return FirebaseCommentService.getCommentStreamById(
           currentUserPost.post.postId);
     }).toList();
   }
+
+
 
   void disableScroll() {
     setState(() {
@@ -174,11 +175,10 @@ class _DisplayPostImageScreenState extends State<DisplayPostImageScreen> {
                             return Padding(
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 10.0),
-                              child: InteractiveImageViewer(
-                                imagePath: widget.firebaseUserPosts[index].post
-                                    .firstImageUrl,
-                                imagePath2: widget.firebaseUserPosts[index].post
-                                    .secondImageUrl,
+                              child:
+                              InteractiveImageViewer(
+                                imagePath: widget.firebaseUserPosts[index].post.firstImageUrl,
+                                imagePath2: widget.firebaseUserPosts[index].post.secondImageUrl,
                                 disableScroll: disableScroll,
                                 enableScroll: enableScroll,
                               ),

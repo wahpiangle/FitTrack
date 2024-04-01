@@ -22,6 +22,7 @@ class InteractiveFriendsPostImage extends StatefulWidget {
 class _InteractiveFriendsPostImageState
     extends State<InteractiveFriendsPostImage> {
   bool displayHoldInstruction = false;
+  bool _isScrollDisabled = false;
 
   void showHoldInstruction() {
     setState(() {
@@ -33,6 +34,17 @@ class _InteractiveFriendsPostImageState
       });
     });
   }
+  void disableScroll() {
+    setState(() {
+      _isScrollDisabled = true;
+    });
+  }
+
+  void enableScroll() {
+    setState(() {
+      _isScrollDisabled = false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,10 +53,8 @@ class _InteractiveFriendsPostImageState
         InteractiveImageViewer(
           imagePath: widget.friendPostData.post.firstImageUrl,
           imagePath2: widget.friendPostData.post.secondImageUrl,
-          // disableScroll: () {
-          // },
-          // enableScroll: () {
-          // },
+          disableScroll: disableScroll,
+          enableScroll: enableScroll,
         ),
         displayHoldInstruction
             ? Positioned.fill(
@@ -88,7 +98,7 @@ class _InteractiveFriendsPostImageState
                 bottom: 10,
                 left: 10,
                 child: ReactionImages(
-                  postReactions: widget.friendPostData.reactions,
+                  postReactions: widget.friendPostData.reactions
                 ),
               )
             : const SizedBox.shrink(),
