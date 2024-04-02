@@ -104,18 +104,18 @@ class UserProfilePageState extends State<UserProfilePage> {
                           children: [
                             Row(
                               children: [
-                                const SizedBox(width: 20),
+                                const Text(
+                                  '🏆',
+                                  style: TextStyle(
+                                    fontSize: 30,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                                const SizedBox(width: 10),
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     const SizedBox(height: 10),
-                                    const Text(
-                                      '🏆',
-                                      style: TextStyle(
-                                        fontSize: 26,
-                                        color: Colors.white,
-                                      ),
-                                    ),
                                     const Text(
                                       'Best',
                                       style: TextStyle(
