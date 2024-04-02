@@ -39,6 +39,7 @@ class UserPostsGrid extends StatelessWidget {
               Post post = snapshot.data![index];
               List<String> imageUrls = [post.firstImageUrl, post.secondImageUrl];
               String firstImageUrl = imageUrls.isNotEmpty ? imageUrls[0] : '';
+              String secondImageUrl = imageUrls.isNotEmpty ? imageUrls[1] : '';
               return GestureDetector(
                 onTap: () {
                   Navigator.push(
@@ -60,12 +61,32 @@ class UserPostsGrid extends StatelessWidget {
                         fit: BoxFit.cover,
                       ),
                     ),
+                    Positioned(
+                      top: 10,
+                      left: 10,
+                      child: Container(
+                        width: 35,
+                        height: 45,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                        clipBehavior: Clip.antiAlias,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
+                          child: Image.network(
+                            secondImageUrl,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                    ),
+
                   ],
                 ),
               );
             },
           );
-        } else {
+        }  else {
           return const Text('No posts found', style: TextStyle(color: Colors.white));
         }
       },
