@@ -28,7 +28,7 @@ class UserProfilePageState extends State<UserProfilePage> {
   late Future<void> dataFuture;
   late Future<List<Post>> postsFuture;
   late Future<FriendStatus> friendStatusFuture;
-  Pair<ExerciseSet, String>? overallBestSetPair;
+  OverallBestSetInfo? overallBestSetInfo;
 
   @override
   void initState() {
@@ -46,9 +46,9 @@ class UserProfilePageState extends State<UserProfilePage> {
       List<FirebaseWorkoutSession> sessions = await FirebaseWorkoutsService.getWorkoutSessionsByUserId(widget.user.uid);
 
       final manager = OverallWorkoutBestSet(sessions: sessions);
-      final bestSetPair = manager.getOverallBestSet();
+      final bestSetInfo = manager.getOverallBestSet();
       setState(() {
-        overallBestSetPair = bestSetPair;
+        overallBestSetInfo = bestSetInfo;
       });
     } catch (e) {
       print(e.toString());
@@ -105,17 +105,18 @@ class UserProfilePageState extends State<UserProfilePage> {
                             Row(
                               children: [
                                 const Text(
-                                  '🏆',
+                                  '🎖️',
                                   style: TextStyle(
-                                    fontSize: 30,
                                     color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 38,
                                   ),
                                 ),
                                 const SizedBox(width: 10),
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    const SizedBox(height: 10),
+                                    const SizedBox(height: 20),
                                     const Text(
                                       'Best',
                                       style: TextStyle(
@@ -124,13 +125,42 @@ class UserProfilePageState extends State<UserProfilePage> {
                                         fontSize: 18,
                                       ),
                                     ),
-                                    overallBestSetPair != null ? Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                    overallBestSetInfo != null ?
+                                    Stack(
                                       children: [
-                                        Text(overallBestSetPair!.second, style: const TextStyle(color: AppColours.secondaryLight, fontSize: 14)),
-                                        Text('${overallBestSetPair!.first.weight} kg x ${overallBestSetPair!.first.reps}', style: const TextStyle(color: AppColours.secondaryLight, fontSize: 14)),
+                                        Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text(overallBestSetInfo!.exerciseName, style: const TextStyle(color: AppColours.secondaryLight, fontSize: 14)),
+                                            Text('${overallBestSetInfo!.bestSet.weight} kg x ${overallBestSetInfo!.bestSet.reps}', style: const TextStyle(color: AppColours.secondaryLight, fontSize: 14)),
+                                            const SizedBox(height: 20),
+                                          ],
+                                        ),
+                                        if (overallBestSetInfo!.isPersonalRecord)
+                                          Positioned(
+                                            bottom: 0,
+                                            right: 10,
+                                            child: Container(
+                                              padding: const EdgeInsets.all(5),
+                                              decoration: const BoxDecoration(
+                                                color: AppColours.secondary,
+                                                borderRadius: BorderRadius.all(
+                                                  Radius.circular(30),
+                                                ),
+                                              ),
+                                              child: const Text(
+                                                '🏆 PR',
+                                                style: TextStyle(
+                                                  color: Colors.green,
+                                                  fontSize: 12,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
                                       ],
-                                    ) : const Text('No best set', style: TextStyle(color: AppColours.secondaryLight, fontSize: 14)),
+                                    )
+
+                                        : const Text('No best set', style: TextStyle(color: AppColours.secondaryLight, fontSize: 14)),
                                   ],
                                 ),
                               ],
