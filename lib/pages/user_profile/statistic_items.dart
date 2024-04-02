@@ -7,6 +7,7 @@ class StatItem extends StatelessWidget {
   final int count;
   final bool isFriend;
   final String userId;
+  final VoidCallback onFriendRemoved;
 
   const StatItem({
     Key? key,
@@ -14,6 +15,7 @@ class StatItem extends StatelessWidget {
     required this.count,
     this.isFriend = false,
     required this.userId,
+    required this.onFriendRemoved,
   }) : super(key: key);
 
   @override
@@ -51,7 +53,7 @@ class StatItem extends StatelessWidget {
               onSelected: (String value) {
                 if (value == 'remove_friend') {
                   FirebaseFriendsService.removeFriend(userId, () {
-                    // Ideally, you should use a callback or an event to refresh the parent widget.
+                    onFriendRemoved(); //refresh page
                   });
                 }
               },

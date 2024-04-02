@@ -4,7 +4,7 @@ import 'package:group_project/models/firebase/firebase_user.dart';
 import 'package:group_project/models/firebase/firebase_user_post.dart';
 import 'package:group_project/pages/home/components/display_post_screen/display_post_image_screen.dart';
 import 'package:group_project/pages/home/components/friends_post/friend_post_carousel.dart';
-import 'package:group_project/pages/user_profile/profile.dart';
+import 'package:group_project/pages/user_profile/user_profile_page.dart';
 import 'package:intl/intl.dart';
 
 class FriendPost extends StatefulWidget {

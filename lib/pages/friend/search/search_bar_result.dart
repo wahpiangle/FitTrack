@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:group_project/constants/themes/app_colours.dart';
 import 'package:group_project/models/firebase/firebase_user.dart';
 import 'package:group_project/pages/friend/search/user_image_display.dart';
-import 'package:group_project/pages/user_profile/profile.dart';
+import 'package:group_project/pages/user_profile/user_profile_page.dart';
 import 'package:group_project/services/firebase/firebase_friends_service.dart';
 
 class SearchBarResult extends StatefulWidget {
@@ -92,7 +92,7 @@ class SearchBarResultState extends State<SearchBarResult> {
                 });
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: friendRequestSent ? AppColours.secondaryLight : AppColours.secondary,
+                backgroundColor: friendRequestReceived ? AppColours.secondaryLight :( friendRequestSent ? AppColours.secondaryLight : AppColours.secondary),
                 padding: const EdgeInsets.all(8),
                 textStyle: const TextStyle(fontSize: 10),
               ),

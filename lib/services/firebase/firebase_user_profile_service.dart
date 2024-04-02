@@ -1,8 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:group_project/pages/user_profile/profile.dart';
+import 'package:group_project/pages/user_profile/user_profile_page.dart';
 import 'package:group_project/services/firebase/firebase_posts_service.dart';
-
 
 
 class FirebaseUserProfileService {
@@ -22,17 +21,11 @@ class FirebaseUserProfileService {
   static Future<FriendStatus> checkFriendshipStatus(String friendUid) async {
     final currentUserUid = FirebaseAuth.instance.currentUser?.uid;
 
-    // Fetch the current user document
     final currentUserDocSnapshot = await FirebaseFirestore.instance.collection(
         'users').doc(currentUserUid).get();
     final Map<String, dynamic> currentUserDocData = currentUserDocSnapshot
         .data() ?? {};
 
-    // Fetch the friend user document
-    final friendUserDocSnapshot = await FirebaseFirestore.instance.collection(
-        'users').doc(friendUid).get();
-
-    // Check the friendship status based on the documents
     if ((currentUserDocData['friends'] as List<dynamic>?)?.contains(
         friendUid) ?? false) {
       return FriendStatus.friends;

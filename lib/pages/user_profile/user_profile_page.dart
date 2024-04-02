@@ -151,8 +151,23 @@ class UserProfilePageState extends State<UserProfilePage> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: <Widget>[
-                        StatItem(label: "Posts", count: postsCount, userId: widget.user.uid),
-                        StatItem(label: "Friends", count: friendsCount, isFriend: isFriend, userId: widget.user.uid),
+                        StatItem(
+                          label: "Posts",
+                          count: postsCount,
+                          userId: widget.user.uid,
+                          onFriendRemoved: () => setState(() {
+                          friendStatusFuture = FirebaseUserProfileService.checkFriendshipStatus(widget.user.uid);
+                        }),
+                        ),
+                        StatItem(
+                          label: "Friends",
+                          count: friendsCount,
+                          isFriend: isFriend,
+                          userId: widget.user.uid,
+                          onFriendRemoved: () => setState(() {
+                            friendStatusFuture = FirebaseUserProfileService.checkFriendshipStatus(widget.user.uid);
+                          }),
+                        ),
                         ],
                         ),
                       );

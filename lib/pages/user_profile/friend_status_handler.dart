@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:group_project/constants/themes/app_colours.dart';
 import 'package:group_project/models/post.dart';
-import 'package:group_project/pages/user_profile/profile.dart';
+import 'package:group_project/pages/user_profile/user_profile_page.dart';
 import 'package:group_project/pages/user_profile/user_post_grid.dart';
 import 'package:group_project/services/firebase/firebase_friends_service.dart';
 import 'package:group_project/models/firebase/firebase_user.dart';
