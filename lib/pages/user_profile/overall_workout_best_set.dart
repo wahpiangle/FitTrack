@@ -5,9 +5,8 @@ import 'package:group_project/models/firebase/firebase_workout_session.dart';
 class OverallBestSetInfo {
   final ExerciseSet bestSet;
   final String exerciseName;
-  final bool isPersonalRecord;
 
-  OverallBestSetInfo(this.bestSet, this.exerciseName, this.isPersonalRecord);
+  OverallBestSetInfo(this.bestSet, this.exerciseName);
 }
 
 
@@ -19,7 +18,6 @@ class OverallWorkoutBestSet {
   OverallBestSetInfo getOverallBestSet() {
     ExerciseSet? overallBestSet;
     String? overallBestExerciseName;
-    bool overallIsPersonalRecord = false;
 
     for (var session in sessions) {
       for (var exercisesSetsInfo in session.exercisesSetsInfo) {
@@ -27,7 +25,6 @@ class OverallWorkoutBestSet {
         if (overallBestSet == null) {
           overallBestSet = bestSet;
           overallBestExerciseName = exercisesSetsInfo.exerciseName;
-          overallIsPersonalRecord = bestSet.isPersonalRecord;
 
         } else {
           bool isCurrentBestSetBetter = objectBox.exerciseService.getOneRepMaxValue(bestSet.weight ?? 0, bestSet.reps ?? 0) >
@@ -36,7 +33,6 @@ class OverallWorkoutBestSet {
           if (isCurrentBestSetBetter) {
             overallBestSet = bestSet;
             overallBestExerciseName = exercisesSetsInfo.exerciseName;
-            overallIsPersonalRecord = bestSet.isPersonalRecord;
 
           }
         }
@@ -44,7 +40,7 @@ class OverallWorkoutBestSet {
     }
 
     if (overallBestSet != null && overallBestExerciseName != null) {
-      return OverallBestSetInfo(overallBestSet, overallBestExerciseName, overallIsPersonalRecord);
+      return OverallBestSetInfo(overallBestSet, overallBestExerciseName);
     } else {
       throw Exception('No best set found');
     }

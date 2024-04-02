@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:group_project/constants/themes/app_colours.dart';
-import 'package:group_project/models/exercise_set.dart';
 import 'package:group_project/models/firebase/firebase_user.dart';
 import 'package:group_project/models/firebase/firebase_workout_session.dart';
 import 'package:group_project/models/post.dart';
@@ -118,7 +117,7 @@ class UserProfilePageState extends State<UserProfilePage> {
                                   children: [
                                     const SizedBox(height: 20),
                                     const Text(
-                                      'Best',
+                                      'PR',
                                       style: TextStyle(
                                         color: Colors.white,
                                         fontWeight: FontWeight.bold,
@@ -136,30 +135,8 @@ class UserProfilePageState extends State<UserProfilePage> {
                                             const SizedBox(height: 20),
                                           ],
                                         ),
-                                        if (overallBestSetInfo!.isPersonalRecord)
-                                          Positioned(
-                                            bottom: 0,
-                                            right: 10,
-                                            child: Container(
-                                              padding: const EdgeInsets.all(5),
-                                              decoration: const BoxDecoration(
-                                                color: AppColours.secondary,
-                                                borderRadius: BorderRadius.all(
-                                                  Radius.circular(30),
-                                                ),
-                                              ),
-                                              child: const Text(
-                                                '🏆 PR',
-                                                style: TextStyle(
-                                                  color: Colors.green,
-                                                  fontSize: 12,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
                                       ],
                                     )
-
                                         : const Text('No best set', style: TextStyle(color: AppColours.secondaryLight, fontSize: 14)),
                                   ],
                                 ),
@@ -170,14 +147,13 @@ class UserProfilePageState extends State<UserProfilePage> {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 20),
                   FutureBuilder<FriendStatus>(
                     future: friendStatusFuture,
                     builder: (context, statusSnapshot) {
                       final isFriend = statusSnapshot.data ==
                           FriendStatus.friends;
                       return Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 20.0),
+                        padding: const EdgeInsets.symmetric(vertical: 15.0),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: <Widget>[
