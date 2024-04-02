@@ -8,12 +8,12 @@ import 'package:group_project/services/firebase/firebase_friends_service.dart';
 
 class SearchBarResult extends StatefulWidget {
   final FirebaseUser friendUser;
-  final bool displayMutuals;
+
 
   const SearchBarResult({
     super.key,
     required this.friendUser,
-    this.displayMutuals = false,
+
   });
 
   @override
@@ -23,11 +23,21 @@ class SearchBarResult extends StatefulWidget {
 class SearchBarResultState extends State<SearchBarResult> {
   bool friendRequestSent = false;
   bool friendRequestReceived = false;
+  int mutualFriendsCount = 0;
+
 
   @override
   void initState() {
     super.initState();
     checkFriendRequestStatus();
+    fetchMutualFriendsCount();
+  }
+
+  void fetchMutualFriendsCount() async {
+    final count = await FirebaseFriendsService.getMutualFriendsCount(widget.friendUser.uid);
+    setState(() {
+      mutualFriendsCount = count;
+    });
   }
 
   void checkFriendRequestStatus() async {
@@ -56,7 +66,8 @@ class SearchBarResultState extends State<SearchBarResult> {
         ),
       ),
       subtitle: Text(
-        "@${widget.friendUser.username} ${widget.displayMutuals ? '(${widget.friendUser.friends.length} mutual friends)' : ''}",
+        "@${widget.friendUser.username} '($mutualFriendsCount mutual friends)",
+
         style: const TextStyle(
           color: Colors.grey,
         ),
