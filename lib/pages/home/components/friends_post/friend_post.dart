@@ -4,6 +4,7 @@ import 'package:group_project/models/firebase/firebase_user.dart';
 import 'package:group_project/models/firebase/firebase_user_post.dart';
 import 'package:group_project/pages/home/components/display_post_screen/display_post_image_screen.dart';
 import 'package:group_project/pages/home/components/friends_post/friend_post_carousel.dart';
+import 'package:group_project/pages/user_profile/user_profile_page.dart';
 import 'package:intl/intl.dart';
 
 class FriendPost extends StatefulWidget {
@@ -33,18 +34,16 @@ class _FriendPostState extends State<FriendPost> {
     });
   }
 
-  @override
-  void initState() {
+  @override void initState() {
     super.initState();
     modifyFriendPostDataListTo24h(widget.friendPostDataList);
-
   }
 
-void modifyFriendPostDataListTo24h(List<FirebaseUserPost> friendPostDataList){
+  void modifyFriendPostDataListTo24h(
+      List<FirebaseUserPost> friendPostDataList) {
     final List<FirebaseUserPost> filteredPosts = [];
     final DateTime now = DateTime.now();
     final DateTime yesterday = now.subtract(const Duration(days: 1));
-
     for (FirebaseUserPost post in friendPostDataList) {
       if (post.post.date.isAfter(yesterday)) {
         filteredPosts.add(post);
@@ -54,19 +53,18 @@ void modifyFriendPostDataListTo24h(List<FirebaseUserPost> friendPostDataList){
     friendPostDataList.addAll(filteredPosts);
   }
 
-
   @override
   Widget build(BuildContext context) {
-    if(widget.friendPostDataList.isEmpty){
+    if (widget.friendPostDataList.isEmpty) {
       return const Center(
-        child: Text(
-          "No one has posted today!",
-              style: TextStyle(
-                color: Colors.white,
-              ),
-        )
+          child: Text(
+            "No posts today",
+            style: TextStyle(
+              color: Colors.white,
+            ),
+          )
       );
-    }else {
+    } else {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -74,46 +72,58 @@ void modifyFriendPostDataListTo24h(List<FirebaseUserPost> friendPostDataList){
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Row(
-                children: [
-                  CachedNetworkImage(
-                    imageUrl: widget.friend.photoUrl,
-                    imageBuilder: (context, imageProvider) =>
-                        CircleAvatar(
-                          backgroundImage: imageProvider,
-                          radius: 20,
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          UserProfilePage(user: widget.friend),
+                    ),
+                  );
+                },
+                child: Row(
+                  children: [
+                    CachedNetworkImage(
+                      imageUrl: widget.friend.photoUrl,
+                      imageBuilder: (context, imageProvider) =>
+                          CircleAvatar(
+                            backgroundImage: imageProvider,
+                            radius: 20,
+                          ),
+                      placeholder: (context, url) =>
+                      const CircularProgressIndicator(),
+                      errorWidget: (context, url, error) =>
+                      const CircleAvatar(
+                        backgroundImage: AssetImage(
+                          'assets/icons/defaultimage.jpg',
                         ),
-                    placeholder: (context, url) =>
-                    const CircularProgressIndicator(),
-                    errorWidget: (context, url, error) =>
-                    const CircleAvatar(
-                      backgroundImage: AssetImage(
-                        'assets/icons/defaultimage.jpg',
                       ),
                     ),
-                  ),
-                  const SizedBox(width: 10),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        widget.friendPostData.postedBy.displayName,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
+                    const SizedBox(width: 10),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          widget.friendPostData.postedBy.displayName,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                      ),
-                      Text(
-                        DateFormat('EEEE, dd MMMM yyyy, hh:mm:ss a').format(
-                            widget.friendPostDataList[_currentIndex].post.date),
-                        style: const TextStyle(
-                          color: Colors.grey,
+                        Text(
+                          DateFormat('EEEE, dd MMMM yyyy, hh:mm:ss a').format(
+                              widget.friendPostDataList[_currentIndex].post
+                                  .date),
+                          style: const TextStyle(
+                            color: Colors.grey,
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                ],
+                      ],
+                    ),
+                  ],
+                ),
               ),
               IconButton(
                 icon: const Icon(Icons.more_vert),

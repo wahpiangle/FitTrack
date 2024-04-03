@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:group_project/main.dart';
 import 'package:group_project/models/exercise.dart';
 import 'package:group_project/constants/themes/app_colours.dart';
+import 'package:group_project/pages/exercise/components/edit_exercise.dart';
 import 'exercise_navigation_buttons.dart';
 
 class ExerciseRecords extends StatefulWidget {
@@ -14,6 +16,14 @@ class ExerciseRecords extends StatefulWidget {
 
 class _ExerciseRecordsState extends State<ExerciseRecords> {
   int selectedPageIndex = 3;
+  String exerciseName = '';
+
+  void updateExerciseName(String newName) {
+    setState(() {
+      exerciseName = newName;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,18 +31,25 @@ class _ExerciseRecordsState extends State<ExerciseRecords> {
       appBar: AppBar(
         backgroundColor: const Color(0xFF1A1A1A),
         actions: <Widget>[
-          TextButton(
-            onPressed: () {
-              // Add edit functionality here
-            },
-            child: const Text(
-              'Edit',
-              style: TextStyle(
-                fontSize: 18,
-                color: AppColours.secondary,
-              ),
-            ),
-          )
+          widget.exercise.isCustom
+              ? TextButton(
+                  onPressed: () async {
+                    final newExerciseName =
+                        await EditExerciseDialog.editExercise(
+                            context, objectBox, widget.exercise);
+                    if (newExerciseName != null) {
+                      updateExerciseName(newExerciseName);
+                    }
+                  },
+                  child: const Text(
+                    'Edit',
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: AppColours.secondary,
+                    ),
+                  ),
+                )
+              : Container(),
         ],
         leading: IconButton(
           onPressed: () {},

@@ -149,8 +149,8 @@ class _InteractiveImageViewerState extends State<InteractiveImageViewer> {
                         widget.imagePath,
                         false,
                         displaySecondImage,
-                        widget.imagePath,
                         widget.imagePath2,
+                        widget.imagePath,
                         context,
                       ),
                     ),
@@ -171,7 +171,7 @@ Widget getImageBasedonType(
     BuildContext context) {
   if (image.contains("http://") || image.contains("https://")) {
     return CachedNetworkImage(
-      imageUrl: displaySecondImage ? imagePath : imagePath2,
+      imageUrl: displaySecondImage ? imagePath2 : imagePath,
       width: MediaQuery.of(context).size.width * (isMainImage ? 1 : 0.25),
       fit: BoxFit.contain,
       placeholder: (context, url) => const SizedBox(),
@@ -180,7 +180,7 @@ Widget getImageBasedonType(
   } else {
     return Image.file(
       File(
-        displaySecondImage ? imagePath : imagePath2,
+        displaySecondImage ? imagePath2 : imagePath,
       ),
       width: MediaQuery.of(context).size.width * (isMainImage ? 1 : 0.25),
       fit: isMainImage ? BoxFit.cover : BoxFit.fill,

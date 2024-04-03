@@ -53,23 +53,23 @@ class FriendSuggestionsTabState extends State<FriendSuggestionsTab> {
               });
             },
           ),
+          const Align(
+            alignment: Alignment.topLeft,
+            child: Padding(
+              padding: EdgeInsets.all(16.0),
+              child: Text(
+                'Suggestions',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ),
           Expanded(
             child: Stack(
               children: [
-                const Align(
-                  alignment: Alignment.topLeft,
-                  child: Padding(
-                    padding: EdgeInsets.all(16.0),
-                    child: Text(
-                      'Suggestions',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ),
                 if (friendSuggestions.isNotEmpty)
                   SearchResultWithMutuals(friendSuggestions: friendSuggestions),
                 if (searchedUsers.isNotEmpty)

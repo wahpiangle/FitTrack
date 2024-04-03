@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:group_project/main.dart';
 import 'package:group_project/models/exercise.dart';
 import 'package:group_project/constants/themes/app_colours.dart';
+import 'package:group_project/pages/exercise/components/edit_exercise.dart';
 import 'exercise_navigation_buttons.dart';
 
 class ExerciseCharts extends StatefulWidget {
@@ -13,6 +15,13 @@ class ExerciseCharts extends StatefulWidget {
 }
 
 class _ExerciseChartsState extends State<ExerciseCharts> {
+  String exerciseName = '';
+  void updateExerciseName(String newName) {
+    setState(() {
+      exerciseName = newName;
+    });
+  }
+
   int selectedPageIndex = 2;
   @override
   Widget build(BuildContext context) {
@@ -21,18 +30,25 @@ class _ExerciseChartsState extends State<ExerciseCharts> {
       appBar: AppBar(
         backgroundColor: const Color(0xFF1A1A1A),
         actions: <Widget>[
-          TextButton(
-            onPressed: () {
-              // Add edit functionality here
-            },
-            child: const Text(
-              'Edit',
-              style: TextStyle(
-                fontSize: 18,
-                color: AppColours.secondary,
-              ),
-            ),
-          )
+          widget.exercise.isCustom
+              ? TextButton(
+                  onPressed: () async {
+                    final newExerciseName =
+                        await EditExerciseDialog.editExercise(
+                            context, objectBox, widget.exercise);
+                    if (newExerciseName != null) {
+                      updateExerciseName(newExerciseName);
+                    }
+                  },
+                  child: const Text(
+                    'Edit',
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: AppColours.secondary,
+                    ),
+                  ),
+                )
+              : Container(),
         ],
         leading: IconButton(
           onPressed: () {},

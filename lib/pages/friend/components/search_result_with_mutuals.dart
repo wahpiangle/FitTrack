@@ -33,7 +33,6 @@ class SearchResultWithMutuals extends StatelessWidget {
                 itemBuilder: (context, index) {
                   return SearchBarResult(
                     friendUser: friendSuggestions.keys.toList()[index],
-                    displayMutuals: true,
                   );
                 },
               ),
