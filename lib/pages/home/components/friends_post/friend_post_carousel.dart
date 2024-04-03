@@ -37,5 +37,6 @@ class _FriendPostCarouselState extends State<FriendPostCarousel> {
         );
       },
     );
+    }
   }
-}
+
