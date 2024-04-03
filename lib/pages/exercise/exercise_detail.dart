@@ -35,22 +35,25 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
       appBar: AppBar(
         backgroundColor: const Color(0xFF1A1A1A),
         actions: <Widget>[
-          TextButton(
-            onPressed: () async {
-              final newExerciseName = await EditExerciseDialog.editExercise(
-                  context, objectBox, widget.exercise);
-              if (newExerciseName != null) {
-                updateExerciseName(newExerciseName);
-              }
-            },
-            child: const Text(
-              'Edit',
-              style: TextStyle(
-                fontSize: 18,
-                color: AppColours.secondary,
-              ),
-            ),
-          )
+          widget.exercise.isCustom
+              ? TextButton(
+                  onPressed: () async {
+                    final newExerciseName =
+                        await EditExerciseDialog.editExercise(
+                            context, objectBox, widget.exercise);
+                    if (newExerciseName != null) {
+                      updateExerciseName(newExerciseName);
+                    }
+                  },
+                  child: const Text(
+                    'Edit',
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: AppColours.secondary,
+                    ),
+                  ),
+                )
+              : Container(),
         ],
         leading: IconButton(
           onPressed: () {},
