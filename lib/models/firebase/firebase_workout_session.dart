@@ -64,3 +64,4 @@ class FirebaseExercisesSetsInfo {
         : b);
   }
 }
+
