@@ -217,26 +217,7 @@ class OwnPostWorkoutInfo extends StatelessWidget {
                             itemCount: exercisesSetInfo.exerciseSets.length,
                             itemBuilder: (context, index) {
                               final set = exercisesSetInfo.exerciseSets[index];
-                              String weightrepsText = '';
-                              if (exercisesSetInfo.exercise.target?.category.target?.name == 'Weighted Bodyweight') {
-                                weightrepsText = '+${set.weight} kg x ${set.reps}';
-                              } else if (exercisesSetInfo.exercise.target?.category.target?.name == 'Assisted Bodyweight') {
-                                weightrepsText = '-${set.weight} kg x ${set.reps}';
-                              } else if (exercisesSetInfo.exercise.target?.category.target?.name == 'Reps Only') {
-                                weightrepsText = '${set.reps} reps';
-                              }else if (exercisesSetInfo.exercise.target?.category.target?.name == 'Duration') {
-                                final timeString = bestSet.time.toString();
-                                if (timeString.length == 3) {
-                                  weightrepsText = '${set.time.toString()[0]}:${set.time.toString()[1]}${set.time.toString()[2]}';
-                                } else if (timeString.length == 4) {
-                                  weightrepsText = '${set.time.toString()[0]}${set.time.toString()[1]}:${set.time.toString()[2]}${set.time.toString()[3]}';
-                                } else if (timeString.length == 5) {
-                                  weightrepsText = '${set.time.toString()[0]}:${set.time.toString()[1]}${set.time.toString()[2]}:${set.time.toString()[3]}${set.time.toString()[3]}';
-                                }
-
-                              }else {
-                                weightrepsText = '${set.weight} kg x ${set.reps}';
-                              }
+                              String weightrepsText = getWeightRepsText(set);
                               return Padding(
                                 padding:
                                     const EdgeInsets.symmetric(vertical: 6.0),
