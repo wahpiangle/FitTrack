@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:group_project/models/firebase/comments.dart';
 import 'package:group_project/models/firebase/reaction.dart';
 import 'package:group_project/models/post.dart';
+import 'package:group_project/pages/complete_workout/capture_image/components/interactive_image_viewer.dart';
 import 'package:group_project/pages/home/components/display_post_screen/comment/comment_tile.dart';
-import 'package:group_project/pages/home/components/front_back_image.dart';
 import 'package:group_project/services/firebase/firebase_posts_service.dart';
 import 'package:group_project/services/firebase/firebase_comment_service.dart'; // Import the FirebaseCommentService
 import 'package:cached_network_image/cached_network_image.dart';
@@ -23,8 +23,24 @@ class PostDisplay extends StatefulWidget {
   _PostDisplayState createState() => _PostDisplayState();
 }
 
+
+
 class _PostDisplayState extends State<PostDisplay> {
   bool _showComments = false;
+  bool _isScrollDisabled = false;
+
+  void disableScroll() {
+    setState(() {
+      _isScrollDisabled = true;
+    });
+  }
+
+  void enableScroll() {
+    setState(() {
+      _isScrollDisabled;
+    });
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -93,15 +109,11 @@ class _PostDisplayState extends State<PostDisplay> {
                                   top: 0,
                                   left: 5,
                                   right: 0,
-                                  child: getImageBasedonType(post.firstImageUrl, false),
-                                ),
-                              if (post.secondImageUrl.isNotEmpty)
-                                Positioned(
-                                  top: 20,
-                                  left: 20,
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(5),
-                                    child: getImageBasedonType(post.secondImageUrl, true),
+                                  child: InteractiveImageViewer(
+                                    imagePath: post.firstImageUrl,
+                                    imagePath2: post.secondImageUrl, // Pass an empty string or null since it's not used in this context
+                                    disableScroll: null, // You can pass null for these parameters as they're not used in this context
+                                    enableScroll: null, // You can pass null for these parameters as they're not used in this context
                                   ),
                                 ),
                               Positioned(
