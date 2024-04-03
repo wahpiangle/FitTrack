@@ -8,38 +8,22 @@ import 'package:group_project/pages/home/components/display_post_screen/comment/
 import 'package:group_project/services/firebase/firebase_posts_service.dart';
 import 'package:group_project/services/firebase/firebase_comment_service.dart'; // Import the FirebaseCommentService
 import 'package:cached_network_image/cached_network_image.dart';
-
 class PostDisplay extends StatefulWidget {
   final String postId;
   final bool isVisible;
 
   const PostDisplay({
-    Key? key,
+    super.key,
     required this.postId,
     required this.isVisible,
-  }) : super(key: key);
+  });
 
   @override
-  _PostDisplayState createState() => _PostDisplayState();
+  PostDisplayState createState() => PostDisplayState(); // Change _PostDisplayState to PostDisplayState
 }
 
-
-
-class _PostDisplayState extends State<PostDisplay> {
+class PostDisplayState extends State<PostDisplay> {
   bool _showComments = false;
-  bool _isScrollDisabled = false;
-
-  void disableScroll() {
-    setState(() {
-      _isScrollDisabled = true;
-    });
-  }
-
-  void enableScroll() {
-    setState(() {
-      _isScrollDisabled;
-    });
-  }
 
 
   @override
@@ -49,14 +33,14 @@ class _PostDisplayState extends State<PostDisplay> {
       children: [
         AnimatedOpacity(
           opacity: widget.isVisible ? 1.0 : 0.0,
-          duration: Duration(milliseconds: 500),
+          duration: const Duration(milliseconds: 500),
           curve: Curves.easeInOut,
           child: Transform.translate(
-            offset: widget.isVisible ? Offset(0.0, 0.0) : Offset(0.0, 50.0),
-            child: Align(
+            offset: widget.isVisible ? const Offset(0.0, 0.0) : const Offset(0.0, 50.0),
+            child: const Align(
               alignment: Alignment.centerLeft,
               child: Padding(
-                padding: const EdgeInsets.only(left: 20.0),
+                padding: EdgeInsets.only(left: 20.0),
                 child: Row(
                   children: [
                     Icon(
@@ -80,10 +64,10 @@ class _PostDisplayState extends State<PostDisplay> {
         ),
         AnimatedOpacity(
           opacity: widget.isVisible ? 1.0 : 0.0,
-          duration: Duration(milliseconds: 500),
+          duration: const Duration(milliseconds: 500),
           curve: Curves.easeInOut,
           child: Transform.translate(
-            offset: widget.isVisible ? Offset(0.0, 0.0) : Offset(0.0, 50.0),
+            offset: widget.isVisible ? const Offset(0.0, 0.0) : const Offset(0.0, 50.0),
             child: Container(
               height: MediaQuery.of(context).size.height * 0.35,
               width: MediaQuery.of(context).size.width * 1,
@@ -94,7 +78,7 @@ class _PostDisplayState extends State<PostDisplay> {
                     future: FirebasePostsService.getPostById(widget.postId),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
-                        return Center(child: CircularProgressIndicator());
+                        return const Center(child: CircularProgressIndicator());
                       } else if (snapshot.hasError) {
                         return Center(child: Text('Error: ${snapshot.error}'));
                       } else if (snapshot.hasData) {
@@ -123,7 +107,7 @@ class _PostDisplayState extends State<PostDisplay> {
                                   future: FirebasePostsService.getReactionsByPostId(widget.postId),
                                   builder: (context, snapshot) {
                                     if (snapshot.connectionState == ConnectionState.waiting) {
-                                      return CircularProgressIndicator();
+                                      return const CircularProgressIndicator();
                                     } else if (snapshot.hasError) {
                                       return Text('Error: ${snapshot.error}');
                                     } else if (snapshot.hasData) {
@@ -143,14 +127,14 @@ class _PostDisplayState extends State<PostDisplay> {
                                             width: 50,
                                             height: 50,
                                             fit: BoxFit.cover,
-                                            placeholder: (context, url) => CircularProgressIndicator(),
-                                            errorWidget: (context, url, error) => Icon(Icons.error),
+                                            placeholder: (context, url) => const CircularProgressIndicator(),
+                                            errorWidget: (context, url, error) => const Icon(Icons.error),
                                           ),
                                         ),
                                       )
-                                          : SizedBox();
+                                          : const SizedBox();
                                     } else {
-                                      return SizedBox();
+                                      return const SizedBox();
                                     }
                                   },
                                 ),
@@ -158,7 +142,7 @@ class _PostDisplayState extends State<PostDisplay> {
                             ],
                           ),
                         )
-                            : Center(
+                            : const Center(
                           child: Text(
                             'No posts yet',
                             style: TextStyle(
@@ -169,7 +153,7 @@ class _PostDisplayState extends State<PostDisplay> {
                           ),
                         );
                       } else {
-                        return Center(child: Text('No data available'));
+                        return const Center(child: Text('No data available'));
                       }
                     },
                   ),
@@ -182,12 +166,12 @@ class _PostDisplayState extends State<PostDisplay> {
                       future: FirebasePostsService.getPostById(widget.postId),
                       builder: (context, snapshot) {
                         if (snapshot.connectionState == ConnectionState.waiting) {
-                          return CircularProgressIndicator();
+                          return const CircularProgressIndicator();
                         } else if (snapshot.hasData) {
                           final post = snapshot.data!;
                           if (post.caption.isNotEmpty) {
                             return Container(
-                              padding: EdgeInsets.all(8),
+                              padding: const EdgeInsets.all(8),
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(15), // Adjust the value as needed
                                 color: Colors.black.withOpacity(0.5),
@@ -195,7 +179,7 @@ class _PostDisplayState extends State<PostDisplay> {
                               child: Center(
                                 child: Text(
                                   post.caption,
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     color: Colors.white,
                                     fontSize: 16,
                                   ),
@@ -204,10 +188,10 @@ class _PostDisplayState extends State<PostDisplay> {
                               ),
                             );
                           } else {
-                            return SizedBox();
+                            return const SizedBox();
                           }
                         } else {
-                          return SizedBox();
+                          return const SizedBox();
                         }
                       },
                     ),
@@ -219,40 +203,37 @@ class _PostDisplayState extends State<PostDisplay> {
         ),
         AnimatedOpacity(
           opacity: widget.isVisible ? 1.0 : 0.0,
-          duration: Duration(milliseconds: 500),
+          duration: const Duration(milliseconds: 500),
           curve: Curves.easeInOut,
-          child: Container(
-            child: FutureBuilder<Post>(
-              future: FirebasePostsService.getPostById(widget.postId),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: CircularProgressIndicator());
-                } else if (snapshot.hasError) {
-                  return Center(child: Text('Error: ${snapshot.error}'));
-                } else if (snapshot.hasData) {
-                  final post = snapshot.data!;
-                  return post.firstImageUrl.isNotEmpty || post.secondImageUrl.isNotEmpty
-                      ? TextButton( // Wrap TextButton in this condition
-                    onPressed: () {
-                      setState(() {
-                        _showComments = !_showComments;
-                      });
-                      print('postId: ${widget.postId}');
-                    },
-                    child: Text(
-                      _showComments ? 'Hide Comments' : 'View Comments',
-                      style: TextStyle(
-                        color: Colors.grey,
-                        fontSize: 16,
-                      ),
+          child: FutureBuilder<Post>(
+            future: FirebasePostsService.getPostById(widget.postId),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator());
+              } else if (snapshot.hasError) {
+                return Center(child: Text('Error: ${snapshot.error}'));
+              } else if (snapshot.hasData) {
+                final post = snapshot.data!;
+                return post.firstImageUrl.isNotEmpty || post.secondImageUrl.isNotEmpty
+                    ? TextButton( // Wrap TextButton in this condition
+                  onPressed: () {
+                    setState(() {
+                      _showComments = !_showComments;
+                    });
+                  },
+                  child: Text(
+                    _showComments ? 'Hide Comments' : 'View Comments',
+                    style: const TextStyle(
+                      color: Colors.grey,
+                      fontSize: 16,
                     ),
-                  )
-                      : SizedBox(); // Return an empty SizedBox if there are no posts
-                } else {
-                  return SizedBox(); // Return an empty SizedBox if no data available
-                }
-              },
-            ),
+                  ),
+                )
+                    : const SizedBox(); // Return an empty SizedBox if there are no posts
+              } else {
+                return const SizedBox(); // Return an empty SizedBox if no data available
+              }
+            },
           ),
         ),
 
@@ -264,17 +245,17 @@ class _PostDisplayState extends State<PostDisplay> {
             stream: FirebaseCommentService.getCommentStreamById(widget.postId),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return Center(child: CircularProgressIndicator());
+                return const Center(child: CircularProgressIndicator());
               } else if (snapshot.hasError) {
                 return Center(child: Text('Error: ${snapshot.error}'));
               } else {
                 final comments = snapshot.data?.docs;
                 if (comments == null || comments.isEmpty) {
-                  return Center(child: Text('No comments available'));
+                  return const Center(child: Text('No comments available'));
                 } else {
                   return ListView.builder(
                     shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
+                    physics: const NeverScrollableScrollPhysics(),
                     itemCount: comments.length,
                     itemBuilder: (context, index) {
                       final commentData = comments[index].data();
