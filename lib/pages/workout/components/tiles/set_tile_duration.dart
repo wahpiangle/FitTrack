@@ -161,7 +161,7 @@
                     initialValue: isTapped ? null : "${widget.set.time ?? ''}",
                     controller: isTapped ? timeController : null,
                     inputFormatters: [
-                      FilteringTextInputFormatter.allow(RegExp(r'^\d{0,3}(:\d{0,3})?$')),
+                      FilteringTextInputFormatter.allow(RegExp(r'^\d{0,4}(:\d{0,4})?$')),
 
                       CustomTimeInputFormatter(),
                     ],
@@ -286,6 +286,13 @@
     TextEditingValue formatEditUpdate(
         TextEditingValue oldValue, TextEditingValue newValue) {
       final newText = newValue.text;
+      final oldText = oldValue.text;
+
+      // Check if a character is deleted
+      if (newText.length < oldText.length) {
+        return TextEditingValue.empty;
+      }
+
       if (newText.length == 1) {
         return TextEditingValue(
           text: newText,
