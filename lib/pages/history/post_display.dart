@@ -69,7 +69,7 @@ class PostDisplayState extends State<PostDisplay> {
           child: Transform.translate(
             offset: widget.isVisible ? const Offset(0.0, 0.0) : const Offset(0.0, 50.0),
             child: Container(
-              height: MediaQuery.of(context).size.height * 0.35,
+              height: MediaQuery.of(context).size.height * 0.50,
               width: MediaQuery.of(context).size.width * 1,
               margin: const EdgeInsets.symmetric(vertical: 8),
               child: Stack(
