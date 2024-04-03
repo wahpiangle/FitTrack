@@ -216,35 +216,36 @@
                 width: 40,
                 child: widget.setIsCompleted != null
                     ? Material(
-                  shape: const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(8),
-                    ),
-                  ),
-                  color: widget.set.isCompleted
-                      ? Colors.green[300]
-                      : AppColours.primaryBright,
-                  child: InkWell(
-                      onTap: () {
-                        widget.setIsCompleted!(widget.set.id);
-                      },
-                      child: const Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child: Icon(
-                          Icons.check,
-                          color: Colors.white,
+                       shape: const RoundedRectangleBorder(
+                           borderRadius: BorderRadius.all(
+                              Radius.circular(8),
+                           ),
+                      ),
+                      color: widget.set.isCompleted
+                          ? Colors.green[300]
+                          : AppColours.primaryBright,
+                        child: InkWell(
+                            onTap: () {
+                                widget.setIsCompleted!(widget.set.id);
+                            },
+                            child: const Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: Icon(
+                                Icons.check,
+                                color: Colors.white,
+                              ),
+                            )
                         ),
-                      )),
                 )
                     : GestureDetector(
-                  onTap: () {
-                    HapticFeedback.lightImpact();
-                  },
-                  child: const Icon(
-                    Icons.horizontal_rule_rounded,
-                    color: Colors.white,
-                  ),
-                ),
+                          onTap: () {
+                            HapticFeedback.lightImpact();
+                          },
+                      child: const Icon(
+                          Icons.horizontal_rule_rounded,
+                          color: Colors.white,
+                      ),
+                    ),
               )
             ],
           ),
@@ -252,34 +253,6 @@
       );
     }
   }
-
-  // class CustomTimeInputFormatter extends TextInputFormatter {
-  //   @override
-  //   TextEditingValue formatEditUpdate(
-  //       TextEditingValue oldValue, TextEditingValue newValue) {
-  //     final newText = newValue.text;
-  //     if (newText.length == 1) {
-  //       return TextEditingValue(
-  //         text: newText,
-  //         selection: TextSelection.collapsed(offset: newText.length),
-  //       );
-  //     } else if (newText.length == 2) {
-  //       return TextEditingValue(
-  //         text: newText[0] + newText[1],
-  //         selection: TextSelection.collapsed(offset: newText.length),
-  //       );
-  //     } else if (newText.length == 3) {
-  //       // If 3 digits are typed, insert ":" between the second and third digits
-  //       final updatedText = "${newText.substring(0, 1)}:${newText.substring(1)}";
-  //       // final updatedText = newText[0] + newText[1] + newText[2];
-  //       return TextEditingValue(
-  //         text: updatedText,
-  //         selection: TextSelection.collapsed(offset: updatedText.length),
-  //       );
-  //     }
-  //     return newValue;
-  //   }
-  // }
 
   class CustomTimeInputFormatter extends TextInputFormatter {
     @override
