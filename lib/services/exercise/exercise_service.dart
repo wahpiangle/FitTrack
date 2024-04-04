@@ -231,7 +231,54 @@ class ExerciseService {
 
   bool isPersonalRecord(ExerciseSet exerciseSet) {
     final category = exerciseSet.exerciseSetInfo.target?.exercise.target?.category.target?.name;
-    if (category != "Reps Only" && category != "Duration") {
+    if (category == "Duration") {
+      // If the category is "Duration", we'll determine personal records based on time
+      ExercisesSetsInfo exercisesSetsInfo = exerciseSet.exerciseSetInfo.target!;
+      Exercise exercise = exercisesSetsInfo.exercise.target!;
+      List<ExerciseSet> exerciseSets = exercise.exercisesSetsInfo
+          .expand((element) => element.exerciseSets)
+          .toList();
+
+      // Get the current time value for the exercise set
+      int currentTime = exerciseSet.time ?? 0;
+
+      // Check if the current time is the best among all other sets
+      for (ExerciseSet set in exerciseSets) {
+        if (set.id != exerciseSet.id) {
+          int otherTime = set.time ?? 0;
+          if (otherTime > currentTime) {
+            // If any other set has a higher time, it's not a personal record
+            return false;
+          }
+        }
+      }
+      // If no other set has a higher time, it's a personal record
+      return true;
+    } else if (category == "Reps Only") {
+      // If the category is "Reps Only", we'll determine personal records based on reps
+      ExercisesSetsInfo exercisesSetsInfo = exerciseSet.exerciseSetInfo.target!;
+      Exercise exercise = exercisesSetsInfo.exercise.target!;
+      List<ExerciseSet> exerciseSets = exercise.exercisesSetsInfo
+          .expand((element) => element.exerciseSets)
+          .toList();
+
+      // Get the current reps value for the exercise set
+      int currentReps = exerciseSet.reps ?? 0;
+
+      // Check if the current reps is the best among all other sets
+      for (ExerciseSet set in exerciseSets) {
+        if (set.id != exerciseSet.id) {
+          int otherReps = set.reps ?? 0;
+          if (otherReps > currentReps) {
+            // If any other set has a higher reps, it's not a personal record
+            return false;
+          }
+        }
+      }
+      // If no other set has a higher reps, it's a personal record
+      return true;
+    } else if (category != "Reps Only" && category != "Duration") {
+      // For categories other than "Reps Only" and "Duration", check one-rep max
       ExercisesSetsInfo exercisesSetsInfo = exerciseSet.exerciseSetInfo.target!;
       Exercise exercise = exercisesSetsInfo.exercise.target!;
       List<ExerciseSet> exerciseSets = exercise.exercisesSetsInfo
@@ -249,7 +296,7 @@ class ExerciseService {
       }
       return true;
     } else {
-      return false; // Return false if category is not "Dumbbell"
+      return false;
     }
   }
 
@@ -282,16 +329,6 @@ class ExerciseService {
     }
   }
 
-  bool isPersonalRecordDuration(ExerciseSet exerciseSet) {
-    final category = exerciseSet.exerciseSetInfo.target?.exercise.target?.category.target?.name;
-    if (category == "Duration") {
-      // If the category is "Duration", personal record is not applicable
-      return false;
-    } else {
-      return false; // Return false if category is not "Duration"
-    }
-  }
-
   ExerciseSet getBestDurationSet(WorkoutSession workoutSession) {
     List<ExerciseSet> allSets = [];
     for (var exerciseSetInfo in workoutSession.exercisesSetsInfo) {
@@ -318,16 +355,6 @@ class ExerciseService {
       return reps;
     } else {
       return 0; // Return some default value if the category is not "Duration"
-    }
-  }
-
-  bool isPersonalRecordRepsOnly(ExerciseSet exerciseSet) {
-    final category = exerciseSet.exerciseSetInfo.target?.exercise.target?.category.target?.name;
-    if (category == "Reps Only") {
-      // If the category is "Reps Only", personal record is not applicable
-      return false;
-    } else {
-      return false; // Return false if category is not "Duration"
     }
   }
 
