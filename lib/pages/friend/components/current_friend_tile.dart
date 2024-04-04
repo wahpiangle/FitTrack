@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:group_project/models/firebase/firebase_user.dart';
 import 'package:group_project/pages/friend/search/user_image_display.dart';
+import 'package:group_project/pages/user_profile/user_profile_page.dart';
 import 'package:group_project/services/firebase/firebase_friends_service.dart';
 
 class CurrentFriendTile extends StatelessWidget {
   final List<FirebaseUser> currentFriends;
   final Future<void> Function() loadCurrentFriends;
+
   const CurrentFriendTile({
     super.key,
     required this.currentFriends,
@@ -20,7 +22,7 @@ class CurrentFriendTile extends StatelessWidget {
         key: UniqueKey(),
         itemCount: currentFriends.length,
         separatorBuilder: (context, index) =>
-            const Divider(color: Colors.transparent, thickness: 0.2),
+        const Divider(color: Colors.transparent, thickness: 0.2),
         itemBuilder: (context, index) {
           return ListTile(
             leading: ImageDisplay.buildUserProfileImage(
@@ -37,9 +39,9 @@ class CurrentFriendTile extends StatelessWidget {
               child: ElevatedButton(
                 onPressed: () {
                   FirebaseFriendsService.removeFriend(currentFriends[index].uid,
-                      () {
-                    loadCurrentFriends();
-                  });
+                          () {
+                        loadCurrentFriends();
+                      });
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.red,
@@ -54,6 +56,12 @@ class CurrentFriendTile extends StatelessWidget {
                 ),
               ),
             ),
+            onTap: () {
+              // Push a new route to the stack to navigate to the UserProfilePage
+              Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => UserProfilePage(user: currentFriends[index]),
+              ));
+            },
           );
         },
       ),
