@@ -231,8 +231,6 @@ class _FriendPostWorkoutInfoState extends State<FriendPostWorkoutInfo> {
                                           ),
                                           Text(
                                             weightrepsText,
-
-
                                             style: const TextStyle(
                                               color: Colors.grey,
                                               fontSize: 14,
