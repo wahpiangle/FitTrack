@@ -10,6 +10,9 @@ import 'package:group_project/pages/home/components/display_post_screen/workout_
 import 'package:group_project/services/firebase/firebase_workouts_service.dart';
 import 'package:intl/intl.dart';
 
+import '../../../../../models/exercise.dart';
+import '../../../../../models/exercise_set.dart';
+
 class FriendPostWorkoutInfo extends StatefulWidget {
   final Post post;
   final FirebaseUser posterInfo;
@@ -204,26 +207,8 @@ class _FriendPostWorkoutInfoState extends State<FriendPostWorkoutInfo> {
                               itemBuilder: (context, index) {
                                 final set =
                                     exercisesSetInfo.exerciseSets[index];
-                                String weightrepsText = '';
-                                // Determine how to display weight based on exercise category
-                                if (exercise?.category.target?.name == 'Assisted Bodyweight') {
-                                  weightrepsText = '-${set.weight} kg x ${set.reps}';
-                                } else if (exercise?.category.target?.name == 'Weighted Bodyweight') {
-                                  weightrepsText = '+${set.weight} kg x ${set.reps}';
-                                } else if (exercise?.category.target?.name == 'Reps Only') {
-                                  weightrepsText = '+${set.reps} reps';
-                                } else if (exercise?.category.target?.name == 'Duration') {
-                                  if (set.time.toString().length == 3) {
-                                    weightrepsText = '${set.time.toString()[0]}:${set.time.toString()[1]}${set.time.toString()[2]}';
-                                  } else if (set.time.toString().length == 4) {
-                                    weightrepsText = '${set.time.toString()[0]}${set.time.toString()[1]}:${set.time.toString()[2]}${set.time.toString()[3]}';
-                                  } else if (set.time.toString().length == 5) {
-                                    weightrepsText = '${set.time.toString()[0]}:${set.time.toString()[1]}${set.time.toString()[2]}:${set.time.toString()[3]}${set.time.toString()[3]}';
-                                  }
+                                final weightrepsText = getWeightRepsText(set, exercise);
 
-                                } else {
-                                  weightrepsText = '${set.weight} kg x ${set.reps}';
-                                }
                                 return Padding(
                                   padding:
                                       const EdgeInsets.symmetric(vertical: 6.0),
@@ -246,6 +231,8 @@ class _FriendPostWorkoutInfoState extends State<FriendPostWorkoutInfo> {
                                           ),
                                           Text(
                                             weightrepsText,
+
+
                                             style: const TextStyle(
                                               color: Colors.grey,
                                               fontSize: 14,
@@ -289,5 +276,26 @@ class _FriendPostWorkoutInfoState extends State<FriendPostWorkoutInfo> {
         return Container();
       },
     );
+  }
+}
+String getWeightRepsText(ExerciseSet set, Exercise? exercise) {
+  if (exercise?.category.target?.name == 'Assisted Bodyweight') {
+    return '-${set.weight} kg x ${set.reps}';
+  } else if (exercise?.category.target?.name == 'Weighted Bodyweight') {
+    return '+${set.weight} kg x ${set.reps}';
+  } else if (exercise?.category.target?.name == 'Reps Only') {
+    return '+${set.reps} reps';
+  } else if (exercise?.category.target?.name == 'Duration') {
+    final timeString = set.time.toString();
+    if (timeString.length == 3) {
+      return '${timeString[0]}:${timeString[1]}${timeString[2]}';
+    } else if (timeString.length == 4) {
+      return '${timeString[0]}${timeString[1]}:${timeString[2]}${timeString[3]}';
+    } else if (timeString.length == 5) {
+      return '${timeString[0]}:${timeString[1]}${timeString[2]}:${timeString[3]}${timeString[4]}';
+    }
+    return '-';
+  } else {
+    return '${set.weight} kg x ${set.reps}';
   }
 }
