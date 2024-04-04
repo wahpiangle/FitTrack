@@ -24,6 +24,9 @@ class OwnPostWorkoutInfo extends StatelessWidget {
     final UserProfileProvider userProfileProvider =
         context.watch<UserProfileProvider>();
     final bestSet = objectBox.exerciseService.getBestSet(workoutSession!);
+    final bestDurationSet = objectBox.exerciseService.getBestDurationSet(workoutSession!);
+    final bestRepsSet = objectBox.exerciseService.getBestSetRepsOnly(workoutSession!);
+
 
     return Column(
       children: [
@@ -135,7 +138,7 @@ class OwnPostWorkoutInfo extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      bestSet.exerciseSetInfo.target!.exercise.target!.name,
+                      getExerciseName(bestSet, bestDurationSet, bestRepsSet),
                       style: const TextStyle(
                         color: AppColours.secondary,
                         fontSize: 12,
@@ -143,12 +146,13 @@ class OwnPostWorkoutInfo extends StatelessWidget {
                     ),
 
                     Text(
-                      getWeightRepsText(bestSet),
+                      getCategoryText(bestSet, bestDurationSet, bestRepsSet),
                       style: const TextStyle(
                         color: AppColours.secondary,
                         fontSize: 12,
                       ),
                     ),
+
                   ],
                 )
               ],
@@ -339,4 +343,52 @@ String formatDuration(int totalSeconds) {
     return '$minutesString $secondsString';
   }
   return secondsString;
+}
+
+
+String getExerciseName(ExerciseSet bestSet, ExerciseSet bestDurationSet, ExerciseSet bestRepsSet) {
+  final category = bestSet.exerciseSetInfo.target?.exercise.target?.category.target?.name;
+  final categoryrepsonly = bestDurationSet.exerciseSetInfo.target?.exercise.target?.category.target?.name;
+  final categoryduration = bestRepsSet.exerciseSetInfo.target?.exercise.target?.category.target?.name;
+
+  if (category == 'Assisted Bodyweight' ||
+      category == 'Weighted Bodyweight' ||
+      category == 'Barbell' ||
+      category == 'Dumbbell' ||
+      category == 'Machine' ||
+      category == 'Cable' ||
+      category == 'Band' ||
+      category == 'Other') {
+    return bestSet.exerciseSetInfo.target!.exercise.target!.name;
+  } else if (categoryrepsonly == 'Duration') {
+    return bestDurationSet.exerciseSetInfo.target!.exercise.target!.name;
+  } else if (categoryduration == 'Reps Only') {
+    return bestRepsSet.exerciseSetInfo.target!.exercise.target!.name;
+  } else {
+    return 'bye';
+  }
+}
+
+
+String getCategoryText(ExerciseSet bestSet, ExerciseSet bestDurationSet, ExerciseSet bestRepsSet) {
+  final category = bestSet.exerciseSetInfo.target?.exercise.target?.category.target?.name;
+  final categoryrepsonly = bestDurationSet.exerciseSetInfo.target?.exercise.target?.category.target?.name;
+  final categoryduration = bestRepsSet.exerciseSetInfo.target?.exercise.target?.category.target?.name;
+
+  if (category == 'Assisted Bodyweight' ||
+      category == 'Weighted Bodyweight' ||
+      category == 'Barbell' ||
+      category == 'Dumbbell' ||
+      category == 'Machine' ||
+      category == 'Cable' ||
+      category == 'Band' ||
+      category == 'Other') {
+    return getWeightRepsText(bestSet);
+  } else if (categoryrepsonly == 'Duration') {
+    return getWeightRepsText(bestDurationSet);
+  } else if (categoryduration == 'Reps Only') {
+    return getWeightRepsText(bestRepsSet);
+  } else {
+    return 'bye';
+  }
 }

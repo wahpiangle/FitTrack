@@ -57,11 +57,35 @@ class FirebaseExercisesSetsInfo {
   });
 
   ExerciseSet getBestSet() {
-    return exerciseSets.reduce((a, b) => objectBox.exerciseService
-                .getOneRepMaxValue(a.weight ?? 0, a.reps ?? 0) >
-            objectBox.exerciseService
-                .getOneRepMaxValue(b.weight ?? 0, b.reps ?? 0)
+    return exerciseSets.reduce((a, b) =>
+    objectBox.exerciseService
+        .getOneRepMaxValue(a.weight ?? 0, a.reps ?? 0, a) >
+        objectBox.exerciseService
+            .getOneRepMaxValue(b.weight ?? 0, b.reps ?? 0, b)
         ? a
         : b);
   }
+
+  ExerciseSet getBestDurationSet() {
+    return exerciseSets.reduce((a, b) =>
+    objectBox.exerciseService
+        .getDurationMaxValue(a.time ?? 0, a) >
+        objectBox.exerciseService
+            .getDurationMaxValue(b.time ?? 0, b)
+        ? a
+        : b);
+  }
+
+
+  ExerciseSet getBestSetRepsOnly() {
+    return exerciseSets.reduce((a, b) =>
+    objectBox.exerciseService
+        .getDurationMaxValue(a.reps ?? 0, a) >
+        objectBox.exerciseService
+            .getDurationMaxValue(b.reps ?? 0, b)
+        ? a
+        : b);
+  }
+
 }
+
