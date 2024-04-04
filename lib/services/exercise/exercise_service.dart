@@ -221,7 +221,7 @@ class ExerciseService {
   int getOneRepMaxValue(int weight, int reps, ExerciseSet exerciseSet) {
     final category = exerciseSet.exerciseSetInfo.target?.exercise.target?.category.target?.name;
 
-    if (category != "Reps Only" && category != "Dumbbell") {
+    if (category != "Reps Only" && category != "Duration") {
       return (weight * (1 + reps / 30)).toInt();
     } else {
       return 0; // Return some default value if category is not "Dumbbell"
@@ -231,7 +231,7 @@ class ExerciseService {
 
   bool isPersonalRecord(ExerciseSet exerciseSet) {
     final category = exerciseSet.exerciseSetInfo.target?.exercise.target?.category.target?.name;
-    if (category != "Reps Only" && category != "Dumbbell") {
+    if (category != "Reps Only" && category != "Duration") {
       ExercisesSetsInfo exercisesSetsInfo = exerciseSet.exerciseSetInfo.target!;
       Exercise exercise = exercisesSetsInfo.exercise.target!;
       List<ExerciseSet> exerciseSets = exercise.exercisesSetsInfo
