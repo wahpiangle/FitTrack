@@ -56,14 +56,7 @@ class _FriendPostState extends State<FriendPost> {
   @override
   Widget build(BuildContext context) {
     if (widget.friendPostDataList.isEmpty) {
-      return const Center(
-          child: Text(
-            "No posts today",
-            style: TextStyle(
-              color: Colors.white,
-            ),
-          )
-      );
+      return SizedBox.shrink();
     } else {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
