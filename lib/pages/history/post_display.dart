@@ -26,6 +26,16 @@ class PostDisplay extends StatefulWidget {
 class PostDisplayState extends State<PostDisplay> {
   bool _showComments = false;
 
+
+  void disableScroll() {
+    setState(() {
+    });
+  }
+
+  void enableScroll() {
+    setState(() {
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -73,7 +83,7 @@ class PostDisplayState extends State<PostDisplay> {
                 ? const Offset(0.0, 0.0)
                 : const Offset(0.0, 50.0),
             child: Container(
-              height: MediaQuery.of(context).size.height * 0.50,
+              height: MediaQuery.of(context).size.height * 0.62,
               width: MediaQuery.of(context).size.width * 1,
               margin: const EdgeInsets.symmetric(vertical: 8),
               child: Stack(
@@ -261,48 +271,56 @@ class PostDisplayState extends State<PostDisplay> {
         // Inside PostDisplay widget
         // Inside the PostDisplay widget where you use CommentTile
         if (_showComments)
-          StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-            stream: FirebaseCommentService.getCommentStreamById(widget.postId),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(child: CircularProgressIndicator());
-              } else if (snapshot.hasError) {
-                return Center(child: Text('Error: ${snapshot.error}'));
-              } else {
-                final comments = snapshot.data?.docs;
-                if (comments == null || comments.isEmpty) {
-                  return const Center(child: Text('No comments available'));
+          SizedBox(
+            height: MediaQuery.of(context).size.height * 0.3, // Adjust the height as needed
+            child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+              stream: FirebaseCommentService.getCommentStreamById(widget.postId),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                } else if (snapshot.hasError) {
+                  return Center(child: Text('Error: ${snapshot.error}'));
                 } else {
-                  return ListView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: comments.length,
-                    itemBuilder: (context, index) {
-                      final commentData = comments[index].data();
-                      final comment = commentData['comment'] ?? '';
-                      final postedBy =
-                          commentData['postedBy'] ?? ''; // Get the user ID
-                      final date = commentData['date']; // Get the comment date
-
-                      return CommentTile(
-                        comment: Comment(
-                          id: '', // Provide an appropriate id value
-                          postId: widget
-                              .postId, // Pass the postId of the current post
-                          comment: comment,
-                          postedBy: postedBy,
-                          date: date != null
-                              ? DateTime.fromMillisecondsSinceEpoch(
-                                  date.seconds * 1000)
-                              : DateTime.now(), // Handle null DateTime
+                  final comments = snapshot.data?.docs;
+                  if (comments == null || comments.isEmpty) {
+                    // If no comments are available, show a message
+                    return const Center(
+                      child: Text(
+                        'No comments available',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
                         ),
-                      );
-                    },
-                  );
+                      ),
+                    );
+                  } else {
+                    return ListView.builder(
+                      itemCount: comments.length,
+                      itemBuilder: (context, index) {
+                        final commentData = comments[index].data();
+                        final comment = commentData['comment'] ?? '';
+                        final postedBy = commentData['postedBy'] ?? ''; // Get the user ID
+                        final date = commentData['date']; // Get the comment date
+
+                        return CommentTile(
+                          comment: Comment(
+                            id: '', // Provide an appropriate id value
+                            postId: widget.postId, // Pass the postId of the current post
+                            comment: comment,
+                            postedBy: postedBy,
+                            date: date != null
+                                ? DateTime.fromMillisecondsSinceEpoch(date.seconds * 1000)
+                                : DateTime.now(), // Handle null DateTime
+                          ),
+                        );
+                      },
+                    );
+                  }
                 }
-              }
-            },
+              },
+            ),
           ),
+
       ],
     );
   }
