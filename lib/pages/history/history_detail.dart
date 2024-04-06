@@ -5,6 +5,7 @@ import 'package:group_project/pages/history/menu_anchor/workout_menu_anchor.dart
 import 'package:group_project/pages/history/post_display.dart';
 import 'package:intl/intl.dart';
 
+
 class HistoryDetail extends StatefulWidget {
   final WorkoutSession workoutSession;
 
@@ -65,176 +66,172 @@ class HistoryDetailState extends State<HistoryDetail> {
           ),
         ],
       ),
-      body: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 10),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 10),
-                child: Text(
-                  widget.workoutSession.title,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 30,
+      body: ListView(
+        children: [
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  child: Text(
+                    widget.workoutSession.title,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 30,
+                    ),
                   ),
                 ),
-              ),
-              Text(
-                DateFormat('EEEE, dd MMMM yyyy, kk:mm a').format(
-                  widget.workoutSession.date,
-                ),
-                style: const TextStyle(
-                  color: Colors.grey,
-                  fontSize: 16,
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8.0),
-                child: Row(
-                  children: [
-                    const Icon(
-                      Icons.access_time_sharp,
-                      color: Colors.white,
-                      size: 20,
-                    ),
-                    const SizedBox(width: 10),
-                    Text(
-                      formatDuration(widget.workoutSession.duration),
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              widget.workoutSession.note == ''
-                  ? const SizedBox()
-                  : Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8.0),
-                child: Text(
-                  widget.workoutSession.note == ''
-                      ? 'No notes'
-                      : widget.workoutSession.note.toString(),
+                Text(
+                  DateFormat('EEEE, dd MMMM yyyy, kk:mm a').format(
+                    widget.workoutSession.date,
+                  ),
                   style: const TextStyle(
                     color: Colors.grey,
                     fontSize: 16,
                   ),
                 ),
-              ),
-              Column(
-                children: widget.workoutSession.exercisesSetsInfo
-                    .map(
-                      (exercisesSetInfo) =>
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 6.0),
-                            child: Text(
-                              exercisesSetInfo.exercise.target?.name ?? '',
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 18,
-                              ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  child: Row(
+                    children: [
+                      const Icon(
+                        Icons.access_time_sharp,
+                        color: Colors.white,
+                        size: 20,
+                      ),
+                      const SizedBox(width: 10),
+                      Text(
+                        formatDuration(widget.workoutSession.duration),
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                widget.workoutSession.note == ''
+                    ? const SizedBox()
+                    : Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  child: Text(
+                    widget.workoutSession.note == ''
+                        ? 'No notes'
+                        : widget.workoutSession.note.toString(),
+                    style: const TextStyle(
+                      color: Colors.grey,
+                      fontSize: 16,
+                    ),
+                  ),
+                ),
+                Column(
+                  children: widget.workoutSession.exercisesSetsInfo
+                      .map(
+                        (exercisesSetInfo) => Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 6.0),
+                          child: Text(
+                            exercisesSetInfo.exercise.target?.name ?? '',
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 18,
                             ),
                           ),
-                          Column(
-                            children: exercisesSetInfo.exerciseSets
-                                .asMap()
-                                .entries
-                                .map(
-                                  (setInfo) =>
+                        ),
+                        Column(
+                          children: exercisesSetInfo.exerciseSets
+                              .asMap()
+                              .entries
+                              .map(
+                                (setInfo) => Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 8.0),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.max,
+                                mainAxisAlignment:
+                                MainAxisAlignment.start,
+                                children: [
                                   Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 8.0),
+                                    padding: const EdgeInsets.only(
+                                        right: 20),
+                                    child: Text(
+                                      (setInfo.key + 1).toString(),
+                                      style: TextStyle(
+                                        color: Colors.grey[300],
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                  ),
+                                  Expanded(
                                     child: Row(
-                                      mainAxisSize: MainAxisSize.max,
                                       mainAxisAlignment:
-                                      MainAxisAlignment.start,
+                                      MainAxisAlignment
+                                          .spaceBetween,
                                       children: [
-                                        Padding(
+                                        Row(
+                                          children: [
+                                            Text(
+                                              ('${setInfo.value.weight} kg × ${setInfo.value.reps}'),
+                                              style: TextStyle(
+                                                color: Colors.grey[300],
+                                                fontSize: 16,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        setInfo.value.isPersonalRecord
+                                            ? Container(
                                           padding:
-                                          const EdgeInsets.only(right: 20),
-                                          child: Text(
-                                            (setInfo.key + 1).toString(),
-                                            style: TextStyle(
-                                              color: Colors.grey[300],
-                                              fontSize: 16,
+                                          const EdgeInsets
+                                              .all(5),
+                                          decoration:
+                                          const BoxDecoration(
+                                            color: AppColours
+                                                .secondary,
+                                            borderRadius:
+                                            BorderRadius.all(
+                                              Radius.circular(
+                                                  30),
                                             ),
                                           ),
-                                        ),
-                                        Expanded(
-                                          child: Row(
-                                            mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Row(
-                                                children: [
-                                                  Text(
-                                                    ('${setInfo.value
-                                                        .weight} kg × ${setInfo
-                                                        .value.reps}'),
-                                                    style: TextStyle(
-                                                      color: Colors.grey[300],
-                                                      fontSize: 16,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                              setInfo.value.isPersonalRecord
-                                                  ? Container(
-                                                padding:
-                                                const EdgeInsets.all(
-                                                    5),
-                                                decoration:
-                                                const BoxDecoration(
-                                                  color: AppColours
-                                                      .secondary,
-                                                  borderRadius:
-                                                  BorderRadius.all(
-                                                    Radius.circular(30),
-                                                  ),
-                                                ),
-                                                child: Text(
-                                                  '🏆 PR',
-                                                  style: TextStyle(
-                                                    color: Colors.green[900],
-                                                    fontSize: 12,
-                                                  ),
-                                                ),
-                                              )
-                                                  : const SizedBox(),
-                                            ],
+                                          child: Text(
+                                            '🏆 PR',
+                                            style: TextStyle(
+                                              color: Colors
+                                                  .green[900],
+                                              fontSize: 12,
+                                            ),
                                           ),
-                                        ),
+                                        )
+                                            : const SizedBox(),
                                       ],
                                     ),
                                   ),
-                            )
-                                .toList(),
-                          ),
-                        ],
-                      ),
-                )
-                    .toList(),
-              ),
-              const SizedBox(height: 50),
-              ListView(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                children: [
-                  PostDisplay(
-                    postId: widget.workoutSession.postId,
-                    isVisible: _isVisible,
-                  ),
-                ],
-              ),
-            ],
+                                ],
+                              ),
+                            ),
+                          )
+                              .toList(),
+                        ),
+                      ],
+                    ),
+                  )
+                      .toList(),
+                ),
+                const SizedBox(height: 50),
+              ],
+            ),
           ),
-        ),
+          PostDisplay(
+            postId: widget.workoutSession.postId,
+            isVisible: _isVisible,
+          ),
+        ],
       ),
     );
   }
