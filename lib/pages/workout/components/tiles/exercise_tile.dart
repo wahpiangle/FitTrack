@@ -12,6 +12,8 @@ import 'package:group_project/pages/workout/components/workout_header.dart';
 import 'package:group_project/pages/workout/components/timer/providers/timer_provider.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../models/exercise_set.dart';
+
 class ExerciseTile extends StatefulWidget {
   final List<Exercise> exerciseData;
   final List<ExercisesSetsInfo> exercisesSetsInfo;
@@ -63,68 +65,8 @@ class _ExerciseTileState extends State<ExerciseTile> {
             .where((exerciseSet) => exerciseSet.id == exerciseSetId)
             .toList()
             .forEach((exerciseSet) {
+              setCompletionBasedOnExerciseType(exercisesSetsInfo, exerciseSet);
 
-
-          if (exercisesSetsInfo.exercise.target?.category.target?.name == "Reps Only") {
-            // Check if reps is null and weight is not null
-            if (exerciseSet.reps != null && exerciseSet.weight == null) {
-              exerciseSet.isCompleted = !exerciseSet.isCompleted;
-            }
-            else if (exerciseSet.reps != null && exerciseSet.weight != null){
-              exerciseSet.isCompleted = !exerciseSet.isCompleted;
-            }
-          }
-
-          else if (exercisesSetsInfo.exercise.target?.category.target?.name == "Duration") {
-            if (exerciseSet.time != null) {
-              String timeAsString = exerciseSet.time.toString();
-              if (timeAsString.length == 3) {
-                // Extracting the second digit from timeAsString
-                int secondDigit = int.parse(timeAsString[1]);
-                // Checking if the second digit is not equal to 7
-                if (secondDigit != 6 && secondDigit != 7 && secondDigit != 8 &&  secondDigit != 9) {
-                  exerciseSet.isCompleted = !exerciseSet.isCompleted;
-                }
-              }
-              else if (timeAsString.length == 4) {
-                // Extracting the second digit from timeAsString
-                int thirdDigit = int.parse(timeAsString[2]);
-                int firstDigit = int.parse(timeAsString[0]);
-                // Checking if the second digit is not equal to 7
-                if (thirdDigit != 6 && thirdDigit != 7 && thirdDigit != 8 &&  thirdDigit != 9) {
-                  if (firstDigit != 6 && firstDigit != 7 && firstDigit != 8 &&  firstDigit != 9) {
-                    exerciseSet.isCompleted = !exerciseSet.isCompleted;
-                  }
-                }
-              }
-
-              else if (timeAsString.length == 5) {
-                // Extracting the second digit from timeAsString
-                int secondDigit = int.parse(timeAsString[1]);
-                int fourthDigit = int.parse(timeAsString[3]);
-                // Checking if the second digit is not equal to 7
-                if (secondDigit != 6 && secondDigit != 7 && secondDigit != 8 &&  secondDigit != 9) {
-                  if (fourthDigit != 6 && fourthDigit != 7 && fourthDigit != 8 &&  fourthDigit != 9) {
-                    exerciseSet.isCompleted = !exerciseSet.isCompleted;
-                  }
-                }
-              }
-            }
-          }
-
-
-          else if (exerciseSet.reps != null && exerciseSet.weight != null) {
-            exerciseSet.isCompleted = !exerciseSet.isCompleted;
-          }
-
-
-
-
-
-
-          // if (exerciseSet.reps != null && exerciseSet.weight != null) {
-          //   exerciseSet.isCompleted = !exerciseSet.isCompleted;
-          // }
 
           if (exerciseSet.isCompleted && restTimerProvider.isRestTimerEnabled) {
             //check if the custom timer is running, if yes, stop the custom timer first
@@ -257,5 +199,44 @@ class _ExerciseTileState extends State<ExerciseTile> {
         },
       ),
     );
+  }
+}
+
+void setCompletionBasedOnExerciseType(ExercisesSetsInfo exercisesSetsInfo, ExerciseSet exerciseSet) {
+  String? targetType = exercisesSetsInfo.exercise.target?.category.target?.name;
+  if (targetType == "Reps Only") {
+    // Check if reps is not null and weight is null
+    if (exerciseSet.reps != null && exerciseSet.weight == null ||
+        exerciseSet.reps != null && exerciseSet.weight != null) {
+      exerciseSet.isCompleted = !exerciseSet.isCompleted;
+    }
+  } else if (targetType == "Duration") {
+    if (exerciseSet.time != null) {
+      String timeAsString = exerciseSet.time.toString();
+      if (timeAsString.length == 3) {
+        int secondDigit = int.parse(timeAsString[1]);
+        if (secondDigit != 6 && secondDigit != 7 && secondDigit != 8 && secondDigit != 9) {
+          exerciseSet.isCompleted = !exerciseSet.isCompleted;
+        }
+      } else if (timeAsString.length == 4) {
+        int thirdDigit = int.parse(timeAsString[2]);
+        int firstDigit = int.parse(timeAsString[0]);
+        if (thirdDigit != 6 && thirdDigit != 7 && thirdDigit != 8 && thirdDigit != 9) {
+          if (firstDigit != 6 && firstDigit != 7 && firstDigit != 8 && firstDigit != 9) {
+            exerciseSet.isCompleted = !exerciseSet.isCompleted;
+          }
+        }
+      } else if (timeAsString.length == 5) {
+        int secondDigit = int.parse(timeAsString[1]);
+        int fourthDigit = int.parse(timeAsString[3]);
+        if (secondDigit != 6 && secondDigit != 7 && secondDigit != 8 && secondDigit != 9) {
+          if (fourthDigit != 6 && fourthDigit != 7 && fourthDigit != 8 && fourthDigit != 9) {
+            exerciseSet.isCompleted = !exerciseSet.isCompleted;
+          }
+        }
+      }
+    }
+  } else if (exerciseSet.reps != null && exerciseSet.weight != null) {
+    exerciseSet.isCompleted = !exerciseSet.isCompleted;
   }
 }

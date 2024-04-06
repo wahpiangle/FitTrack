@@ -209,6 +209,7 @@ Widget renderExerciseInfo(exercisesSetInfo, MapEntry<int, ExerciseSet> setInfo) 
     case "Machine":
     case "Cable":
     case "Band":
+    case "Other":
       return Text(
         '${setInfo.value.weight} kg  × ${setInfo.value.reps}',
         style: TextStyle(
