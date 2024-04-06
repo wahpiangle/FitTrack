@@ -24,6 +24,33 @@ class ExerciseWorkoutCard extends StatelessWidget {
     return '$hoursString:$minutesString:$secondsString';
   }
 
+  String formatExerciseInfo(dynamic value, String category, String weightUnit) {
+    if (value.weight != null || value.reps != null || value.time != null) {
+      if (category == "Assisted Bodyweight") {
+        return '-${value.weight} $weightUnit x ${value.reps}';
+      } else if (category == "Weighted Bodyweight") {
+        return '+${value.weight} $weightUnit x ${value.reps}';
+      } else if (category == "Reps Only") {
+        return '${value.reps} reps';
+      } else if (category == "Duration") {
+        final timeString = value.time.toString();
+        if (timeString.length == 3) {
+          return '${timeString[0]}:${timeString[1]}${timeString[2]}';
+        } else if (timeString.length == 4) {
+          return '${timeString[0]}${timeString[1]}:${timeString[2]}${timeString[3]}';
+        } else if (timeString.length == 5) {
+          return '${timeString[0]}:${timeString[1]}${timeString[2]}:${timeString[3]}${timeString[4]}';
+        } else {
+          return '${value.weight} $weightUnit x ${value.reps}';
+        }
+      } else {
+        return '${value.weight} $weightUnit x ${value.reps}';
+      }
+    } else {
+      return '-';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final filteredSetsInfo = workoutSession.exercisesSetsInfo
@@ -144,56 +171,12 @@ class ExerciseWorkoutCard extends StatelessWidget {
                                                     ),
                                                   ),
                                                   Text(
-                                                    (setInfo.value.weight != null || setInfo.value.reps != null || setInfo.value.time != null )
-                                                        ? (exercisesSetInfo.exercise.target?.category.target?.name == "Assisted Bodyweight"
-                                                            ? ('-${setInfo.value.weight} kg x ${setInfo.value.reps}')
-                                                            : (exercisesSetInfo.exercise.target?.category.target?.name == "Weighted Bodyweight"
-                                                              ? ('+${setInfo.value.weight} kg x ${setInfo.value.reps}')
-                                                              : (exercisesSetInfo.exercise.target?.category.target?.name == "Reps Only"
-                                                                ? ('${setInfo.value.reps} reps')
-                                                                : (exercisesSetInfo.exercise.target?.category.target?.name == "Duration"
-                                                                  ? (setInfo.value.time.toString().length == 3
-                                                                    ? '${setInfo.value.time.toString()[0]}:${setInfo.value.time.toString()[1]}${setInfo.value.time.toString()[2]}'
-                                                                    : (setInfo.value.time.toString().length == 4)
-                                                                      ? '${setInfo.value.time.toString()[0]}${setInfo.value.time.toString()[1]}:${setInfo.value.time.toString()[2]}${setInfo.value.time.toString()[3]}'
-                                                                      : (setInfo.value.time.toString().length == 5)
-                                                                        ? '${setInfo.value.time.toString()[0]}:${setInfo.value.time.toString()[1]}${setInfo.value.time.toString()[2]}:${setInfo.value.time.toString()[3]}${setInfo.value.time.toString()[3]}'
-                                                                        : '${setInfo.value.weight} kg x ${setInfo.value.reps}')
-                                                                  : '${setInfo.value.weight} kg x ${setInfo.value.reps}'))))
-                                                        : '-',
+                                                    formatExerciseInfo(setInfo.value, exercisesSetInfo.exercise.target?.category.target?.name ?? "", "kg"),
                                                     style: TextStyle(
                                                       color: Colors.grey[300],
                                                       fontSize: 16,
                                                     ),
                                                   ),
-
-                                                  // Text(
-                                                  //   ('${setInfo.value.weight} kg'),
-                                                  //   style: TextStyle(
-                                                  //     color: Colors.grey[300],
-                                                  //     fontSize: 16,
-                                                  //   ),
-                                                  // ),
-                                                  // Padding(
-                                                  //   padding: const EdgeInsets
-                                                  //       .symmetric(
-                                                  //       horizontal: 5),
-                                                  //   child: Text(
-                                                  //     '×',
-                                                  //     style: TextStyle(
-                                                  //         color:
-                                                  //             Colors.grey[300],
-                                                  //         fontSize: 16),
-                                                  //   ),
-                                                  // ),
-                                                  // Text(
-                                                  //   setInfo.value.reps
-                                                  //       .toString(),
-                                                  //   style: TextStyle(
-                                                  //     color: Colors.grey[300],
-                                                  //     fontSize: 16,
-                                                  //   ),
-                                                  // ),
                                                 ],
                                               ),
                                               setInfo.value.isPersonalRecord
