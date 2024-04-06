@@ -25,6 +25,33 @@ class RecentValues extends StatefulWidget {
   });
   @override
   State<RecentValues> createState() => _RecentValuesState();
+
+  String generateRecentValuesText() {
+    if (recentWeight != null || recentTime != null || recentReps != null) {
+      switch (exercisesSetsInfo.exercise.target?.category.target?.name) {
+        case "Assisted Bodyweight":
+          return '-${recentWeight}kg x ${recentReps}';
+        case "Weighted Bodyweight":
+          return '+${recentWeight}kg x ${recentReps}';
+        case "Reps Only":
+          return '${recentReps} reps';
+        case "Duration":
+          return recentTime != null
+              ? (recentTime.toString().length == 3
+              ? '${recentTime.toString()[0]}:${recentTime.toString()[1]}${recentTime.toString()[2]}'
+              : (recentTime.toString().length == 4)
+              ? '${recentTime.toString()[0]}${recentTime.toString()[1]}:${recentTime.toString()[2]}${recentTime.toString()[3]}'
+              : (recentTime.toString().length == 5)
+              ? '${recentTime.toString()[0]}:${recentTime.toString()[1]}${recentTime.toString()[2]}:${recentTime.toString()[3]}${recentTime.toString()[3]}'
+              : '${recentWeight} kg x ${recentReps}')
+              : '${recentWeight} kg x ${recentReps}';
+        default:
+          return '${recentWeight}kg x ${recentReps}';
+      }
+    } else {
+      return '-';
+    }
+  }
 }
 
 class _RecentValuesState extends State<RecentValues>
@@ -61,23 +88,7 @@ class _RecentValuesState extends State<RecentValues>
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
             child: Text(
-              widget.recentWeight != null || widget.recentTime != null || widget.recentReps != null
-                  ? (widget.exercisesSetsInfo.exercise.target?.category.target?.name == "Assisted Bodyweight"
-                    ? '-${widget.recentWeight}kg x ${widget.recentReps}'
-                    : (widget.exercisesSetsInfo.exercise.target?.category.target?.name == "Weighted Bodyweight"
-                      ? '+${widget.recentWeight}kg x ${widget.recentReps}'
-                      : (widget.exercisesSetsInfo.exercise.target?.category.target?.name == "Reps Only"
-                        ? '${widget.recentReps} reps'
-                        : (widget.exercisesSetsInfo.exercise.target?.category.target?.name == "Duration"
-                          ? (widget.recentTime.toString().length == 3
-                            ? '${widget.recentTime.toString()[0]}:${widget.recentTime.toString()[1]}${widget.recentTime.toString()[2]}'
-                            : (widget.recentTime.toString().length == 4)
-                              ? '${widget.recentTime.toString()[0]}${widget.recentTime.toString()[1]}:${widget.recentTime.toString()[2]}${widget.recentTime.toString()[3]}'
-                              : (widget.recentTime.toString().length == 5)
-                                ? '${widget.recentTime.toString()[0]}:${widget.recentTime.toString()[1]}${widget.recentTime.toString()[2]}:${widget.recentTime.toString()[3]}${widget.recentTime.toString()[3]}'
-                                : '${widget.recentWeight} kg x ${widget.recentReps}')
-                            : '${widget.recentWeight} kg x ${widget.recentReps}'))))
-                  : '-',
+              widget.generateRecentValuesText(),
               style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.bold,

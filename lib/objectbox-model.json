@@ -147,7 +147,7 @@
     },
     {
       "id": "5:4750852453579650123",
-      "lastPropertyId": "8:4553188056418383244",
+      "lastPropertyId": "9:1561625142316087456",
       "name": "ExerciseSet",
       "properties": [
         {
@@ -193,6 +193,11 @@
           "flags": 520,
           "indexId": "4:2930750127829057275",
           "relationTarget": "ExercisesSetsInfo"
+        },
+        {
+          "id": "9:1561625142316087456",
+          "name": "time",
+          "type": 6
         }
       ],
       "relations": []
