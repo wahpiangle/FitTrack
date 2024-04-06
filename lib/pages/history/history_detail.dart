@@ -14,10 +14,10 @@ class HistoryDetail extends StatefulWidget {
   });
 
   @override
-  _HistoryDetailState createState() => _HistoryDetailState();
+  HistoryDetailState createState() => HistoryDetailState();
 }
 
-class _HistoryDetailState extends State<HistoryDetail> {
+class HistoryDetailState extends State<HistoryDetail> {
   bool _isVisible = false;
 
   @override
@@ -113,21 +113,22 @@ class _HistoryDetailState extends State<HistoryDetail> {
               widget.workoutSession.note == ''
                   ? const SizedBox()
                   : Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 8.0),
-                      child: Text(
-                        widget.workoutSession.note == ''
-                            ? 'No notes'
-                            : widget.workoutSession.note.toString(),
-                        style: const TextStyle(
-                          color: Colors.grey,
-                          fontSize: 16,
-                        ),
-                      ),
-                    ),
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                child: Text(
+                  widget.workoutSession.note == ''
+                      ? 'No notes'
+                      : widget.workoutSession.note.toString(),
+                  style: const TextStyle(
+                    color: Colors.grey,
+                    fontSize: 16,
+                  ),
+                ),
+              ),
               Column(
                 children: widget.workoutSession.exercisesSetsInfo
                     .map(
-                      (exercisesSetInfo) => Column(
+                      (exercisesSetInfo) =>
+                      Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Padding(
@@ -145,17 +146,18 @@ class _HistoryDetailState extends State<HistoryDetail> {
                                 .asMap()
                                 .entries
                                 .map(
-                                  (setInfo) => Padding(
+                                  (setInfo) =>
+                                  Padding(
                                     padding: const EdgeInsets.symmetric(
                                         vertical: 8.0),
                                     child: Row(
                                       mainAxisSize: MainAxisSize.max,
                                       mainAxisAlignment:
-                                          MainAxisAlignment.start,
+                                      MainAxisAlignment.start,
                                       children: [
                                         Padding(
                                           padding:
-                                              const EdgeInsets.only(right: 20),
+                                          const EdgeInsets.only(right: 20),
                                           child: Text(
                                             (setInfo.key + 1).toString(),
                                             style: TextStyle(
@@ -167,12 +169,14 @@ class _HistoryDetailState extends State<HistoryDetail> {
                                         Expanded(
                                           child: Row(
                                             mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
+                                            MainAxisAlignment.spaceBetween,
                                             children: [
                                               Row(
                                                 children: [
                                                   Text(
-                                                    ('${setInfo.value.weight} kg × ${setInfo.value.reps}'),
+                                                    ('${setInfo.value
+                                                        .weight} kg × ${setInfo
+                                                        .value.reps}'),
                                                     style: TextStyle(
                                                       color: Colors.grey[300],
                                                       fontSize: 16,
@@ -182,27 +186,26 @@ class _HistoryDetailState extends State<HistoryDetail> {
                                               ),
                                               setInfo.value.isPersonalRecord
                                                   ? Container(
-                                                      padding:
-                                                          const EdgeInsets.all(
-                                                              5),
-                                                      decoration:
-                                                          const BoxDecoration(
-                                                        color: AppColours
-                                                            .secondary,
-                                                        borderRadius:
-                                                            BorderRadius.all(
-                                                          Radius.circular(30),
-                                                        ),
-                                                      ),
-                                                      child: Text(
-                                                        '🏆 PR',
-                                                        style: TextStyle(
-                                                          color:
-                                                              Colors.green[900],
-                                                          fontSize: 12,
-                                                        ),
-                                                      ),
-                                                    )
+                                                padding:
+                                                const EdgeInsets.all(
+                                                    5),
+                                                decoration:
+                                                const BoxDecoration(
+                                                  color: AppColours
+                                                      .secondary,
+                                                  borderRadius:
+                                                  BorderRadius.all(
+                                                    Radius.circular(30),
+                                                  ),
+                                                ),
+                                                child: Text(
+                                                  '🏆 PR',
+                                                  style: TextStyle(
+                                                    color: Colors.green[900],
+                                                    fontSize: 12,
+                                                  ),
+                                                ),
+                                              )
                                                   : const SizedBox(),
                                             ],
                                           ),
@@ -210,18 +213,24 @@ class _HistoryDetailState extends State<HistoryDetail> {
                                       ],
                                     ),
                                   ),
-                                )
+                            )
                                 .toList(),
                           ),
                         ],
                       ),
-                    )
+                )
                     .toList(),
               ),
               const SizedBox(height: 50),
-              PostDisplay(
-                postId: widget.workoutSession.postId,
-                isVisible: _isVisible,
+              ListView(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                children: [
+                  PostDisplay(
+                    postId: widget.workoutSession.postId,
+                    isVisible: _isVisible,
+                  ),
+                ],
               ),
             ],
           ),
