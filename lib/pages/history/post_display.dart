@@ -19,6 +19,7 @@ class PostDisplay extends StatefulWidget {
     required this.isVisible,
   });
 
+
   @override
   PostDisplayState createState() => PostDisplayState();
 }
