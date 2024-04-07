@@ -94,6 +94,9 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
                             child: Image.asset(
                               widget.exercise.imagePath,
                               fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) {
+                                return const SizedBox.shrink();
+                              },
                             ),
                           ),
                         ),
