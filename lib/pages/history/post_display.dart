@@ -24,6 +24,7 @@ class PostDisplay extends StatefulWidget {
 }
 
 class PostDisplayState extends State<PostDisplay> {
+  int _pointerCount = 0;
   bool _showComments = false;
   bool _isScrollDisabled = false;
   late Future<Post?> _postFuture;
@@ -101,15 +102,23 @@ class PostDisplayState extends State<PostDisplay> {
                   ? const NeverScrollableScrollPhysics()
                   : null,
               child: Container(
-                height: MediaQuery.of(context).size.height * 0.6,
+                height: MediaQuery.of(context).size.height * 0.50,
                 width: MediaQuery.of(context).size.width,
                 margin: const EdgeInsets.symmetric(vertical: 8),
                 child: Listener(
                   onPointerDown: (event) {
-                    disableScroll();
+                    setState(() {
+                      _pointerCount++;
+                      disableScroll();
+                    });
                   },
                   onPointerUp: (event) {
-                    enableScroll();
+                    setState(() {
+                      _pointerCount--;
+                      if (_pointerCount == 0) {
+                        enableScroll();
+                      }
+                    });
                   },
                   child: FutureBuilder<Post?>(
                     future: _postFuture,
@@ -131,12 +140,12 @@ class PostDisplayState extends State<PostDisplay> {
                                         top: 0,
                                         left: 5,
                                         right: 0,
-                                        child: InteractiveImageViewer(
-                                          imagePath: post.firstImageUrl,
-                                          imagePath2: post.secondImageUrl,
-                                          disableScroll: disableScroll,
-                                          enableScroll: enableScroll,
-                                        ),
+                                          child: InteractiveImageViewer(
+                                            imagePath: post.firstImageUrl,
+                                            imagePath2: post.secondImageUrl,
+                                            disableScroll: disableScroll,
+                                            enableScroll: enableScroll,
+                                          ),
                                       ),
                                     Positioned(
                                       bottom: 40,
