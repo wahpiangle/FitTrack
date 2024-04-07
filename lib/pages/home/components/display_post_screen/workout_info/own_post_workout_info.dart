@@ -2,15 +2,14 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:group_project/constants/themes/app_colours.dart';
 import 'package:group_project/main.dart';
+import 'package:group_project/models/exercise_set.dart';
 import 'package:group_project/models/post.dart';
 import 'package:group_project/models/workout_session.dart';
 import 'package:group_project/pages/layout/user_profile_provider.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-import '../../../../../models/exercise_set.dart';
-
-class OwnPostWorkoutInfo extends StatelessWidget {
+class OwnPostWorkoutInfo extends StatefulWidget {
   final Post post;
   const OwnPostWorkoutInfo({
     super.key,
@@ -18,15 +17,21 @@ class OwnPostWorkoutInfo extends StatelessWidget {
   });
 
   @override
+  State<OwnPostWorkoutInfo> createState() => _OwnPostWorkoutInfoState();
+}
+
+class _OwnPostWorkoutInfoState extends State<OwnPostWorkoutInfo> {
+  @override
   Widget build(BuildContext context) {
     final WorkoutSession? workoutSession = objectBox.workoutSessionService
-        .getWorkoutSession(post.workoutSessionId);
+        .getWorkoutSession(widget.post.workoutSessionId);
     final UserProfileProvider userProfileProvider =
         context.watch<UserProfileProvider>();
     final bestSet = objectBox.exerciseService.getBestSet(workoutSession!);
-    final bestDurationSet = objectBox.exerciseService.getBestDurationSet(workoutSession!);
-    final bestRepsSet = objectBox.exerciseService.getBestSetRepsOnly(workoutSession!);
-
+    final bestDurationSet =
+        objectBox.exerciseService.getBestDurationSet(workoutSession);
+    final bestRepsSet =
+        objectBox.exerciseService.getBestSetRepsOnly(workoutSession);
 
     return Column(
       children: [
@@ -144,7 +149,6 @@ class OwnPostWorkoutInfo extends StatelessWidget {
                         fontSize: 12,
                       ),
                     ),
-
                     Text(
                       getCategoryText(bestSet, bestDurationSet, bestRepsSet),
                       style: const TextStyle(
@@ -152,7 +156,6 @@ class OwnPostWorkoutInfo extends StatelessWidget {
                         fontSize: 12,
                       ),
                     ),
-
                   ],
                 )
               ],
@@ -174,118 +177,130 @@ class OwnPostWorkoutInfo extends StatelessWidget {
                 ),
               ),
         const SizedBox(height: 10),
-        SingleChildScrollView(
-          child: ListView.builder(
-              shrinkWrap: true,
-              itemCount: workoutSession.exercisesSetsInfo.length,
-              itemBuilder: (context, index) {
-                final exercisesSetInfo =
-                    workoutSession.exercisesSetsInfo[index];
-                return Row(
-                  children: [
-                    SizedBox(
-                      height: 80,
-                      width: 80,
-                      child: ClipRRect(
-                          borderRadius: BorderRadius.circular(300.0),
-                          child:
-                              exercisesSetInfo.exercise.target?.imagePath == ''
-                                  ? const Icon(
-                                      Icons.fitness_center_sharp,
-                                      color: Colors.white,
-                                      size: 40,
-                                    )
-                                  : Image.asset(
-                                      exercisesSetInfo
-                                          .exercise.target!.halfImagePath,
-                                      fit: BoxFit.contain,
-                                    )),
-                    ),
-                    const SizedBox(width: 20),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 6.0),
-                            child: Text(
-                              exercisesSetInfo.exercise.target!.name,
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 16,
-                              ),
-                            ),
-                          ),
-                          ListView.builder(
-                            shrinkWrap: true,
-                            itemCount: exercisesSetInfo.exerciseSets.length,
-                            itemBuilder: (context, index) {
-                              final set = exercisesSetInfo.exerciseSets[index];
-                              String weightrepsText = getWeightRepsText(set);
-                              return Padding(
+        Expanded(
+          child: SingleChildScrollView(
+            child: ListView.builder(
+                physics: const NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                itemCount: workoutSession.exercisesSetsInfo.length,
+                itemBuilder: (context, index) {
+                  final exercisesSetInfo =
+                      workoutSession.exercisesSetsInfo[index];
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 5.0),
+                    child: Row(
+                      children: [
+                        SizedBox(
+                          height: 80,
+                          width: 80,
+                          child: ClipRRect(
+                              borderRadius: BorderRadius.circular(300.0),
+                              child:
+                                  exercisesSetInfo.exercise.target?.imagePath ==
+                                          ''
+                                      ? const Icon(
+                                          Icons.fitness_center_sharp,
+                                          color: Colors.white,
+                                          size: 40,
+                                        )
+                                      : Image.asset(
+                                          exercisesSetInfo
+                                              .exercise.target!.halfImagePath,
+                                          fit: BoxFit.contain,
+                                        )),
+                        ),
+                        const SizedBox(width: 20),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Padding(
                                 padding:
                                     const EdgeInsets.symmetric(vertical: 6.0),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Row(
+                                child: Text(
+                                  exercisesSetInfo.exercise.target!.name,
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ),
+                              ListView.builder(
+                                shrinkWrap: true,
+                                physics: const NeverScrollableScrollPhysics(),
+                                itemCount: exercisesSetInfo.exerciseSets.length,
+                                itemBuilder: (context, index) {
+                                  final set =
+                                      exercisesSetInfo.exerciseSets[index];
+                                  String weightrepsText =
+                                      getWeightRepsText(set);
+                                  return Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 6.0),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
                                       children: [
-                                        Padding(
-                                          padding:
-                                              const EdgeInsets.only(right: 20),
-                                          child: Text(
-                                            '${index + 1}',
-                                            style: const TextStyle(
-                                              color: Colors.grey,
-                                              fontSize: 14,
+                                        Row(
+                                          children: [
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  right: 20),
+                                              child: Text(
+                                                '${index + 1}',
+                                                style: const TextStyle(
+                                                  color: Colors.grey,
+                                                  fontSize: 14,
+                                                ),
+                                              ),
                                             ),
-                                          ),
+                                            Text(
+                                              weightrepsText,
+                                              style: const TextStyle(
+                                                color: Colors.grey,
+                                                fontSize: 14,
+                                              ),
+                                            ),
+                                          ],
                                         ),
-                                        Text(
-                                          weightrepsText, // Using the modified weightrepsText here
-                                          style: const TextStyle(
-                                            color: Colors.grey,
-                                            fontSize: 14,
-                                          ),
-                                        ),
+                                        set.isPersonalRecord
+                                            ? Container(
+                                                padding:
+                                                    const EdgeInsets.all(5),
+                                                decoration: const BoxDecoration(
+                                                  color: AppColours.secondary,
+                                                  borderRadius:
+                                                      BorderRadius.all(
+                                                    Radius.circular(30),
+                                                  ),
+                                                ),
+                                                child: Text(
+                                                  '🏆 PR',
+                                                  style: TextStyle(
+                                                    color: Colors.green[900],
+                                                    fontSize: 12,
+                                                  ),
+                                                ),
+                                              )
+                                            : const SizedBox(),
                                       ],
                                     ),
-                                    set.isPersonalRecord
-                                        ? Container(
-                                            padding: const EdgeInsets.all(5),
-                                            decoration: const BoxDecoration(
-                                              color: AppColours.secondary,
-                                              borderRadius: BorderRadius.all(
-                                                Radius.circular(30),
-                                              ),
-                                            ),
-                                            child: Text(
-                                              '🏆 PR',
-                                              style: TextStyle(
-                                                color: Colors.green[900],
-                                                fontSize: 12,
-                                              ),
-                                            ),
-                                          )
-                                        : const SizedBox(),
-                                  ],
-                                ),
-                              );
-                            },
-                          )
-                        ],
-                      ),
+                                  );
+                                },
+                              )
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
-                );
-              }),
+                  );
+                }),
+          ),
         ),
       ],
     );
   }
 }
-
 
 enum ExerciseCategory {
   AssistedBodyweight,
@@ -307,7 +322,8 @@ String getTimeString(String timeString) {
 }
 
 String getWeightRepsText(ExerciseSet bestSet) {
-  final category = bestSet.exerciseSetInfo.target?.exercise.target?.category.target?.name;
+  final category =
+      bestSet.exerciseSetInfo.target?.exercise.target?.category.target?.name;
   final weight = bestSet.weight;
   final reps = bestSet.reps;
   final timeString = bestSet.time.toString();
@@ -326,8 +342,6 @@ String getWeightRepsText(ExerciseSet bestSet) {
   }
 }
 
-
-
 String formatDuration(int totalSeconds) {
   final duration = Duration(seconds: totalSeconds);
   final hours = duration.inHours;
@@ -345,11 +359,14 @@ String formatDuration(int totalSeconds) {
   return secondsString;
 }
 
-
-String getExerciseName(ExerciseSet bestSet, ExerciseSet bestDurationSet, ExerciseSet bestRepsSet) {
-  final category = bestSet.exerciseSetInfo.target?.exercise.target?.category.target?.name;
-  final categoryrepsonly = bestDurationSet.exerciseSetInfo.target?.exercise.target?.category.target?.name;
-  final categoryduration = bestRepsSet.exerciseSetInfo.target?.exercise.target?.category.target?.name;
+String getExerciseName(
+    ExerciseSet bestSet, ExerciseSet bestDurationSet, ExerciseSet bestRepsSet) {
+  final category =
+      bestSet.exerciseSetInfo.target?.exercise.target?.category.target?.name;
+  final categoryrepsonly = bestDurationSet
+      .exerciseSetInfo.target?.exercise.target?.category.target?.name;
+  final categoryduration = bestRepsSet
+      .exerciseSetInfo.target?.exercise.target?.category.target?.name;
 
   if (category == 'Assisted Bodyweight' ||
       category == 'Weighted Bodyweight' ||
@@ -369,11 +386,14 @@ String getExerciseName(ExerciseSet bestSet, ExerciseSet bestDurationSet, Exercis
   }
 }
 
-
-String getCategoryText(ExerciseSet bestSet, ExerciseSet bestDurationSet, ExerciseSet bestRepsSet) {
-  final category = bestSet.exerciseSetInfo.target?.exercise.target?.category.target?.name;
-  final categoryrepsonly = bestDurationSet.exerciseSetInfo.target?.exercise.target?.category.target?.name;
-  final categoryduration = bestRepsSet.exerciseSetInfo.target?.exercise.target?.category.target?.name;
+String getCategoryText(
+    ExerciseSet bestSet, ExerciseSet bestDurationSet, ExerciseSet bestRepsSet) {
+  final category =
+      bestSet.exerciseSetInfo.target?.exercise.target?.category.target?.name;
+  final categoryrepsonly = bestDurationSet
+      .exerciseSetInfo.target?.exercise.target?.category.target?.name;
+  final categoryduration = bestRepsSet
+      .exerciseSetInfo.target?.exercise.target?.category.target?.name;
 
   if (category == 'Assisted Bodyweight' ||
       category == 'Weighted Bodyweight' ||
