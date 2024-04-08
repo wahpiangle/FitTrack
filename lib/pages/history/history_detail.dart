@@ -9,16 +9,15 @@ class HistoryDetail extends StatefulWidget {
   final WorkoutSession workoutSession;
 
   const HistoryDetail({
-    Key? key,
+    super.key,
     required this.workoutSession,
-  }) : super(key: key);
+  });
 
   @override
   HistoryDetailState createState() => HistoryDetailState();
 }
 
 class HistoryDetailState extends State<HistoryDetail> {
-  bool _isVisible = false;
   bool _isScrollDisabled = false;
 
   @override
@@ -27,7 +26,6 @@ class HistoryDetailState extends State<HistoryDetail> {
     // Add a delay to start the animation after a short delay
     Future.delayed(const Duration(milliseconds: 500), () {
       setState(() {
-        _isVisible = true;
       });
     });
   }
@@ -236,10 +234,29 @@ class HistoryDetailState extends State<HistoryDetail> {
                     .toList(),
               ),
               const SizedBox(height: 50),
-              PostDisplay(
-                postId: widget.workoutSession.postId,
-                isVisible: _isVisible,
+              ElevatedButton(
+                onPressed: () {
+                  // Navigate to the PostDisplay page
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => PostDisplay(
+                        postId: widget.workoutSession.postId,
+                        postDate: widget.workoutSession.date,
+                      ),
+                    ),
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFFE1F0CF), // Set background color
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30), // Set border radius
+                  ),
+                ),
+                child: const Text('View Memories'),
               ),
+
+
             ],
           ),
         ),
