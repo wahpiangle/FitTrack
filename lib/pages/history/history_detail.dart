@@ -250,10 +250,11 @@ class HistoryDetailState extends State<HistoryDetail> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFFE1F0CF), // Set background color
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30), // Set border radius
+                    borderRadius: BorderRadius.circular(10), // Set border radius
                   ),
                 ),
-                child: const Text('View Memories'),
+                child: const Text('View Memories'
+                ),
               ),
 
 
