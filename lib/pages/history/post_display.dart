@@ -66,9 +66,9 @@ class _PostDisplay extends State<PostDisplay> {
         ),
         title: Column(
           children: [
-            Text(
+            const Text(
               'Your memories',
-              style: const TextStyle(
+              style: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
                 fontSize: 16,

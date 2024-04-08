@@ -25,8 +25,7 @@ class HistoryDetailState extends State<HistoryDetail> {
     super.initState();
     // Add a delay to start the animation after a short delay
     Future.delayed(const Duration(milliseconds: 500), () {
-      setState(() {
-      });
+      setState(() {});
     });
   }
 
@@ -79,21 +78,59 @@ class HistoryDetailState extends State<HistoryDetail> {
       body: Container(
         padding: const EdgeInsets.symmetric(horizontal: 10),
         child: SingleChildScrollView(
-          physics: _isScrollDisabled
-              ? const NeverScrollableScrollPhysics()
-              : null,
+          physics:
+          _isScrollDisabled ? const NeverScrollableScrollPhysics() : null,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 10),
-                child: Text(
-                  widget.workoutSession.title,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 30,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    widget.workoutSession.title,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 30,
+                    ),
                   ),
-                ),
+                  ElevatedButton(
+                    onPressed: () {
+                      // Navigate to the PostDisplay page
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => PostDisplay(
+                            postId: widget.workoutSession.postId,
+                            postDate: widget.workoutSession.date,
+                          ),
+                        ),
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFFE1F0CF),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                    ),
+                    child: const Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          Icons.photo,
+                          color: Colors.black,
+                        ),
+                        Text(
+                          'View Memories',
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 12,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
               Text(
                 DateFormat('EEEE, dd MMMM yyyy, kk:mm a').format(
@@ -145,8 +182,7 @@ class HistoryDetailState extends State<HistoryDetail> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Padding(
-                        padding:
-                        const EdgeInsets.symmetric(vertical: 6.0),
+                        padding: const EdgeInsets.symmetric(vertical: 6.0),
                         child: Text(
                           exercisesSetInfo.exercise.target?.name ?? '',
                           style: const TextStyle(
@@ -169,8 +205,7 @@ class HistoryDetailState extends State<HistoryDetail> {
                               MainAxisAlignment.start,
                               children: [
                                 Padding(
-                                  padding:
-                                  const EdgeInsets.only(right: 20),
+                                  padding: const EdgeInsets.only(right: 20),
                                   child: Text(
                                     (setInfo.key + 1).toString(),
                                     style: TextStyle(
@@ -197,23 +232,17 @@ class HistoryDetailState extends State<HistoryDetail> {
                                       ),
                                       setInfo.value.isPersonalRecord
                                           ? Container(
-                                        padding:
-                                        const EdgeInsets.all(
-                                            5),
-                                        decoration:
-                                        const BoxDecoration(
-                                          color: AppColours
-                                              .secondary,
-                                          borderRadius:
-                                          BorderRadius.all(
+                                        padding: const EdgeInsets.all(5),
+                                        decoration: const BoxDecoration(
+                                          color: AppColours.secondary,
+                                          borderRadius: BorderRadius.all(
                                             Radius.circular(30),
                                           ),
                                         ),
                                         child: Text(
                                           '🏆 PR',
                                           style: TextStyle(
-                                            color:
-                                            Colors.green[900],
+                                            color: Colors.green[900],
                                             fontSize: 12,
                                           ),
                                         ),
@@ -234,30 +263,6 @@ class HistoryDetailState extends State<HistoryDetail> {
                     .toList(),
               ),
               const SizedBox(height: 50),
-              ElevatedButton(
-                onPressed: () {
-                  // Navigate to the PostDisplay page
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => PostDisplay(
-                        postId: widget.workoutSession.postId,
-                        postDate: widget.workoutSession.date,
-                      ),
-                    ),
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFFE1F0CF), // Set background color
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10), // Set border radius
-                  ),
-                ),
-                child: const Text('View Memories'
-                ),
-              ),
-
-
             ],
           ),
         ),
