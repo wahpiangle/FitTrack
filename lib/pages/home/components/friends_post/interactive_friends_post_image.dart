@@ -22,7 +22,6 @@ class InteractiveFriendsPostImage extends StatefulWidget {
 class _InteractiveFriendsPostImageState
     extends State<InteractiveFriendsPostImage> {
   bool displayHoldInstruction = false;
-  bool _isScrollDisabled = false;
 
   void showHoldInstruction() {
     setState(() {
@@ -36,15 +35,14 @@ class _InteractiveFriendsPostImageState
   }
   void disableScroll() {
     setState(() {
-      _isScrollDisabled = true;
     });
   }
 
   void enableScroll() {
     setState(() {
-      _isScrollDisabled = false;
     });
   }
+
 
   @override
   Widget build(BuildContext context) {

@@ -88,13 +88,12 @@ class _InteractiveImageViewerState extends State<InteractiveImageViewer> {
           top: yOffset,
           child: GestureDetector(
             onTap: () {
-              print("tap");
               HapticFeedback.vibrate();
               setState(() {
                 displaySecondImage = !displaySecondImage;
               });
             },
-            onTapDown: (details) {
+            onTapDown: (details) { // targettwo
               if (widget.disableScroll != null) {
                 widget.disableScroll!();
               }

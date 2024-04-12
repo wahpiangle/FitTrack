@@ -41,12 +41,12 @@ class _WorkoutPostedPageState extends State<WorkoutPostedPage> {
   Widget build(BuildContext context) {
     final UploadImageProvider uploadImageProvider =
         context.watch<UploadImageProvider>();
-
-    return GestureDetector(
-      onTap: () {
-        FocusScope.of(context).requestFocus(FocusNode());
-      },
-      child: SingleChildScrollView(
+    //target
+    return SingleChildScrollView(
+      child: GestureDetector(
+        onTap: () {
+          FocusScope.of(context).requestFocus(FocusNode());
+        },
         child: Container(
           margin: const EdgeInsets.all(10),
           child: Column(
@@ -125,8 +125,8 @@ class _WorkoutPostedPageState extends State<WorkoutPostedPage> {
             ],
           ),
         ),
+      
       ),
-
     );
   }
 }

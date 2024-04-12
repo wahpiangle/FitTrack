@@ -56,7 +56,7 @@ class _FriendPostState extends State<FriendPost> {
   @override
   Widget build(BuildContext context) {
     if (widget.friendPostDataList.isEmpty) {
-      return SizedBox.shrink();
+      return const SizedBox.shrink();
     } else {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
