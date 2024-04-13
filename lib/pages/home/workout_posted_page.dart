@@ -133,7 +133,10 @@ class _WorkoutPostedPageState extends State<WorkoutPostedPage> {
                     );
                 },
               ),
-              const FriendsPostList(),
+               FriendsPostList(
+                disableScroll: disableScroll,
+                enableScroll: enableScroll,
+              ),
             ],
           ),
         ),
