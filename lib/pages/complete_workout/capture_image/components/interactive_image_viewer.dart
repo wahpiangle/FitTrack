@@ -96,7 +96,6 @@ class _InteractiveImageViewerState extends State<InteractiveImageViewer> {
             onTapDown: (details) { // targettwo
               if (widget.disableScroll != null) {
                 widget.disableScroll!();
-                print("tap small image");
               }
             },
             onTapUp: (details) {

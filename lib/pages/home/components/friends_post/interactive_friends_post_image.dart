@@ -9,12 +9,16 @@ class InteractiveFriendsPostImage extends StatefulWidget {
   final FirebaseUserPost friendPostData;
   final void Function() toggleState;
   final bool isTappingSmallImage;
+  final Function? disableScroll;
+  final Function? enableScroll;
 
   const InteractiveFriendsPostImage({
     super.key,
     required this.friendPostData,
     required this.toggleState,
     required this.isTappingSmallImage,
+    this.disableScroll,
+    this.enableScroll,
   });
 
   @override
@@ -36,16 +40,6 @@ class _InteractiveFriendsPostImageState
       });
     });
   }
-  void disableScroll() {
-    setState(() {
-    });
-  }
-
-  void enableScroll() {
-    setState(() {
-    });
-  }
-
 
   @override
   Widget build(BuildContext context) {
@@ -54,8 +48,8 @@ class _InteractiveFriendsPostImageState
         InteractiveImageViewer(
           imagePath: widget.friendPostData.post.firstImageUrl,
           imagePath2: widget.friendPostData.post.secondImageUrl,
-          disableScroll: disableScroll,
-          enableScroll: enableScroll,
+          disableScroll: widget.disableScroll,
+          enableScroll: widget.enableScroll,
         ),
         displayHoldInstruction
             ? Positioned.fill(
