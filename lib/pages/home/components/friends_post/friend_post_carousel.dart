@@ -24,9 +24,24 @@ class FriendPostCarousel extends StatefulWidget {
 }
 
 class _FriendPostCarouselState extends State<FriendPostCarousel> {
+bool _isHorizontalScrollDisabled = false;
+
+  void disableHorizontalScroll() {
+    setState(() {
+      _isHorizontalScrollDisabled = true;
+    });
+  }
+
+  void enableHorizontalScroll() {
+    setState(() {
+      _isHorizontalScrollDisabled = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return PageView.builder(
+      physics: _isHorizontalScrollDisabled ? const NeverScrollableScrollPhysics() : null,
       itemCount: widget.friendPostDataList.length,
       scrollDirection: Axis.horizontal,
       controller: widget.controller,
@@ -41,6 +56,7 @@ class _FriendPostCarouselState extends State<FriendPostCarousel> {
           isTappingSmallImage: false,
           enableScroll: widget.enableScroll,
           disableScroll: widget.disableScroll,
+
         );
       },
     );
