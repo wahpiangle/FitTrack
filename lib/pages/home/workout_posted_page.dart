@@ -54,6 +54,7 @@ class _WorkoutPostedPageState extends State<WorkoutPostedPage> {
         context.watch<UploadImageProvider>();
     //target
     return SingleChildScrollView(
+      physics: _isScrollDisabled ? const NeverScrollableScrollPhysics() : null,
       child: GestureDetector(
         onTap: () {
           FocusScope.of(context).requestFocus(FocusNode());
