@@ -8,10 +8,13 @@ import 'package:group_project/pages/home/components/reaction/reaction_images.dar
 class InteractiveFriendsPostImage extends StatefulWidget {
   final FirebaseUserPost friendPostData;
   final void Function() toggleState;
+  final bool isTappingSmallImage;
+
   const InteractiveFriendsPostImage({
     super.key,
     required this.friendPostData,
     required this.toggleState,
+    required this.isTappingSmallImage,
   });
 
   @override
@@ -56,27 +59,27 @@ class _InteractiveFriendsPostImageState
         ),
         displayHoldInstruction
             ? Positioned.fill(
-                child: Opacity(
-                  opacity: 0.5,
-                  child: Container(
-                    color: const Color(0xFF000000),
-                  ),
-                ),
-              )
+          child: Opacity(
+            opacity: 0.5,
+            child: Container(
+              color: const Color(0xFF000000),
+            ),
+          ),
+        )
             : const SizedBox(),
         displayHoldInstruction
             ? const Positioned.fill(
-                child: Center(
-                  child: Text(
-                    'Hold the emoji button to react',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              )
+          child: Center(
+            child: Text(
+              'Hold the emoji button to react',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        )
             : const SizedBox(),
         Positioned(
           bottom: 10,
@@ -93,12 +96,12 @@ class _InteractiveFriendsPostImageState
         ),
         widget.friendPostData.reactions.isNotEmpty
             ? Positioned(
-                bottom: 10,
-                left: 10,
-                child: ReactionImages(
-                  postReactions: widget.friendPostData.reactions
-                ),
-              )
+          bottom: 10,
+          left: 10,
+          child: ReactionImages(
+            postReactions: widget.friendPostData.reactions,
+          ),
+        )
             : const SizedBox.shrink(),
       ],
     );

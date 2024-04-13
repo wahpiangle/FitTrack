@@ -34,6 +34,7 @@ class _FriendPostCarouselState extends State<FriendPostCarousel> {
         return InteractiveFriendsPostImage(
           friendPostData: friendPostData,
           toggleState: widget.toggleState,
+          isTappingSmallImage: false,
         );
       },
     );
