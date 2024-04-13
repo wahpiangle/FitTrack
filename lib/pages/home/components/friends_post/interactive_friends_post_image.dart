@@ -11,6 +11,8 @@ class InteractiveFriendsPostImage extends StatefulWidget {
   final bool isTappingSmallImage;
   final Function? disableScroll;
   final Function? enableScroll;
+  final Function? disableHorizontalScroll;
+  final Function? enableHorizontalScroll;
 
   const InteractiveFriendsPostImage({
     super.key,
@@ -19,6 +21,8 @@ class InteractiveFriendsPostImage extends StatefulWidget {
     required this.isTappingSmallImage,
     this.disableScroll,
     this.enableScroll,
+    this.disableHorizontalScroll,
+    this.enableHorizontalScroll,
   });
 
   @override
@@ -50,6 +54,8 @@ class _InteractiveFriendsPostImageState
           imagePath2: widget.friendPostData.post.secondImageUrl,
           disableScroll: widget.disableScroll,
           enableScroll: widget.enableScroll,
+          disableHorizontalScroll: widget.disableHorizontalScroll,
+          enableHorizontalScroll: widget.enableHorizontalScroll,
         ),
         displayHoldInstruction
             ? Positioned.fill(

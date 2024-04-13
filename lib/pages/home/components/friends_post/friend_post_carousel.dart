@@ -56,7 +56,8 @@ bool _isHorizontalScrollDisabled = false;
           isTappingSmallImage: false,
           enableScroll: widget.enableScroll,
           disableScroll: widget.disableScroll,
-
+          disableHorizontalScroll: disableHorizontalScroll,
+          enableHorizontalScroll: enableHorizontalScroll,
         );
       },
     );

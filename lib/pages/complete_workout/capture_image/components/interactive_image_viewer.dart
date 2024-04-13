@@ -10,6 +10,8 @@ class InteractiveImageViewer extends StatefulWidget {
   final String imagePath2;
   final Function? disableScroll;
   final Function? enableScroll;
+  final Function? disableHorizontalScroll;
+  final Function? enableHorizontalScroll;
   const InteractiveImageViewer({
     super.key,
     this.toggleRetake,
@@ -17,6 +19,8 @@ class InteractiveImageViewer extends StatefulWidget {
     required this.imagePath2,
     this.disableScroll,
     this.enableScroll,
+    this.disableHorizontalScroll,
+    this.enableHorizontalScroll,
   });
 
   @override
@@ -96,14 +100,16 @@ class _InteractiveImageViewerState extends State<InteractiveImageViewer> {
             onTapDown: (details) { // targettwo
               if (widget.disableScroll != null) {
                 widget.disableScroll!();
+                widget.disableHorizontalScroll!();
               }
             },
             onTapUp: (details) {
-              print("let go");
+              widget.enableHorizontalScroll!();
             },
             onPanUpdate: (details) {
               if (widget.disableScroll != null) {
                 widget.disableScroll!();
+
               }
               setState(() {
                 xOffset += details.delta.dx * 1;
