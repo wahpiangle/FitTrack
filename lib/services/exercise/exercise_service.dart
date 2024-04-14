@@ -260,4 +260,25 @@ class ExerciseService {
     }
     return null;
   }
+
+  List<Exercise> getRecentExercises(int count) {
+    final recentSessions = workoutSessionBox.query()
+        .order(WorkoutSession_.date, flags: Order.descending)
+        .build()
+        .find();
+
+    final recentExercises = <Exercise>{};
+
+    for (var session in recentSessions) {
+      for (var setInfo in session.exercisesSetsInfo) {
+        if (recentExercises.length < count) {
+          recentExercises.add(setInfo.exercise.target!);
+        }
+      }
+      if (recentExercises.length >= count) break;
+    }
+
+    return recentExercises.toList();
+  }
+
 }
