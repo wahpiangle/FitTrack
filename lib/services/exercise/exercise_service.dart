@@ -268,17 +268,22 @@ class ExerciseService {
         .find();
 
     final recentExercises = <Exercise>{};
+    final exerciseIds = <int>{};
 
     for (var session in recentSessions) {
       for (var setInfo in session.exercisesSetsInfo) {
-        if (recentExercises.length < count) {
-          recentExercises.add(setInfo.exercise.target!);
+        final exercise = setInfo.exercise.target!;
+        if (!exerciseIds.contains(exercise.id)) {
+          recentExercises.add(exercise);
+          exerciseIds.add(exercise.id);
         }
+        if (recentExercises.length >= count) break;
       }
       if (recentExercises.length >= count) break;
     }
 
     return recentExercises.toList();
   }
+
 
 }

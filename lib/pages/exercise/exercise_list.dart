@@ -24,7 +24,7 @@ class ExerciseListScreenState extends State<ExerciseListScreen> {
   String selectedBodyPart = '';
   Map<String, List<Exercise>> exerciseGroups = {};
   Stream<List<Exercise>> streamExercises =
-      objectBox.exerciseService.watchAllExercise();
+  objectBox.exerciseService.watchAllExercise();
   final categories = objectBox.exerciseService.getCategories();
   List<Exercise> recentExercises = [];
 
@@ -89,7 +89,7 @@ class ExerciseListScreenState extends State<ExerciseListScreen> {
 
   void _handleTimerActive(BuildContext context) {
     TimerProvider? timerProvider =
-        Provider.of<TimerProvider>(context, listen: false);
+    Provider.of<TimerProvider>(context, listen: false);
 
     void handleTimerStateChanged() {
       if (timerProvider.isTimerRunning &&
@@ -112,6 +112,7 @@ class ExerciseListScreenState extends State<ExerciseListScreen> {
 
     timerProvider.addListener(listener);
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -132,6 +133,7 @@ class ExerciseListScreenState extends State<ExerciseListScreen> {
             return (selectedBodyPart.isEmpty || exerciseBodyPart == selectedBodyPart) &&
                 (selectedCategory.isEmpty || selectedCategory.contains(exerciseCategory));
           }).toList();
+          final groupedExercise = groupExercises(filteredExercises);
 
           return SingleChildScrollView(
             child: Container(
@@ -148,8 +150,8 @@ class ExerciseListScreenState extends State<ExerciseListScreen> {
                       addSelectedCategory: addSelectedCategory,
                       removeSelectedCategory: removeSelectedCategory,
                     ),
-                    _buildExerciseSection("Recent Exercises", recentExercises),
-                    _buildExerciseSection("All Exercises", filteredExercises),
+                    _buildExerciseSection("Recent Exercises", recentExercises, false),
+                    _buildExerciseSection(" ", groupedExercise.values.expand((x) => x).toList(), true),
                   ],
                 ),
               ),
@@ -160,8 +162,8 @@ class ExerciseListScreenState extends State<ExerciseListScreen> {
     );
   }
 
-  Widget _buildExerciseSection(String title, List<Exercise> exercises) {
-    if (exercises.isEmpty || recentExercises.isEmpty) return SizedBox.shrink();
+  Widget _buildExerciseSection(String title, List<Exercise> exercises, bool showFilters) {
+    if (exercises.isEmpty) return const SizedBox.shrink();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -170,37 +172,39 @@ class ExerciseListScreenState extends State<ExerciseListScreen> {
           padding: const EdgeInsets.symmetric(vertical: 8),
           child: Text(
             title,
-            style: TextStyle(
+            style: const TextStyle(
               color: Colors.white,
               fontSize: 18,
               fontWeight: FontWeight.bold,
             ),
           ),
         ),
-        Wrap(
-          spacing: 10,
-          runSpacing: 10,
-          children: [
-            for (final category in selectedCategory)
-              FilterLabel(
-                text: category,
-                isFilterSelected: true,
-                onTap: () => removeSelectedCategory(category),
-              ),
-            if (selectedBodyPart.isEmpty && selectedCategory.isEmpty)
-              FilterLabel(
-                text: 'All',
-                isFilterSelected: false,
-                onTap: () {
-                  setSelectedBodyPart('');
-                  selectedCategory.clear();
-                },
-              ),
-          ],
-        ),
+        if (showFilters) ...[
+          Wrap(
+            spacing: 10,
+            runSpacing: 10,
+            children: [
+              for (final category in selectedCategory)
+                FilterLabel(
+                  text: category,
+                  isFilterSelected: true,
+                  onTap: () => removeSelectedCategory(category),
+                ),
+              if (selectedBodyPart.isEmpty && selectedCategory.isEmpty)
+                FilterLabel(
+                  text: 'All',
+                  isFilterSelected: false,
+                  onTap: () {
+                    setSelectedBodyPart('');
+                    selectedCategory.clear();
+                  },
+                ),
+            ],
+          ),
+        ],
         ListView.builder(
           shrinkWrap: true,
-          physics: NeverScrollableScrollPhysics(), // to disable scrolling within the ListView
+          physics: const NeverScrollableScrollPhysics(),
           itemCount: exercises.length,
           itemBuilder: (context, index) {
             final exercise = exercises[index];
@@ -214,27 +218,21 @@ class ExerciseListScreenState extends State<ExerciseListScreen> {
               },
               confirmDismiss: (direction) async {
                 if (!exercise.isCustom) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text("${exercise.name} can't be hidden"),
-                      duration: const Duration(seconds: 2),
-                    ),
-                  );
                   return false;
                 }
                 return await showDialog<bool>(
                   context: context,
                   builder: (BuildContext context) {
                     return AlertDialog(
-                      title: Text("Hide ${exercise.name}", style: TextStyle(color: Colors.white)),
-                      content: Text("This exercise will no longer be visible in the list. Are you sure?"),
+                      title: Text("Hide ${exercise.name}", style: const TextStyle(color: Colors.white)),
+                      content: const Text("This exercise will no longer be visible in the list. Are you sure?"),
                       actions: <Widget>[
                         TextButton(
-                          child: Text('Cancel', style: TextStyle(color: Colors.white)),
+                          child: const Text('Cancel', style: TextStyle(color: Colors.white)),
                           onPressed: () => Navigator.of(context).pop(false),
                         ),
                         TextButton(
-                          child: Text('Hide', style: TextStyle(color: Colors.red)),
+                          child: const Text('Hide', style: TextStyle(color: Colors.red)),
                           onPressed: () => Navigator.of(context).pop(true),
                         ),
                       ],
@@ -244,9 +242,9 @@ class ExerciseListScreenState extends State<ExerciseListScreen> {
               },
               background: Container(
                 color: Colors.red,
-                padding: EdgeInsets.only(right: 20.0),
+                padding: const EdgeInsets.only(right: 20.0),
                 alignment: Alignment.centerRight,
-                child: Text('Hide', style: TextStyle(color: Colors.white, fontSize: 16.0)),
+                child: const Text('Hide', style: TextStyle(color: Colors.white, fontSize: 16.0)),
               ),
               child: ExerciseListItem(
                 exercise: exercise,

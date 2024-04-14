@@ -38,6 +38,7 @@ class ExerciseListItem extends StatelessWidget {
                 );
               },
               child: ListTile(
+                contentPadding: EdgeInsets.zero,
                 leading: SizedBox(
                   height: 80,
                   width: 60,
