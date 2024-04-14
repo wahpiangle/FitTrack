@@ -97,19 +97,16 @@ class _InteractiveImageViewerState extends State<InteractiveImageViewer> {
                 displaySecondImage = !displaySecondImage;
               });
             },
-            onTapDown: (details) { // targettwo
+            onTapDown: (details) {
               if (widget.disableScroll != null) {
                 widget.disableScroll!();
                 widget.disableHorizontalScroll!();
               }
             },
-            onTapUp: (details) {
-              widget.enableHorizontalScroll!();
-            },
+
             onPanUpdate: (details) {
               if (widget.disableScroll != null) {
                 widget.disableScroll!();
-
               }
               setState(() {
                 xOffset += details.delta.dx * 1;
@@ -124,6 +121,7 @@ class _InteractiveImageViewerState extends State<InteractiveImageViewer> {
             onPanEnd: (details) {
               if (widget.enableScroll != null) {
                 widget.enableScroll!();
+                widget.enableHorizontalScroll!();
               }
               if (xOffset > MediaQuery.of(context).size.width * 0.62 / 2) {
                 setState(() {
