@@ -261,7 +261,7 @@ class ExerciseService {
     return null;
   }
 
-  List<Exercise> getRecentExercises(int count) {
+  List<Exercise> getRecentExercises(int count, {String? category, String? bodyPart}) {
     final recentSessions = workoutSessionBox.query()
         .order(WorkoutSession_.date, flags: Order.descending)
         .build()
@@ -273,7 +273,9 @@ class ExerciseService {
     for (var session in recentSessions) {
       for (var setInfo in session.exercisesSetsInfo) {
         final exercise = setInfo.exercise.target!;
-        if (!exerciseIds.contains(exercise.id)) {
+        if (!exerciseIds.contains(exercise.id) &&
+            (category == null || exercise.category.target?.name == category) &&
+            (bodyPart == null || exercise.bodyPart.target?.name == bodyPart)) {
           recentExercises.add(exercise);
           exerciseIds.add(exercise.id);
         }
@@ -284,6 +286,7 @@ class ExerciseService {
 
     return recentExercises.toList();
   }
+
 
 
 }

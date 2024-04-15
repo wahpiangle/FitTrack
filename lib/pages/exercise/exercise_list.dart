@@ -54,24 +54,30 @@ class ExerciseListScreenState extends State<ExerciseListScreen> {
   void filterExercises(String query) {
     setState(() {
       searchText = query;
+      recentExercises = objectBox.exerciseService.getRecentExercises(10,
+          category: selectedCategory.isEmpty ? null : selectedCategory.join(", "),
+          bodyPart: selectedBodyPart.isEmpty ? null : selectedBodyPart);
     });
   }
 
   void setSelectedBodyPart(String bodyPart) {
     setState(() {
       selectedBodyPart = bodyPart;
+      filterExercises(searchText);
     });
   }
 
   void addSelectedCategory(String category) {
     setState(() {
       selectedCategory.add(category);
+      filterExercises(searchText);
     });
   }
 
   void removeSelectedCategory(String category) {
     setState(() {
       selectedCategory.remove(category);
+      filterExercises(searchText);
     });
   }
 
@@ -124,21 +130,14 @@ class ExerciseListScreenState extends State<ExerciseListScreen> {
             return Container(
               color: const Color(0xFF1A1A1A),
               height: double.infinity,
-              child: const Center(
-                child: CircularProgressIndicator(),
-              ),
+              child: const Center(child: CircularProgressIndicator()),
             );
           }
           final filteredData = snapshot.data!.where((exercise) {
             final exerciseBodyPart = exercise.bodyPart.target?.name ?? '';
             final exerciseCategory = exercise.category.target?.name ?? '';
-
-            final isBodyPartMatch = selectedBodyPart.isEmpty ||
-                exerciseBodyPart == selectedBodyPart;
-            final isCategoryMatch = selectedCategory.isEmpty ||
-                selectedCategory.contains(exerciseCategory);
-
-            return isBodyPartMatch && isCategoryMatch;
+            return (selectedBodyPart.isEmpty || exerciseBodyPart == selectedBodyPart) &&
+                (selectedCategory.isEmpty || selectedCategory.contains(exerciseCategory));
           }).toList();
 
           final groupedExercise = groupExercises(filteredData);
@@ -221,7 +220,7 @@ class ExerciseListScreenState extends State<ExerciseListScreen> {
                         ),
                         ListView.builder(
                           shrinkWrap: true,
-                          physics: NeverScrollableScrollPhysics(),
+                          physics: const NeverScrollableScrollPhysics(),
                           itemCount: recentExercises.length,
                           itemBuilder: (context, index) {
                             final exercise = recentExercises[index];
@@ -236,7 +235,7 @@ class ExerciseListScreenState extends State<ExerciseListScreen> {
                         ),
                         ListView.builder(
                           shrinkWrap: true,
-                          physics: NeverScrollableScrollPhysics(),
+                          physics: const NeverScrollableScrollPhysics(),
                           itemCount: groupedExercise.length,
                           itemBuilder: (context, index) {
                             final exercises = groupedExercise.values.elementAt(
