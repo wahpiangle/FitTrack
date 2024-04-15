@@ -24,7 +24,6 @@ class WorkoutPostedPage extends StatefulWidget {
 
 class _WorkoutPostedPageState extends State<WorkoutPostedPage> {
   int _current = 0;
-  // bool _isScrollDisabled = false;
 
   @override
   void initState() {
@@ -38,17 +37,7 @@ class _WorkoutPostedPageState extends State<WorkoutPostedPage> {
     });
   }
 
-  // void disableScroll() {
-  //     setState(() {
-  //       _isScrollDisabled = true;
-  //     });
-  // }
-  //
-  // void enableScroll() {
-  //   setState(() {
-  //     _isScrollDisabled = false;
-  //   });
-  // }
+
   @override
   Widget build(BuildContext context) {
     final UploadImageProvider uploadImageProvider =

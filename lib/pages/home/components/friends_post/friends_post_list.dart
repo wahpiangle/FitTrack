@@ -5,12 +5,8 @@ import 'package:group_project/pages/home/components/friends_post/friend_post.dar
 import 'package:group_project/services/firebase/firebase_friends_post.dart';
 
 class FriendsPostList extends StatefulWidget {
-  // final Function? disableScroll;
-  // final Function? enableScroll;
    const FriendsPostList({
     super.key,
-    // this.disableScroll,
-    // this.enableScroll
   });
 
 
@@ -62,8 +58,6 @@ class _FriendsPostCarouselState extends State<FriendsPostList> {
                       friendPostData: friendPostData,
                       friendPostDataList: friendPostDataList,
                       toggleState: toggleState,
-                      // enableScroll: widget.enableScroll,
-                      // disableScroll: widget.disableScroll,
                     );
                   },
                 );

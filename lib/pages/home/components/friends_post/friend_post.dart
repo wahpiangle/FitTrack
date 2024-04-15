@@ -12,16 +12,12 @@ class FriendPost extends StatefulWidget {
   final FirebaseUserPost friendPostData;
   final List<FirebaseUserPost> friendPostDataList;
   final void Function() toggleState;
-  // final Function? disableScroll;
-  // final Function? enableScroll;
   const FriendPost({
     super.key,
     required this.friend,
     required this.friendPostData,
     required this.friendPostDataList,
     required this.toggleState,
-    // this.disableScroll,
-    // this.enableScroll,
   });
 
   @override
@@ -139,8 +135,6 @@ class _FriendPostState extends State<FriendPost> {
               toggleState: widget.toggleState,
               onPageChanged: _onPageChanged,
               controller: _pageController,
-              // enableScroll: widget.enableScroll,
-              // disableScroll: widget.disableScroll,
             ),
           ),
           const SizedBox(height: 10),
