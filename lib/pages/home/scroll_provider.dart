@@ -5,6 +5,7 @@ class ScrollProvider extends ChangeNotifier {
   bool _isHorizontalScrollDisabled = false;
 
   bool get isScrollDisabled => _isScrollDisabled;
+
   bool get isHorizontalScrollDisabled => _isHorizontalScrollDisabled;
 
   void disableScroll() {
@@ -18,11 +19,12 @@ class ScrollProvider extends ChangeNotifier {
   }
 
   void disableHorizontalScroll() {
-      _isHorizontalScrollDisabled = true;
-      notifyListeners();
+    _isHorizontalScrollDisabled = true;
+    notifyListeners();
   }
 
   void enableHorizontalScroll() {
-      _isHorizontalScrollDisabled = false;
-      notifyListeners();
+    _isHorizontalScrollDisabled = false;
+    notifyListeners();
+  }
 }

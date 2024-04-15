@@ -48,8 +48,6 @@ class _InteractiveFriendsPostImageState
         InteractiveImageViewer(
           imagePath: widget.friendPostData.post.firstImageUrl,
           imagePath2: widget.friendPostData.post.secondImageUrl,
-          disableHorizontalScroll: widget.disableHorizontalScroll,
-          enableHorizontalScroll: widget.enableHorizontalScroll,
         ),
         displayHoldInstruction
             ? Positioned.fill(

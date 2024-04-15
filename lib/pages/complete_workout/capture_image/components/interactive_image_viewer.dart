@@ -12,8 +12,6 @@ class InteractiveImageViewer extends StatefulWidget {
   final String imagePath2;
   final Function? disableScroll;
   final Function? enableScroll;
-  final Function? disableHorizontalScroll;
-  final Function? enableHorizontalScroll;
   const InteractiveImageViewer({
     super.key,
     this.toggleRetake,
@@ -21,8 +19,6 @@ class InteractiveImageViewer extends StatefulWidget {
     required this.imagePath2,
     this.disableScroll,
     this.enableScroll,
-    this.disableHorizontalScroll,
-    this.enableHorizontalScroll,
   });
 
   @override
@@ -104,7 +100,7 @@ class _InteractiveImageViewerState extends State<InteractiveImageViewer> {
               if (widget.disableScroll != null) {
                 widget.disableScroll!();
                 scrollProvider.disableScroll();
-                // widget.disableHorizontalScroll!();
+                scrollProvider.disableHorizontalScroll();
               }
             },
 
@@ -112,6 +108,7 @@ class _InteractiveImageViewerState extends State<InteractiveImageViewer> {
               if (widget.disableScroll != null) {
                  widget.disableScroll!();
                  scrollProvider.disableScroll();
+
 
               }
               setState(() {
@@ -127,7 +124,7 @@ class _InteractiveImageViewerState extends State<InteractiveImageViewer> {
             onPanEnd: (details) {
               if (widget.enableScroll != null) {
                 widget.enableScroll!();
-                widget.enableHorizontalScroll!();
+                scrollProvider.enableHorizontalScroll();
               }
               if (xOffset > MediaQuery.of(context).size.width * 0.62 / 2) {
                 setState(() {
