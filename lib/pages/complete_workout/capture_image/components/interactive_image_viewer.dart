@@ -91,10 +91,14 @@ class _InteractiveImageViewerState extends State<InteractiveImageViewer> {
           top: yOffset,
           child: GestureDetector(
             onTap: () {
+              scrollProvider.disableScroll();
+              scrollProvider.disableHorizontalScroll();
               HapticFeedback.vibrate();
               setState(() {
                 displaySecondImage = !displaySecondImage;
               });
+              scrollProvider.enableScroll();
+              scrollProvider.enableHorizontalScroll();
             },
             onTapDown: (details) {
               if (widget.disableScroll != null) {
@@ -103,7 +107,6 @@ class _InteractiveImageViewerState extends State<InteractiveImageViewer> {
                 scrollProvider.disableHorizontalScroll();
               }
             },
-
             onPanUpdate: (details) {
               if (widget.disableScroll != null) {
                  widget.disableScroll!();
