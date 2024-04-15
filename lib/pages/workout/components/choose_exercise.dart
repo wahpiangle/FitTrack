@@ -35,7 +35,7 @@ class ChooseExerciseState extends State<ChooseExercise> {
   List<String> selectedCategory = [];
   String selectedBodyPart = '';
   Stream<List<Exercise>> streamExercises =
-      objectBox.exerciseService.watchAllExercise();
+  objectBox.exerciseService.watchAllExercise();
   List<Exercise> recentExercises = [];
   String searchText = '';
 
@@ -69,7 +69,7 @@ class ChooseExerciseState extends State<ChooseExercise> {
       } else {
         filteredExercises = widget.exercises
             .where((exercise) =>
-                exercise.name.toLowerCase().contains(query.toLowerCase()))
+            exercise.name.toLowerCase().contains(query.toLowerCase()))
             .toList();
       }
       recentExercises = objectBox.exerciseService.getRecentExercises(10,
@@ -171,102 +171,51 @@ class ChooseExerciseState extends State<ChooseExercise> {
                     removeSelectedCategory: removeSelectedCategory,
                   ),
                   Expanded(
-                    child: SingleChildScrollView(
-                      child: Column(
-                        children: [
-                          ListView.builder(
-                            shrinkWrap: true,
-                            physics: NeverScrollableScrollPhysics(),
-                            itemCount: recentExercises.length,
-                            itemBuilder: (context, index) {
-                              final exercise = recentExercises[index];
-                              return ListTile(
-                                title: Text(
-                                  exercise.name,
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 16,
-                                  ),
-                                ),
-                                subtitle: Text(
-                                  "${exercise.bodyPart.target?.name ?? 'N/A'} (${exercise.category.target?.name ?? 'N/A'})",
+                    child: ListView(
+                      children: [
+                        if (recentExercises.isNotEmpty)
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                                child: Text(
+                                  "Recent Exercises",
                                   style: TextStyle(
-                                    color: Colors.grey[500],
-                                    fontSize: 14,
+                                    color: Colors.white,
+                                    fontSize: 16.0,
+                                    fontWeight: FontWeight.bold,
                                   ),
                                 ),
-                                onTap: () => _selectExercise(exercise),
-                                leading: CircleAvatar(
-                                  backgroundColor: Colors.grey[800],
-                                  child: Text(
-                                    exercise.name[0],
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 24,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
-                                trailing: Icon(
-                                  exercise.isSelected ? Icons.check_circle : Icons.check_circle_outline,
-                                  color: exercise.isSelected ? Colors.green : Colors.grey,
-                                ),
-                              );
-                            },
+                              ),
+                              Column(
+                                children: recentExercises.map((exercise) => exerciseTile(exercise)).toList(),
+                              ),
+                            ],
                           ),
-                          ...groupedExercises.keys.map((firstLetter) {
-                            final groupExercises = groupedExercises[firstLetter]!;
-                            return Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(vertical: 8.0),
-                                  child: Text(
-                                    firstLetter,
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 20.0,
-                                      fontWeight: FontWeight.bold,
-                                    ),
+                        ...groupedExercises.keys.map((firstLetter) {
+                          final exercises = groupedExercises[firstLetter]!;
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                                child: Text(
+                                  firstLetter,
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 16.0,
+                                    fontWeight: FontWeight.bold,
                                   ),
                                 ),
-                                ...groupExercises.map((exercise) => ListTile(
-                                  title: Text(
-                                    exercise.name,
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 16.5,
-                                    ),
-                                  ),
-                                  subtitle: Text(
-                                    "${exercise.bodyPart.target?.name ?? ''} (${exercise.category.target?.name ?? ''})",
-                                    style: TextStyle(
-                                      color: Colors.grey[500],
-                                      fontSize: 14,
-                                    ),
-                                  ),
-                                  leading: CircleAvatar(
-                                    backgroundColor: Colors.grey[800],
-                                    child: Text(
-                                      exercise.name[0],
-                                      style: const TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 24,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ),
-                                  trailing: Icon(
-                                    exercise.isSelected ? Icons.check_circle : Icons.check_circle_outline,
-                                    color: exercise.isSelected ? Colors.green : Colors.grey,
-                                  ),
-                                  onTap: () => _selectExercise(exercise),
-                                )).toList(),
-                              ],
-                            );
-                          }).toList(),
-                        ],
-                      ),
+                              ),
+                              Column(
+                                children: exercises.map((exercise) => exerciseTile(exercise)).toList(),
+                              ),
+                            ],
+                          );
+                        }).toList(),
+                      ],
                     ),
                   ),
                 ],
@@ -275,14 +224,91 @@ class ChooseExerciseState extends State<ChooseExercise> {
           );
         },
       ),
-      floatingActionButton: isAnyExerciseSelected ? FloatingActionButton(
+      floatingActionButton: isAnyExerciseSelected
+          ? FloatingActionButton(
         onPressed: () {
-          widget.exercises.forEach(widget.selectExercise);
+          for (final exercise in widget.exercises) {
+            submitSelectedExercise(exercise);
+          }
           Navigator.pop(context);
         },
         backgroundColor: AppColours.secondary,
         child: const Icon(Icons.add),
-      ) : null,
+      )
+          : null,
+    );
+  }
+
+  Widget exerciseTile(Exercise exercise) {
+    return InkWell(
+      onTap: () => _selectExercise(exercise),
+      child: Container(
+        margin: const EdgeInsets.symmetric(vertical: 5),
+        color: exercise.isSelected ? Colors.grey[800] : null,
+        child: ListTile(
+          leading: SizedBox(
+            width: 50.0,
+            height: 50.0,
+            child: Stack(
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(300.0),
+                  child: exercise.imagePath.isEmpty ? Container(
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFE1F0CF),
+                      borderRadius: BorderRadius.circular(300.0),
+                    ),
+                    child: Center(
+                      child: Text(
+                        exercise.name[0].toUpperCase(),
+                        style: const TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 24.0,
+                        ),
+                      ),
+                    ),
+                  ) : Image.asset(
+                    exercise.imagePath,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                if (exercise.isSelected)
+                  Positioned(
+                    top: 0,
+                    right: 0,
+                    child: Container(
+                      padding: const EdgeInsets.all(5),
+                      decoration: BoxDecoration(
+                        color: Colors.black45,
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(
+                        Icons.check,
+                        color: Colors.white,
+                        size: 18,
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+          ),
+          title: Text(
+            exercise.name,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 16.5,
+            ),
+          ),
+          subtitle: Text(
+            "${exercise.bodyPart.target?.name ?? 'N/A'} (${exercise.category.target?.name ?? 'N/A'})",
+            style: TextStyle(
+              color: Colors.grey[500],
+              fontSize: 14,
+            ),
+          ),
+        ),
+      ),
     );
   }
 
