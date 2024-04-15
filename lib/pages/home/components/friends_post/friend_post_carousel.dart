@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:group_project/models/firebase/firebase_user_post.dart';
 import 'package:group_project/pages/home/components/friends_post/interactive_friends_post_image.dart';
+import 'package:group_project/pages/home/scroll_provider.dart';
+import 'package:provider/provider.dart';
 
 class FriendPostCarousel extends StatefulWidget {
   final List<FirebaseUserPost> friendPostDataList;
@@ -20,24 +22,14 @@ class FriendPostCarousel extends StatefulWidget {
 }
 
 class _FriendPostCarouselState extends State<FriendPostCarousel> {
-bool _isHorizontalScrollDisabled = false;
-
-  void disableHorizontalScroll() {
-    setState(() {
-      _isHorizontalScrollDisabled = true;
-    });
-  }
-
-  void enableHorizontalScroll() {
-    setState(() {
-      _isHorizontalScrollDisabled = false;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
+    final scrollProvider = Provider.of<ScrollProvider>(context);
     return PageView.builder(
-      physics: _isHorizontalScrollDisabled ? const NeverScrollableScrollPhysics() : null,
+      physics: scrollProvider.isHorizontalScrollDisabled
+          ? const NeverScrollableScrollPhysics()
+          : null,
       itemCount: widget.friendPostDataList.length,
       scrollDirection: Axis.horizontal,
       controller: widget.controller,
@@ -50,8 +42,6 @@ bool _isHorizontalScrollDisabled = false;
           friendPostData: friendPostData,
           toggleState: widget.toggleState,
           isTappingSmallImage: false,
-          disableHorizontalScroll: disableHorizontalScroll,
-          enableHorizontalScroll: enableHorizontalScroll,
         );
       },
     );
