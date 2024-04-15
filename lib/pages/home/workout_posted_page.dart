@@ -7,6 +7,7 @@ import 'package:group_project/pages/home/components/current_user/display_image_s
 import 'package:group_project/pages/home/components/display_post_screen/display_post_image_screen.dart';
 import 'package:group_project/pages/home/components/friends_post/friends_post_list.dart';
 import 'package:group_project/pages/home/components/reaction/reaction_images.dart';
+import 'package:group_project/pages/home/scroll_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -23,7 +24,7 @@ class WorkoutPostedPage extends StatefulWidget {
 
 class _WorkoutPostedPageState extends State<WorkoutPostedPage> {
   int _current = 0;
-  bool _isScrollDisabled = false;
+  // bool _isScrollDisabled = false;
 
   @override
   void initState() {
@@ -37,24 +38,28 @@ class _WorkoutPostedPageState extends State<WorkoutPostedPage> {
     });
   }
 
-  void disableScroll() {
-    setState(() {
-      _isScrollDisabled = true;
-    });
-  }
-
-  void enableScroll() {
-    setState(() {
-      _isScrollDisabled = false;
-    });
-  }
+  // void disableScroll() {
+  //     setState(() {
+  //       _isScrollDisabled = true;
+  //     });
+  // }
+  //
+  // void enableScroll() {
+  //   setState(() {
+  //     _isScrollDisabled = false;
+  //   });
+  // }
   @override
   Widget build(BuildContext context) {
     final UploadImageProvider uploadImageProvider =
         context.watch<UploadImageProvider>();
+    final scrollProvider = Provider.of<ScrollProvider>(context);
+
     //target
     return SingleChildScrollView(
-      physics: _isScrollDisabled ? const NeverScrollableScrollPhysics() : null,
+      physics: scrollProvider.isScrollDisabled
+          ? const NeverScrollableScrollPhysics()
+          : null,
       child: GestureDetector(
         onTap: () {
           FocusScope.of(context).requestFocus(FocusNode());
@@ -133,10 +138,7 @@ class _WorkoutPostedPageState extends State<WorkoutPostedPage> {
                     );
                 },
               ),
-               FriendsPostList(
-                disableScroll: disableScroll,
-                enableScroll: enableScroll,
-              ),
+               const FriendsPostList(),
             ],
           ),
         ),

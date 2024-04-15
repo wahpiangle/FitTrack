@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:group_project/pages/home/scroll_provider.dart';
+import 'package:provider/provider.dart';
 
 class InteractiveImageViewer extends StatefulWidget {
   final Function? toggleRetake;
@@ -37,6 +39,7 @@ class _InteractiveImageViewerState extends State<InteractiveImageViewer> {
   Matrix4 initialControllerValue = Matrix4.identity();
   @override
   Widget build(BuildContext context) {
+    final scrollProvider = Provider.of<ScrollProvider>(context);
     return Stack(
       children: [
         ClipRRect(
@@ -100,13 +103,16 @@ class _InteractiveImageViewerState extends State<InteractiveImageViewer> {
             onTapDown: (details) {
               if (widget.disableScroll != null) {
                 widget.disableScroll!();
-                widget.disableHorizontalScroll!();
+                scrollProvider.disableScroll();
+                // widget.disableHorizontalScroll!();
               }
             },
 
             onPanUpdate: (details) {
               if (widget.disableScroll != null) {
-                widget.disableScroll!();
+                 widget.disableScroll!();
+                 scrollProvider.disableScroll();
+
               }
               setState(() {
                 xOffset += details.delta.dx * 1;

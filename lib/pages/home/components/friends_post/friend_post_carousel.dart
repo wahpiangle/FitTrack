@@ -7,16 +7,16 @@ class FriendPostCarousel extends StatefulWidget {
   final void Function() toggleState;
   final Function onPageChanged;
   final PageController controller;
-  final Function? disableScroll;
-  final Function? enableScroll;
+  // final Function? disableScroll;
+  // final Function? enableScroll;
   const FriendPostCarousel({
     super.key,
     required this.friendPostDataList,
     required this.toggleState,
     required this.onPageChanged,
     required this.controller,
-    this.disableScroll,
-    this.enableScroll,
+    // this.disableScroll,
+    // this.enableScroll,
   });
 
   @override
@@ -54,8 +54,8 @@ bool _isHorizontalScrollDisabled = false;
           friendPostData: friendPostData,
           toggleState: widget.toggleState,
           isTappingSmallImage: false,
-          enableScroll: widget.enableScroll,
-          disableScroll: widget.disableScroll,
+          // enableScroll: widget.enableScroll,
+          // disableScroll: widget.disableScroll,
           disableHorizontalScroll: disableHorizontalScroll,
           enableHorizontalScroll: enableHorizontalScroll,
         );
