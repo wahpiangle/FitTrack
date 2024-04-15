@@ -36,14 +36,19 @@ class ChooseExerciseState extends State<ChooseExercise> {
   String selectedBodyPart = '';
   Stream<List<Exercise>> streamExercises =
       objectBox.exerciseService.watchAllExercise();
+  List<Exercise> recentExercises = [];
+  String searchText = '';
 
   @override
   void initState() {
     super.initState();
+    recentExercises = objectBox.exerciseService.getRecentExercises(10);
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       filterExercises('');
     });
   }
+
 
   SplayTreeMap<String, List<Exercise>> groupExercises(exercises) {
     final groupedExercises = SplayTreeMap<String, List<Exercise>>();
@@ -67,24 +72,30 @@ class ChooseExerciseState extends State<ChooseExercise> {
                 exercise.name.toLowerCase().contains(query.toLowerCase()))
             .toList();
       }
+      recentExercises = objectBox.exerciseService.getRecentExercises(10,
+          category: selectedCategory.isEmpty ? null : selectedCategory.join(", "),
+          bodyPart: selectedBodyPart.isEmpty ? null : selectedBodyPart);
     });
   }
 
   void setSelectedBodyPart(String bodyPart) {
     setState(() {
       selectedBodyPart = bodyPart;
+      filterExercises(searchText);
     });
   }
 
   void addSelectedCategory(String category) {
     setState(() {
       selectedCategory.add(category);
+      filterExercises(searchText);
     });
   }
 
   void removeSelectedCategory(String category) {
     setState(() {
       selectedCategory.remove(category);
+      filterExercises(searchText);
     });
   }
 
@@ -117,9 +128,7 @@ class ChooseExerciseState extends State<ChooseExercise> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios),
           color: Colors.white,
-          onPressed: () {
-            Navigator.pop(context);
-          },
+          onPressed: () => Navigator.pop(context),
         ),
         title: const Text(
           "Choose Exercises",
@@ -141,14 +150,8 @@ class ChooseExerciseState extends State<ChooseExercise> {
           final filteredData = exercises.where((exercise) {
             final exerciseBodyPart = exercise.bodyPart.target?.name ?? '';
             final exerciseCategory = exercise.category.target?.name ?? '';
-
-
-            final isBodyPartMatch = selectedBodyPart.isEmpty ||
-                exerciseBodyPart == selectedBodyPart;
-            final isCategoryMatch = selectedCategory.isEmpty ||
-                selectedCategory.contains(exerciseCategory);
-
-            return isBodyPartMatch && isCategoryMatch;
+            return (selectedBodyPart.isEmpty || exerciseBodyPart == selectedBodyPart) &&
+                (selectedCategory.isEmpty || selectedCategory.contains(exerciseCategory));
           }).toList();
 
           final groupedExercises = groupExercises(filteredData);
@@ -167,189 +170,103 @@ class ChooseExerciseState extends State<ChooseExercise> {
                     addSelectedCategory: addSelectedCategory,
                     removeSelectedCategory: removeSelectedCategory,
                   ),
-                  Container(
-                    alignment: Alignment.centerLeft,
-                    margin: const EdgeInsets.only(bottom: 20.0),
-                    child: Wrap(
-                      spacing: 10,
-                      runSpacing: 10,
-                      children: [
-                        if (selectedBodyPart.isNotEmpty ||
-                            selectedCategory.isNotEmpty)
-                          if (selectedBodyPart.isEmpty &&
-                              selectedCategory.isEmpty)
-                            FilterLabel(
-                              text: 'All',
-                              isFilterSelected: true,
-                              onTap: () {
-                                setSelectedBodyPart('');
-                                selectedCategory.clear();
-                                filterExercises('');
-                              },
-                            ),
-                        if (selectedBodyPart.isNotEmpty)
-                          FilterLabel(
-                            text: selectedBodyPart,
-                            isFilterSelected: true,
-                            onTap: () {
-                              setSelectedBodyPart('');
-                              filterExercises('');
-                            },
-                          ),
-                        for (final category in selectedCategory)
-                          FilterLabel(
-                            text: category,
-                            isFilterSelected: true,
-                            onTap: () {
-                              removeSelectedCategory(category);
-                              filterExercises('');
-                            },
-                          ),
-                        if (selectedBodyPart.isEmpty &&
-                            selectedCategory.isEmpty)
-                          FilterLabel(
-                            text: 'All',
-                            isFilterSelected: false,
-                            onTap: () {
-                              setSelectedBodyPart('');
-                              selectedCategory.clear();
-                              filterExercises('');
-                            },
-                          ),
-                      ],
-                    ),
-                  ),
                   Expanded(
-                    child: ListView.builder(
-                      itemCount: groupedExercises.length,
-                      itemBuilder: (context, index) {
-                        final firstLetter =
-                            groupedExercises.keys.toList()[index];
-                        final groupExercises = groupedExercises[firstLetter]!;
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding:
-                                  const EdgeInsets.only(top: 8.0, bottom: 4.0),
-                              child: Text(
-                                firstLetter,
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20.0,
-                                  fontWeight: FontWeight.bold,
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          ListView.builder(
+                            shrinkWrap: true,
+                            physics: NeverScrollableScrollPhysics(),
+                            itemCount: recentExercises.length,
+                            itemBuilder: (context, index) {
+                              final exercise = recentExercises[index];
+                              return ListTile(
+                                title: Text(
+                                  exercise.name,
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 16,
+                                  ),
                                 ),
-                              ),
-                            ),
-                            ListView.builder(
-                              shrinkWrap: true,
-                              physics: const NeverScrollableScrollPhysics(),
-                              itemCount: groupExercises.length,
-                              itemBuilder: (context, index) {
-                                final exercise = groupExercises[index];
-                                return Material(
-                                  color: const Color(0xFF1A1A1A),
-                                  child: InkWell(
-                                    onTap: () {
-                                      _selectExercise(exercise);
-                                    },
-                                    child: Container(
-                                      margin: const EdgeInsets.symmetric(
-                                          vertical: 5),
-                                      child: ListTile(
-                                        tileColor: exercise.isSelected
-                                            ? Colors.grey[800]
-                                            : null,
-                                        leading: SizedBox(
-                                          width: 50.0,
-                                          height: 50.0,
-                                          child: Stack(
-                                            children: [
-                                              ClipRRect(
-                                                borderRadius:
-                                                    BorderRadius.circular(
-                                                        300.0),
-                                                child: exercise.imagePath == ''
-                                                    ? Container(
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          color: const Color(
-                                                              0xFFE1F0CF),
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(
-                                                                      300.0),
-                                                        ),
-                                                        child: Center(
-                                                          child: Text(
-                                                            exercise.name[0]
-                                                                .toUpperCase(),
-                                                            style:
-                                                                const TextStyle(
-                                                              color:
-                                                                  Colors.black,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold,
-                                                              fontSize: 24.0,
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      )
-                                                    : Image.asset(
-                                                        exercise.halfImagePath,
-                                                        fit: BoxFit.contain,
-                                                      ),
-                                              ),
-                                              if (exercise.isSelected)
-                                                Positioned(
-                                                  top: 12.5,
-                                                  right: 50,
-                                                  child: Container(
-                                                    padding:
-                                                        const EdgeInsets.all(5),
-                                                    decoration:
-                                                        const BoxDecoration(
-                                                      shape: BoxShape.circle,
-                                                      color: Colors.black26,
-                                                    ),
-                                                    child: const Icon(
-                                                      Icons.check,
-                                                      color: Colors.white,
-                                                      size: 18,
-                                                    ),
-                                                  ),
-                                                ),
-                                            ],
-                                          ),
-                                        ),
-                                        title: Padding(
-                                          padding:
-                                              const EdgeInsets.only(bottom: 10),
-                                          child: Text(
-                                            exercise.name,
-                                            style: const TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 16.5,
-                                            ),
-                                          ),
-                                        ),
-                                        subtitle: Text(
-                                          exercise.bodyPart.target?.name ?? '',
-                                          style: TextStyle(
-                                            color: Colors.grey[500],
-                                            fontSize: 14,
-                                          ),
-                                        ),
+                                subtitle: Text(
+                                  "${exercise.bodyPart.target?.name ?? 'N/A'} (${exercise.category.target?.name ?? 'N/A'})",
+                                  style: TextStyle(
+                                    color: Colors.grey[500],
+                                    fontSize: 14,
+                                  ),
+                                ),
+                                onTap: () => _selectExercise(exercise),
+                                leading: CircleAvatar(
+                                  backgroundColor: Colors.grey[800],
+                                  child: Text(
+                                    exercise.name[0],
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                                trailing: Icon(
+                                  exercise.isSelected ? Icons.check_circle : Icons.check_circle_outline,
+                                  color: exercise.isSelected ? Colors.green : Colors.grey,
+                                ),
+                              );
+                            },
+                          ),
+                          ...groupedExercises.keys.map((firstLetter) {
+                            final groupExercises = groupedExercises[firstLetter]!;
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                                  child: Text(
+                                    firstLetter,
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 20.0,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                                ...groupExercises.map((exercise) => ListTile(
+                                  title: Text(
+                                    exercise.name,
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 16.5,
+                                    ),
+                                  ),
+                                  subtitle: Text(
+                                    "${exercise.bodyPart.target?.name ?? ''} (${exercise.category.target?.name ?? ''})",
+                                    style: TextStyle(
+                                      color: Colors.grey[500],
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                  leading: CircleAvatar(
+                                    backgroundColor: Colors.grey[800],
+                                    child: Text(
+                                      exercise.name[0],
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 24,
+                                        fontWeight: FontWeight.bold,
                                       ),
                                     ),
                                   ),
-                                );
-                              },
-                            ),
-                          ],
-                        );
-                      },
+                                  trailing: Icon(
+                                    exercise.isSelected ? Icons.check_circle : Icons.check_circle_outline,
+                                    color: exercise.isSelected ? Colors.green : Colors.grey,
+                                  ),
+                                  onTap: () => _selectExercise(exercise),
+                                )).toList(),
+                              ],
+                            );
+                          }).toList(),
+                        ],
+                      ),
                     ),
                   ),
                 ],
@@ -358,18 +275,15 @@ class ChooseExerciseState extends State<ChooseExercise> {
           );
         },
       ),
-      floatingActionButton: isAnyExerciseSelected
-          ? FloatingActionButton(
-              onPressed: () {
-                for (final exercise in widget.exercises) {
-                  submitSelectedExercise(exercise);
-                }
-                Navigator.pop(context);
-              },
-              backgroundColor: AppColours.secondary,
-              child: const Icon(Icons.add),
-            )
-          : null,
+      floatingActionButton: isAnyExerciseSelected ? FloatingActionButton(
+        onPressed: () {
+          widget.exercises.forEach(widget.selectExercise);
+          Navigator.pop(context);
+        },
+        backgroundColor: AppColours.secondary,
+        child: const Icon(Icons.add),
+      ) : null,
     );
   }
+
 }
