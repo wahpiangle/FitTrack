@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:group_project/constants/themes/app_colours.dart';
 import 'package:group_project/models/exercise.dart';
 import 'package:group_project/pages/exercise/exercise_detail.dart';
 
@@ -25,7 +24,7 @@ class ExerciseListItem extends StatelessWidget {
     final containsSearchText = exerciseName.toLowerCase().contains(searchText.toLowerCase());
 
     // Style for the subtitle to display body part and category as 'Body Part (Category)'
-    final subtitleText = '$exerciseBodyPart (${exerciseCategory})';
+    final subtitleText = '$exerciseBodyPart ($exerciseCategory)';
 
     if (searchText.isEmpty || containsSearchText) {
       return Column(
@@ -88,10 +87,8 @@ class ExerciseListItem extends StatelessWidget {
               ),
             ),
           ),
-          const Divider(
-            color: AppColours.secondaryLight,
-            height: 5,
-            thickness: 0.2,
+           Divider(
+            color: Colors.grey[700], height: 0.1, thickness: 0.8,
           ),
         ],
       );
