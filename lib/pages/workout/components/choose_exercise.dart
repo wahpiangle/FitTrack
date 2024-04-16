@@ -158,12 +158,64 @@ class ChooseExerciseState extends State<ChooseExercise> {
           final groupedExercises = groupExercises(filteredData);
 
           return Container(
-            color: Color(0xFF1A1A1A),
+            color: const Color(0xFF1A1A1A),
             child: Padding(
-              padding: EdgeInsets.all(20.0),
+              padding: const EdgeInsets.all(20.0),
               child: Column(
                 children: [
                   ExercisesListFilters(filterExercises: filterExercises, selectedBodyPart: selectedBodyPart, setSelectedBodyPart: setSelectedBodyPart, selectedCategory: selectedCategory, addSelectedCategory: addSelectedCategory, removeSelectedCategory: removeSelectedCategory),
+                  Container(
+                    alignment: Alignment.centerLeft,
+                    margin: const EdgeInsets.only(bottom: 20.0),
+                    child: Wrap(
+                      spacing: 10,
+                      runSpacing: 10,
+                      children: [
+                        if (selectedBodyPart.isNotEmpty ||
+                            selectedCategory.isNotEmpty)
+                          if (selectedBodyPart.isEmpty &&
+                              selectedCategory.isEmpty)
+                            FilterLabel(
+                              text: 'All',
+                              isFilterSelected: true,
+                              onTap: () {
+                                setSelectedBodyPart('');
+                                selectedCategory.clear();
+                                filterExercises('');
+                              },
+                            ),
+                        if (selectedBodyPart.isNotEmpty)
+                          FilterLabel(
+                            text: selectedBodyPart,
+                            isFilterSelected: true,
+                            onTap: () {
+                              setSelectedBodyPart('');
+                              filterExercises('');
+                            },
+                          ),
+                        for (final category in selectedCategory)
+                          FilterLabel(
+                            text: category,
+                            isFilterSelected: true,
+                            onTap: () {
+                              removeSelectedCategory(category);
+                              filterExercises('');
+                            },
+                          ),
+                        if (selectedBodyPart.isEmpty &&
+                            selectedCategory.isEmpty)
+                          FilterLabel(
+                            text: 'All',
+                            isFilterSelected: false,
+                            onTap: () {
+                              setSelectedBodyPart('');
+                              selectedCategory.clear();
+                              filterExercises('');
+                            },
+                          ),
+                      ],
+                    ),
+                  ),
                   Expanded(
                     child: ListView(
                       children: [
@@ -171,7 +223,7 @@ class ChooseExerciseState extends State<ChooseExercise> {
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Padding(padding: EdgeInsets.symmetric(vertical: 8.0), child: Text("Recent Exercises", style: TextStyle(color: Colors.white, fontSize: 16.0, fontWeight: FontWeight.bold))),
+                              const Padding(padding: EdgeInsets.symmetric(vertical: 8.0), child: Text("Recent Exercises", style: TextStyle(color: Colors.white, fontSize: 16.0, fontWeight: FontWeight.bold))),
                               Column(children: recentExercises.map((e) => exerciseTile(e)).toList()),
                             ],
                           ),
@@ -179,7 +231,7 @@ class ChooseExerciseState extends State<ChooseExercise> {
                           return Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Padding(padding: EdgeInsets.symmetric(vertical: 8.0), child: Text(firstLetter, style: TextStyle(color: Colors.white, fontSize: 16.0, fontWeight: FontWeight.bold))),
+                              Padding(padding: const EdgeInsets.symmetric(vertical: 8.0), child: Text(firstLetter, style: const TextStyle(color: Colors.white, fontSize: 16.0, fontWeight: FontWeight.bold))),
                               Column(children: groupedExercises[firstLetter]!.map((e) => exerciseTile(e)).toList()),
                             ],
                           );
@@ -213,7 +265,7 @@ class ChooseExerciseState extends State<ChooseExercise> {
     return InkWell(
       onTap: () => _selectExercise(exercise),
       child: Container(
-        margin: EdgeInsets.symmetric(vertical: 5),
+        margin: const EdgeInsets.symmetric(vertical: 5),
         color: exercise.isSelected ? Colors.grey[800] : null,
         child: ListTile(
           leading: SizedBox(
@@ -224,9 +276,9 @@ class ChooseExerciseState extends State<ChooseExercise> {
                 ClipRRect(
                   borderRadius: BorderRadius.circular(300.0),
                   child: exercise.imagePath.isEmpty ? Container(
-                    decoration: BoxDecoration(color: Color(0xFFE1F0CF), borderRadius: BorderRadius.circular(300.0)),
+                    decoration: BoxDecoration(color: const Color(0xFFE1F0CF), borderRadius: BorderRadius.circular(300.0)),
                     child: Center(
-                      child: Text(exercise.name[0].toUpperCase(), style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 24.0)),
+                      child: Text(exercise.name[0].toUpperCase(), style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 24.0)),
                     ),
                   ) : Image.asset(exercise.imagePath, fit: BoxFit.cover),
                 ),
@@ -235,15 +287,15 @@ class ChooseExerciseState extends State<ChooseExercise> {
                     top: 0,
                     right: 0,
                     child: Container(
-                      padding: EdgeInsets.all(5),
-                      decoration: BoxDecoration(color: Colors.black45, shape: BoxShape.circle),
-                      child: Icon(Icons.check, color: Colors.white, size: 18),
+                      padding: const EdgeInsets.all(5),
+                      decoration: const BoxDecoration(color: Colors.black45, shape: BoxShape.circle),
+                      child: const Icon(Icons.check, color: Colors.white, size: 18),
                     ),
                   ),
               ],
             ),
           ),
-          title: Text(exercise.name, style: TextStyle(color: Colors.white, fontSize: 16.5)),
+          title: Text(exercise.name, style: const TextStyle(color: Colors.white, fontSize: 16.5)),
           subtitle: Text("${exercise.bodyPart.target?.name ?? 'N/A'} (${exercise.category.target?.name ?? 'N/A'})", style: TextStyle(color: Colors.grey[500], fontSize: 14)),
         ),
       ),
