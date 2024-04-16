@@ -6,6 +6,7 @@ import 'package:group_project/main.dart';
 import 'package:group_project/models/exercise.dart';
 import 'package:group_project/pages/exercise/components/exercises_list_filters.dart';
 import 'package:group_project/pages/exercise/components/filter_label.dart';
+import 'package:group_project/pages/workout/components/workout_exercise_list_item.dart';
 
 // Top-Level function
 // Allows it to be called outside of this class
@@ -224,7 +225,7 @@ class ChooseExerciseState extends State<ChooseExercise> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               const Padding(padding: EdgeInsets.symmetric(vertical: 8.0), child: Text("Recent Exercises", style: TextStyle(color: Colors.white, fontSize: 16.0, fontWeight: FontWeight.bold))),
-                              Column(children: recentExercises.map((e) => exerciseTile(e)).toList()),
+                              Column(children: recentExercises.map((e) => WorkoutExerciseListItem(exercise: e, onSelectExercise: _selectExercise)).toList()),
                             ],
                           ),
                         ...groupedExercises.keys.map((firstLetter) {
@@ -232,10 +233,10 @@ class ChooseExerciseState extends State<ChooseExercise> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Padding(padding: const EdgeInsets.symmetric(vertical: 8.0), child: Text(firstLetter, style: const TextStyle(color: Colors.white, fontSize: 16.0, fontWeight: FontWeight.bold))),
-                              Column(children: groupedExercises[firstLetter]!.map((e) => exerciseTile(e)).toList()),
+                              Column(children: groupedExercises[firstLetter]!.map((e) => WorkoutExerciseListItem(exercise: e, onSelectExercise: _selectExercise)).toList()),
                             ],
                           );
-                        }).toList(),
+                        }),
                       ],
                     ),
                   ),
@@ -260,46 +261,4 @@ class ChooseExerciseState extends State<ChooseExercise> {
           : null,
     );
   }
-
-  Widget exerciseTile(Exercise exercise) {
-    return InkWell(
-      onTap: () => _selectExercise(exercise),
-      child: Container(
-        margin: const EdgeInsets.symmetric(vertical: 5),
-        color: exercise.isSelected ? Colors.grey[800] : null,
-        child: ListTile(
-          leading: SizedBox(
-            width: 50.0,
-            height: 50.0,
-            child: Stack(
-              children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(300.0),
-                  child: exercise.imagePath.isEmpty ? Container(
-                    decoration: BoxDecoration(color: const Color(0xFFE1F0CF), borderRadius: BorderRadius.circular(300.0)),
-                    child: Center(
-                      child: Text(exercise.name[0].toUpperCase(), style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 24.0)),
-                    ),
-                  ) : Image.asset(exercise.imagePath, fit: BoxFit.cover),
-                ),
-                if (exercise.isSelected)
-                  Positioned(
-                    top: 0,
-                    right: 0,
-                    child: Container(
-                      padding: const EdgeInsets.all(5),
-                      decoration: const BoxDecoration(color: Colors.black45, shape: BoxShape.circle),
-                      child: const Icon(Icons.check, color: Colors.white, size: 18),
-                    ),
-                  ),
-              ],
-            ),
-          ),
-          title: Text(exercise.name, style: const TextStyle(color: Colors.white, fontSize: 16.5)),
-          subtitle: Text("${exercise.bodyPart.target?.name ?? 'N/A'} (${exercise.category.target?.name ?? 'N/A'})", style: TextStyle(color: Colors.grey[500], fontSize: 14)),
-        ),
-      ),
-    );
-  }
-
 }
