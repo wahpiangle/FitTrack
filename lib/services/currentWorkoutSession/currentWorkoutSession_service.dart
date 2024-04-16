@@ -147,6 +147,7 @@ class CurrentWorkoutSessionService {
         exerciseSetCopy.exerciseSetInfo.target = exercisesSetsInfoCopy;
         exerciseSetCopy.reps = exerciseSet.reps;
         exerciseSetCopy.weight = exerciseSet.weight;
+        exerciseSetCopy.time = exerciseSet.time;
         exerciseSetBox.put(exerciseSetCopy);
       });
       exercisesSetsInfoCopy.exercise.target = exercisesSetsInfo.exercise.target;

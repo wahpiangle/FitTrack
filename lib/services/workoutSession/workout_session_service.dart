@@ -74,6 +74,7 @@ class WorkoutSessionService {
         final newExerciseSet = ExerciseSet();
         newExerciseSet.reps = exerciseSet.reps;
         newExerciseSet.weight = exerciseSet.weight;
+        newExerciseSet.time = exerciseSet.time;
         newExerciseSet.exerciseSetInfo.target = newExercisesSetsInfo;
         newExercisesSetsInfo.exerciseSets.add(newExerciseSet);
       }
@@ -145,6 +146,10 @@ class WorkoutSessionService {
             workoutSession.exercisesSetsInfo[i].exerciseSets[j].weight) {
           return true;
         }
+        if (editingWorkoutSession.exercisesSetsInfo[i].exerciseSets[j].time !=
+            workoutSession.exercisesSetsInfo[i].exerciseSets[j].time) {
+          return true;
+        }
       }
     }
     return false;
@@ -171,6 +176,7 @@ class WorkoutSessionService {
         final newExerciseSet = ExerciseSet();
         newExerciseSet.reps = exerciseSet.reps;
         newExerciseSet.weight = exerciseSet.weight;
+        newExerciseSet.time = exerciseSet.time;
         newExerciseSet.exerciseSetInfo.target = newExercisesSetsInfo;
         newExercisesSetsInfo.exerciseSets.add(newExerciseSet);
       }
@@ -231,6 +237,7 @@ class WorkoutSessionService {
             final newExerciseSet = ExerciseSet();
             newExerciseSet.reps = exerciseSet['reps'];
             newExerciseSet.weight = exerciseSet['weight'];
+            newExerciseSet.time = exerciseSet['time'];
             newExerciseSet.isPersonalRecord =
                 exerciseSet['isPersonalRecord'] ?? false;
             newExerciseSet.exerciseSetInfo.target = newExercisesSetsInfo;
@@ -282,6 +289,10 @@ class WorkoutSessionService {
           }
           if (workoutTemplate.exercisesSetsInfo[i].exerciseSets[j].weight !=
               workoutSession.exercisesSetsInfo[i].exerciseSets[j].weight) {
+            return true;
+          }
+          if (workoutTemplate.exercisesSetsInfo[i].exerciseSets[j].time !=
+              workoutSession.exercisesSetsInfo[i].exerciseSets[j].time) {
             return true;
           }
         }
