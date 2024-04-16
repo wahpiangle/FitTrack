@@ -89,30 +89,34 @@ class _InteractiveImageViewerState extends State<InteractiveImageViewer> {
         Positioned(
           left: xOffset,
           top: yOffset,
+          child: Listener(
+            onPointerDown: (event) {
+           if (scrollProvider.disableScroll != null) {
+            scrollProvider.disableScroll!();
+            scrollProvider.disableHorizontalScroll();
+              }
+           },
+            onPointerUp: (event) {
+              if (scrollProvider.enableScroll != null) {
+                scrollProvider.enableScroll!();
+                scrollProvider.enableHorizontalScroll();
+              }
+              },
           child: GestureDetector(
             onTap: () {
-              scrollProvider.disableScroll();
-              scrollProvider.disableHorizontalScroll();
               HapticFeedback.vibrate();
               setState(() {
                 displaySecondImage = !displaySecondImage;
               });
-              scrollProvider.enableScroll();
-              scrollProvider.enableHorizontalScroll();
             },
             onTapDown: (details) {
               if (widget.disableScroll != null) {
                 widget.disableScroll!();
-                scrollProvider.disableScroll();
-                scrollProvider.disableHorizontalScroll();
               }
             },
             onPanUpdate: (details) {
               if (widget.disableScroll != null) {
                  widget.disableScroll!();
-                 scrollProvider.disableScroll();
-
-
               }
               setState(() {
                 xOffset += details.delta.dx * 1;
@@ -127,7 +131,6 @@ class _InteractiveImageViewerState extends State<InteractiveImageViewer> {
             onPanEnd: (details) {
               if (widget.enableScroll != null) {
                 widget.enableScroll!();
-                scrollProvider.enableHorizontalScroll();
               }
               if (xOffset > MediaQuery.of(context).size.width * 0.62 / 2) {
                 setState(() {
@@ -169,7 +172,7 @@ class _InteractiveImageViewerState extends State<InteractiveImageViewer> {
                   ),
           ),
         ),
-      ],
+        )],
     );
   }
 }
