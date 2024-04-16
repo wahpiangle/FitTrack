@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:group_project/models/firebase/firebase_user_post.dart';
 import 'package:group_project/pages/complete_workout/capture_image/components/interactive_image_viewer.dart';
@@ -47,27 +46,27 @@ class _InteractiveFriendsPostImageState
         ),
         displayHoldInstruction
             ? Positioned.fill(
-          child: Opacity(
-            opacity: 0.5,
-            child: Container(
-              color: const Color(0xFF000000),
-            ),
-          ),
-        )
+                child: Opacity(
+                  opacity: 0.5,
+                  child: Container(
+                    color: const Color(0xFF000000),
+                  ),
+                ),
+              )
             : const SizedBox(),
         displayHoldInstruction
             ? const Positioned.fill(
-          child: Center(
-            child: Text(
-              'Hold the emoji button to react',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-        )
+                child: Center(
+                  child: Text(
+                    'Hold the emoji button to react',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              )
             : const SizedBox(),
         Positioned(
           bottom: 10,
@@ -84,12 +83,12 @@ class _InteractiveFriendsPostImageState
         ),
         widget.friendPostData.reactions.isNotEmpty
             ? Positioned(
-          bottom: 10,
-          left: 10,
-          child: ReactionImages(
-            postReactions: widget.friendPostData.reactions,
-          ),
-        )
+                bottom: 10,
+                left: 10,
+                child: ReactionImages(
+                  postReactions: widget.friendPostData.reactions,
+                ),
+              )
             : const SizedBox.shrink(),
       ],
     );
