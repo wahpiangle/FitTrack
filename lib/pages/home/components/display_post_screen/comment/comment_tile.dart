@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:group_project/models/firebase/comments.dart';
+import 'package:group_project/pages/user_profile/user_profile_page.dart';
 import 'package:group_project/services/firebase/firebase_user_service.dart';
 import 'package:intl/intl.dart';
 
@@ -30,27 +31,48 @@ class _CommentTileState extends State<CommentTile> {
         }
         return ListTile(
           contentPadding: const EdgeInsets.all(0),
-          leading: ClipOval(
+          leading: GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => UserProfilePage(user: snapshot.data),
+                ),
+              );
+            },
+            child: ClipOval(
               child: CachedNetworkImage(
-            imageUrl: snapshot.data!.photoUrl,
-            width: 50,
-            height: 50,
-            fit: BoxFit.cover,
-            placeholder: (context, url) => const SizedBox(),
-            errorWidget: (context, url, error) => Image.asset(
-              'assets/icons/defaultimage.jpg',
-              fit: BoxFit.cover,
-              width: 50,
-              height: 50,
+                imageUrl: snapshot.data!.photoUrl,
+                width: 50,
+                height: 50,
+                fit: BoxFit.cover,
+                placeholder: (context, url) => const SizedBox(),
+                errorWidget: (context, url, error) => Image.asset(
+                  'assets/icons/defaultimage.jpg',
+                  fit: BoxFit.cover,
+                  width: 50,
+                  height: 50,
+                ),
+              ),
             ),
-          )),
+          ),
           title: Row(
             children: [
-              Text(
-                snapshot.data!.username,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => UserProfilePage(user: snapshot.data),
+                    ),
+                  );
+                },
+                child: Text(
+                  snapshot.data!.username,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
               const SizedBox(width: 10),
