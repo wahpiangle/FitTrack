@@ -207,7 +207,7 @@ class ExerciseListScreenState extends State<ExerciseListScreen> {
                   Expanded(
                     child: ListView(
                       children: [
-                         Padding(
+                        Padding(
                           padding: EdgeInsets.symmetric(vertical: 8),
                           child: searchText.isEmpty
                               ? Text(

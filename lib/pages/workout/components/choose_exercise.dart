@@ -66,18 +66,17 @@ class ChooseExerciseState extends State<ChooseExercise> {
   void filterExercises(String query) {
     setState(() {
       if (query.isEmpty) {
-        filteredExercises = widget.exercises;
+        filteredExercises = [...widget.exercises, ...recentExercises];
       } else {
-        filteredExercises = widget.exercises
+        filteredExercises = [...widget.exercises, ...recentExercises]
             .where((exercise) =>
             exercise.name.toLowerCase().contains(query.toLowerCase()))
             .toList();
       }
-      recentExercises = objectBox.exerciseService.getRecentExercises(10,
-          category: selectedCategory.isEmpty ? null : selectedCategory.join(", "),
-          bodyPart: selectedBodyPart.isEmpty ? null : selectedBodyPart);
+      searchText = query;
     });
   }
+
 
   void setSelectedBodyPart(String bodyPart) {
     setState(() {
@@ -219,16 +218,16 @@ class ChooseExerciseState extends State<ChooseExercise> {
                   ),
                   Expanded(
                     child: ListView(
-                      children: [
-                        if (recentExercises.isNotEmpty)
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Padding(padding: EdgeInsets.symmetric(vertical: 8.0), child: Text("Recent Exercises", style: TextStyle(color: Colors.white, fontSize: 16.0, fontWeight: FontWeight.bold))),
-                              Column(children: recentExercises.map((e) => WorkoutExerciseListItem(exercise: e, onSelectExercise: _selectExercise)).toList()),
-                            ],
-                          ),
-                        ...groupedExercises.keys.map((firstLetter) {
+                        children: [
+                            if (searchText.isEmpty && recentExercises.isNotEmpty)
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Padding(padding: EdgeInsets.symmetric(vertical: 8.0), child: Text("Recent", style: TextStyle(color: Colors.white, fontSize: 16.0, fontWeight: FontWeight.bold))),
+                                  Column(children: recentExercises.map((e) => WorkoutExerciseListItem(exercise: e, onSelectExercise: _selectExercise)).toList()),
+                                ],
+                              ),
+                          ...groupedExercises.keys.map((firstLetter) {
                           return Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
