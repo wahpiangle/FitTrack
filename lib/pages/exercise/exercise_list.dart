@@ -32,7 +32,7 @@ class ExerciseListScreenState extends State<ExerciseListScreen> {
   @override
   void initState() {
     super.initState();
-    //recentExercises = objectBox.exerciseService.getRecentExercises(10);
+    recentExercises = objectBox.exerciseService.getRecentExercises(10);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       filterExercises('');
       _handleTimerActive(context);
@@ -54,9 +54,9 @@ class ExerciseListScreenState extends State<ExerciseListScreen> {
   void filterExercises(String query) {
     setState(() {
       searchText = query;
-      // recentExercises = objectBox.exerciseService.getRecentExercises(10,
-      //     category: selectedCategory.isEmpty ? null : selectedCategory.join(", "),
-      //     bodyPart: selectedBodyPart.isEmpty ? null : selectedBodyPart);
+      recentExercises = objectBox.exerciseService.getRecentExercises(10,
+          category: selectedCategory.isEmpty ? null : selectedCategory.join(", "),
+          bodyPart: selectedBodyPart.isEmpty ? null : selectedBodyPart);
     });
   }
 
@@ -208,9 +208,9 @@ class ExerciseListScreenState extends State<ExerciseListScreen> {
                     child: ListView(
                       children: [
                         Padding(
-                          padding: EdgeInsets.symmetric(vertical: 8),
+                          padding: const EdgeInsets.symmetric(vertical: 8),
                           child: searchText.isEmpty
-                              ? Text(
+                              ? const Text(
                             "Recent",
                             style: TextStyle(
                               color: Colors.white,
