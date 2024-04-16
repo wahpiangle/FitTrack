@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class ScrollProvider extends ChangeNotifier {
+class HomepageScrollProvider extends ChangeNotifier {
   bool _isScrollDisabled = false;
   bool _isHorizontalScrollDisabled = false;
 

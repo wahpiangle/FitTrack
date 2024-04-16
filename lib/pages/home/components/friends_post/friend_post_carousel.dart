@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:group_project/models/firebase/firebase_user_post.dart';
 import 'package:group_project/pages/home/components/friends_post/interactive_friends_post_image.dart';
-import 'package:group_project/pages/home/scroll_provider.dart';
+import 'package:group_project/pages/home/homepage_scroll_provider.dart';
 import 'package:provider/provider.dart';
 
 class FriendPostCarousel extends StatefulWidget {
@@ -25,9 +25,9 @@ class _FriendPostCarouselState extends State<FriendPostCarousel> {
 
   @override
   Widget build(BuildContext context) {
-    final scrollProvider = Provider.of<ScrollProvider>(context);
+    final homepageScrollProvider = Provider.of<HomepageScrollProvider>(context);
     return PageView.builder(
-      physics: scrollProvider.isHorizontalScrollDisabled
+      physics: homepageScrollProvider.isHorizontalScrollDisabled
           ? const NeverScrollableScrollPhysics()
           : null,
       itemCount: widget.friendPostDataList.length,

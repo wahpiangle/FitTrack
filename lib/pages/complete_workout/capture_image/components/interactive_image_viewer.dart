@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:group_project/pages/home/scroll_provider.dart';
+import 'package:group_project/pages/home/homepage_scroll_provider.dart';
 import 'package:provider/provider.dart';
 
 class InteractiveImageViewer extends StatefulWidget {
@@ -35,7 +35,7 @@ class _InteractiveImageViewerState extends State<InteractiveImageViewer> {
   Matrix4 initialControllerValue = Matrix4.identity();
   @override
   Widget build(BuildContext context) {
-    final scrollProvider = Provider.of<ScrollProvider>(context);
+    final scrollProvider = Provider.of<HomepageScrollProvider>(context);
     return Stack(
       children: [
         ClipRRect(
