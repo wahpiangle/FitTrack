@@ -272,10 +272,18 @@ class ExerciseService {
 
     for (var session in recentSessions) {
       for (var setInfo in session.exercisesSetsInfo) {
-        final exercise = setInfo.exercise.target!;
+        // Check if the exercise target is null and skip if true
+        if (setInfo.exercise.target == null) {
+          continue; // Skip to the next iteration if the exercise data is not available
+        }
+        final exercise = setInfo.exercise.target!; // Now safe to use !
+
+        // Additional condition to ensure all necessary properties are non-null
         if (!exerciseIds.contains(exercise.id) &&
-            (category == null || exercise.category.target?.name == category) &&
-            (bodyPart == null || exercise.bodyPart.target?.name == bodyPart)) {
+            exercise.category.target != null &&
+            exercise.bodyPart.target != null &&
+            (category == null || exercise.category.target!.name == category) &&
+            (bodyPart == null || exercise.bodyPart.target!.name == bodyPart)) {
           recentExercises.add(exercise);
           exerciseIds.add(exercise.id);
         }
@@ -286,7 +294,6 @@ class ExerciseService {
 
     return recentExercises.toList();
   }
-
 
 
 }
