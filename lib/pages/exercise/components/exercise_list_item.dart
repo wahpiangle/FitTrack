@@ -20,8 +20,12 @@ class ExerciseListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final exerciseName = exercise.name;
-    final exerciseBodyPart = exercise.bodyPart.target?.name ?? '';
+    final exerciseBodyPart = exercise.bodyPart.target?.name ?? ' ';
+    final exerciseCategory = exercise.category.target?.name ?? ' ';
     final containsSearchText = exerciseName.toLowerCase().contains(searchText.toLowerCase());
+
+    // Style for the subtitle to display body part and category as 'Body Part (Category)'
+    final subtitleText = '$exerciseBodyPart (${exerciseCategory})';
 
     if (searchText.isEmpty || containsSearchText) {
       return Column(
@@ -62,20 +66,20 @@ class ExerciseListItem extends StatelessWidget {
                       ),
                     )
                         : Image.asset(
-                      exercise.halfImagePath,
+                      exercise.imagePath,
                       fit: BoxFit.contain,
                     ),
                   ),
                 ),
                 title: Text(
-                  exercise.name,
+                  exerciseName,
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 16.0,
                   ),
                 ),
                 subtitle: Text(
-                  exerciseBodyPart,
+                  subtitleText,
                   style: TextStyle(
                     color: Colors.grey[500],
                     fontSize: 12,
