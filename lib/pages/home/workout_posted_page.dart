@@ -44,7 +44,6 @@ class _WorkoutPostedPageState extends State<WorkoutPostedPage> {
         context.watch<UploadImageProvider>();
     final scrollProvider = Provider.of<ScrollProvider>(context);
 
-    //target
     return SingleChildScrollView(
       physics: scrollProvider.isScrollDisabled
           ? const NeverScrollableScrollPhysics()

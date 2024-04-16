@@ -9,16 +9,12 @@ class InteractiveFriendsPostImage extends StatefulWidget {
   final FirebaseUserPost friendPostData;
   final void Function() toggleState;
   final bool isTappingSmallImage;
-  final Function? disableHorizontalScroll;
-  final Function? enableHorizontalScroll;
 
   const InteractiveFriendsPostImage({
     super.key,
     required this.friendPostData,
     required this.toggleState,
     required this.isTappingSmallImage,
-    this.disableHorizontalScroll,
-    this.enableHorizontalScroll,
   });
 
   @override
