@@ -5,7 +5,10 @@ import 'package:group_project/pages/home/components/friends_post/friend_post.dar
 import 'package:group_project/services/firebase/firebase_friends_post.dart';
 
 class FriendsPostList extends StatefulWidget {
-  const FriendsPostList({super.key});
+   const FriendsPostList({
+    super.key,
+  });
+
 
   @override
   State<FriendsPostList> createState() => _FriendsPostCarouselState();

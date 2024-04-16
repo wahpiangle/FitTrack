@@ -41,6 +41,12 @@ class _DisplayPostImageScreenState extends State<DisplayPostImageScreen> {
   List<Stream<QuerySnapshot<Map<String, dynamic>>>>? _commentStreams;
   late PageController controller;
 
+  List<FirebaseUserPost> filterPostsByLast24Hours(List<FirebaseUserPost> posts) {
+    final DateTime now = DateTime.now();
+    final DateTime yesterday = now.subtract(const Duration(days: 1));
+    return posts.where((post) => post.post.date.isAfter(yesterday)).toList();
+  }
+
   @override
   void initState() {
     super.initState();
@@ -51,6 +57,8 @@ class _DisplayPostImageScreenState extends State<DisplayPostImageScreen> {
           currentUserPost.post.postId);
     }).toList();
   }
+
+
 
   void disableScroll() {
     setState(() {
@@ -63,6 +71,8 @@ class _DisplayPostImageScreenState extends State<DisplayPostImageScreen> {
       _isScrollDisabled = false;
     });
   }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -165,11 +175,10 @@ class _DisplayPostImageScreenState extends State<DisplayPostImageScreen> {
                             return Padding(
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 10.0),
-                              child: InteractiveImageViewer(
-                                imagePath: widget.firebaseUserPosts[index].post
-                                    .firstImageUrl,
-                                imagePath2: widget.firebaseUserPosts[index].post
-                                    .secondImageUrl,
+                              child:
+                              InteractiveImageViewer(
+                                imagePath: widget.firebaseUserPosts[index].post.firstImageUrl,
+                                imagePath2: widget.firebaseUserPosts[index].post.secondImageUrl,
                                 disableScroll: disableScroll,
                                 enableScroll: enableScroll,
                               ),

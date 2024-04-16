@@ -7,6 +7,7 @@ import 'package:group_project/pages/home/components/current_user/display_image_s
 import 'package:group_project/pages/home/components/display_post_screen/display_post_image_screen.dart';
 import 'package:group_project/pages/home/components/friends_post/friends_post_list.dart';
 import 'package:group_project/pages/home/components/reaction/reaction_images.dart';
+import 'package:group_project/pages/home/homepage_scroll_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -36,16 +37,21 @@ class _WorkoutPostedPageState extends State<WorkoutPostedPage> {
     });
   }
 
+
   @override
   Widget build(BuildContext context) {
     final UploadImageProvider uploadImageProvider =
         context.watch<UploadImageProvider>();
+    final homepageScrollProvider = Provider.of<HomepageScrollProvider>(context);
 
-    return GestureDetector(
-      onTap: () {
-        FocusScope.of(context).requestFocus(FocusNode());
-      },
-      child: SingleChildScrollView(
+    return SingleChildScrollView(
+      physics: homepageScrollProvider.isScrollDisabled
+          ? const NeverScrollableScrollPhysics()
+          : null,
+      child: GestureDetector(
+        onTap: () {
+          FocusScope.of(context).requestFocus(FocusNode());
+        },
         child: Container(
           margin: const EdgeInsets.all(10),
           child: Column(
@@ -66,64 +72,65 @@ class _WorkoutPostedPageState extends State<WorkoutPostedPage> {
                 ),
                 itemBuilder: (context, index, realIndex) {
                   final currentUserPostInfo = widget.currentUserPosts[index];
-                  return Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 5),
-                    child: Column(
-                      children: [
-                        ClipRRect(
-                          borderRadius: const BorderRadius.all(
-                            Radius.circular(8.0),
+                    return Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 5),
+                      child: Column(
+                        children: [
+                          ClipRRect(
+                            borderRadius: const BorderRadius.all(
+                              Radius.circular(8.0),
+                            ),
+                            child: DisplayImageStack(
+                              currentUserPosts: widget.currentUserPosts,
+                              currentUserPostInfo: currentUserPostInfo,
+                              index: index,
+                              current: _current,
+                            ),
                           ),
-                          child: DisplayImageStack(
-                            currentUserPosts: widget.currentUserPosts,
-                            currentUserPostInfo: currentUserPostInfo,
-                            index: index,
-                            current: _current,
-                          ),
-                        ),
-                        const SizedBox(height: 10),
-                        currentUserPostInfo.reactions.isNotEmpty
-                            ? GestureDetector(
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          DisplayPostImageScreen(
+                          const SizedBox(height: 10),
+                          currentUserPostInfo.reactions.isNotEmpty
+                              ? GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      DisplayPostImageScreen(
                                         firebaseUserPosts:
-                                            widget.currentUserPosts,
+                                        widget.currentUserPosts,
                                       ),
-                                    ),
-                                  );
-                                },
-                                child: ReactionImages(
-                                  postReactions: currentUserPostInfo.reactions,
-                                  isCurrentUserPost: true,
                                 ),
-                              )
-                            : const SizedBox(),
-                        uploadImageProvider.uploadError
-                            ? const Text(
-                                'There was an error uploading your workout. Please try again.',
-                                style: TextStyle(color: Colors.red),
-                                textAlign: TextAlign.center,
-                              )
-                            : Text(
-                                currentUserPostInfo.post.caption != ''
-                                    ? currentUserPostInfo.post.caption
-                                    : 'Add a caption...',
-                                style: const TextStyle(color: Colors.white),
-                                textAlign: TextAlign.center,
-                              )
-                      ],
-                    ),
-                  );
+                              );
+                            },
+                            child: ReactionImages(
+                              postReactions: currentUserPostInfo.reactions,
+                              isCurrentUserPost: true,
+                            ),
+                          )
+                              : const SizedBox(),
+                          uploadImageProvider.uploadError
+                              ? const Text(
+                            'There was an error uploading your workout. Please try again.',
+                            style: TextStyle(color: Colors.red),
+                            textAlign: TextAlign.center,
+                          )
+                              : Text(
+                            currentUserPostInfo.post.caption != ''
+                                ? currentUserPostInfo.post.caption
+                                : 'Add a caption...',
+                            style: const TextStyle(color: Colors.white),
+                            textAlign: TextAlign.center,
+                          )
+                        ],
+                      ),
+                    );
                 },
               ),
-              const FriendsPostList(),
+               const FriendsPostList(),
             ],
           ),
         ),
+      
       ),
     );
   }

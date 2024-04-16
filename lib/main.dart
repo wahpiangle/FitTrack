@@ -9,6 +9,7 @@ import 'package:group_project/pages/auth_wrapper.dart';
 import 'package:group_project/pages/complete_workout/capture_image/upload_image_provider.dart';
 import 'package:group_project/pages/complete_workout/congratulation_screen.dart';
 import 'package:group_project/pages/complete_workout/capture_image/post_workout_prompt.dart';
+import 'package:group_project/pages/home/homepage_scroll_provider.dart';
 import 'package:group_project/pages/layout/app_layout.dart';
 import 'package:group_project/pages/history/history_screen.dart';
 import 'package:group_project/pages/layout/user_profile_provider.dart';
@@ -75,6 +76,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => UserProfileProvider()),
         ChangeNotifierProvider(create: (context) => CustomTimerProvider()),
         ChangeNotifierProvider(create: (context) => UploadImageProvider()),
+        ChangeNotifierProvider(create: (context) => HomepageScrollProvider()),
         StreamProvider.value(
           value: AuthService().user,
           initialData: null,
@@ -110,3 +112,7 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
+
+
+

@@ -176,8 +176,14 @@ class FirebasePostsService {
 
   static Future<List<Reaction>> getReactionsByPostId(String postId) async {
     try {
+      final DocumentReference postRef = postsCollectionRef.doc(postId);
       final QuerySnapshot<Map<String, dynamic>> querySnapshot =
-          await postsCollectionRef.doc(postId).collection('reactions').get();
+      await postRef.collection('reactions').get();
+
+      if (querySnapshot.docs.isEmpty) {
+        return [];
+      }
+
       List<Reaction> reactions = [];
       for (var doc in querySnapshot.docs) {
         Reaction reaction = Reaction.fromDocument(doc);
@@ -186,10 +192,11 @@ class FirebasePostsService {
       }
       return reactions;
     } catch (e) {
-      print(e);
+      print('Error fetching reactions: $e');
       return [];
     }
   }
+
 
   static Future<Post> getPostById(String postId) async {
     try {
