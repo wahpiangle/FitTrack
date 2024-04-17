@@ -65,7 +65,7 @@ class ExerciseListItem extends StatelessWidget {
                       ),
                     )
                         : Image.asset(
-                      exercise.imagePath,
+                      exercise.halfImagePath,
                       fit: BoxFit.contain,
                     ),
                   ),
