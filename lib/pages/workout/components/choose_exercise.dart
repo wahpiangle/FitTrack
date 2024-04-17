@@ -74,6 +74,9 @@ class ChooseExerciseState extends State<ChooseExercise> {
             .toList();
       }
       searchText = query;
+      recentExercises = objectBox.exerciseService.getRecentExercises(10,
+          category: selectedCategory.isEmpty ? null : selectedCategory.join(", "),
+          bodyPart: selectedBodyPart.isEmpty ? null : selectedBodyPart);
     });
   }
 
