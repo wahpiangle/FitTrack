@@ -23,7 +23,6 @@ class ExerciseListItem extends StatelessWidget {
     final exerciseCategory = exercise.category.target?.name ?? ' ';
     final containsSearchText = exerciseName.toLowerCase().contains(searchText.toLowerCase());
 
-    // Style for the subtitle to display body part and category as 'Body Part (Category)'
     final subtitleText = '$exerciseBodyPart ($exerciseCategory)';
 
     if (searchText.isEmpty || containsSearchText) {

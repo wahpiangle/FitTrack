@@ -60,7 +60,7 @@ class WorkoutExerciseListItem extends StatelessWidget {
                   style: TextStyle(color: Colors.grey[500], fontSize: 14)),
             ),
           ),
-          Divider(color: Colors.grey[700], height: 0.1, thickness: 0.8,),  // Adjust the color and thickness as needed
+          Divider(color: Colors.grey[700], height: 0.1, thickness: 0.8,),
         ],
       ),
     );

@@ -272,13 +272,11 @@ class ExerciseService {
 
     for (var session in recentSessions) {
       for (var setInfo in session.exercisesSetsInfo) {
-        // Check if the exercise target is null and skip if true
         if (setInfo.exercise.target == null) {
-          continue; // Skip to the next iteration if the exercise data is not available
+          continue;
         }
-        final exercise = setInfo.exercise.target!; // Now safe to use !
+        final exercise = setInfo.exercise.target!;
 
-        // Additional condition to ensure all necessary properties are non-null
         if (!exerciseIds.contains(exercise.id) &&
             exercise.category.target != null &&
             exercise.bodyPart.target != null &&
