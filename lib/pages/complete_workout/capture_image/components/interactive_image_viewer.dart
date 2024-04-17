@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:group_project/pages/home/homepage_scroll_provider.dart';
+import 'package:provider/provider.dart';
 
 class InteractiveImageViewer extends StatefulWidget {
   final Function? toggleRetake;
@@ -33,6 +35,7 @@ class _InteractiveImageViewerState extends State<InteractiveImageViewer> {
   Matrix4 initialControllerValue = Matrix4.identity();
   @override
   Widget build(BuildContext context) {
+    final scrollProvider = Provider.of<HomepageScrollProvider>(context);
     return Stack(
       children: [
         ClipRRect(
@@ -86,76 +89,86 @@ class _InteractiveImageViewerState extends State<InteractiveImageViewer> {
         Positioned(
           left: xOffset,
           top: yOffset,
-          child: GestureDetector(
-            onTap: () {
-              HapticFeedback.vibrate();
-              setState(() {
-                displaySecondImage = !displaySecondImage;
-              });
+          child: Listener(
+            onPointerDown: (event) {
+              scrollProvider.disableScroll();
+              scrollProvider.disableHorizontalScroll();
             },
-            onTapDown: (details) {
-              if (widget.disableScroll != null) {
-                widget.disableScroll!();
-              }
+            onPointerUp: (event) {
+              scrollProvider.enableScroll();
+              scrollProvider.enableHorizontalScroll();
             },
-            onPanUpdate: (details) {
-              if (widget.disableScroll != null) {
-                widget.disableScroll!();
-              }
-              setState(() {
-                xOffset += details.delta.dx * 1;
-                yOffset += details.delta.dy * 1;
+            child: GestureDetector(
+              onTap: () {
+                HapticFeedback.vibrate();
+                setState(() {
+                  displaySecondImage = !displaySecondImage;
+                });
+              },
+              onTapDown: (details) {
+                if (widget.disableScroll != null) {
+                  widget.disableScroll!();
+                }
+              },
+              onPanUpdate: (details) {
+                if (widget.disableScroll != null) {
+                  widget.disableScroll!();
+                }
+                setState(() {
+                  xOffset += details.delta.dx * 1;
+                  yOffset += details.delta.dy * 1;
 
-                xOffset =
-                    xOffset.clamp(20, MediaQuery.of(context).size.width * 0.62);
-                yOffset =
-                    yOffset.clamp(20, MediaQuery.of(context).size.height * 0.4);
-              });
-            },
-            onPanEnd: (details) {
-              if (widget.enableScroll != null) {
-                widget.enableScroll!();
-              }
-              if (xOffset > MediaQuery.of(context).size.width * 0.62 / 2) {
-                setState(() {
-                  xOffset = MediaQuery.of(context).size.width * 0.62;
+                  xOffset = xOffset.clamp(
+                      20, MediaQuery.of(context).size.width * 0.62);
+                  yOffset = yOffset.clamp(
+                      20, MediaQuery.of(context).size.height * 0.4);
                 });
-              } else {
-                setState(() {
-                  xOffset = 20;
-                });
-              }
-              if (yOffset > MediaQuery.of(context).size.height * 0.4 / 2) {
-                setState(() {
-                  yOffset = MediaQuery.of(context).size.height * 0.4;
-                });
-              } else {
-                setState(() {
-                  yOffset = 20;
-                });
-              }
-            },
-            child: hideSecondImage
-                ? Container()
-                : Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(),
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(20),
-                      child: getImageBasedonType(
-                        widget.imagePath,
-                        false,
-                        displaySecondImage,
-                        widget.imagePath2,
-                        widget.imagePath,
-                        context,
+              },
+              onPanEnd: (details) {
+                if (widget.enableScroll != null) {
+                  widget.enableScroll!();
+                }
+                if (xOffset > MediaQuery.of(context).size.width * 0.62 / 2) {
+                  setState(() {
+                    xOffset = MediaQuery.of(context).size.width * 0.62;
+                  });
+                } else {
+                  setState(() {
+                    xOffset = 20;
+                  });
+                }
+                if (yOffset > MediaQuery.of(context).size.height * 0.4 / 2) {
+                  setState(() {
+                    yOffset = MediaQuery.of(context).size.height * 0.4;
+                  });
+                } else {
+                  setState(() {
+                    yOffset = 20;
+                  });
+                }
+              },
+              child: hideSecondImage
+                  ? Container()
+                  : Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(20),
+                        child: getImageBasedonType(
+                          widget.imagePath,
+                          false,
+                          displaySecondImage,
+                          widget.imagePath2,
+                          widget.imagePath,
+                          context,
+                        ),
                       ),
                     ),
-                  ),
+            ),
           ),
-        ),
+        )
       ],
     );
   }

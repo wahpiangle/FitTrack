@@ -24,15 +24,15 @@ class Post {
     required this.postId,
   });
 
-  static fromDocument(QueryDocumentSnapshot<Map<String, dynamic>> doc) {
+  static Post fromDocument(QueryDocumentSnapshot<Map<String, dynamic>> doc) {
     return Post(
       postId: doc.id,
-      caption: doc.data()['caption'],
-      firstImageUrl: doc.data()['firstImageUrl'],
-      secondImageUrl: doc.data()['secondImageUrl'],
-      date: doc.data()['date'].toDate(),
-      postedBy: doc.data()['postedBy'],
-      workoutSessionId: doc.data()['workoutSessionId'],
+      caption: doc.data()['caption'] ?? '',
+      firstImageUrl: doc.data()['firstImageUrl'] ?? '',
+      secondImageUrl: doc.data()['secondImageUrl'] ?? '',
+      date: doc.data()['date']?.toDate() ?? DateTime.now(),
+      postedBy: doc.data()['postedBy'] ?? '',
+      workoutSessionId: doc.data()['workoutSessionId'] ?? '',
     );
   }
 

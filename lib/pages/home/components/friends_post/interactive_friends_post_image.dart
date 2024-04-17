@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:group_project/models/firebase/firebase_user_post.dart';
+import 'package:group_project/pages/complete_workout/capture_image/components/interactive_image_viewer.dart';
 import 'package:group_project/pages/home/components/reaction/reaction_button.dart';
 import 'package:group_project/pages/home/components/reaction/reaction_images.dart';
 
 class InteractiveFriendsPostImage extends StatefulWidget {
   final FirebaseUserPost friendPostData;
   final void Function() toggleState;
+  final bool isTappingSmallImage;
+
   const InteractiveFriendsPostImage({
     super.key,
     required this.friendPostData,
     required this.toggleState,
+    required this.isTappingSmallImage,
   });
 
   @override
@@ -36,25 +40,9 @@ class _InteractiveFriendsPostImageState
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        ClipRRect(
-          borderRadius: BorderRadius.circular(8.0),
-          child: Image.network(
-            widget.friendPostData.post.firstImageUrl,
-            fit: BoxFit.cover,
-            width: double.infinity,
-          ),
-        ),
-        Positioned(
-          top: 20,
-          left: 20,
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(8.0),
-            child: Image.network(
-              widget.friendPostData.post.secondImageUrl,
-              fit: BoxFit.cover,
-              width: 100,
-            ),
-          ),
+        InteractiveImageViewer(
+          imagePath: widget.friendPostData.post.firstImageUrl,
+          imagePath2: widget.friendPostData.post.secondImageUrl,
         ),
         displayHoldInstruction
             ? Positioned.fill(
