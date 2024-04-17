@@ -209,7 +209,7 @@ class ExerciseListScreenState extends State<ExerciseListScreen> {
                       children: [
                         Padding(
                           padding: const EdgeInsets.symmetric(vertical: 8),
-                          child: searchText.isEmpty
+                          child: searchText.isEmpty && recentExercises.isNotEmpty
                               ? const Text(
                             "Recent",
                             style: TextStyle(
