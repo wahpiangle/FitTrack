@@ -65,7 +65,9 @@ class _CaptureReactionDialogState extends State<CaptureReactionDialog> {
     });
     setState(() {
       _controller = CameraController(
-        cameras.first,
+        cameras.firstWhere((camera) {
+          return camera.lensDirection == CameraLensDirection.front;
+        }, orElse: () => cameras.first),
         ResolutionPreset.medium,
       );
     });
