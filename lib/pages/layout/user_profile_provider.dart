@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:group_project/services/firebase/auth_service.dart';
 import 'package:group_project/services/firebase/firebase_user_service.dart';
 
 class UserProfileProvider extends ChangeNotifier {
