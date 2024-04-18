@@ -151,7 +151,7 @@ class _DisplayPostImageScreenState extends State<DisplayPostImageScreen> {
               child: Container(
                 padding: const EdgeInsets.all(10),
                 child: SingleChildScrollView(
-                  physics: _pointerCount == 2
+                  physics: _pointerCount == 2 || _isScrollDisabled
                       ? const NeverScrollableScrollPhysics()
                       : null,
                   child: Column(

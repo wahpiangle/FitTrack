@@ -93,10 +93,16 @@ class _InteractiveImageViewerState extends State<InteractiveImageViewer> {
             onPointerDown: (event) {
               scrollProvider.disableScroll();
               scrollProvider.disableHorizontalScroll();
+              if (widget.disableScroll != null) {
+                widget.disableScroll!();
+              }
             },
             onPointerUp: (event) {
               scrollProvider.enableScroll();
               scrollProvider.enableHorizontalScroll();
+              if (widget.enableScroll != null) {
+                widget.enableScroll!();
+              }
             },
             child: GestureDetector(
               onTap: () {
