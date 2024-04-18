@@ -5,7 +5,6 @@ import 'package:group_project/models/firebase/firebase_user.dart';
 import 'package:group_project/services/firebase/firebase_user_service.dart';
 
 class FirebaseFriendsService {
-
   static Future<List<FirebaseUser>> searchUsers(String searchText) async {
     searchText = searchText.toLowerCase();
 
@@ -26,14 +25,19 @@ class FirebaseFriendsService {
     return results;
   }
 
-  static Future<Map<String, bool>> checkFriendRequestStatus(String friendUid) async {
+  static Future<Map<String, bool>> checkFriendRequestStatus(
+      String friendUid) async {
     final currentUserUid = FirebaseAuth.instance.currentUser?.uid;
     if (currentUserUid == null) return {'sent': false, 'received': false};
 
-    final currentUserDoc = await FirebaseFirestore.instance.collection('users').doc(currentUserUid).get();
+    final currentUserDoc = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(currentUserUid)
+        .get();
     final userData = currentUserDoc.data();
     final requestsSent = userData?['requestSent'] as List<dynamic>? ?? [];
-    final requestsReceived = userData?['requestReceived'] as List<dynamic>? ?? [];
+    final requestsReceived =
+        userData?['requestReceived'] as List<dynamic>? ?? [];
 
     return {
       'sent': requestsSent.contains(friendUid),
@@ -41,21 +45,21 @@ class FirebaseFriendsService {
     };
   }
 
-
-
   static Future<void> cancelFriendRequest(String friendUid) async {
     final currentUserUid = FirebaseAuth.instance.currentUser?.uid;
     if (currentUserUid == null) return;
 
     // Canceling the friend request
-    await FirebaseFirestore.instance.collection('users').doc(currentUserUid).update({
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(currentUserUid)
+        .update({
       'requestSent': FieldValue.arrayRemove([friendUid]),
     });
     await FirebaseFirestore.instance.collection('users').doc(friendUid).update({
       'requestReceived': FieldValue.arrayRemove([currentUserUid]),
     });
   }
-
 
   static addFriend(String friendUid) async {
     final currentUserUid = FirebaseAuth.instance.currentUser?.uid;
@@ -77,7 +81,6 @@ class FirebaseFriendsService {
     }
   }
 
-
   static Future<Map<FirebaseUser, int>> getFriendSuggestions() async {
     final currentUserUid = FirebaseAuth.instance.currentUser?.uid;
 
@@ -86,7 +89,8 @@ class FirebaseFriendsService {
         .doc(currentUserUid)
         .get();
 
-    final currentUserFriendsUids = currentUserSnapshot.data()?['friends'] as List<dynamic>? ?? [];
+    final currentUserFriendsUids =
+        currentUserSnapshot.data()?['friends'] as List<dynamic>? ?? [];
     List<FirebaseUser> currentUserFriends = [];
     for (var friendUid in currentUserFriendsUids) {
       final friend = await FirebaseUserService.getUserByUid(friendUid);
@@ -97,16 +101,20 @@ class FirebaseFriendsService {
     final addedUserIds = <String>{};
 
     for (var friend in currentUserFriends) {
-      final friendFriendsUid = await FirebaseUserService.getUserFriendsUidsByUid(friend.uid);
+      final friendFriendsUid =
+          await FirebaseUserService.getUserFriendsUidsByUid(friend.uid);
       for (var friendOfFriendUid in friendFriendsUid) {
-        if (friendOfFriendUid == currentUserUid || currentUserFriendsUids.contains(friendOfFriendUid)) {
+        if (friendOfFriendUid == currentUserUid ||
+            currentUserFriendsUids.contains(friendOfFriendUid)) {
           continue;
         }
 
         if (!addedUserIds.contains(friendOfFriendUid)) {
-          final friendOfFriend = await FirebaseUserService.getUserByUid(friendOfFriendUid);
+          final friendOfFriend =
+              await FirebaseUserService.getUserByUid(friendOfFriendUid);
           if (friendsOfFriends.containsKey(friendOfFriend)) {
-            friendsOfFriends[friendOfFriend] = friendsOfFriends[friendOfFriend]! + 1;
+            friendsOfFriends[friendOfFriend] =
+                friendsOfFriends[friendOfFriend]! + 1;
           } else {
             friendsOfFriends[friendOfFriend] = 1;
             addedUserIds.add(friendOfFriendUid);
@@ -116,7 +124,6 @@ class FirebaseFriendsService {
     }
     return friendsOfFriends;
   }
-
 
   static removeFriend(String friendUid, VoidCallback onRemoved) async {
     final currentUserUid = FirebaseAuth.instance.currentUser?.uid;
@@ -207,8 +214,6 @@ class FirebaseFriendsService {
     return friendRequestsUserDocuments;
   }
 
-
-
   static Future<int> getMutualFriendsCount(String otherUserUid) async {
     final currentUserUid = FirebaseAuth.instance.currentUser?.uid;
     if (currentUserUid == null) return 0;
@@ -217,17 +222,18 @@ class FirebaseFriendsService {
         .collection('users')
         .doc(currentUserUid)
         .get();
-    final currentUserFriends = Set.from(currentUserDoc.data()?['friends'] as List<dynamic>);
+    final currentUserFriends =
+        Set.from(currentUserDoc.data()?['friends'] as List<dynamic>);
 
     final otherUserDoc = await FirebaseFirestore.instance
         .collection('users')
         .doc(otherUserUid)
         .get();
-    final otherUserFriends = Set.from(otherUserDoc.data()?['friends'] as List<dynamic>);
+    final otherUserFriends =
+        Set.from(otherUserDoc.data()?['friends'] as List<dynamic>);
 
     final mutualFriends = currentUserFriends.intersection(otherUserFriends);
 
     return mutualFriends.length;
   }
-
 }
