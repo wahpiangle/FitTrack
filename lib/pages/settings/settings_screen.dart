@@ -199,11 +199,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       ],
                     ),
                     const SizedBox(height: 55),
-                    ProfileMenuItem(
-                      title: "Notifications",
-                      icon: Icons.notifications,
-                      onPressed: () {},
-                    ),
+                    // ProfileMenuItem(
+                    //   title: "Notifications",
+                    //   icon: Icons.notifications,
+                    //   onPressed: () {},
+                    // ),
                     ProfileMenuItem(
                       title: "Timer",
                       icon: Icons.timer,
@@ -216,11 +216,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         );
                       },
                     ),
-                    ProfileMenuItem(
-                      title: "Help Centre",
-                      icon: Icons.info,
-                      onPressed: () {},
-                    ),
+                    // ProfileMenuItem(
+                    //   title: "Help Centre",
+                    //   icon: Icons.info,
+                    //   onPressed: () {},
+                    // ),
                     if (!isSignInWithGoogle)
                       ProfileMenuItem(
                         title: "Edit Password",
@@ -233,11 +233,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           );
                         },
                       ),
-                    ProfileMenuItem(
-                      title: "Terms and Conditions",
-                      icon: Icons.gavel,
-                      onPressed: () {},
-                    ),
+                    // ProfileMenuItem(
+                    //   title: "Terms and Conditions",
+                    //   icon: Icons.gavel,
+                    //   onPressed: () {},
+                    // ),
                     const SizedBox(height: 40),
                     LogoutButton(),
                   ],
