@@ -28,7 +28,7 @@ class UserProfileProvider extends ChangeNotifier {
   }
 
   Future<void> _loadDisplayName() async {
-    _displayName = AuthService().getCurrentUser()?.displayName ?? '';
+    _displayName = await FirebaseUserService.getUserDisplayName();
     notifyListeners();
   }
 

@@ -78,6 +78,12 @@ class FirebaseUserService {
     return doc['username'];
   }
 
+  static Future<String> getUserDisplayName() async {
+    final User user = auth.currentUser!;
+    final DocumentSnapshot doc = await usersCollectionRef.doc(user.uid).get();
+    return doc['displayName'];
+  }
+
   static Future<String> getProfilePicture() async {
     final User user = auth.currentUser!;
     final DocumentSnapshot doc = await usersCollectionRef.doc(user.uid).get();
