@@ -22,17 +22,17 @@ class FirebaseWorkoutSession {
       : date = json['date'].toDate(),
         duration = json['duration'],
         exercisesSetsInfo = (json['exercisesSetsInfo'] as List<dynamic>).map(
-          (exercisesSetsInfo) {
+              (exercisesSetsInfo) {
             return FirebaseExercisesSetsInfo(
               exerciseId: exercisesSetsInfo['exercise'],
               exerciseName: exercisesSetsInfo['exerciseName'] ?? '',
               exerciseSets:
-                  (exercisesSetsInfo['exerciseSets'] as List<dynamic>).map(
-                (exerciseSet) {
+              (exercisesSetsInfo['exerciseSets'] as List<dynamic>).map(
+                    (exerciseSet) {
                   return ExerciseSet(
                     reps: exerciseSet['reps'],
                     weight: exerciseSet['weight'],
-                    time: exerciseSet['time'],
+                    duration: exerciseSet['duration'],
                     isPersonalRecord: exerciseSet['isPersonalRecord'],
                   );
                 },
@@ -66,26 +66,29 @@ class FirebaseExercisesSetsInfo {
         : b);
   }
 
-  ExerciseSet getBestDurationSet() {
-    return exerciseSets.reduce((a, b) =>
-    objectBox.exerciseService
-        .getDurationMaxValue(a.time ?? 0, a) >
-        objectBox.exerciseService
-            .getDurationMaxValue(b.time ?? 0, b)
-        ? a
-        : b);
-  }
+// ExerciseSet getBestDurationSet() {
+//   return exerciseSets.reduce((a, b) {
+//     final aDuration = a.duration != null ? int.parse(a.duration!) : 0;
+//     final bDuration = b.duration != null ? int.parse(b.duration!) : 0;
+//     return objectBox.exerciseService
+//         .getDurationMaxValue(aDuration, a) >
+//         objectBox.exerciseService
+//             .getDurationMaxValue(bDuration, b)
+//         ? a
+//         : b;
+//   });
+// }
 
 
-  ExerciseSet getBestSetRepsOnly() {
-    return exerciseSets.reduce((a, b) =>
-    objectBox.exerciseService
-        .getDurationMaxValue(a.reps ?? 0, a) >
-        objectBox.exerciseService
-            .getDurationMaxValue(b.reps ?? 0, b)
-        ? a
-        : b);
-  }
+// ExerciseSet getBestSetRepsOnly() {
+//   return exerciseSets.reduce((a, b) =>
+//   objectBox.exerciseService
+//       .getDurationMaxValue(a.reps ?? 0, a) >
+//       objectBox.exerciseService
+//           .getDurationMaxValue(b.reps ?? 0, b)
+//       ? a
+//       : b);
+// }
 
 }
 

@@ -276,24 +276,23 @@ class _FriendPostWorkoutInfoState extends State<FriendPostWorkoutInfo> {
     );
   }
 }
+
 String getWeightRepsText(ExerciseSet set, Exercise? exercise) {
-  if (exercise?.category.target?.name == 'Assisted Bodyweight') {
+  if (exercise?.category.target?.name == 'Barbell'
+      || exercise?.category.target?.name == 'Dumbbell'
+      || exercise?.category.target?.name == 'Machine'
+      || exercise?.category.target?.name == 'Cable'
+      || exercise?.category.target?.name == 'Band'
+      || exercise?.category.target?.name == 'Other') {
+    return '${set.weight} kg x ${set.reps}';
+  }
+  else if (exercise?.category.target?.name == 'Assisted Bodyweight') {
     return '-${set.weight} kg x ${set.reps}';
   } else if (exercise?.category.target?.name == 'Weighted Bodyweight') {
     return '+${set.weight} kg x ${set.reps}';
-  } else if (exercise?.category.target?.name == 'Reps Only') {
-    return '+${set.reps} reps';
   } else if (exercise?.category.target?.name == 'Duration') {
-    final timeString = set.time.toString();
-    if (timeString.length == 3) {
-      return '${timeString[0]}:${timeString[1]}${timeString[2]}';
-    } else if (timeString.length == 4) {
-      return '${timeString[0]}${timeString[1]}:${timeString[2]}${timeString[3]}';
-    } else if (timeString.length == 5) {
-      return '${timeString[0]}:${timeString[1]}${timeString[2]}:${timeString[3]}${timeString[4]}';
-    }
-    return '-';
+    return '${set.duration} ';
   } else {
-    return '${set.weight} kg x ${set.reps}';
+    return '${set.reps} reps';
   }
 }

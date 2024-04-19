@@ -298,8 +298,8 @@
           selection: TextSelection.collapsed(offset: updatedText.length),
         );
       } else if (newText.length == 6) {
-        // If 5 digits are typed, append the fifth digit after the colon
-        final updatedText = "${newText.substring(0, 1)}:${newText.substring(1, 2)}${newText.substring(3, 4)}:${newText.substring(4, 6)}";
+        // If 6 digits are typed, modify the text to "1:newText"
+        final updatedText = "1:${newText.substring(0, 2)}:${newText.substring(2, 4)}";
         return TextEditingValue(
           text: updatedText,
           selection: TextSelection.collapsed(offset: updatedText.length),

@@ -210,33 +210,79 @@ void setCompletionBasedOnExerciseType(ExercisesSetsInfo exercisesSetsInfo, Exerc
         exerciseSet.reps != null && exerciseSet.weight != null) {
       exerciseSet.isCompleted = !exerciseSet.isCompleted;
     }
-  } else if (targetType == "Duration") {
-    if (exerciseSet.time != null) {
-      String timeAsString = exerciseSet.time.toString();
-      if (timeAsString.length == 3) {
-        int secondDigit = int.parse(timeAsString[1]);
-        if (secondDigit != 6 && secondDigit != 7 && secondDigit != 8 && secondDigit != 9) {
-          exerciseSet.isCompleted = !exerciseSet.isCompleted;
-        }
-      } else if (timeAsString.length == 4) {
-        int thirdDigit = int.parse(timeAsString[2]);
-        int firstDigit = int.parse(timeAsString[0]);
-        if (thirdDigit != 6 && thirdDigit != 7 && thirdDigit != 8 && thirdDigit != 9) {
-          if (firstDigit != 6 && firstDigit != 7 && firstDigit != 8 && firstDigit != 9) {
-            exerciseSet.isCompleted = !exerciseSet.isCompleted;
+  }
+  else if (targetType == "Duration") {
+    // Check if duration is not null and contains '1:'
+    if (exerciseSet.duration != null) {
+      if (RegExp(r'^[0-9:]+$').hasMatch(exerciseSet.duration.toString())) { // if string has 0-9 and ":" in it
+        if (exerciseSet.duration.toString().length == 4){
+          if (exerciseSet.duration.toString()[1] == ':') {
+            if (exerciseSet.duration.toString()[2] == '0'
+                || exerciseSet.duration.toString()[2] == '1'
+                || exerciseSet.duration.toString()[2] == '2'
+                || exerciseSet.duration.toString()[2] == '3'
+                || exerciseSet.duration.toString()[2] == '4'
+                || exerciseSet.duration.toString()[2] == '5') { // proceed if seconds is < 59
+              if (RegExp(r'^\d$').hasMatch(exerciseSet.duration.toString()[0])) {
+                if (RegExp(r'^\d$').hasMatch(exerciseSet.duration.toString()[3])) { // make sure is number inside the string
+                  exerciseSet.isCompleted = !exerciseSet.isCompleted;
+                }
+              }
+            }
           }
         }
-      } else if (timeAsString.length == 5) {
-        int secondDigit = int.parse(timeAsString[1]);
-        int fourthDigit = int.parse(timeAsString[3]);
-        if (secondDigit != 6 && secondDigit != 7 && secondDigit != 8 && secondDigit != 9) {
-          if (fourthDigit != 6 && fourthDigit != 7 && fourthDigit != 8 && fourthDigit != 9) {
-            exerciseSet.isCompleted = !exerciseSet.isCompleted;
+        else if (exerciseSet.duration.toString().length == 5){
+          if (exerciseSet.duration.toString()[2] == ':') {
+            if (exerciseSet.duration.toString()[0] == '0'
+                || exerciseSet.duration.toString()[0] == '1'
+                || exerciseSet.duration.toString()[0] == '2'
+                || exerciseSet.duration.toString()[0] == '3'
+                || exerciseSet.duration.toString()[0] == '4'
+                || exerciseSet.duration.toString()[0] == '5') { // proceed if minutes is < 59
+              if (exerciseSet.duration.toString()[3] == '0'
+                  || exerciseSet.duration.toString()[3] == '1'
+                  || exerciseSet.duration.toString()[3] == '2'
+                  || exerciseSet.duration.toString()[3] == '3'
+                  || exerciseSet.duration.toString()[3] == '4'
+                  || exerciseSet.duration.toString()[3] == '5') { // proceed if seconds is < 59
+                if (RegExp(r'^\d$').hasMatch(exerciseSet.duration.toString()[1])) {
+                  if (RegExp(r'^\d$').hasMatch(exerciseSet.duration.toString()[4])) { // make sure is number inside the string
+                    exerciseSet.isCompleted = !exerciseSet.isCompleted;
+                  }
+                }
+              }
+            }
+          }
+        }
+        else if (exerciseSet.duration.toString().length == 7){
+          if (exerciseSet.duration.toString()[1] == ':' && exerciseSet.duration.toString()[4] == ':') {
+            if (exerciseSet.duration.toString()[2] == '0'
+                || exerciseSet.duration.toString()[2] == '1'
+                || exerciseSet.duration.toString()[2] == '2'
+                || exerciseSet.duration.toString()[2] == '3'
+                || exerciseSet.duration.toString()[2] == '4'
+                || exerciseSet.duration.toString()[2] == '5') {  // proceed if minutes is < 59
+              if (exerciseSet.duration.toString()[5] == '0'
+                  || exerciseSet.duration.toString()[5] == '1'
+                  || exerciseSet.duration.toString()[5] == '2'
+                  || exerciseSet.duration.toString()[5] == '3'
+                  || exerciseSet.duration.toString()[5] == '4'
+                  || exerciseSet.duration.toString()[5] == '5') { // proceed if seconds is < 59
+                if (RegExp(r'^\d$').hasMatch(exerciseSet.duration.toString()[0])) {
+                  if (RegExp(r'^\d$').hasMatch(exerciseSet.duration.toString()[3])) {
+                    if (RegExp(r'^\d$').hasMatch(exerciseSet.duration.toString()[6])) { // make sure is number inside the string
+                      exerciseSet.isCompleted = !exerciseSet.isCompleted;
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
     }
-  } else if (exerciseSet.reps != null && exerciseSet.weight != null) {
+  }
+  else if ( exerciseSet.weight != null) {
     exerciseSet.isCompleted = !exerciseSet.isCompleted;
   }
 }

@@ -25,7 +25,7 @@ class ExerciseWorkoutCard extends StatelessWidget {
   }
 
   String formatExerciseInfo(dynamic value, String category, String weightUnit) {
-    if (value.weight != null || value.reps != null || value.time != null) {
+    if (value.weight != null || value.reps != null || value.time != null || value.duration != null) {
       if (category == "Assisted Bodyweight") {
         return '-${value.weight} $weightUnit x ${value.reps}';
       } else if (category == "Weighted Bodyweight") {
@@ -33,16 +33,7 @@ class ExerciseWorkoutCard extends StatelessWidget {
       } else if (category == "Reps Only") {
         return '${value.reps} reps';
       } else if (category == "Duration") {
-        final timeString = value.time.toString();
-        if (timeString.length == 3) {
-          return '${timeString[0]}:${timeString[1]}${timeString[2]}';
-        } else if (timeString.length == 4) {
-          return '${timeString[0]}${timeString[1]}:${timeString[2]}${timeString[3]}';
-        } else if (timeString.length == 5) {
-          return '${timeString[0]}:${timeString[1]}${timeString[2]}:${timeString[3]}${timeString[4]}';
-        } else {
-          return '${value.weight} $weightUnit x ${value.reps}';
-        }
+        return '${value.duration}';
       } else {
         return '${value.weight} $weightUnit x ${value.reps}';
       }

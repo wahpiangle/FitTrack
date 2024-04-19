@@ -13,6 +13,7 @@ class RecentValues extends StatefulWidget {
   final int? recentWeight;
   final int? recentReps;
   final int? recentTime;
+  final String? recentDuration;
   const RecentValues({
     super.key,
     required this.isCurrentEditing,
@@ -22,12 +23,13 @@ class RecentValues extends StatefulWidget {
     required this.recentWeight,
     required this.recentReps,
     this.recentTime,
+    this.recentDuration,
   });
   @override
   State<RecentValues> createState() => _RecentValuesState();
 
   String generateRecentValuesText() {
-    if (recentWeight != null || recentTime != null || recentReps != null) {
+    if (recentWeight != null || recentTime != null || recentReps != null || recentDuration != null) {
       switch (exercisesSetsInfo.exercise.target?.category.target?.name) {
         case "Assisted Bodyweight":
           return '-${recentWeight}kg x ${recentReps}';
@@ -36,15 +38,7 @@ class RecentValues extends StatefulWidget {
         case "Reps Only":
           return '${recentReps} reps';
         case "Duration":
-          return recentTime != null
-              ? (recentTime.toString().length == 3
-              ? '${recentTime.toString()[0]}:${recentTime.toString()[1]}${recentTime.toString()[2]}'
-              : (recentTime.toString().length == 4)
-              ? '${recentTime.toString()[0]}${recentTime.toString()[1]}:${recentTime.toString()[2]}${recentTime.toString()[3]}'
-              : (recentTime.toString().length == 5)
-              ? '${recentTime.toString()[0]}:${recentTime.toString()[1]}${recentTime.toString()[2]}:${recentTime.toString()[3]}${recentTime.toString()[3]}'
-              : '${recentWeight} kg x ${recentReps}')
-              : '${recentWeight} kg x ${recentReps}';
+          return '${recentDuration}';
         default:
           return '${recentWeight}kg x ${recentReps}';
       }

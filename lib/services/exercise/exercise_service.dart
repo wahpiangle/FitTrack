@@ -148,47 +148,63 @@ class ExerciseService {
   void completeExerciseSet(int exerciseSetId) {
     ExerciseSet exerciseSet = exerciseSetBox.get(exerciseSetId)!;
     ExercisesSetsInfo? exercisesSetsInfo = exerciseSet.exerciseSetInfo.target;
-
-
     if (exercisesSetsInfo?.exercise.target?.category.target?.name == "Reps Only") {
       if (exerciseSet.reps == null) {
         return;
       }
     }
-
     else if (exercisesSetsInfo?.exercise.target?.category.target?.name == "Duration") {
-      String timeString = exerciseSet.time.toString();
-      if (exerciseSet.time == null || exerciseSet.time.toString().length < 3) {
+      if (exerciseSet.duration == null
+          || exerciseSet.duration.toString().length < 4
+          || exerciseSet.duration.toString().length > 7
+          || exerciseSet.duration.toString().length == 6
+          || !RegExp(r'^[0-9:]+$').hasMatch(exerciseSet.duration.toString())) {
         return;
       }
-      else if (exerciseSet.time.toString().length == 3 && ['6', '7', '8', '9'].contains(timeString[1])) {
+      else if (exerciseSet.duration.toString().length == 4) {
+        if (['6', '7', '8', '9'].contains(exerciseSet.duration.toString()[2])) { // return if seconds is > 59
           return;
+        }
+        else if ([':'].contains(exerciseSet.duration.toString()[0])
+            || [':'].contains(exerciseSet.duration.toString()[2])
+            || [':'].contains(exerciseSet.duration.toString()[3])
+            || ![':'].contains(exerciseSet.duration.toString()[1])) { //return if string is not in M:SS format
+          return;
+        }
       }
-      else if (exerciseSet.time.toString().length == 4  ) {
-        if (['6', '7', '8', '9'].contains(timeString[0])) {
+      else if (exerciseSet.duration.toString().length == 5) {
+        if (['6', '7', '8', '9'].contains(exerciseSet.duration.toString()[0])
+            || ['6', '7', '8', '9'].contains(exerciseSet.duration.toString()[3])) { // return if seconds and minutes are > 59
           return;
         }
-        else if (['6', '7', '8', '9'].contains(timeString[2])) {
+        else if ([':'].contains(exerciseSet.duration.toString()[0])
+            || [':'].contains(exerciseSet.duration.toString()[1])
+            || [':'].contains(exerciseSet.duration.toString()[3])
+            || [':'].contains(exerciseSet.duration.toString()[4])
+            || ![':'].contains(exerciseSet.duration.toString()[2])) { //return if string is not in MM:SS format
           return;
         }
       }
-      else if (exerciseSet.time.toString().length == 5  ) {
-        if (['6', '7', '8', '9'].contains(timeString[1])) {
-        return;
+      else if (exerciseSet.duration.toString().length == 7) {
+        if (['6', '7', '8', '9'].contains(exerciseSet.duration.toString()[2])
+            || ['6', '7', '8', '9'].contains(exerciseSet.duration.toString()[5])) { // return if seconds and minutes are > 59
+          return;
         }
-        else if (['6', '7', '8', '9'].contains(timeString[3])) {
+        else if ([':'].contains(exerciseSet.duration.toString()[0])
+            || [':'].contains(exerciseSet.duration.toString()[2])
+            || [':'].contains(exerciseSet.duration.toString()[3])
+            || [':'].contains(exerciseSet.duration.toString()[5])
+            || [':'].contains(exerciseSet.duration.toString()[6])
+            || ![':'].contains(exerciseSet.duration.toString()[1])
+            || ![':'].contains(exerciseSet.duration.toString()[4])) { //return if string is not in H:MM:SS format
           return;
         }
       }
     }
 
-    else if (exerciseSet.reps == null || exerciseSet.weight == null) {
+    else if (exerciseSet.reps == null || exerciseSet.weight == null ) {
       return;
     }
-
-
-
-
     exerciseSet.isCompleted = !exerciseSet.isCompleted;
     if (isPersonalRecord(exerciseSet) == true) {
       exerciseSet.isPersonalRecord = true;
@@ -239,20 +255,25 @@ class ExerciseService {
           .expand((element) => element.exerciseSets)
           .toList();
 
-      // Get the current time value for the exercise set
-      int currentTime = exerciseSet.time ?? 0;
 
-      // Check if the current time is the best among all other sets
+      // Get the current duration value for the exercise set
+      String duration = exerciseSet.duration ?? '0:00';
+
+      // Remove ":" from the duration string and convert it to an integer representing total seconds
+      int currentTime = getDurationInSeconds(duration);
+
+      // Check if the current duration is the best among all other sets
       for (ExerciseSet set in exerciseSets) {
         if (set.id != exerciseSet.id) {
-          int otherTime = set.time ?? 0;
+          String otherDuration = set.duration ?? '0:00';
+          int otherTime = getDurationInSeconds(otherDuration);
           if (otherTime > currentTime) {
-            // If any other set has a higher time, it's not a personal record
+            // If any other set has a higher duration, it's not a personal record
             return false;
           }
         }
       }
-      // If no other set has a higher time, it's a personal record
+      // If no other set has a higher duration, it's a personal record
       return true;
     } else if (category == "Reps Only") {
       // If the category is "Reps Only", we'll determine personal records based on reps
@@ -300,6 +321,14 @@ class ExerciseService {
     }
   }
 
+
+  int getDurationInSeconds(String duration) {
+    List<String> parts = duration.split(':');
+    int minutes = int.parse(parts[0]);
+    int seconds = int.parse(parts[1]);
+    return minutes * 60 + seconds;
+  }
+
   ExerciseSet getBestSet(WorkoutSession workoutSession) {
     List<ExerciseSet> allSets = [];
     for (var exerciseSetInfo in workoutSession.exercisesSetsInfo) {
@@ -339,9 +368,9 @@ class ExerciseService {
     ).toList();
     if (durationSets.isNotEmpty) {
       // There are "Duration" sets available
-      durationSets.sort((a, b) => getDurationMaxValue(b.time!, b)
-          .compareTo(getDurationMaxValue(a.time!, a)));
-      return durationSets.first;
+      ExerciseSet longestDurationSet = durationSets.reduce((a, b) =>
+      getDurationInSeconds(b.duration ?? '0') > getDurationInSeconds(a.duration ?? '0') ? b : a);
+      return longestDurationSet;
     } else {
       return ExerciseSet(); // Return some default value if no "Duration" sets found
     }
@@ -447,4 +476,30 @@ class ExerciseService {
     }
     return null;
   }
+
+  String? getRecentDuration(int exerciseId, int setIndex) {
+    final allWorkoutSessions = workoutSessionBox.getAll();
+    allWorkoutSessions.sort((a, b) => b.date.compareTo(a.date));
+    final mostRecentWorkoutSession = allWorkoutSessions.firstOrNull;
+    if (mostRecentWorkoutSession == null) {
+      return null;
+    }
+    final exerciseSetsInfo = mostRecentWorkoutSession.exercisesSetsInfo;
+
+    for (final exerciseSetInfo in exerciseSetsInfo) {
+      final exercise = exerciseSetInfo.exercise.target;
+      if (exercise != null && exercise.id == exerciseId) {
+        int counter = 0;
+        for (final exerciseSet in exerciseSetInfo.exerciseSets) {
+          if (counter == setIndex) {
+            final recentDuration = exerciseSet.duration;
+            return recentDuration;
+          }
+          counter++;
+        }
+      }
+    }
+    return null;
+  }
+
 }

@@ -4,9 +4,14 @@ import 'package:group_project/main.dart';
 import 'package:group_project/models/exercise_set.dart';
 import 'package:group_project/models/firebase/firebase_workout_session.dart';
 
+import '../../../../../../models/workout_session.dart';
+import '../../../../../layout/user_profile_provider.dart';
+
 class FriendPostBestSet extends StatelessWidget {
   final FirebaseWorkoutSession workoutSession;
   const FriendPostBestSet({super.key, required this.workoutSession});
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -37,23 +42,6 @@ class FriendPostBestSet extends StatelessWidget {
       return aOneRepMax > bOneRepMax ? a : b;
     });
 
-    final bestDurationSetInfo = workoutSession.exercisesSetsInfo.reduce((a, b) {
-      final aReps = a.exerciseSets[0].time ??
-          0; // Change this to get the reps directly from the ExerciseSet
-      final bReps = b.exerciseSets[0].time ??
-          0; // Change this to get the reps directly from the ExerciseSet
-      return aReps > bReps ? a : b;
-    });
-    final bestDurationSet = bestDurationSetInfo.exerciseSets.firstOrNull;
-
-    final bestRepsonlySetInfo = workoutSession.exercisesSetsInfo.reduce((a, b) {
-      final aReps = a.exerciseSets[0].reps ??
-          0; // Change this to get the reps directly from the ExerciseSet
-      final bReps = b.exerciseSets[0].reps ??
-          0; // Change this to get the reps directly from the ExerciseSet
-      return aReps > bReps ? a : b;
-    });
-    final bestRepsSet = bestRepsonlySetInfo.exerciseSets.firstOrNull;
 
     return Row(
       children: [
@@ -74,15 +62,14 @@ class FriendPostBestSet extends StatelessWidget {
               ),
             ),
             Text(
-              getBestExerciseName(bestSet, bestRepsSet, bestDurationSet,
-                  bestExerciseSetInfo.exerciseName),
+              bestExerciseSetInfo.exerciseName,
               style: const TextStyle(
                 color: AppColours.secondary,
                 fontSize: 12,
               ),
             ),
             Text(
-              getExerciseText(bestSet, bestRepsSet, bestDurationSet),
+              getExerciseText(bestSet),
               style: const TextStyle(
                 color: AppColours.secondary,
                 fontSize: 12,
@@ -95,122 +82,26 @@ class FriendPostBestSet extends StatelessWidget {
   }
 }
 
-String getWeightRepsText(ExerciseSet bestSet) {
-  if (bestSet.exerciseSetInfo.target?.exercise.target?.category.target?.name ==
-      'Assisted Bodyweight') {
-    return '-${bestSet.weight} kg x ${bestSet.reps}';
-  } else if (bestSet
-          .exerciseSetInfo.target?.exercise.target?.category.target?.name ==
-      'Weighted Bodyweight') {
-    return '+${bestSet.weight} kg x ${bestSet.reps}';
-  } else if (bestSet
-          .exerciseSetInfo.target?.exercise.target?.category.target?.name ==
-      'Reps Only') {
-    return '${bestSet.reps} reps';
-  } else if (bestSet
-          .exerciseSetInfo.target?.exercise.target?.category.target?.name ==
-      'Duration') {
-    final timeString = bestSet.time.toString();
-    if (timeString.length == 3) {
-      return '${timeString[0]}:${timeString[1]}${timeString[2]}';
-    } else if (timeString.length == 4) {
-      return '${timeString[0]}${timeString[1]}:${timeString[2]}${timeString[3]}';
-    } else if (timeString.length == 5) {
-      return '${timeString[0]}:${timeString[1]}${timeString[2]}:${timeString[3]}${timeString[4]}';
-    }
-    return '-';
+
+
+String getExerciseText(ExerciseSet exerciseSet) {
+  final category = exerciseSet.exerciseSetInfo.target?.exercise.target?.category.target?.name;
+
+  if (category == "Assisted Bodyweight") {
+    return '-${exerciseSet.weight} kg x ${exerciseSet.reps} reps';
+  } else if (category == "Weighted Bodyweight") {
+    return '+${exerciseSet.weight} kg x ${exerciseSet.reps} reps';
+  } else if (category == "Duration") {
+    return '${exerciseSet.duration}';
+  } else if (category == "Reps Only") {
+    return '${exerciseSet.reps} reps';
   } else {
-    return '${bestSet.weight} kg x ${bestSet.reps}';
+    return '${exerciseSet.weight} kg x ${exerciseSet.reps}';
   }
 }
 
-String getDurationText(ExerciseSet? bestDurationSet) {
-  if (bestDurationSet == null) {
-    return ''; // No best set available
-  }
-  final timeString = bestDurationSet.time.toString();
-  if (timeString.length == 3) {
-    return '${timeString[0]}:${timeString[1]}${timeString[2]}';
-  } else if (timeString.length == 4) {
-    return '${timeString[0]}${timeString[1]}:${timeString[2]}${timeString[3]}';
-  } else if (timeString.length == 5) {
-    return '${timeString[0]}:${timeString[1]}${timeString[2]}:${timeString[3]}${timeString[4]}';
-  } else {
-    return '-'; // Invalid time format
-  }
-}
 
-String getRepsOnlyText(ExerciseSet? bestRepsSet) {
-  if (bestRepsSet == null) {
-    return ''; // No best set available
-  }
-  if (bestRepsSet
-          .exerciseSetInfo.target?.exercise.target?.category.target?.name ==
-      'Reps Only') {
-    return '${bestRepsSet.reps} reps';
-  } else {
-    return '-'; // Invalid time format
-  }
-}
 
-String getBestExerciseName(ExerciseSet bestSet, ExerciseSet? bestRepsSet,
-    ExerciseSet? bestDurationSet, String bestExerciseName) {
-  if (bestSet.exerciseSetInfo.target?.exercise.target?.category.target?.name == 'Assisted Bodyweight' ||
-      bestSet.exerciseSetInfo.target?.exercise.target?.category.target?.name ==
-          'Weighted Bodyweight' ||
-      bestSet.exerciseSetInfo.target?.exercise.target?.category.target?.name ==
-          'Barbell' ||
-      bestSet.exerciseSetInfo.target?.exercise.target?.category.target?.name ==
-          'Dumbbell' ||
-      bestSet.exerciseSetInfo.target?.exercise.target?.category.target?.name ==
-          'Machine' ||
-      bestSet.exerciseSetInfo.target?.exercise.target?.category.target?.name ==
-          'Cable' ||
-      bestSet.exerciseSetInfo.target?.exercise.target?.category.target?.name ==
-          'Band' ||
-      bestSet.exerciseSetInfo.target?.exercise.target?.category.target?.name ==
-          'Other') {
-    return bestSet.exerciseSetInfo.target!.exercise.target!.name;
-  } else if (bestRepsSet
-          ?.exerciseSetInfo.target?.exercise.target?.category.target?.name ==
-      'Reps Only') {
-    return bestRepsSet!.exerciseSetInfo.target!.exercise.target!.name;
-  } else if (bestDurationSet
-          ?.exerciseSetInfo.target?.exercise.target?.category.target?.name ==
-      'Duration') {
-    return bestDurationSet!.exerciseSetInfo.target!.exercise.target!.name;
-  } else {
-    return '-';
-  }
-}
 
-String getExerciseText(ExerciseSet bestSet, ExerciseSet? bestRepsSet,
-    ExerciseSet? bestDurationSet) {
-  if (bestSet.exerciseSetInfo.target?.exercise.target?.category.target?.name == 'Assisted Bodyweight' ||
-      bestSet.exerciseSetInfo.target?.exercise.target?.category.target?.name ==
-          'Weighted Bodyweight' ||
-      bestSet.exerciseSetInfo.target?.exercise.target?.category.target?.name ==
-          'Barbell' ||
-      bestSet.exerciseSetInfo.target?.exercise.target?.category.target?.name ==
-          'Dumbbell' ||
-      bestSet.exerciseSetInfo.target?.exercise.target?.category.target?.name ==
-          'Machine' ||
-      bestSet.exerciseSetInfo.target?.exercise.target?.category.target?.name ==
-          'Cable' ||
-      bestSet.exerciseSetInfo.target?.exercise.target?.category.target?.name ==
-          'Band' ||
-      bestSet.exerciseSetInfo.target?.exercise.target?.category.target?.name ==
-          'Other') {
-    return getWeightRepsText(bestSet);
-  } else if (bestRepsSet
-          ?.exerciseSetInfo.target?.exercise.target?.category.target?.name ==
-      'Reps Only') {
-    return getRepsOnlyText(bestRepsSet!);
-  } else if (bestDurationSet
-          ?.exerciseSetInfo.target?.exercise.target?.category.target?.name ==
-      'Duration') {
-    return getDurationText(bestDurationSet!);
-  } else {
-    return "-";
-  }
-}
+
+

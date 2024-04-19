@@ -310,23 +310,13 @@ enum ExerciseCategory {
   Other,
 }
 
-String getTimeString(String timeString) {
-  if (timeString.length == 3) {
-    return '${timeString[0]}:${timeString[1]}${timeString[2]}';
-  } else if (timeString.length == 4) {
-    return '${timeString[0]}${timeString[1]}:${timeString[2]}${timeString[3]}';
-  } else if (timeString.length == 5) {
-    return '${timeString[0]}:${timeString[1]}${timeString[2]}:${timeString[3]}${timeString[4]}';
-  }
-  return '-';
-}
 
 String getWeightRepsText(ExerciseSet bestSet) {
   final category =
       bestSet.exerciseSetInfo.target?.exercise.target?.category.target?.name;
   final weight = bestSet.weight;
   final reps = bestSet.reps;
-  final timeString = bestSet.time.toString();
+  final duration = bestSet.duration;
 
   switch (category) {
     case 'Assisted Bodyweight':
@@ -336,7 +326,7 @@ String getWeightRepsText(ExerciseSet bestSet) {
     case 'Reps Only':
       return '$reps reps';
     case 'Duration':
-      return getTimeString(timeString);
+      return '$duration';
     default:
       return '$weight kg x $reps';
   }
@@ -363,9 +353,9 @@ String getExerciseName(
     ExerciseSet bestSet, ExerciseSet bestDurationSet, ExerciseSet bestRepsSet) {
   final category =
       bestSet.exerciseSetInfo.target?.exercise.target?.category.target?.name;
-  final categoryrepsonly = bestDurationSet
+  final categoryduration = bestDurationSet
       .exerciseSetInfo.target?.exercise.target?.category.target?.name;
-  final categoryduration = bestRepsSet
+  final categoryrepsonly = bestRepsSet
       .exerciseSetInfo.target?.exercise.target?.category.target?.name;
 
   if (category == 'Assisted Bodyweight' ||
@@ -377,12 +367,12 @@ String getExerciseName(
       category == 'Band' ||
       category == 'Other') {
     return bestSet.exerciseSetInfo.target!.exercise.target!.name;
-  } else if (categoryrepsonly == 'Duration') {
+  } else if (categoryduration == 'Duration') {
     return bestDurationSet.exerciseSetInfo.target!.exercise.target!.name;
-  } else if (categoryduration == 'Reps Only') {
+  } else if (categoryrepsonly == 'Reps Only') {
     return bestRepsSet.exerciseSetInfo.target!.exercise.target!.name;
   } else {
-    return 'bye';
+    return '-';
   }
 }
 
@@ -409,6 +399,6 @@ String getCategoryText(
   } else if (categoryduration == 'Reps Only') {
     return getWeightRepsText(bestRepsSet);
   } else {
-    return 'bye';
+    return '-';
   }
 }

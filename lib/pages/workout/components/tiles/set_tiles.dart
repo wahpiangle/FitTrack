@@ -10,6 +10,7 @@ import 'package:group_project/pages/workout/components/tiles/set_labels_weighted
 import 'package:group_project/pages/workout/components/tiles/set_tile.dart';
 import 'package:group_project/pages/workout/components/tiles/set_tile_assisted.dart';
 import 'package:group_project/pages/workout/components/tiles/set_tile_duration.dart';
+import 'package:group_project/pages/workout/components/tiles/set_tile_durationn.dart';
 import 'package:group_project/pages/workout/components/tiles/set_tile_repsonly.dart';
 import 'package:group_project/pages/workout/components/tiles/set_tile_weighted.dart';
 
@@ -164,7 +165,7 @@ Widget buildSetTile(
       isCurrentEditing: isCurrentEditing,
     );
   } else if (categoryName == "Duration") {
-    return SetTileDuration(
+    return SetTileDurationn(
       set: set,
       setIndex: setIndex,
       exercisesSetsInfo: exercisesSetsInfo,

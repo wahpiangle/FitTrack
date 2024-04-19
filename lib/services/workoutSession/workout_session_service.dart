@@ -74,7 +74,8 @@ class WorkoutSessionService {
         final newExerciseSet = ExerciseSet();
         newExerciseSet.reps = exerciseSet.reps;
         newExerciseSet.weight = exerciseSet.weight;
-        newExerciseSet.time = exerciseSet.time;
+        // newExerciseSet.time = exerciseSet.time;
+        newExerciseSet.duration = exerciseSet.duration;
         newExerciseSet.exerciseSetInfo.target = newExercisesSetsInfo;
         newExercisesSetsInfo.exerciseSets.add(newExerciseSet);
       }
@@ -146,8 +147,12 @@ class WorkoutSessionService {
             workoutSession.exercisesSetsInfo[i].exerciseSets[j].weight) {
           return true;
         }
-        if (editingWorkoutSession.exercisesSetsInfo[i].exerciseSets[j].time !=
-            workoutSession.exercisesSetsInfo[i].exerciseSets[j].time) {
+        // if (editingWorkoutSession.exercisesSetsInfo[i].exerciseSets[j].time !=
+        //     workoutSession.exercisesSetsInfo[i].exerciseSets[j].time) {
+        //   return true;
+        // }
+        if (editingWorkoutSession.exercisesSetsInfo[i].exerciseSets[j].duration !=
+            workoutSession.exercisesSetsInfo[i].exerciseSets[j].duration) {
           return true;
         }
       }
@@ -176,7 +181,8 @@ class WorkoutSessionService {
         final newExerciseSet = ExerciseSet();
         newExerciseSet.reps = exerciseSet.reps;
         newExerciseSet.weight = exerciseSet.weight;
-        newExerciseSet.time = exerciseSet.time;
+        // newExerciseSet.time = exerciseSet.time;
+        newExerciseSet.duration = exerciseSet.duration;
         newExerciseSet.exerciseSetInfo.target = newExercisesSetsInfo;
         newExercisesSetsInfo.exerciseSets.add(newExerciseSet);
       }
@@ -237,7 +243,8 @@ class WorkoutSessionService {
             final newExerciseSet = ExerciseSet();
             newExerciseSet.reps = exerciseSet['reps'];
             newExerciseSet.weight = exerciseSet['weight'];
-            newExerciseSet.time = exerciseSet['time'];
+            // newExerciseSet.time = exerciseSet['time'];
+            newExerciseSet.duration = exerciseSet['duration'];
             newExerciseSet.isPersonalRecord =
                 exerciseSet['isPersonalRecord'] ?? false;
             newExerciseSet.exerciseSetInfo.target = newExercisesSetsInfo;
@@ -291,8 +298,12 @@ class WorkoutSessionService {
               workoutSession.exercisesSetsInfo[i].exerciseSets[j].weight) {
             return true;
           }
-          if (workoutTemplate.exercisesSetsInfo[i].exerciseSets[j].time !=
-              workoutSession.exercisesSetsInfo[i].exerciseSets[j].time) {
+          // if (workoutTemplate.exercisesSetsInfo[i].exerciseSets[j].time !=
+          //     workoutSession.exercisesSetsInfo[i].exerciseSets[j].time) {
+          //   return true;
+          // }
+          if (workoutTemplate.exercisesSetsInfo[i].exerciseSets[j].duration !=
+              workoutSession.exercisesSetsInfo[i].exerciseSets[j].duration) {
             return true;
           }
         }

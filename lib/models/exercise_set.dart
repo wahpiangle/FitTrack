@@ -8,6 +8,7 @@ class ExerciseSet {
   int? weight;
   int? reps;
   int? time;
+  String? duration;
   bool isCompleted = false;
   int? recentWeight;
   int? recentReps;
@@ -20,6 +21,7 @@ class ExerciseSet {
     this.weight,
     this.reps,
     this.time,
+    this.duration,
     this.recentReps,
     this.recentWeight,
     this.isPersonalRecord = false,
