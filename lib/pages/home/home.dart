@@ -34,10 +34,27 @@ class _HomeState extends State<Home> {
     for (FirebaseUserPost post in currentUserPosts) {
       if (post.post.date.isAfter(yesterday)) {
         return true;
+
       }
     }
     return false;
   }
+
+  List<FirebaseUserPost> modifyCurrentUserPostsTo24h(List<FirebaseUserPost> currentUserPosts) {
+    final List<FirebaseUserPost> filteredPosts = [];
+    final DateTime now = DateTime.now();
+    final DateTime yesterday = now.subtract(const Duration(days: 1));
+
+    for (FirebaseUserPost post in currentUserPosts) {
+      if (post.post.date.isAfter(yesterday)) {
+        filteredPosts.add(post);
+      }
+    }
+    currentUserPosts.clear();
+    currentUserPosts.addAll(filteredPosts);
+    return currentUserPosts;
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -51,11 +68,18 @@ class _HomeState extends State<Home> {
               child: CircularProgressIndicator(),
             );
           }
+          if (snapshot.hasError) {
+            return const Center(
+              child: Text('An error occurred',
+                  style: TextStyle(fontSize: 20, color: Colors.white)
+              ),
+            );
+          }
           if (snapshot.connectionState == ConnectionState.active &&
-              snapshot.hasData) {
+              snapshot.data != null) {
             final currentUserPosts =
                 FirebaseUserPost.convertStreamDataToCurrentUserPost(
-              snapshot.data!.docs,
+              snapshot.data!.docs
             );
             return FutureBuilder(
               future: currentUserPosts,
@@ -82,7 +106,7 @@ class _HomeState extends State<Home> {
                     return const NoWorkoutPostedPage();
                   } else {
                     return WorkoutPostedPage(
-                      currentUserPosts: currentUserPosts,
+                      currentUserPosts: modifyCurrentUserPostsTo24h(currentUserPosts),
                     );
                   }
                 }

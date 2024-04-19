@@ -129,10 +129,18 @@ class FirebasePostsService {
     }
   }
 
-  static Future<List<Post>> getPostsByUserId(String userId) async {
+  static Future<List<Post>> getPostsByUserId(String userId,
+      {bool? limit24hour}) async {
     try {
-      final QuerySnapshot<Map<String, dynamic>> querySnapshot =
-          await postsCollectionRef.where('postedBy', isEqualTo: userId).get();
+      final QuerySnapshot<Map<String, dynamic>> querySnapshot = limit24hour ==
+              true
+          ? await postsCollectionRef
+              .where('postedBy', isEqualTo: userId)
+              .where('date',
+                  isGreaterThan:
+                      DateTime.now().subtract(const Duration(days: 1)))
+              .get()
+          : await postsCollectionRef.where('postedBy', isEqualTo: userId).get();
       List<Post> posts = [];
       for (var doc in querySnapshot.docs) {
         posts.add(Post.fromDocument(doc));
@@ -176,8 +184,14 @@ class FirebasePostsService {
 
   static Future<List<Reaction>> getReactionsByPostId(String postId) async {
     try {
+      final DocumentReference postRef = postsCollectionRef.doc(postId);
       final QuerySnapshot<Map<String, dynamic>> querySnapshot =
-          await postsCollectionRef.doc(postId).collection('reactions').get();
+          await postRef.collection('reactions').get();
+
+      if (querySnapshot.docs.isEmpty) {
+        return [];
+      }
+
       List<Reaction> reactions = [];
       for (var doc in querySnapshot.docs) {
         Reaction reaction = Reaction.fromDocument(doc);
@@ -186,7 +200,7 @@ class FirebasePostsService {
       }
       return reactions;
     } catch (e) {
-      print(e);
+      print('Error fetching reactions: $e');
       return [];
     }
   }

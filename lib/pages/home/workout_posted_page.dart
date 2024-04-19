@@ -7,6 +7,7 @@ import 'package:group_project/pages/home/components/current_user/display_image_s
 import 'package:group_project/pages/home/components/display_post_screen/display_post_image_screen.dart';
 import 'package:group_project/pages/home/components/friends_post/friends_post_list.dart';
 import 'package:group_project/pages/home/components/reaction/reaction_images.dart';
+import 'package:group_project/pages/home/homepage_scroll_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -40,12 +41,16 @@ class _WorkoutPostedPageState extends State<WorkoutPostedPage> {
   Widget build(BuildContext context) {
     final UploadImageProvider uploadImageProvider =
         context.watch<UploadImageProvider>();
+    final homepageScrollProvider = Provider.of<HomepageScrollProvider>(context);
 
-    return GestureDetector(
-      onTap: () {
-        FocusScope.of(context).requestFocus(FocusNode());
-      },
-      child: SingleChildScrollView(
+    return SingleChildScrollView(
+      physics: homepageScrollProvider.isScrollDisabled
+          ? const NeverScrollableScrollPhysics()
+          : null,
+      child: GestureDetector(
+        onTap: () {
+          FocusScope.of(context).requestFocus(FocusNode());
+        },
         child: Container(
           margin: const EdgeInsets.all(10),
           child: Column(
@@ -108,12 +113,26 @@ class _WorkoutPostedPageState extends State<WorkoutPostedPage> {
                                 style: TextStyle(color: Colors.red),
                                 textAlign: TextAlign.center,
                               )
-                            : Text(
-                                currentUserPostInfo.post.caption != ''
-                                    ? currentUserPostInfo.post.caption
-                                    : 'Add a caption...',
-                                style: const TextStyle(color: Colors.white),
-                                textAlign: TextAlign.center,
+                            : GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          DisplayPostImageScreen(
+                                        firebaseUserPosts:
+                                            widget.currentUserPosts,
+                                      ),
+                                    ),
+                                  );
+                                },
+                                child: Text(
+                                  currentUserPostInfo.post.caption != ''
+                                      ? currentUserPostInfo.post.caption
+                                      : 'Add a caption...',
+                                  style: const TextStyle(color: Colors.white),
+                                  textAlign: TextAlign.center,
+                                ),
                               )
                       ],
                     ),

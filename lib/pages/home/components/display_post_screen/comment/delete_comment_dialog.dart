@@ -7,14 +7,17 @@ import 'package:group_project/services/firebase/firebase_comment_service.dart';
 class DeleteCommentDialog extends StatelessWidget {
   final Comment comment;
   final Post post;
+  final Function toggleState;
   const DeleteCommentDialog({
     super.key,
     required this.comment,
     required this.post,
+    required this.toggleState,
   });
 
   @override
   Widget build(BuildContext context) {
+    final navigator = Navigator.of(context);
     return Dialog(
       backgroundColor: AppColours.primary,
       surfaceTintColor: Colors.transparent,
@@ -73,10 +76,11 @@ class DeleteCommentDialog extends StatelessWidget {
                       style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.all(Colors.red),
                       ),
-                      onPressed: () {
-                        FirebaseCommentService.deleteCommentById(
+                      onPressed: () async {
+                        await FirebaseCommentService.deleteCommentById(
                             post.postId, comment.id);
-                        Navigator.pop(context);
+                        toggleState();
+                        navigator.pop();
                       },
                       child: const Text(
                         'Delete',

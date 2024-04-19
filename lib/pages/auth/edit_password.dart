@@ -70,7 +70,7 @@ class _EditPasswordState extends State<EditPassword> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  const Text('Enter your current password',
+                  const Text('Enter current password',
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 20,
@@ -100,11 +100,11 @@ class _EditPasswordState extends State<EditPassword> {
                       });
                     },
                     validator: (val) => val!.isEmpty
-                        ? 'Please enter your current password'
+                        ? 'Please enter current password'
                         : null,
                   ),
                   const SizedBox(height: 20.0),
-                  const Text('Enter your new password',
+                  const Text('Enter new password',
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 20,
@@ -138,7 +138,7 @@ class _EditPasswordState extends State<EditPassword> {
                         : null,
                   ),
                   const SizedBox(height: 20.0),
-                  const Text('Confirm your new password',
+                  const Text('Confirm new password',
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 20,

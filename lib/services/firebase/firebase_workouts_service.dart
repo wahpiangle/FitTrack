@@ -23,7 +23,7 @@ class FirebaseWorkoutsService {
         'title': workoutSession.title,
         'note': workoutSession.note,
         'duration': workoutSession.duration,
-        'post': workoutSession.postId,
+        'postId': workoutSession.postId,
         'exercisesSetsInfo': workoutSession.exercisesSetsInfo
             .map((exercisesSetsInfo) => {
                   'exercise': exercisesSetsInfo.exercise.targetId,
@@ -90,7 +90,7 @@ class FirebaseWorkoutsService {
       'title': updatedWorkoutSession.title,
       'note': updatedWorkoutSession.note,
       'duration': updatedWorkoutSession.duration,
-      'post': updatedWorkoutSession.postId,
+      'postId': updatedWorkoutSession.postId,
       'exercisesSetsInfo': updatedWorkoutSession.exercisesSetsInfo
           .map((exercisesSetsInfo) => {
                 'exercise': exercisesSetsInfo.exercise.targetId,
@@ -131,7 +131,7 @@ class FirebaseWorkoutsService {
         .doc(userId)
         .collection('workoutSessions')
         .doc(workoutSessionId.toString())
-        .update({'post': postId});
+        .update({'postId': postId});
   }
 
 

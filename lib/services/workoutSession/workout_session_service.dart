@@ -228,7 +228,7 @@ class WorkoutSessionService {
           note: workoutSession['note'],
           title: workoutSession['title'],
           duration: workoutSession['duration'],
-          postId: workoutSession['post'],
+          postId: workoutSession['postId'],
           isCurrentEditing: false,
         );
 

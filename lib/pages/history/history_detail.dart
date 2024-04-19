@@ -2,16 +2,33 @@ import 'package:flutter/material.dart';
 import 'package:group_project/constants/themes/app_colours.dart';
 import 'package:group_project/models/workout_session.dart';
 import 'package:group_project/pages/history/menu_anchor/workout_menu_anchor.dart';
+import 'package:group_project/pages/history/post_display.dart';
 import 'package:intl/intl.dart';
 import '../../models/exercise_set.dart';
 
-class HistoryDetail extends StatelessWidget {
+class HistoryDetail extends StatefulWidget {
   final WorkoutSession workoutSession;
 
   const HistoryDetail({
     super.key,
     required this.workoutSession,
   });
+
+  @override
+  HistoryDetailState createState() => HistoryDetailState();
+}
+
+class HistoryDetailState extends State<HistoryDetail> {
+  bool _isScrollDisabled = false;
+
+  @override
+  void initState() {
+    super.initState();
+    // Add a delay to start the animation after a short delay
+    Future.delayed(const Duration(milliseconds: 500), () {
+      setState(() {});
+    });
+  }
 
   String formatDuration(int totalSeconds) {
     final duration = Duration(seconds: totalSeconds);
@@ -24,6 +41,18 @@ class HistoryDetail extends StatelessWidget {
     return '$hoursString:$minutesString:$secondsString';
   }
 
+  void disableScroll() {
+    setState(() {
+      _isScrollDisabled = true;
+    });
+  }
+
+  void enableScroll() {
+    setState(() {
+      _isScrollDisabled = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,9 +61,9 @@ class HistoryDetail extends StatelessWidget {
         backgroundColor: AppColours.primary,
         leading: IconButton(
           icon: const Icon(
-            Icons.arrow_back,
+            Icons.arrow_back_ios,
             color: Colors.white,
-            size: 30,
+            size: 25,
           ),
           onPressed: () {
             Navigator.pop(context);
@@ -42,30 +71,71 @@ class HistoryDetail extends StatelessWidget {
         ),
         actions: [
           WorkoutMenuAnchor(
-              workoutSessionId: workoutSession.id, isDetailPage: true)
+            workoutSessionId: widget.workoutSession.id,
+            isDetailPage: true,
+          ),
         ],
       ),
       body: Container(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 10,
-        ),
+        padding: const EdgeInsets.symmetric(horizontal: 10),
         child: SingleChildScrollView(
+          physics:
+          _isScrollDisabled ? const NeverScrollableScrollPhysics() : null,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 10),
-                child: Text(
-                  workoutSession.title,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 30,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    widget.workoutSession.title,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 30,
+                    ),
                   ),
-                ),
+                  ElevatedButton(
+                    onPressed: () {
+                      // Navigate to the PostDisplay page
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => PostDisplay(
+                            postId: widget.workoutSession.postId,
+                            postDate: widget.workoutSession.date,
+                          ),
+                        ),
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFFE1F0CF),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                    ),
+                    child: const Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          Icons.photo,
+                          color: Colors.black,
+                        ),
+                        Text(
+                          'View Memories',
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 12,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
               Text(
                 DateFormat('EEEE, dd MMMM yyyy, kk:mm a').format(
-                  workoutSession.date,
+                  widget.workoutSession.date,
                 ),
                 style: const TextStyle(
                   color: Colors.grey,
@@ -81,11 +151,9 @@ class HistoryDetail extends StatelessWidget {
                       color: Colors.white,
                       size: 20,
                     ),
-                    const SizedBox(
-                      width: 10,
-                    ),
+                    const SizedBox(width: 10),
                     Text(
-                      formatDuration(workoutSession.duration),
+                      formatDuration(widget.workoutSession.duration),
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 16,
@@ -94,22 +162,22 @@ class HistoryDetail extends StatelessWidget {
                   ],
                 ),
               ),
-              workoutSession.note == ''
+              widget.workoutSession.note == ''
                   ? const SizedBox()
                   : Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 8.0),
-                      child: Text(
-                        workoutSession.note == ''
-                            ? 'No notes'
-                            : workoutSession.note.toString(),
-                        style: const TextStyle(
-                          color: Colors.grey,
-                          fontSize: 16,
-                        ),
-                      ),
-                    ),
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                child: Text(
+                  widget.workoutSession.note == ''
+                      ? 'No notes'
+                      : widget.workoutSession.note.toString(),
+                  style: const TextStyle(
+                    color: Colors.grey,
+                    fontSize: 16,
+                  ),
+                ),
+              ),
               Column(
-                children: workoutSession.exercisesSetsInfo
+                children: widget.workoutSession.exercisesSetsInfo
                     .map(
                       (exercisesSetInfo) => Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -191,7 +259,8 @@ class HistoryDetail extends StatelessWidget {
                       ),
                     )
                     .toList(),
-              )
+              ),
+              const SizedBox(height: 50),
             ],
           ),
         ),

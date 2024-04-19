@@ -22,8 +22,8 @@ class FirebaseFriendsPost {
       Set<String> uniquePosts = {};
 
       for (String friendId in friendIds) {
-        List<Post> posts =
-            await FirebasePostsService.getPostsByUserId(friendId);
+        List<Post> posts = await FirebasePostsService.getPostsByUserId(friendId,
+            limit24hour: true);
         FirebaseUser friend = await FirebaseUserService.getUserByUid(friendId);
 
         for (Post post in posts) {

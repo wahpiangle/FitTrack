@@ -8,11 +8,11 @@ class FirebaseCommentService {
 
     try {
       QuerySnapshot<Map<String, dynamic>> commentsSnapshot =
-          await FirebaseFirestore.instance
-              .collection('posts')
-              .doc(postId)
-              .collection('comments')
-              .get();
+      await FirebaseFirestore.instance
+          .collection('posts')
+          .doc(postId)
+          .collection('comments')
+          .get();
 
       if (commentsSnapshot.docs.isNotEmpty) {
         comments.addAll(
@@ -25,6 +25,7 @@ class FirebaseCommentService {
 
     return comments;
   }
+
 
   static Future<void> addCommentToPost(String postId, String comment) async {
     final currentUser = FirebaseAuth.instance.currentUser;
