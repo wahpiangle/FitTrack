@@ -32,7 +32,7 @@ class FirebaseWorkoutsService {
                       .map((exerciseSet) => {
                             'reps': exerciseSet.reps,
                             'weight': exerciseSet.weight,
-                            'duration': exerciseSet.duration,
+                            'time': exerciseSet.time,
                             'isPersonalRecord': exerciseSet.isPersonalRecord,
                           })
                       .toList(),
@@ -98,7 +98,7 @@ class FirebaseWorkoutsService {
                     .map((exerciseSet) => {
                           'reps': exerciseSet.reps,
                           'weight': exerciseSet.weight,
-                          'duration': exerciseSet.duration,
+                          'time': exerciseSet.time,
                         })
                     .toList(),
               })

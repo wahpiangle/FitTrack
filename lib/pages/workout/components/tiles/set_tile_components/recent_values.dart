@@ -29,7 +29,7 @@ class RecentValues extends StatefulWidget {
   State<RecentValues> createState() => _RecentValuesState();
 
   String generateRecentValuesText() {
-    if (recentWeight != null || recentTime != null || recentReps != null || recentDuration != null) {
+    if (recentWeight != null || recentTime != null || recentReps != null) {
       switch (exercisesSetsInfo.exercise.target?.category.target?.name) {
         case "Assisted Bodyweight":
           return '-${recentWeight}kg x ${recentReps}';
@@ -38,7 +38,7 @@ class RecentValues extends StatefulWidget {
         case "Reps Only":
           return '${recentReps} reps';
         case "Duration":
-          return '${recentDuration}';
+          return formatDuration(recentTime!);
         default:
           return '${recentWeight}kg x ${recentReps}';
       }
@@ -46,6 +46,20 @@ class RecentValues extends StatefulWidget {
       return '-';
     }
   }
+  String formatDuration(int totalSeconds) {
+    final duration = Duration(seconds: totalSeconds);
+    final hours = duration.inHours;
+    final minutes = (duration.inMinutes % 60).toString().padLeft(2, '0'); // Pad minutes with leading zero if necessary
+    final seconds = (totalSeconds % 60).toString().padLeft(2, '0'); // Pad seconds with leading zero if necessary
+
+    if (hours > 0) {
+      return '$hours:$minutes:$seconds';
+    } else {
+      return '$minutes:$seconds';
+    }
+  }
+
+
 }
 
 class _RecentValuesState extends State<RecentValues>

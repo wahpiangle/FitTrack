@@ -42,6 +42,22 @@ class FriendPostBestSet extends StatelessWidget {
       return aOneRepMax > bOneRepMax ? a : b;
     });
 
+    final bestDurationSetInfo = workoutSession.exercisesSetsInfo.reduce((a, b) {
+      final aTime = a.exerciseSets[0].time ?? 0; // Get the time from ExerciseSet
+      final bTime = b.exerciseSets[0].time ?? 0; // Get the time from ExerciseSet
+      return aTime > bTime ? a : b;
+    });
+    final bestDurationSet = bestDurationSetInfo.exerciseSets[0]; // Get the first ExerciseSet with the highest time
+
+
+    final bestRepsonlySetInfo = workoutSession.exercisesSetsInfo.reduce((a, b) {
+      final aReps = a.exerciseSets[0].reps ?? 0; // Get the reps directly from ExerciseSet
+      final bReps = b.exerciseSets[0].reps ?? 0; // Get the reps directly from ExerciseSet
+      return aReps > bReps ? a : b;
+    });
+    final bestRepsSet = bestRepsonlySetInfo.exerciseSets[0]; // Get the first ExerciseSet with the highest reps
+
+
 
     return Row(
       children: [
@@ -69,7 +85,7 @@ class FriendPostBestSet extends StatelessWidget {
               ),
             ),
             Text(
-              getExerciseText(bestSet),
+              getExerciseText(bestSet, bestDurationSet!, bestRepsSet!),
               style: const TextStyle(
                 color: AppColours.secondary,
                 fontSize: 12,
@@ -84,19 +100,21 @@ class FriendPostBestSet extends StatelessWidget {
 
 
 
-String getExerciseText(ExerciseSet exerciseSet) {
-  final category = exerciseSet.exerciseSetInfo.target?.exercise.target?.category.target?.name;
+String getExerciseText(ExerciseSet bestSet, ExerciseSet bestDurationSet, ExerciseSet bestRepsSet) {
+  final category = bestSet.exerciseSetInfo.target?.exercise.target?.category.target?.name;
+  final categoryDuration = bestDurationSet.exerciseSetInfo.target?.exercise.target?.category.target?.name;
+  final categoryReps = bestRepsSet.exerciseSetInfo.target?.exercise.target?.category.target?.name;
 
   if (category == "Assisted Bodyweight") {
-    return '-${exerciseSet.weight} kg x ${exerciseSet.reps} reps';
+    return '-${bestSet.weight} kg x ${bestSet.reps} reps';
   } else if (category == "Weighted Bodyweight") {
-    return '+${exerciseSet.weight} kg x ${exerciseSet.reps} reps';
-  } else if (category == "Duration") {
-    return '${exerciseSet.duration}';
-  } else if (category == "Reps Only") {
-    return '${exerciseSet.reps} reps';
+    return '+${bestSet.weight} kg x ${bestSet.reps} reps';
+  } else if (categoryDuration == "Duration") {
+    return '${bestDurationSet.duration}';
+  } else if (categoryReps == "Reps Only") {
+    return '${bestSet.reps} reps';
   } else {
-    return '${exerciseSet.weight} kg x ${exerciseSet.reps}';
+    return '${bestSet.weight} kg x ${bestSet.reps}';
   }
 }
 

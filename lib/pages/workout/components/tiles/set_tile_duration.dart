@@ -185,10 +185,14 @@
                         if (widget.set.time == null || widget.set.time.toString().length < 3) {
                           widget.set.isCompleted = false;
                         }
-                        else if (widget.set.time.toString().length == 3 && ['6', '7', '8', '9'].contains(value[1])) {
+                        else if (widget.set.time.toString().length == 3 ) {
+                          if ( ['6', '7', '8', '9'].contains(value[1])) {
                             widget.set.isCompleted = false;
+                          }
+
                         }
                         else if (widget.set.time.toString().length == 4 ) {
+
                           if ( ['6', '7', '8', '9'].contains(value[0])) {
                             widget.set.isCompleted = false;
                           }
@@ -276,30 +280,30 @@
           text: newText,
           selection: TextSelection.collapsed(offset: newText.length),
         );
-      } else if (newText.length == 3) {
+      } else if (oldText.length == 2) {
         // If 3 digits are typed, insert ":" between the second and third digits
         final updatedText = "${newText.substring(0, 1)}:${newText.substring(1)}";
         return TextEditingValue(
           text: updatedText,
           selection: TextSelection.collapsed(offset: updatedText.length),
         );
-      } else if (newText.length == 4) {
+      } else if (oldText.length == 3) {
         // If 4 digits are typed, insert ":" between the second and third digits
         final updatedText = "${newText.substring(0, 2)}:${newText.substring(2)}";
         return TextEditingValue(
           text: updatedText,
           selection: TextSelection.collapsed(offset: updatedText.length),
         );
-      } else if (newText.length == 5) {
+      } else if (oldText.length == 4) {
         // If 5 digits are typed, append the fifth digit after the colon
         final updatedText = "${newText.substring(0, 1)}${newText.substring(2, 3)}:${newText.substring(3, 5)}";
         return TextEditingValue(
           text: updatedText,
           selection: TextSelection.collapsed(offset: updatedText.length),
         );
-      } else if (newText.length == 6) {
-        // If 6 digits are typed, modify the text to "1:newText"
-        final updatedText = "1:${newText.substring(0, 2)}:${newText.substring(2, 4)}";
+      } else if (oldText.length == 5) {
+        // If 5 digits are typed, append the fifth digit after the colon
+        final updatedText = "${newText.substring(0, 1)}:${newText.substring(1, 2)}${newText.substring(3, 4)}:${newText.substring(4, 6)}";
         return TextEditingValue(
           text: updatedText,
           selection: TextSelection.collapsed(offset: updatedText.length),

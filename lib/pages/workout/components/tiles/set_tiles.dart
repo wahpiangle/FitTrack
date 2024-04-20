@@ -165,7 +165,7 @@ Widget buildSetTile(
       isCurrentEditing: isCurrentEditing,
     );
   } else if (categoryName == "Duration") {
-    return SetTileDurationn(
+    return SetTileDuration(
       set: set,
       setIndex: setIndex,
       exercisesSetsInfo: exercisesSetsInfo,

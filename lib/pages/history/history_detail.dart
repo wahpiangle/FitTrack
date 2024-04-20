@@ -312,7 +312,19 @@ Widget renderExerciseInfo(exercisesSetInfo, MapEntry<int, ExerciseSet> setInfo) 
       );
     case "Duration":
       return Text(
-        '${setInfo.value.duration}',
+        setInfo.value.time != null
+            ? (setInfo.value.time.toString().length == 1
+            ? '0:0${setInfo.value.time.toString()[0]}'
+            : (setInfo.value.time.toString().length == 2)
+            ? '0:${setInfo.value.time.toString()[0]}${setInfo.value.time.toString()[1]}'
+            : (setInfo.value.time.toString().length == 3)
+            ? '${setInfo.value.time.toString()[0]}:${setInfo.value.time.toString()[1]}${setInfo.value.time.toString()[2]}'
+            : (setInfo.value.time.toString().length == 4)
+            ? '${setInfo.value.time.toString()[0]}${setInfo.value.time.toString()[1]}:${setInfo.value.time.toString()[2]}${setInfo.value.time.toString()[3]}'
+            : (setInfo.value.time.toString().length == 5)
+            ? '${setInfo.value.time.toString()[0]}:${setInfo.value.time.toString()[1]}${setInfo.value.time.toString()[2]}:${setInfo.value.time.toString()[3]}${setInfo.value.time.toString()[4]}'
+            : '-')
+            : '-',
         style: TextStyle(
           color: Colors.grey[300],
           fontSize: 16,
