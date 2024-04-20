@@ -328,8 +328,8 @@ String getTimeString(String timeString) {
 String getWeightRepsText(ExerciseSet bestSet) {
   final category =
       bestSet.exerciseSetInfo.target?.exercise.target?.category.target?.name;
-  final weight = bestSet.weight;
-  final reps = bestSet.reps;
+  final weight = bestSet.weight ?? 0; // Provide a default value if weight is null
+  final reps = bestSet.reps ?? 0; // Provide a default value if reps is null
   final timeString = bestSet.time.toString();
 
   switch (category) {
@@ -340,11 +340,25 @@ String getWeightRepsText(ExerciseSet bestSet) {
     case 'Reps Only':
       return '$reps reps';
     case 'Duration':
-      return getTimeString(timeString);
+      return formatDurationn(bestSet.time ?? 0); // Provide a default value if time is null
     default:
       return '$weight kg x $reps';
   }
 }
+
+String formatDurationn(int totalSeconds) {
+  final duration = Duration(seconds: totalSeconds);
+  final hours = duration.inHours;
+  final minutes = (duration.inMinutes % 60).toString().padLeft(2, '0'); // Pad minutes with leading zero if necessary
+  final seconds = (totalSeconds % 60).toString().padLeft(2, '0'); // Pad seconds with leading zero if necessary
+
+  if (hours > 0) {
+    return '$hours:$minutes:$seconds';
+  } else {
+    return '$minutes:$seconds';
+  }
+}
+
 
 String formatDuration(int totalSeconds) {
   final duration = Duration(seconds: totalSeconds);

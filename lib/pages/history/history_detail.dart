@@ -5,6 +5,7 @@ import 'package:group_project/pages/history/menu_anchor/workout_menu_anchor.dart
 import 'package:group_project/pages/history/post_display.dart';
 import 'package:intl/intl.dart';
 import '../../models/exercise_set.dart';
+import '../home/components/display_post_screen/workout_info/own_post_workout_info.dart';
 
 class HistoryDetail extends StatefulWidget {
   final WorkoutSession workoutSession;
@@ -311,20 +312,9 @@ Widget renderExerciseInfo(exercisesSetInfo, MapEntry<int, ExerciseSet> setInfo) 
         ),
       );
     case "Duration":
+      String formattedTime = formatDuration(setInfo.value.time ?? 0);
       return Text(
-        setInfo.value.time != null
-            ? (setInfo.value.time.toString().length == 1
-            ? '0:0${setInfo.value.time.toString()[0]}'
-            : (setInfo.value.time.toString().length == 2)
-            ? '0:${setInfo.value.time.toString()[0]}${setInfo.value.time.toString()[1]}'
-            : (setInfo.value.time.toString().length == 3)
-            ? '${setInfo.value.time.toString()[0]}:${setInfo.value.time.toString()[1]}${setInfo.value.time.toString()[2]}'
-            : (setInfo.value.time.toString().length == 4)
-            ? '${setInfo.value.time.toString()[0]}${setInfo.value.time.toString()[1]}:${setInfo.value.time.toString()[2]}${setInfo.value.time.toString()[3]}'
-            : (setInfo.value.time.toString().length == 5)
-            ? '${setInfo.value.time.toString()[0]}:${setInfo.value.time.toString()[1]}${setInfo.value.time.toString()[2]}:${setInfo.value.time.toString()[3]}${setInfo.value.time.toString()[4]}'
-            : '-')
-            : '-',
+        formattedTime,
         style: TextStyle(
           color: Colors.grey[300],
           fontSize: 16,
@@ -332,5 +322,18 @@ Widget renderExerciseInfo(exercisesSetInfo, MapEntry<int, ExerciseSet> setInfo) 
       );
     default:
       return SizedBox();
+  }
+}
+
+String formatDuration(int totalSeconds) {
+  final duration = Duration(seconds: totalSeconds);
+  final hours = duration.inHours;
+  final minutes = (duration.inMinutes % 60).toString().padLeft(2, '0'); // Pad minutes with leading zero if necessary
+  final seconds = (totalSeconds % 60).toString().padLeft(2, '0'); // Pad seconds with leading zero if necessary
+
+  if (hours > 0) {
+    return '$hours:$minutes:$seconds';
+  } else {
+    return '$minutes:$seconds';
   }
 }

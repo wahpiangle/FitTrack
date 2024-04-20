@@ -212,38 +212,10 @@ void setCompletionBasedOnExerciseType(ExercisesSetsInfo exercisesSetsInfo, Exerc
     }
   }
   else if (targetType == "Duration") {
-    if (exerciseSet.time != null && RegExp(r'^[0-9]+$').hasMatch(exerciseSet.time.toString()[0])) {
-      String timeAsString = exerciseSet.time.toString();
-      if (timeAsString.length == 1) {
-            exerciseSet.isCompleted = !exerciseSet.isCompleted;
-      } else if (timeAsString.length == 2) {
+    if (exerciseSet.time != null) {
         exerciseSet.isCompleted = !exerciseSet.isCompleted;
-      } else if (timeAsString.length == 3) {
-        int secondDigit = int.parse(timeAsString[1]);
-        if (secondDigit != 6 && secondDigit != 7 && secondDigit != 8 && secondDigit != 9) {
-          if (secondDigit != 6 && secondDigit != 7 && secondDigit != 8 && secondDigit != 9) {
-            exerciseSet.isCompleted = !exerciseSet.isCompleted;
-          }
-        }
-      } else if (timeAsString.length == 4) {
-        int thirdDigit = int.parse(timeAsString[2]);
-        int firstDigit = int.parse(timeAsString[0]);
-        if (thirdDigit != 6 && thirdDigit != 7 && thirdDigit != 8 && thirdDigit != 9) {
-          if (firstDigit != 6 && firstDigit != 7 && firstDigit != 8 && firstDigit != 9) {
-            exerciseSet.isCompleted = !exerciseSet.isCompleted;
-          }
-        }
-      } else if (timeAsString.length == 5) {
-        int secondDigit = int.parse(timeAsString[1]);
-        int fourthDigit = int.parse(timeAsString[3]);
-        if (secondDigit != 6 && secondDigit != 7 && secondDigit != 8 && secondDigit != 9) {
-          if (fourthDigit != 6 && fourthDigit != 7 && fourthDigit != 8 && fourthDigit != 9) {
-            exerciseSet.isCompleted = !exerciseSet.isCompleted;
-          }
-        }
-      }
-    }
-  } else if (exerciseSet.reps != null && exerciseSet.weight != null) {
+  }
+} else if (exerciseSet.reps != null && exerciseSet.weight != null) {
     exerciseSet.isCompleted = !exerciseSet.isCompleted;
   }
 }

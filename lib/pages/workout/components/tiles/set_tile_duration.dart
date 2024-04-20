@@ -38,6 +38,7 @@
     late TextEditingController repsController;
     late TextEditingController timeController;
     bool isTapped = false;
+    late String originalTime;
 
     @override
     void initState() {
@@ -45,6 +46,7 @@
       fetchRecentWeightAndTime();
       weightController = TextEditingController();
       timeController = TextEditingController();
+      originalTime = widget.set.time != null ? _secondsToTimeString(widget.set.time!) : '';
     }
 
     @override
@@ -158,7 +160,7 @@
                     ),
                     textAlign: TextAlign.center,
                     keyboardType: TextInputType.number,
-                    initialValue: isTapped ? null : "${widget.set.time ?? ''}",
+                    initialValue: isTapped ? null : originalTime,
                     controller: isTapped ? timeController : null,
                     inputFormatters: [
                       FilteringTextInputFormatter.allow(RegExp(r'^\d{0,4}(:\d{0,4})?$')),
@@ -180,37 +182,15 @@
                     onChanged: (value) {
                       setState(() {
                         isTapped = false;
-                        // Remove ":" from the input string and parse it to an integer
-                        widget.set.time = int.tryParse(value.replaceAll(':', ''));
-                        if (widget.set.time == null || widget.set.time.toString().length < 3) {
+                        // Convert the formatted time string into seconds
+                        widget.set.time = _timeStringToSeconds(value);
+                        if (widget.set.time == null) {
                           widget.set.isCompleted = false;
-                        }
-                        else if (widget.set.time.toString().length == 3 ) {
-                          if ( ['6', '7', '8', '9'].contains(value[1])) {
-                            widget.set.isCompleted = false;
-                          }
-
-                        }
-                        else if (widget.set.time.toString().length == 4 ) {
-
-                          if ( ['6', '7', '8', '9'].contains(value[0])) {
-                            widget.set.isCompleted = false;
-                          }
-                          else if ( ['6', '7', '8', '9'].contains(value[2])) {
-                            widget.set.isCompleted = false;
-                          }
-                        }
-                        else if (widget.set.time.toString().length == 5 ) {
-                          if ( ['6', '7', '8', '9'].contains(value[1])) {
-                            widget.set.isCompleted = false;
-                          }
-                          else if ( ['6', '7', '8', '9'].contains(value[3])) {
-                            widget.set.isCompleted = false;
-                          }
                         }
                         objectBox.exerciseService.updateExerciseSet(widget.set);
                       });
                     },
+
 
                   ),
                 ),
@@ -255,6 +235,10 @@
           ),
         ),
       );
+    }
+    String _secondsToTimeString(int seconds) {
+      Duration duration = Duration(seconds: seconds);
+      return duration.toString().split('.').first.padLeft(8, "0");
     }
   }
 
@@ -311,4 +295,22 @@
       }
       return newValue;
     }
+  }
+
+
+  int? _timeStringToSeconds(String timeString) {
+    List<String> parts = timeString.split(':');
+    if (parts.length == 2) {
+      // If it's in the format "mm:ss"
+      int minutes = int.tryParse(parts[0]) ?? 0;
+      int seconds = int.tryParse(parts[1]) ?? 0;
+      return minutes * 60 + seconds;
+    } else if (parts.length == 3) {
+      // If it's in the format "hh:mm:ss"
+      int hours = int.tryParse(parts[0]) ?? 0;
+      int minutes = int.tryParse(parts[1]) ?? 0;
+      int seconds = int.tryParse(parts[2]) ?? 0;
+      return hours * 3600 + minutes * 60 + seconds;
+    }
+    return null;
   }

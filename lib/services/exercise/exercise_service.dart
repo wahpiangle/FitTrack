@@ -154,33 +154,10 @@ class ExerciseService {
       }
     }
     else if (exercisesSetsInfo?.exercise.target?.category.target?.name == "Duration") {
-      String timeString = exerciseSet.time.toString();
       if (exerciseSet.time == null) {
         return;
       }
-      else if (exerciseSet.time.toString().length == 3 && ['6', '7', '8', '9'].contains(timeString[1])) {
-        return;
-      }
-      else if (exerciseSet.time.toString().length == 4  ) {
-
-        if (['6', '7', '8', '9'].contains(timeString[0])) {
-
-          return;
-        }
-        else if (['6', '7', '8', '9'].contains(timeString[2])) {
-          return;
-        }
-      }
-      else if (exerciseSet.time.toString().length == 5  ) {
-        if (['6', '7', '8', '9'].contains(timeString[1])) {
-          return;
-        }
-        else if (['6', '7', '8', '9'].contains(timeString[3])) {
-          return;
-        }
-      }
     }
-
     else if (exerciseSet.reps == null || exerciseSet.weight == null) {
       return;
     }

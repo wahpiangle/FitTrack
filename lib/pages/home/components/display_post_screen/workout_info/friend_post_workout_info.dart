@@ -291,20 +291,22 @@ String getWeightRepsText(ExerciseSet set, Exercise? exercise) {
   } else if (exercise?.category.target?.name == 'Weighted Bodyweight') {
     return '+${set.weight} kg x ${set.reps}';
   } else if (exercise?.category.target?.name == 'Duration') {
-    final timeString = set.time.toString();
-    if (timeString.length == 1) {
-      return '0:0${timeString[0]}';
-    } else if (timeString.length == 2) {
-      return '0:${timeString[0]}${timeString[1]}';
-    } else if (timeString.length == 3) {
-      return '${timeString[0]}:${timeString[1]}${timeString[2]}';
-    } else if (timeString.length == 4) {
-      return '${timeString[0]}${timeString[1]}:${timeString[2]}${timeString[3]}';
-    } else if (timeString.length == 5) {
-      return '${timeString[0]}:${timeString[1]}${timeString[2]}:${timeString[3]}${timeString[4]}';
-    }
-    return '-';
+    return formatDurationn(set.time ?? 0);
   } else {
     return '${set.reps} reps';
+  }
+}
+
+
+String formatDurationn(int totalSeconds) {
+  final duration = Duration(seconds: totalSeconds);
+  final hours = duration.inHours;
+  final minutes = (duration.inMinutes % 60).toString().padLeft(2, '0'); // Pad minutes with leading zero if necessary
+  final seconds = (totalSeconds % 60).toString().padLeft(2, '0'); // Pad seconds with leading zero if necessary
+
+  if (hours > 0) {
+    return '$hours:$minutes:$seconds';
+  } else {
+    return '$minutes:$seconds';
   }
 }
