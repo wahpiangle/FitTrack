@@ -380,9 +380,9 @@ String getCategoryText(
     ExerciseSet bestSet, ExerciseSet bestDurationSet, ExerciseSet bestRepsSet) {
   final category =
       bestSet.exerciseSetInfo.target?.exercise.target?.category.target?.name;
-  final categoryrepsonly = bestDurationSet
+  final categoryduration = bestDurationSet
       .exerciseSetInfo.target?.exercise.target?.category.target?.name;
-  final categoryduration = bestRepsSet
+  final categoryrepsonly = bestRepsSet
       .exerciseSetInfo.target?.exercise.target?.category.target?.name;
 
   if (category == 'Assisted Bodyweight' ||
@@ -394,9 +394,9 @@ String getCategoryText(
       category == 'Band' ||
       category == 'Other') {
     return getWeightRepsText(bestSet);
-  } else if (categoryrepsonly == 'Duration') {
+  } else if (categoryduration == 'Duration') {
     return getWeightRepsText(bestDurationSet);
-  } else if (categoryduration == 'Reps Only') {
+  } else if (categoryrepsonly == 'Reps Only') {
     return getWeightRepsText(bestRepsSet);
   } else {
     return '-';
