@@ -11,6 +11,7 @@ class Exercise {
   String name;
   String imagePath;
   String halfImagePath;
+  List<String> description;
   bool isSelected;
   bool isVisible;
   bool isCustom;
@@ -23,6 +24,7 @@ class Exercise {
   Exercise({
     this.id = 0,
     required this.name,
+    this.description = const [],
     this.imagePath = '',
     this.halfImagePath = '',
     this.isSelected = false,
