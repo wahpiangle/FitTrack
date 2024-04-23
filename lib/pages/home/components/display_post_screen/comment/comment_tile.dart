@@ -22,25 +22,29 @@ class _CommentTileState extends State<CommentTile> {
     super.initState();
   }
 
+  void navigateToUserProfile(FirebaseUser user) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => UserProfilePage(user: user)),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
+    return FutureBuilder<FirebaseUser>(
       future: userFuture,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const SizedBox();
         }
+        if (!snapshot.hasData) {
+          return const SizedBox();
+        }
+        final user = snapshot.data!;
         return ListTile(
           contentPadding: const EdgeInsets.all(0),
           leading: GestureDetector(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => UserProfilePage(user: snapshot.data),
-                ),
-              );
-            },
+            onTap: () => navigateToUserProfile(user),
             child: ClipOval(
               child: CachedNetworkImage(
                 imageUrl: snapshot.data!.photoUrl,
@@ -60,14 +64,7 @@ class _CommentTileState extends State<CommentTile> {
           title: Row(
             children: [
               GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => UserProfilePage(user: snapshot.data),
-                    ),
-                  );
-                },
+                onTap: () => navigateToUserProfile(user),
                 child: Text(
                   snapshot.data!.username,
                   style: const TextStyle(
