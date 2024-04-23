@@ -3,6 +3,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:group_project/constants/themes/app_colours.dart';
 import 'package:group_project/models/firebase/reaction.dart';
+import 'package:group_project/pages/user_profile/user_profile_page.dart';
 import 'package:intl/intl.dart';
 
 class ReactionImageBottomSheet extends StatefulWidget {
@@ -68,10 +69,18 @@ class _ReactionImageBottomSheetState extends State<ReactionImageBottomSheet> {
               const SizedBox(height: 10),
               GestureDetector(
                 onTap: () {
-                  // TODO: Redirect to user profile
+                  final user = _reaction.postedByUser;
+                  if (user != null) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => UserProfilePage(user: user),
+                      ),
+                    );
+                  }
                 },
                 child: Text(
-                  _reaction.postedByUser!.username,
+                  _reaction.postedByUser?.username ?? 'Unknown User',
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 16,

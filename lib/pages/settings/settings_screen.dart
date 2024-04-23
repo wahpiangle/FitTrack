@@ -88,7 +88,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Widget build(BuildContext context) {
     UserProfileProvider userProfileProvider =
         Provider.of<UserProfileProvider>(context);
-    print(userProfileProvider.displayName);
     return Scaffold(
       body: Container(
         height: double.infinity,
