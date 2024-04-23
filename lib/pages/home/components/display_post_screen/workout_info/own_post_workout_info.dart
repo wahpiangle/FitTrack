@@ -330,7 +330,6 @@ String getWeightRepsText(ExerciseSet bestSet) {
       bestSet.exerciseSetInfo.target?.exercise.target?.category.target?.name;
   final weight = bestSet.weight ?? 0; // Provide a default value if weight is null
   final reps = bestSet.reps ?? 0; // Provide a default value if reps is null
-  final timeString = bestSet.time.toString();
 
   switch (category) {
     case 'Assisted Bodyweight':
@@ -340,13 +339,13 @@ String getWeightRepsText(ExerciseSet bestSet) {
     case 'Reps Only':
       return '$reps reps';
     case 'Duration':
-      return formatDurationn(bestSet.time ?? 0); // Provide a default value if time is null
+      return formatDurationFromSeconds(bestSet.time ?? 0); // Provide a default value if time is null
     default:
       return '$weight kg x $reps';
   }
 }
 
-String formatDurationn(int totalSeconds) {
+String formatDurationFromSeconds(int totalSeconds) {
   final duration = Duration(seconds: totalSeconds);
   final hours = duration.inHours;
   final minutes = (duration.inMinutes % 60).toString().padLeft(2, '0'); // Pad minutes with leading zero if necessary

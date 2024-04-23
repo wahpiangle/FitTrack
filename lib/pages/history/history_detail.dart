@@ -312,7 +312,7 @@ Widget renderExerciseInfo(exercisesSetInfo, MapEntry<int, ExerciseSet> setInfo) 
         ),
       );
     case "Duration":
-      String formattedTime = formatDuration(setInfo.value.time ?? 0);
+      String formattedTime = formatDurationFromSeconds(setInfo.value.time ?? 0);
       return Text(
         formattedTime,
         style: TextStyle(
@@ -325,7 +325,7 @@ Widget renderExerciseInfo(exercisesSetInfo, MapEntry<int, ExerciseSet> setInfo) 
   }
 }
 
-String formatDuration(int totalSeconds) {
+String formatDurationFromSeconds(int totalSeconds) {
   final duration = Duration(seconds: totalSeconds);
   final hours = duration.inHours;
   final minutes = (duration.inMinutes % 60).toString().padLeft(2, '0'); // Pad minutes with leading zero if necessary

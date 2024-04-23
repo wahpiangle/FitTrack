@@ -33,7 +33,7 @@ class ExerciseWorkoutCard extends StatelessWidget {
       } else if (category == "Reps Only") {
         return '${value.reps} reps';
       } else if (category == "Duration") {
-        return formatDurationn(value.time ?? 0);
+        return formatDurationFromSeconds(value.time ?? 0);
       } else {
         return '${value.weight} $weightUnit x ${value.reps}';
       }
@@ -42,7 +42,7 @@ class ExerciseWorkoutCard extends StatelessWidget {
     }
   }
 
-  String formatDurationn(int totalSeconds) {
+  String formatDurationFromSeconds(int totalSeconds) {
     final duration = Duration(seconds: totalSeconds);
     final hours = duration.inHours;
     final minutes = (duration.inMinutes % 60).toString().padLeft(2, '0'); // Pad minutes with leading zero if necessary

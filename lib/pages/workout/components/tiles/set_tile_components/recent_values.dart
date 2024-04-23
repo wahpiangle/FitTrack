@@ -38,7 +38,7 @@ class RecentValues extends StatefulWidget {
         case "Reps Only":
           return '${recentReps} reps';
         case "Duration":
-          return formatDuration(recentTime!);
+          return formatDurationFromSeconds(recentTime!);
         default:
           return '${recentWeight}kg x ${recentReps}';
       }
@@ -46,7 +46,7 @@ class RecentValues extends StatefulWidget {
       return '-';
     }
   }
-  String formatDuration(int totalSeconds) {
+  String formatDurationFromSeconds(int totalSeconds) {
     final duration = Duration(seconds: totalSeconds);
     final hours = duration.inHours;
     final minutes = (duration.inMinutes % 60).toString().padLeft(2, '0'); // Pad minutes with leading zero if necessary
