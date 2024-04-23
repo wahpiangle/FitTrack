@@ -4,8 +4,6 @@ import 'package:group_project/main.dart';
 import 'package:group_project/models/exercise_set.dart';
 import 'package:group_project/models/firebase/firebase_workout_session.dart';
 
-import '../../../../../../models/workout_session.dart';
-import '../../../../../layout/user_profile_provider.dart';
 
 class FriendPostBestSet extends StatelessWidget {
   final FirebaseWorkoutSession workoutSession;
