@@ -397,31 +397,6 @@ class ExerciseService {
     return null;
   }
 
-  int? getRecentTime(int exerciseId, int setIndex) {
-    final allWorkoutSessions = workoutSessionBox.getAll();
-    allWorkoutSessions.sort((a, b) => b.date.compareTo(a.date));
-    final mostRecentWorkoutSession = allWorkoutSessions.firstOrNull;
-    if (mostRecentWorkoutSession == null) {
-      return null;
-    }
-    final exerciseSetsInfo = mostRecentWorkoutSession.exercisesSetsInfo;
-
-    for (final exerciseSetInfo in exerciseSetsInfo) {
-      final exercise = exerciseSetInfo.exercise.target;
-      if (exercise != null && exercise.id == exerciseId) {
-        int counter = 0;
-        for (final exerciseSet in exerciseSetInfo.exerciseSets) {
-          if (counter == setIndex) {
-            final recentTime = exerciseSet.time;
-            return recentTime;
-          }
-          counter++;
-        }
-      }
-    }
-    return null;
-  }
-
   List<Exercise> getRecentExercises(int count, {String? category, String? bodyPart}) {
     final recentSessions = workoutSessionBox.query()
         .order(WorkoutSession_.date, flags: Order.descending)
