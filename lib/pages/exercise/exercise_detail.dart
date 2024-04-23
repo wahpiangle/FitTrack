@@ -85,7 +85,7 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
                       exercise: widget.exercise,
                     ),
                     const SizedBox(height: 10.0),
-                    
+
                     !widget.exercise.isCustom
                         ? Stack(
                       alignment: Alignment.bottomCenter,

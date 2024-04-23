@@ -454,6 +454,4 @@ class ExerciseService {
     return recentExercises.toList();
   }
 
-
-
 }
