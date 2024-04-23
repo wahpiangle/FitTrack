@@ -152,7 +152,7 @@
     },
     {
       "id": "5:4750852453579650123",
-      "lastPropertyId": "9:1561625142316087456",
+      "lastPropertyId": "10:3584652252887315954",
       "name": "ExerciseSet",
       "properties": [
         {
@@ -203,6 +203,11 @@
           "id": "9:1561625142316087456",
           "name": "time",
           "type": 6
+        },
+        {
+          "id": "10:3584652252887315954",
+          "name": "duration",
+          "type": 9
         }
       ],
       "relations": []
