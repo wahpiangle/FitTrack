@@ -59,13 +59,10 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
               : Container(),
         ],
         leading: IconButton(
-          onPressed: () {},
-          icon: IconButton(
-            icon: const Icon(Icons.close_sharp, color: Colors.white),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          ),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          icon: const Icon(Icons.close_sharp, color: Colors.white),
         ),
         title: Center(
           child: Text(
@@ -88,20 +85,22 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
                       exercise: widget.exercise,
                     ),
                     const SizedBox(height: 10.0),
-                    Stack(
-                      alignment: Alignment.bottomCenter,
-                      children: [
-                        SizedBox(
-                          width: double.infinity,
-                          child: Card(
-                            child: Image.asset(
-                              widget.exercise.imagePath,
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
+                    !widget.exercise.isCustom
+                        ? Stack(
+                            alignment: Alignment.bottomCenter,
+                            children: [
+                              SizedBox(
+                                width: double.infinity,
+                                child: Card(
+                                  child: Image.asset(
+                                    widget.exercise.imagePath,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          )
+                        : Container(),
                     Padding(
                       padding: const EdgeInsets.all(16.0),
                       child: ListView.builder(

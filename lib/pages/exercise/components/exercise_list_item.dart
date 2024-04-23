@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:group_project/models/exercise.dart';
 import 'package:group_project/pages/exercise/exercise_detail.dart';
+import 'package:group_project/pages/exercise/exercise_history.dart';
 
 class ExerciseListItem extends StatelessWidget {
   final Exercise exercise;
@@ -21,7 +22,8 @@ class ExerciseListItem extends StatelessWidget {
     final exerciseName = exercise.name;
     final exerciseBodyPart = exercise.bodyPart.target?.name ?? ' ';
     final exerciseCategory = exercise.category.target?.name ?? ' ';
-    final containsSearchText = exerciseName.toLowerCase().contains(searchText.toLowerCase());
+    final containsSearchText =
+        exerciseName.toLowerCase().contains(searchText.toLowerCase());
 
     final subtitleText = '$exerciseBodyPart ($exerciseCategory)';
 
@@ -35,7 +37,9 @@ class ExerciseListItem extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => ExerciseDetailScreen(exercise),
+                    builder: (context) => exercise.isCustom
+                        ? ExerciseHistory(exercise)
+                        : ExerciseDetailScreen(exercise),
                   ),
                 );
               },
@@ -48,25 +52,25 @@ class ExerciseListItem extends StatelessWidget {
                     borderRadius: BorderRadius.circular(300.0),
                     child: exercise.imagePath == ''
                         ? Container(
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFE1F0CF),
-                        borderRadius: BorderRadius.circular(300.0),
-                      ),
-                      child: Center(
-                        child: Text(
-                          exercise.name[0].toUpperCase(),
-                          style: const TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 24.0,
-                          ),
-                        ),
-                      ),
-                    )
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFE1F0CF),
+                              borderRadius: BorderRadius.circular(300.0),
+                            ),
+                            child: Center(
+                              child: Text(
+                                exercise.name[0].toUpperCase(),
+                                style: const TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 24.0,
+                                ),
+                              ),
+                            ),
+                          )
                         : Image.asset(
-                      exercise.halfImagePath,
-                      fit: BoxFit.contain,
-                    ),
+                            exercise.halfImagePath,
+                            fit: BoxFit.contain,
+                          ),
                   ),
                 ),
                 title: Text(
@@ -86,8 +90,10 @@ class ExerciseListItem extends StatelessWidget {
               ),
             ),
           ),
-           Divider(
-            color: Colors.grey[700], height: 0.1, thickness: 0.8,
+          Divider(
+            color: Colors.grey[700],
+            height: 0.1,
+            thickness: 0.8,
           ),
         ],
       );
