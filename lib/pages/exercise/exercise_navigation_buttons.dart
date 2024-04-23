@@ -22,15 +22,17 @@ class NavigationButtonsRow extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          NavigationButton(
-            pageIndex: 0,
-            selectedPageIndex: selectedPageIndex,
-            buttonText: 'About',
-            destination: ExerciseDetailScreen(
-              exercise,
-              key: const PageStorageKey('exerciseDetailScreen'),
-            ),
-          ),
+          !exercise.isCustom
+              ? NavigationButton(
+                  pageIndex: 0,
+                  selectedPageIndex: selectedPageIndex,
+                  buttonText: 'About',
+                  destination: ExerciseDetailScreen(
+                    exercise,
+                    key: const PageStorageKey('exerciseDetailScreen'),
+                  ),
+                )
+              : Container(),
           NavigationButton(
             pageIndex: 1,
             selectedPageIndex: selectedPageIndex,
