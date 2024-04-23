@@ -6,9 +6,11 @@ import 'package:keyboard_attachable/keyboard_attachable.dart';
 
 class CommentFooter extends StatefulWidget {
   final Post post;
+  final Function resetComments;
   const CommentFooter({
     super.key,
     required this.post,
+    required this.resetComments,
   });
 
   @override
@@ -60,6 +62,7 @@ class _CommentFooterState extends State<CommentFooter> {
                     widget.post.postId,
                     commentTextController.text,
                   );
+                  widget.resetComments();
                   commentTextController.text = '';
                 } catch (e) {
                   commentTextController.text = '';

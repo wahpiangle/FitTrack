@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:group_project/models/firebase/comments.dart';
+import 'package:group_project/models/firebase/firebase_user.dart';
 import 'package:group_project/pages/user_profile/user_profile_page.dart';
 import 'package:group_project/services/firebase/firebase_user_service.dart';
 import 'package:intl/intl.dart';
@@ -14,7 +15,7 @@ class CommentTile extends StatefulWidget {
 }
 
 class _CommentTileState extends State<CommentTile> {
-  late Future userFuture;
+  late Future<FirebaseUser> userFuture;
   @override
   void initState() {
     userFuture = FirebaseUserService.getUserByUid(widget.comment.postedBy);

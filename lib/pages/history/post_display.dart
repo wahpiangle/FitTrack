@@ -17,13 +17,13 @@ import 'package:keyboard_attachable/keyboard_attachable.dart';
 
 class PostDisplay extends StatefulWidget {
   final FirebaseUser? posterInfo;
-  final String postId; // Changed to postId
+  final String postId;
   final DateTime postDate;
 
   const PostDisplay({
     super.key,
     this.posterInfo,
-    required this.postId, // Changed to postId
+    required this.postId,
     required this.postDate,
   });
 
@@ -46,13 +46,11 @@ class _PostDisplay extends State<PostDisplay> {
   }
 
   void disableScroll() {
-    setState(() {
-    });
+    setState(() {});
   }
 
   void enableScroll() {
-    setState(() {
-    });
+    setState(() {});
   }
 
   @override
@@ -112,7 +110,8 @@ class _PostDisplay extends State<PostDisplay> {
                     FutureBuilder<Post?>(
                       future: _postFuture,
                       builder: (context, snapshot) {
-                        if (snapshot.connectionState == ConnectionState.waiting) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
                           return const CircularProgressIndicator();
                         }
                         if (snapshot.hasError || !snapshot.hasData) {
@@ -128,7 +127,8 @@ class _PostDisplay extends State<PostDisplay> {
                             controller: PageController(),
                             children: [
                               Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 10.0),
                                 child: InteractiveImageViewer(
                                   imagePath: post.firstImageUrl,
                                   imagePath2: post.secondImageUrl,
@@ -146,7 +146,8 @@ class _PostDisplay extends State<PostDisplay> {
                     FutureBuilder<Post?>(
                       future: _postFuture,
                       builder: (context, snapshot) {
-                        if (snapshot.connectionState == ConnectionState.waiting) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
                           return const CircularProgressIndicator();
                         }
                         if (snapshot.hasError || !snapshot.hasData) {
@@ -165,7 +166,6 @@ class _PostDisplay extends State<PostDisplay> {
                         );
                       },
                     ),
-
                     const Divider(
                       color: AppColours.primaryBright,
                       thickness: 1,
@@ -178,7 +178,8 @@ class _PostDisplay extends State<PostDisplay> {
                           child: FutureBuilder<List<Reaction>>(
                             future: _reactionFuture,
                             builder: (context, snapshot) {
-                              if (snapshot.connectionState == ConnectionState.waiting) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
                                 return const CircularProgressIndicator();
                               }
                               if (snapshot.hasError) {
@@ -206,12 +207,11 @@ class _PostDisplay extends State<PostDisplay> {
                       thickness: 1,
                       height: 30,
                     ),
-                    // Display reactions widget
-                    // Display comments widget
                     StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
                       stream: _commentStream,
                       builder: (context, snapshot) {
-                        if (snapshot.connectionState == ConnectionState.waiting) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
                           return const CircularProgressIndicator();
                         }
                         if (snapshot.hasError) {
@@ -220,17 +220,18 @@ class _PostDisplay extends State<PostDisplay> {
                         if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
                           return const Text('No comments');
                         }
-                        // Build comment list
                         return Column(
                           children: snapshot.data!.docs.map((doc) {
                             final Comment comment = Comment.fromDocument(doc);
+                            print(comment.postedBy);
                             return GestureDetector(
                               onLongPress: () {
                                 if (comment.postedBy ==
-                                    FirebaseAuth
-                                        .instance.currentUser!.uid ||
+                                        FirebaseAuth
+                                            .instance.currentUser!.uid ||
                                     widget.postId ==
-                                        FirebaseAuth.instance.currentUser!.uid) {
+                                        FirebaseAuth
+                                            .instance.currentUser!.uid) {
                                   HapticFeedback.heavyImpact();
                                 }
                               },

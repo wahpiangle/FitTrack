@@ -7,7 +7,10 @@ import 'exercise_navigation_buttons.dart';
 
 class ExerciseDetailScreen extends StatefulWidget {
   final Exercise exercise;
-  const ExerciseDetailScreen(this.exercise, {super.key});
+  const ExerciseDetailScreen(
+    this.exercise, {
+    super.key,
+  });
   @override
   State<ExerciseDetailScreen> createState() => _ExerciseDetailScreenState();
 }
@@ -101,15 +104,23 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
                     ),
                     Padding(
                       padding: const EdgeInsets.all(16.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            '$exerciseName',
-                            style: const TextStyle(
-                                fontSize: 18, color: Colors.white),
-                          ),
-                        ],
+                      child: ListView.builder(
+                        itemCount: widget.exercise.description.length,
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemBuilder: (context, index) {
+                          return ListTile(
+                              leading: CircleAvatar(
+                                child: Text('${index + 1}'),
+                              ),
+                              title: Text(
+                                widget.exercise.description[index],
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.white,
+                                ),
+                              ));
+                        },
                       ),
                     ),
                   ],

@@ -41,7 +41,8 @@ class _DisplayPostImageScreenState extends State<DisplayPostImageScreen> {
   List<Stream<QuerySnapshot<Map<String, dynamic>>>>? _commentStreams;
   late PageController controller;
 
-  List<FirebaseUserPost> filterPostsByLast24Hours(List<FirebaseUserPost> posts) {
+  List<FirebaseUserPost> filterPostsByLast24Hours(
+      List<FirebaseUserPost> posts) {
     final DateTime now = DateTime.now();
     final DateTime yesterday = now.subtract(const Duration(days: 1));
     return posts.where((post) => post.post.date.isAfter(yesterday)).toList();
@@ -58,8 +59,6 @@ class _DisplayPostImageScreenState extends State<DisplayPostImageScreen> {
     }).toList();
   }
 
-
-
   void disableScroll() {
     setState(() {
       _isScrollDisabled = true;
@@ -71,8 +70,6 @@ class _DisplayPostImageScreenState extends State<DisplayPostImageScreen> {
       _isScrollDisabled = false;
     });
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -141,11 +138,20 @@ class _DisplayPostImageScreenState extends State<DisplayPostImageScreen> {
             maintainBottomViewPadding: true,
             child: FooterLayout(
               footer: CommentFooter(
-                  post: widget.firebaseUserPosts[_streamIndex].post),
+                  post: widget.firebaseUserPosts[_streamIndex].post,
+                  resetComments: () {
+                    setState(() {
+                      _commentStreams =
+                          widget.firebaseUserPosts.map((currentUserPost) {
+                        return FirebaseCommentService.getCommentStreamById(
+                            currentUserPost.post.postId);
+                      }).toList();
+                    });
+                  }),
               child: Container(
                 padding: const EdgeInsets.all(10),
                 child: SingleChildScrollView(
-                  physics: _pointerCount == 2
+                  physics: _pointerCount == 2 || _isScrollDisabled
                       ? const NeverScrollableScrollPhysics()
                       : null,
                   child: Column(
@@ -162,11 +168,6 @@ class _DisplayPostImageScreenState extends State<DisplayPostImageScreen> {
                           itemCount: widget.firebaseUserPosts.length,
                           controller: controller,
                           onPageChanged: (index) {
-                            if (index == 0) {
-                              disableScroll();
-                            } else {
-                              enableScroll();
-                            }
                             setState(() {
                               _streamIndex = index;
                             });
@@ -175,10 +176,11 @@ class _DisplayPostImageScreenState extends State<DisplayPostImageScreen> {
                             return Padding(
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 10.0),
-                              child:
-                              InteractiveImageViewer(
-                                imagePath: widget.firebaseUserPosts[index].post.firstImageUrl,
-                                imagePath2: widget.firebaseUserPosts[index].post.secondImageUrl,
+                              child: InteractiveImageViewer(
+                                imagePath: widget.firebaseUserPosts[index].post
+                                    .firstImageUrl,
+                                imagePath2: widget.firebaseUserPosts[index].post
+                                    .secondImageUrl,
                                 disableScroll: disableScroll,
                                 enableScroll: enableScroll,
                               ),
@@ -258,43 +260,55 @@ class _DisplayPostImageScreenState extends State<DisplayPostImageScreen> {
                               child: Text('Error fetching comments'),
                             );
                           }
-                          if (!snapshot.hasData) {
-                            return const Center(
-                              child: Text('No comments'),
-                            );
-                          }
-                          return Column(
-                            children: snapshot.data!.docs.map((doc) {
-                              final Comment comment = Comment.fromDocument(doc);
-                              return GestureDetector(
-                                onLongPress: () {
-                                  if (comment.postedBy ==
-                                          FirebaseAuth
-                                              .instance.currentUser!.uid ||
-                                      widget.firebaseUserPosts[_streamIndex]
-                                              .post.postedBy ==
-                                          FirebaseAuth
-                                              .instance.currentUser!.uid) {
-                                    HapticFeedback.heavyImpact();
-                                    showDialog(
-                                      context: context,
-                                      builder: (context) {
-                                        return DeleteCommentDialog(
-                                          comment: comment,
-                                          post: widget
-                                              .firebaseUserPosts[_streamIndex]
-                                              .post,
-                                        );
-                                      },
-                                    );
-                                  }
-                                },
-                                child: CommentTile(
-                                  comment: comment,
-                                ),
-                              );
-                            }).toList(),
-                          );
+                          return ListView.builder(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemCount: snapshot.data!.docs.length,
+                              itemBuilder: (context, index) {
+                                Comment comment = Comment.fromDocument(
+                                  snapshot.data!.docs[index],
+                                );
+                                return GestureDetector(
+                                  onLongPress: () {
+                                    if (comment.postedBy ==
+                                            FirebaseAuth
+                                                .instance.currentUser!.uid ||
+                                        widget.firebaseUserPosts[_streamIndex]
+                                                .post.postedBy ==
+                                            FirebaseAuth
+                                                .instance.currentUser!.uid) {
+                                      HapticFeedback.heavyImpact();
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          return DeleteCommentDialog(
+                                            toggleState: () {
+                                              setState(() {
+                                                _commentStreams = widget
+                                                    .firebaseUserPosts
+                                                    .map((currentUserPost) {
+                                                  return FirebaseCommentService
+                                                      .getCommentStreamById(
+                                                          currentUserPost
+                                                              .post.postId);
+                                                }).toList();
+                                                _pointerCount = 0;
+                                              });
+                                            },
+                                            comment: comment,
+                                            post: widget
+                                                .firebaseUserPosts[_streamIndex]
+                                                .post,
+                                          );
+                                        },
+                                      );
+                                    }
+                                  },
+                                  child: CommentTile(
+                                    comment: comment,
+                                  ),
+                                );
+                              });
                         },
                       ),
                     ],
