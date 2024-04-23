@@ -446,5 +446,35 @@ class ExerciseService {
   //   }
   //   return null;
   // }
+  List<Exercise> getRecentExercises(int count, {String? category, String? bodyPart}) {
+    final recentSessions = workoutSessionBox.query()
+        .order(WorkoutSession_.date, flags: Order.descending)
+        .build()
+        .find();
 
+    final recentExercises = <Exercise>{};
+    final exerciseIds = <int>{};
+
+    for (var session in recentSessions) {
+      for (var setInfo in session.exercisesSetsInfo) {
+        if (setInfo.exercise.target == null) {
+          continue;
+        }
+        final exercise = setInfo.exercise.target!;
+
+        if (!exerciseIds.contains(exercise.id) &&
+            exercise.category.target != null &&
+            exercise.bodyPart.target != null &&
+            (category == null || exercise.category.target!.name == category) &&
+            (bodyPart == null || exercise.bodyPart.target!.name == bodyPart)) {
+          recentExercises.add(exercise);
+          exerciseIds.add(exercise.id);
+        }
+        if (recentExercises.length >= count) break;
+      }
+      if (recentExercises.length >= count) break;
+    }
+
+    return recentExercises.toList();
+  }
 }

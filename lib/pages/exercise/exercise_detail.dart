@@ -102,6 +102,22 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
                         ),
                       ],
                     ),
+                    !widget.exercise.isCustom
+                        ? Stack(
+                      alignment: Alignment.bottomCenter,
+                      children: [
+                        SizedBox(
+                          width: double.infinity,
+                          child: Card(
+                            child: Image.asset(
+                              widget.exercise.imagePath,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
+                      ],
+                    )
+                        : Container(),
                     Padding(
                       padding: const EdgeInsets.all(16.0),
                       child: Row(
