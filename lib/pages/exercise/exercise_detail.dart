@@ -85,23 +85,7 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
                       exercise: widget.exercise,
                     ),
                     const SizedBox(height: 10.0),
-                    Stack(
-                      alignment: Alignment.bottomCenter,
-                      children: [
-                        SizedBox(
-                          width: double.infinity,
-                          child: Card(
-                            child: Image.asset(
-                              widget.exercise.imagePath,
-                              fit: BoxFit.cover,
-                              errorBuilder: (context, error, stackTrace) {
-                                return const SizedBox.shrink();
-                              },
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
+                    
                     !widget.exercise.isCustom
                         ? Stack(
                       alignment: Alignment.bottomCenter,
