@@ -27,8 +27,8 @@ class OverallWorkoutBestSet {
           overallBestExerciseName = exercisesSetsInfo.exerciseName;
 
         } else {
-          bool isCurrentBestSetBetter = objectBox.exerciseService.getOneRepMaxValue(bestSet.weight ?? 0, bestSet.reps ?? 0) >
-              objectBox.exerciseService.getOneRepMaxValue(overallBestSet.weight ?? 0, overallBestSet.reps ?? 0);
+          bool isCurrentBestSetBetter = objectBox.exerciseService.getOneRepMaxValue(bestSet.weight ?? 0, bestSet.reps ?? 0, bestSet ) >
+              objectBox.exerciseService.getOneRepMaxValue(overallBestSet.weight ?? 0, overallBestSet.reps ?? 0, overallBestSet );
 
           if (isCurrentBestSetBetter) {
             overallBestSet = bestSet;

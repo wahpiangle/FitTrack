@@ -10,6 +10,9 @@ import 'package:group_project/pages/home/components/display_post_screen/workout_
 import 'package:group_project/services/firebase/firebase_workouts_service.dart';
 import 'package:intl/intl.dart';
 
+import '../../../../../models/exercise.dart';
+import '../../../../../models/exercise_set.dart';
+
 class FriendPostWorkoutInfo extends StatefulWidget {
   final Post post;
   final FirebaseUser posterInfo;
@@ -156,127 +159,154 @@ class _FriendPostWorkoutInfoState extends State<FriendPostWorkoutInfo> {
                     ),
               const SizedBox(height: 10),
               SingleChildScrollView(
-                child: ListView.builder(
-                                itemCount: workoutSession.exercisesSetsInfo.length,
-                                shrinkWrap: true,
-                                itemBuilder: (context, index) {
-                final exercisesSetInfo =
-                    workoutSession.exercisesSetsInfo[index];
-                final exercise = objectBox.exerciseService
-                    .getExerciseById(exercisesSetInfo.exerciseId);
-                return Row(
-                  children: [
-                    SizedBox(
-                      height: 80,
-                      width: 80,
-                      child: ClipRRect(
-                          borderRadius: BorderRadius.circular(300.0),
-                          child: exercise?.halfImagePath == null
-                              ? const Icon(
-                                  Icons.fitness_center_sharp,
+                  child: ListView.builder(
+                itemCount: workoutSession.exercisesSetsInfo.length,
+                shrinkWrap: true,
+                itemBuilder: (context, index) {
+                  final exercisesSetInfo =
+                      workoutSession.exercisesSetsInfo[index];
+                  final exercise = objectBox.exerciseService
+                      .getExerciseById(exercisesSetInfo.exerciseId);
+                  return Row(
+                    children: [
+                      SizedBox(
+                        height: 80,
+                        width: 80,
+                        child: ClipRRect(
+                            borderRadius: BorderRadius.circular(300.0),
+                            child: exercise?.halfImagePath == null
+                                ? const Icon(
+                                    Icons.fitness_center_sharp,
+                                    color: Colors.white,
+                                    size: 40,
+                                  )
+                                : Image.asset(
+                                    exercise!.halfImagePath,
+                                    fit: BoxFit.contain,
+                                  )),
+                      ),
+                      const SizedBox(width: 20),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 6.0),
+                              child: Text(
+                                exercisesSetInfo.exerciseName,
+                                style: const TextStyle(
                                   color: Colors.white,
-                                  size: 40,
-                                )
-                              : Image.asset(
-                                  exercise!.halfImagePath,
-                                  fit: BoxFit.contain,
-                                )),
-                    ),
-                    const SizedBox(width: 20),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding:
-                                const EdgeInsets.symmetric(vertical: 6.0),
-                            child: Text(
-                              exercisesSetInfo.exerciseName,
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 16,
+                                  fontSize: 16,
+                                ),
                               ),
                             ),
-                          ),
-                          ListView.builder(
-                            shrinkWrap: true,
-                            itemCount: exercisesSetInfo.exerciseSets.length,
-                            itemBuilder: (context, index) {
-                              final set =
-                                  exercisesSetInfo.exerciseSets[index];
-                              return Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 6.0),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Row(
-                                      children: [
-                                        Padding(
-                                          padding: const EdgeInsets.only(
-                                              right: 20),
-                                          child: Text(
-                                            '${index + 1}',
+                            ListView.builder(
+                              shrinkWrap: true,
+                              itemCount: exercisesSetInfo.exerciseSets.length,
+                              itemBuilder: (context, index) {
+                                final set =
+                                    exercisesSetInfo.exerciseSets[index];
+                                final weightrepsText = getWeightRepsText(set, exercise);
+
+                                return Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 6.0),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                                right: 20),
+                                            child: Text(
+                                              '${index + 1}',
+                                              style: const TextStyle(
+                                                color: Colors.grey,
+                                                fontSize: 14,
+                                              ),
+                                            ),
+                                          ),
+                                          Text(
+                                            weightrepsText,
                                             style: const TextStyle(
                                               color: Colors.grey,
                                               fontSize: 14,
                                             ),
                                           ),
-                                        ),
-                                        Text(
-                                          '${set.weight} kg',
-                                          style: const TextStyle(
-                                            color: Colors.grey,
-                                            fontSize: 14,
-                                          ),
-                                        ),
-                                        const SizedBox(width: 10),
-                                        Text(
-                                          'x  ${set.reps}',
-                                          style: const TextStyle(
-                                            color: Colors.grey,
-                                            fontSize: 14,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    set.isPersonalRecord
-                                        ? Container(
-                                            padding: const EdgeInsets.all(5),
-                                            decoration: const BoxDecoration(
-                                              color: AppColours.secondary,
-                                              borderRadius: BorderRadius.all(
-                                                Radius.circular(30),
+                                        ],
+                                      ),
+                                      set.isPersonalRecord
+                                          ? Container(
+                                              padding: const EdgeInsets.all(5),
+                                              decoration: const BoxDecoration(
+                                                color: AppColours.secondary,
+                                                borderRadius: BorderRadius.all(
+                                                  Radius.circular(30),
+                                                ),
                                               ),
-                                            ),
-                                            child: Text(
-                                              '🏆 PR',
-                                              style: TextStyle(
-                                                color: Colors.green[900],
-                                                fontSize: 12,
+                                              child: Text(
+                                                '🏆 PR',
+                                                style: TextStyle(
+                                                  color: Colors.green[900],
+                                                  fontSize: 12,
+                                                ),
                                               ),
-                                            ),
-                                          )
-                                        : const SizedBox(),
-                                  ],
-                                ),
-                              );
-                            },
-                          )
-                        ],
+                                            )
+                                          : const SizedBox(),
+                                    ],
+                                  ),
+                                );
+                              },
+                            )
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
-                );
-                                },
-                              ),
-              ),
+                    ],
+                  );
+                },
+              )),
             ],
           );
         }
         return Container();
       },
     );
+  }
+}
+
+String getWeightRepsText(ExerciseSet set, Exercise? exercise) {
+  if (exercise?.category.target?.name == 'Barbell'
+      || exercise?.category.target?.name == 'Dumbbell'
+      || exercise?.category.target?.name == 'Machine'
+      || exercise?.category.target?.name == 'Cable'
+      || exercise?.category.target?.name == 'Band'
+      || exercise?.category.target?.name == 'Other') {
+    return '${set.weight} kg x ${set.reps}';
+  }
+  else if (exercise?.category.target?.name == 'Assisted Bodyweight') {
+    return '-${set.weight} kg x ${set.reps}';
+  } else if (exercise?.category.target?.name == 'Weighted Bodyweight') {
+    return '+${set.weight} kg x ${set.reps}';
+  } else if (exercise?.category.target?.name == 'Duration') {
+    return formatDurationn(set.time ?? 0);
+  } else {
+    return '${set.reps} reps';
+  }
+}
+
+
+String formatDurationn(int totalSeconds) {
+  final duration = Duration(seconds: totalSeconds);
+  final hours = duration.inHours;
+  final minutes = (duration.inMinutes % 60).toString().padLeft(2, '0'); // Pad minutes with leading zero if necessary
+  final seconds = (totalSeconds % 60).toString().padLeft(2, '0'); // Pad seconds with leading zero if necessary
+
+  if (hours > 0) {
+    return '$hours:$minutes:$seconds';
+  } else {
+    return '$minutes:$seconds';
   }
 }

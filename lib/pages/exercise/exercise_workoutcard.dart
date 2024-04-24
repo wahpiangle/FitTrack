@@ -24,6 +24,37 @@ class ExerciseWorkoutCard extends StatelessWidget {
     return '$hoursString:$minutesString:$secondsString';
   }
 
+  String formatExerciseInfo(dynamic value, String category, String weightUnit) {
+    if (value.weight != null || value.reps != null || value.time != null) {
+      if (category == "Assisted Bodyweight") {
+        return '-${value.weight} $weightUnit x ${value.reps}';
+      } else if (category == "Weighted Bodyweight") {
+        return '+${value.weight} $weightUnit x ${value.reps}';
+      } else if (category == "Reps Only") {
+        return '${value.reps} reps';
+      } else if (category == "Duration") {
+        return formatDurationFromSeconds(value.time ?? 0);
+      } else {
+        return '${value.weight} $weightUnit x ${value.reps}';
+      }
+    } else {
+      return '-';
+    }
+  }
+
+  String formatDurationFromSeconds(int totalSeconds) {
+    final duration = Duration(seconds: totalSeconds);
+    final hours = duration.inHours;
+    final minutes = (duration.inMinutes % 60).toString().padLeft(2, '0'); // Pad minutes with leading zero if necessary
+    final seconds = (totalSeconds % 60).toString().padLeft(2, '0'); // Pad seconds with leading zero if necessary
+
+    if (hours > 0) {
+      return '$hours:$minutes:$seconds';
+    } else {
+      return '$minutes:$seconds';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final filteredSetsInfo = workoutSession.exercisesSetsInfo
@@ -144,27 +175,7 @@ class ExerciseWorkoutCard extends StatelessWidget {
                                                     ),
                                                   ),
                                                   Text(
-                                                    ('${setInfo.value.weight} kg'),
-                                                    style: TextStyle(
-                                                      color: Colors.grey[300],
-                                                      fontSize: 16,
-                                                    ),
-                                                  ),
-                                                  Padding(
-                                                    padding: const EdgeInsets
-                                                        .symmetric(
-                                                        horizontal: 5),
-                                                    child: Text(
-                                                      '×',
-                                                      style: TextStyle(
-                                                          color:
-                                                              Colors.grey[300],
-                                                          fontSize: 16),
-                                                    ),
-                                                  ),
-                                                  Text(
-                                                    setInfo.value.reps
-                                                        .toString(),
+                                                    formatExerciseInfo(setInfo.value, exercisesSetInfo.exercise.target?.category.target?.name ?? "", "kg"),
                                                     style: TextStyle(
                                                       color: Colors.grey[300],
                                                       fontSize: 16,

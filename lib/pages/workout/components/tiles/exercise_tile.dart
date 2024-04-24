@@ -12,6 +12,8 @@ import 'package:group_project/pages/workout/components/workout_header.dart';
 import 'package:group_project/pages/workout/components/timer/providers/timer_provider.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../models/exercise_set.dart';
+
 class ExerciseTile extends StatefulWidget {
   final List<Exercise> exerciseData;
   final List<ExercisesSetsInfo> exercisesSetsInfo;
@@ -63,9 +65,8 @@ class _ExerciseTileState extends State<ExerciseTile> {
             .where((exerciseSet) => exerciseSet.id == exerciseSetId)
             .toList()
             .forEach((exerciseSet) {
-          if (exerciseSet.reps != null && exerciseSet.weight != null) {
-            exerciseSet.isCompleted = !exerciseSet.isCompleted;
-          }
+              setCompletionBasedOnExerciseType(exercisesSetsInfo, exerciseSet);
+
 
           if (exerciseSet.isCompleted && restTimerProvider.isRestTimerEnabled) {
             //check if the custom timer is running, if yes, stop the custom timer first
@@ -198,5 +199,23 @@ class _ExerciseTileState extends State<ExerciseTile> {
         },
       ),
     );
+  }
+}
+
+void setCompletionBasedOnExerciseType(ExercisesSetsInfo exercisesSetsInfo, ExerciseSet exerciseSet) {
+  String? targetType = exercisesSetsInfo.exercise.target?.category.target?.name;
+  if (targetType == "Reps Only") {
+    // Check if reps is not null and weight is null
+    if (exerciseSet.reps != null && exerciseSet.weight == null ||
+        exerciseSet.reps != null && exerciseSet.weight != null) {
+      exerciseSet.isCompleted = !exerciseSet.isCompleted;
+    }
+  }
+  else if (targetType == "Duration") {
+    if (exerciseSet.time != null) {
+        exerciseSet.isCompleted = !exerciseSet.isCompleted;
+  }
+} else if (exerciseSet.reps != null && exerciseSet.weight != null) {
+    exerciseSet.isCompleted = !exerciseSet.isCompleted;
   }
 }

@@ -46,6 +46,8 @@ class WorkoutTemplateService {
         final newExerciseSet = ExerciseSet();
         newExerciseSet.reps = exerciseSet.reps;
         newExerciseSet.weight = exerciseSet.weight;
+        newExerciseSet.time = exerciseSet.time;
+        // newExerciseSet.duration = exerciseSet.duration;
         newExerciseSet.exerciseSetInfo.target = newExercisesSetsInfo;
         newExercisesSetsInfo.exerciseSets.add(newExerciseSet);
       }
@@ -161,6 +163,8 @@ class WorkoutTemplateService {
         final newExerciseSet = ExerciseSet();
         newExerciseSet.reps = exerciseSet.reps;
         newExerciseSet.weight = exerciseSet.weight;
+        newExerciseSet.time = exerciseSet.time;
+        // newExerciseSet.duration = exerciseSet.duration;
         newExerciseSet.exerciseSetInfo.target = newExercisesSetsInfo;
         newExercisesSetsInfo.exerciseSets.add(newExerciseSet);
       }
@@ -203,6 +207,14 @@ class WorkoutTemplateService {
             workoutTemplate.exercisesSetsInfo[i].exerciseSets[j].weight) {
           return true;
         }
+        if (editingTemplate.exercisesSetsInfo[i].exerciseSets[j].time !=
+            workoutTemplate.exercisesSetsInfo[i].exerciseSets[j].time) {
+          return true;
+        }
+        // if (editingTemplate.exercisesSetsInfo[i].exerciseSets[j].duration !=
+        //     workoutTemplate.exercisesSetsInfo[i].exerciseSets[j].duration) {
+        //   return true;
+        // }
       }
     }
     return false;
@@ -222,6 +234,8 @@ class WorkoutTemplateService {
         final newExerciseSet = ExerciseSet();
         newExerciseSet.reps = exerciseSet.reps;
         newExerciseSet.weight = exerciseSet.weight;
+        newExerciseSet.time = exerciseSet.time;
+        // newExerciseSet.duration = exerciseSet.duration;
         newExerciseSet.exerciseSetInfo.target = newExercisesSetsInfo;
         newExercisesSetsInfo.exerciseSets.add(newExerciseSet);
       }

@@ -3,6 +3,8 @@ import 'package:group_project/constants/themes/app_colours.dart';
 import 'package:group_project/models/workout_session.dart';
 import 'package:intl/intl.dart';
 
+import '../../models/exercise_set.dart';
+
 class CompleteHistoryDetail extends StatelessWidget {
   final WorkoutSession workoutSession;
 
@@ -140,30 +142,32 @@ class CompleteHistoryDetail extends StatelessWidget {
                                               ),
                                             ),
                                           ),
-                                          Text(
-                                            ('${setInfo.value.weight} kg'),
-                                            style: TextStyle(
-                                              color: Colors.grey[300],
-                                              fontSize: 16,
+                                          renderExerciseInfo(exercisesSetInfo, setInfo),
+                                          const SizedBox(width: 10),
+                                          setInfo.value.isPersonalRecord
+                                              ? Container(
+                                            padding:
+                                            const EdgeInsets.all(
+                                                5),
+                                            decoration:
+                                            const BoxDecoration(
+                                              color: AppColours
+                                                  .secondary,
+                                              borderRadius:
+                                              BorderRadius.all(
+                                                Radius.circular(30),
+                                              ),
                                             ),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 5),
                                             child: Text(
-                                              '×',
+                                              '🏆 PR',
                                               style: TextStyle(
-                                                  color: Colors.grey[300],
-                                                  fontSize: 16),
+                                                color:
+                                                Colors.green[900],
+                                                fontSize: 12,
+                                              ),
                                             ),
-                                          ),
-                                          Text(
-                                            setInfo.value.reps.toString(),
-                                            style: TextStyle(
-                                              color: Colors.grey[300],
-                                              fontSize: 16,
-                                            ),
-                                          ),
+                                          )
+                                              : const SizedBox(),
                                         ],
                                       ),
                                     ),
@@ -179,5 +183,73 @@ class CompleteHistoryDetail extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+Widget renderExerciseInfo(exercisesSetInfo, MapEntry<int, ExerciseSet> setInfo) {
+  String category = exercisesSetInfo.exercise.target?.category?.target?.name ?? '';
+
+  switch (category) {
+    case "Barbell":
+    case "Dumbbell":
+    case "Machine":
+    case "Cable":
+    case "Band":
+    case "Other":
+      return Text(
+        '${setInfo.value.weight} kg  × ${setInfo.value.reps}',
+        style: TextStyle(
+          color: Colors.grey[300],
+          fontSize: 16,
+        ),
+      );
+    case "Assisted Bodyweight":
+      return Text(
+        '-${setInfo.value.weight} kg × ${setInfo.value.reps}',
+        style: TextStyle(
+          color: Colors.grey[300],
+          fontSize: 16,
+        ),
+      );
+    case "Weighted Bodyweight":
+      return Text(
+        '+${setInfo.value.weight} kg  × ${setInfo.value.reps}',
+        style: TextStyle(
+          color: Colors.grey[300],
+          fontSize: 16,
+        ),
+      );
+    case "Reps Only":
+      return Text(
+        '${setInfo.value.reps} reps',
+        style: TextStyle(
+          color: Colors.grey[300],
+          fontSize: 16,
+        ),
+      );
+    case "Duration":
+      String formattedTime = formatDurationFromSeconds(setInfo.value.time ?? 0);
+      return Text(
+        formattedTime,
+        style: TextStyle(
+          color: Colors.grey[300],
+          fontSize: 16,
+        ),
+      );
+    default:
+      return SizedBox();
+  }
+}
+
+String formatDurationFromSeconds(int totalSeconds) {
+  final duration = Duration(seconds: totalSeconds);
+  final hours = duration.inHours;
+  final minutes = (duration.inMinutes % 60).toString().padLeft(2, '0'); // Pad minutes with leading zero if necessary
+  final seconds = (totalSeconds % 60).toString().padLeft(2, '0'); // Pad seconds with leading zero if necessary
+
+  if (hours > 0) {
+    return '$hours:$minutes:$seconds';
+  } else {
+    return '$minutes:$seconds';
   }
 }
