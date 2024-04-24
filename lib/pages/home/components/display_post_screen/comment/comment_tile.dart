@@ -61,7 +61,8 @@ class _CommentTileState extends State<CommentTile> {
               ),
             ),
           ),
-          title: Row(
+          title: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               GestureDetector(
                 onTap: () => navigateToUserProfile(user),
