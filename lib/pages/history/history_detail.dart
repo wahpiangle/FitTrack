@@ -5,7 +5,6 @@ import 'package:group_project/pages/history/menu_anchor/workout_menu_anchor.dart
 import 'package:group_project/pages/history/post_display.dart';
 import 'package:intl/intl.dart';
 import '../../models/exercise_set.dart';
-import '../home/components/display_post_screen/workout_info/own_post_workout_info.dart';
 
 class HistoryDetail extends StatefulWidget {
   final WorkoutSession workoutSession;
@@ -81,7 +80,7 @@ class HistoryDetailState extends State<HistoryDetail> {
         padding: const EdgeInsets.symmetric(horizontal: 10),
         child: SingleChildScrollView(
           physics:
-          _isScrollDisabled ? const NeverScrollableScrollPhysics() : null,
+              _isScrollDisabled ? const NeverScrollableScrollPhysics() : null,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -166,17 +165,17 @@ class HistoryDetailState extends State<HistoryDetail> {
               widget.workoutSession.note == ''
                   ? const SizedBox()
                   : Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8.0),
-                child: Text(
-                  widget.workoutSession.note == ''
-                      ? 'No notes'
-                      : widget.workoutSession.note.toString(),
-                  style: const TextStyle(
-                    color: Colors.grey,
-                    fontSize: 16,
-                  ),
-                ),
-              ),
+                      padding: const EdgeInsets.symmetric(vertical: 8.0),
+                      child: Text(
+                        widget.workoutSession.note == ''
+                            ? 'No notes'
+                            : widget.workoutSession.note.toString(),
+                        style: const TextStyle(
+                          color: Colors.grey,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ),
               Column(
                 children: widget.workoutSession.exercisesSetsInfo
                     .map(
@@ -222,7 +221,8 @@ class HistoryDetailState extends State<HistoryDetail> {
                                             mainAxisAlignment:
                                                 MainAxisAlignment.spaceBetween,
                                             children: [
-                                              renderExerciseInfo(exercisesSetInfo, setInfo),
+                                              renderExerciseInfo(
+                                                  exercisesSetInfo, setInfo),
                                               setInfo.value.isPersonalRecord
                                                   ? Container(
                                                       padding:
@@ -270,8 +270,10 @@ class HistoryDetailState extends State<HistoryDetail> {
   }
 }
 
-Widget renderExerciseInfo(exercisesSetInfo, MapEntry<int, ExerciseSet> setInfo) {
-  String category = exercisesSetInfo.exercise.target?.category?.target?.name ?? '';
+Widget renderExerciseInfo(
+    exercisesSetInfo, MapEntry<int, ExerciseSet> setInfo) {
+  String category =
+      exercisesSetInfo.exercise.target?.category?.target?.name ?? '';
 
   switch (category) {
     case "Barbell":
@@ -328,8 +330,12 @@ Widget renderExerciseInfo(exercisesSetInfo, MapEntry<int, ExerciseSet> setInfo) 
 String formatDurationFromSeconds(int totalSeconds) {
   final duration = Duration(seconds: totalSeconds);
   final hours = duration.inHours;
-  final minutes = (duration.inMinutes % 60).toString().padLeft(2, '0'); // Pad minutes with leading zero if necessary
-  final seconds = (totalSeconds % 60).toString().padLeft(2, '0'); // Pad seconds with leading zero if necessary
+  final minutes = (duration.inMinutes % 60)
+      .toString()
+      .padLeft(2, '0'); // Pad minutes with leading zero if necessary
+  final seconds = (totalSeconds % 60)
+      .toString()
+      .padLeft(2, '0'); // Pad seconds with leading zero if necessary
 
   if (hours > 0) {
     return '$hours:$minutes:$seconds';
