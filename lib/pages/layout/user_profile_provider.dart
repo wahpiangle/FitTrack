@@ -1,45 +1,38 @@
 import 'package:flutter/material.dart';
+import 'package:group_project/models/firebase/firebase_user.dart';
 import 'package:group_project/services/firebase/firebase_user_service.dart';
 
 class UserProfileProvider extends ChangeNotifier {
   String _profileImage = '';
   String _username = '';
   String _displayName = '';
+  late FirebaseUser _user;
 
   UserProfileProvider() {
-    _loadProfileImage();
-    _loadUsername();
-    _loadDisplayName();
+    _loadUserProfile();
   }
 
   String get profileImage => _profileImage;
   String get username => _username;
   String get displayName => _displayName;
 
-  Future<void> _loadProfileImage() async {
-    _profileImage = await FirebaseUserService.getProfilePicture();
-    notifyListeners();
-  }
-
-  Future<void> _loadUsername() async {
-    _username = await FirebaseUserService.getUsername();
-    notifyListeners();
-  }
-
-  Future<void> _loadDisplayName() async {
-    _displayName = await FirebaseUserService.getUserDisplayName();
+  Future<void> _loadUserProfile() async {
+    _user = await FirebaseUserService.getCurrentUser();
+    _profileImage = _user.photoUrl;
+    _username = _user.username;
+    _displayName = _user.displayName;
     notifyListeners();
   }
 
   Future<void> updateProfileImage(String image) async {
     await FirebaseUserService.storeProfilePicture(image);
-    _loadProfileImage();
+    _loadUserProfile();
     notifyListeners();
   }
 
   Future<void> updateUsername(String username) async {
     await FirebaseUserService.updateUsername(username);
-    _loadUsername();
+    _loadUserProfile();
     notifyListeners();
   }
 
@@ -57,9 +50,7 @@ class UserProfileProvider extends ChangeNotifier {
   }
 
   void loadAll() {
-    _loadProfileImage();
-    _loadUsername();
-    _loadDisplayName();
+    _loadUserProfile();
     notifyListeners();
   }
 }
