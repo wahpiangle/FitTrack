@@ -4,7 +4,7 @@ import 'package:group_project/constants/themes/app_colours.dart';
 import 'package:group_project/main.dart';
 import 'package:group_project/models/exercise_set.dart';
 import 'package:group_project/models/exercises_sets_info.dart';
-import 'package:group_project/pages/workout/components/tiles/set_tile_components/recent_values.dart';
+import 'package:group_project/pages/workout/components/tiles/recent_values.dart';
 
 class SetTileRepsOnly extends StatefulWidget {
   final ExerciseSet set;
@@ -109,8 +109,8 @@ class _SetTileRepsOnlyState extends State<SetTileRepsOnly> {
       child: Container(
         color: widget.setIsCompleted != null
             ? widget.set.isCompleted
-            ? Colors.green[300]
-            : Colors.transparent
+                ? Colors.green[300]
+                : Colors.transparent
             : Colors.transparent,
         padding: const EdgeInsets.symmetric(vertical: 10),
         child: Row(
@@ -178,41 +178,42 @@ class _SetTileRepsOnlyState extends State<SetTileRepsOnly> {
               ),
             ),
             const SizedBox(width: 10),
+            const SizedBox(width: 10),
             SizedBox(
               width: 40,
               child: widget.setIsCompleted != null
                   ? Material(
-                shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(8),
-                  ),
-                ),
-                color: widget.set.isCompleted
-                    ? Colors.green[300]
-                    : AppColours.primaryBright,
-                child: InkWell(
-                    onTap: () {
-                      setState(() {
-                        widget.setIsCompleted!(widget.set.id);
-                      });
-                    },
-                    child: const Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: Icon(
-                        Icons.check,
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(8),
+                        ),
+                      ),
+                      color: widget.set.isCompleted
+                          ? Colors.green[300]
+                          : AppColours.primaryBright,
+                      child: InkWell(
+                          onTap: () {
+                            setState(() {
+                              widget.setIsCompleted!(widget.set.id);
+                            });
+                          },
+                          child: const Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: Icon(
+                              Icons.check,
+                              color: Colors.white,
+                            ),
+                          )),
+                    )
+                  : GestureDetector(
+                      onTap: () {
+                        HapticFeedback.lightImpact();
+                      },
+                      child: const Icon(
+                        Icons.horizontal_rule_rounded,
                         color: Colors.white,
                       ),
-                    )),
-              )
-                  : GestureDetector(
-                onTap: () {
-                  HapticFeedback.lightImpact();
-                },
-                child: const Icon(
-                  Icons.horizontal_rule_rounded,
-                  color: Colors.white,
-                ),
-              ),
+                    ),
             )
           ],
         ),

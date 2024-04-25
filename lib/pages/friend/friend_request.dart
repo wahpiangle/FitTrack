@@ -111,7 +111,12 @@ class FriendRequestsTabState extends State<FriendRequestsTab> {
                               final requests = (snapshot.data?.data()
                                   as Map<String, dynamic>?)?['requestReceived'];
                               if (requests == null || requests.isEmpty) {
-                                return const SizedBox.shrink();
+                                return const Center(
+                                  child: Text(
+                                    'No friend request found',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                );
                               }
                               return ListView.builder(
                                 itemCount: requestDocumentList.length,

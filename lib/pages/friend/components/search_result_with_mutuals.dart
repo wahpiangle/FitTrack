@@ -26,10 +26,8 @@ class SearchResultWithMutuals extends StatelessWidget {
                   style: TextStyle(color: Colors.white),
                 ),
               )
-            : ListView.separated(
+            : ListView.builder(
                 itemCount: friendSuggestions.length,
-                separatorBuilder: (context, index) =>
-                    const Divider(color: Colors.transparent, thickness: 0.5),
                 itemBuilder: (context, index) {
                   return SearchBarResult(
                     friendUser: friendSuggestions.keys.toList()[index],

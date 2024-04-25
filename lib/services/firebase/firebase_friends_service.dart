@@ -222,17 +222,17 @@ class FirebaseFriendsService {
         .collection('users')
         .doc(currentUserUid)
         .get();
-    final currentUserFriends =
-        Set.from(currentUserDoc.data()?['friends'] as List<dynamic>);
+    final currentUser = await FirebaseUser.fromDocument(currentUserDoc);
 
     final otherUserDoc = await FirebaseFirestore.instance
         .collection('users')
         .doc(otherUserUid)
         .get();
-    final otherUserFriends =
-        Set.from(otherUserDoc.data()?['friends'] as List<dynamic>);
+    final otherUser = await FirebaseUser.fromDocument(otherUserDoc);
 
-    final mutualFriends = currentUserFriends.intersection(otherUserFriends);
+    final mutualFriends = currentUser.friends
+        .where((friendUid) => otherUser.friends.contains(friendUid))
+        .toList();
 
     return mutualFriends.length;
   }

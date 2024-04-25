@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 
 class SetLabels extends StatelessWidget {
   final void Function(int exerciseSetId)? setIsCompleted;
+  final String categoryName;
   const SetLabels({
-    super.key,
     this.setIsCompleted,
+    required this.categoryName,
+    super.key,
   });
 
   @override
@@ -38,12 +40,18 @@ class SetLabels extends StatelessWidget {
           ),
         ),
         const SizedBox(width: 10),
-        const Expanded(
+        Expanded(
           flex: 1,
           child: Center(
             child: Text(
-              "Weight",
-              style: TextStyle(
+              categoryName == "Duration"
+                  ? "Duration"
+                  : categoryName == "Reps Only"
+                      ? "Reps"
+                      : categoryName == "Assisted Bodyweight"
+                          ? "-kg"
+                          : "Weight (kg)",
+              style: const TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.bold,
                 color: Colors.white,
@@ -52,20 +60,23 @@ class SetLabels extends StatelessWidget {
             ),
           ),
         ),
-        const SizedBox(width: 20),
-        const Expanded(
-          flex: 1,
-          child: Center(
-            child: Text(
-              "Reps",
-              style: TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
-            ),
-          ),
-        ),
+        const SizedBox(width: 10),
+        categoryName != "Duration" && categoryName != "Reps Only"
+            ? const Expanded(
+                flex: 1,
+                child: Center(
+                  child: Text(
+                    "Reps",
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              )
+            : const SizedBox.shrink(),
         const SizedBox(width: 10),
         SizedBox(
           width: 40,

@@ -22,7 +22,7 @@ class CurrentFriendTile extends StatelessWidget {
         key: UniqueKey(),
         itemCount: currentFriends.length,
         separatorBuilder: (context, index) =>
-        const Divider(color: Colors.transparent, thickness: 0.2),
+            const Divider(color: Colors.transparent, thickness: 0.2),
         itemBuilder: (context, index) {
           return ListTile(
             leading: ImageDisplay.buildUserProfileImage(
@@ -33,33 +33,37 @@ class CurrentFriendTile extends StatelessWidget {
                 color: Colors.white,
               ),
             ),
-            trailing: FractionallySizedBox(
-              widthFactor: 0.18,
-              heightFactor: 0.50,
-              child: ElevatedButton(
-                onPressed: () {
-                  FirebaseFriendsService.removeFriend(currentFriends[index].uid,
-                          () {
-                        loadCurrentFriends();
-                      });
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.red,
-                  padding: const EdgeInsets.all(8),
-                  textStyle: const TextStyle(fontSize: 10),
-                ),
-                child: const Text(
-                  'Remove',
-                  key: Key('requestedText'),
-                  style: TextStyle(
-                      color: Colors.white, fontWeight: FontWeight.bold),
-                ),
+            subtitle: Text(
+              '@${currentFriends[index].username}',
+              style: const TextStyle(
+                color: Colors.grey,
+              ),
+            ),
+            trailing: ElevatedButton(
+              onPressed: () {
+                FirebaseFriendsService.removeFriend(currentFriends[index].uid,
+                    () {
+                  loadCurrentFriends();
+                });
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.red,
+                padding: const EdgeInsets.all(8),
+                textStyle: const TextStyle(fontSize: 10),
+              ),
+              child: const Text(
+                'Remove',
+                key: Key('requestedText'),
+                style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 12),
               ),
             ),
             onTap: () {
-              // Push a new route to the stack to navigate to the UserProfilePage
               Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => UserProfilePage(user: currentFriends[index]),
+                builder: (context) =>
+                    UserProfilePage(user: currentFriends[index]),
               ));
             },
           );

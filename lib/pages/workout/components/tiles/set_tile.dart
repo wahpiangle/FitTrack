@@ -4,7 +4,7 @@ import 'package:group_project/constants/themes/app_colours.dart';
 import 'package:group_project/main.dart';
 import 'package:group_project/models/exercise_set.dart';
 import 'package:group_project/models/exercises_sets_info.dart';
-import 'package:group_project/pages/workout/components/tiles/set_tile_components/recent_values.dart';
+import 'package:group_project/pages/workout/components/tiles/recent_values.dart';
 
 class SetTile extends StatefulWidget {
   final ExerciseSet set;
