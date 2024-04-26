@@ -5,6 +5,7 @@ import 'package:group_project/main.dart';
 import 'package:group_project/models/exercise_set.dart';
 import 'package:group_project/models/exercises_sets_info.dart';
 import 'package:group_project/pages/workout/components/tiles/recent_values.dart';
+import 'dart:math' as math;
 
 class SetTileDuration extends StatefulWidget {
   final ExerciseSet set;
@@ -31,11 +32,7 @@ class SetTileDuration extends StatefulWidget {
 }
 
 class _SetTileDurationState extends State<SetTileDuration> {
-  int? recentWeight;
-  int? recentReps;
   int? recentTime;
-  late TextEditingController weightController;
-  late TextEditingController repsController;
   late TextEditingController timeController;
   bool isTapped = false;
   late String originalTime;
@@ -44,7 +41,6 @@ class _SetTileDurationState extends State<SetTileDuration> {
   void initState() {
     super.initState();
     fetchRecentWeightAndTime();
-    weightController = TextEditingController();
     timeController = TextEditingController();
     originalTime =
         widget.set.time != null ? _secondsToTimeString(widget.set.time!) : '';
@@ -52,7 +48,6 @@ class _SetTileDurationState extends State<SetTileDuration> {
 
   @override
   void dispose() {
-    weightController.dispose();
     timeController.dispose();
     super.dispose();
   }
@@ -62,16 +57,10 @@ class _SetTileDurationState extends State<SetTileDuration> {
     if (exercisesSetsInfo != null) {
       final exercise = exercisesSetsInfo.exercise.target;
       if (exercise != null) {
-        final recentWeight = objectBox.exerciseService
-            .getRecentWeight(exercise.id, widget.setIndex);
-        final recentReps = objectBox.exerciseService
-            .getRecentReps(exercise.id, widget.setIndex);
-        final recentTime = objectBox.exerciseService
+        final recentTimeFromDB = objectBox.exerciseService
             .getRecentTime(exercise.id, widget.setIndex);
         setState(() {
-          this.recentWeight = recentWeight;
-          this.recentReps = recentReps;
-          this.recentTime = recentTime;
+          recentTime = recentTimeFromDB;
         });
       }
     }
@@ -80,12 +69,8 @@ class _SetTileDurationState extends State<SetTileDuration> {
   void onTapPreviousTab(
       ExercisesSetsInfo exercisesSetsInfo, AnimationController controller) {
     if (!widget.isCurrentEditing) {
-      weightController.text = recentWeight?.toString() ?? '';
-      repsController.text = recentReps?.toString() ?? '';
       timeController.text = recentTime?.toString() ?? '';
       setState(() {
-        widget.set.weight = recentWeight;
-        widget.set.reps = recentReps;
         widget.set.time = recentTime;
         isTapped = true;
       });
@@ -139,13 +124,12 @@ class _SetTileDurationState extends State<SetTileDuration> {
             ),
             const SizedBox(width: 10),
             RecentValues(
-                isCurrentEditing: widget.isCurrentEditing,
-                exercisesSetsInfo: widget.exercisesSetsInfo,
-                isTapped: isTapped,
-                onTapPreviousTab: onTapPreviousTab,
-                recentWeight: recentWeight,
-                recentReps: recentReps,
-                recentTime: recentTime),
+              isCurrentEditing: widget.isCurrentEditing,
+              exercisesSetsInfo: widget.exercisesSetsInfo,
+              isTapped: isTapped,
+              onTapPreviousTab: onTapPreviousTab,
+              recentTime: recentTime,
+            ),
             const SizedBox(width: 10),
             Expanded(
               flex: 1,
@@ -160,13 +144,12 @@ class _SetTileDurationState extends State<SetTileDuration> {
                     color: Colors.white,
                   ),
                   textAlign: TextAlign.center,
-                  keyboardType: TextInputType.number,
+                  keyboardType:
+                      const TextInputType.numberWithOptions(decimal: false),
                   initialValue: isTapped ? null : originalTime,
                   controller: isTapped ? timeController : null,
                   inputFormatters: [
-                    FilteringTextInputFormatter.allow(
-                        RegExp(r'^\d{0,4}(:\d{0,4})?$')),
-                    CustomTimeInputFormatter(),
+                    TimeTextInputFormatter(),
                   ],
                   decoration: const InputDecoration(
                     contentPadding: EdgeInsets.all(0),
@@ -181,7 +164,6 @@ class _SetTileDurationState extends State<SetTileDuration> {
                   onChanged: (value) {
                     setState(() {
                       isTapped = false;
-                      // Convert the formatted time string into seconds
                       widget.set.time = _timeStringToSeconds(value);
                       if (widget.set.time == null) {
                         widget.set.isCompleted = false;
@@ -240,60 +222,89 @@ class _SetTileDurationState extends State<SetTileDuration> {
   }
 }
 
-class CustomTimeInputFormatter extends TextInputFormatter {
+class TimeTextInputFormatter extends TextInputFormatter {
+  final RegExp _exp = RegExp(r'^[0-9:]+$');
+  TimeTextInputFormatter();
+
   @override
   TextEditingValue formatEditUpdate(
-      TextEditingValue oldValue, TextEditingValue newValue) {
-    final newText = newValue.text;
-    final oldText = oldValue.text;
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
+    if (_exp.hasMatch(newValue.text)) {
+      TextSelection newSelection = newValue.selection;
 
-    // Check if a character is deleted
-    if (newText.length < oldText.length) {
-      return TextEditingValue.empty;
-    }
+      String value = newValue.text;
+      String newText;
 
-    if (newText.length == 1) {
+      String leftChunk = '';
+      String rightChunk = '';
+
+      if (value.length >= 8) {
+        if (value.substring(0, 7) == '00:00:0') {
+          leftChunk = '00:00:';
+          rightChunk = value.substring(leftChunk.length + 1, value.length);
+        } else if (value.substring(0, 6) == '00:00:') {
+          leftChunk = '00:0';
+          rightChunk = "${value.substring(6, 7)}:${value.substring(7)}";
+        } else if (value.substring(0, 4) == '00:0') {
+          leftChunk = '00:';
+          rightChunk =
+              "${value.substring(4, 5)}${value.substring(6, 7)}:${value.substring(7)}";
+        } else if (value.substring(0, 3) == '00:') {
+          leftChunk = '0';
+          rightChunk =
+              "${value.substring(3, 4)}:${value.substring(4, 5)}${value.substring(6, 7)}:${value.substring(7, 8)}${value.substring(8)}";
+        } else {
+          leftChunk = '';
+          rightChunk =
+              "${value.substring(1, 2)}${value.substring(3, 4)}:${value.substring(4, 5)}${value.substring(6, 7)}:${value.substring(7)}";
+        }
+      } else if (value.length == 7) {
+        if (value.substring(0, 7) == '00:00:0') {
+          leftChunk = '';
+          rightChunk = '';
+        } else if (value.substring(0, 6) == '00:00:') {
+          leftChunk = '00:00:0';
+          rightChunk = value.substring(6, 7);
+        } else if (value.substring(0, 1) == '0') {
+          leftChunk = '00:';
+          rightChunk =
+              "${value.substring(1, 2)}${value.substring(3, 4)}:${value.substring(4, 5)}${value.substring(6, 7)}";
+        } else {
+          leftChunk = '';
+          rightChunk =
+              "${value.substring(1, 2)}${value.substring(3, 4)}:${value.substring(4, 5)}${value.substring(6, 7)}:${value.substring(7)}";
+        }
+      } else {
+        leftChunk = '00:00:0';
+        rightChunk = value;
+      }
+
+      if (oldValue.text.isNotEmpty && oldValue.text.substring(0, 1) != '0') {
+        if (value.length > 7) {
+          return oldValue;
+        } else {
+          leftChunk = '0';
+          rightChunk =
+              "${value.substring(0, 1)}:${value.substring(1, 2)}${value.substring(3, 4)}:${value.substring(4, 5)}${value.substring(6, 7)}";
+        }
+      }
+
+      newText = leftChunk + rightChunk;
+
+      newSelection = newValue.selection.copyWith(
+        baseOffset: math.min(newText.length, newText.length),
+        extentOffset: math.min(newText.length, newText.length),
+      );
+
       return TextEditingValue(
         text: newText,
-        selection: TextSelection.collapsed(offset: newText.length),
-      );
-    } else if (newText.length == 2) {
-      return TextEditingValue(
-        text: newText,
-        selection: TextSelection.collapsed(offset: newText.length),
-      );
-    } else if (oldText.length == 2) {
-      // If 3 digits are typed, insert ":" between the second and third digits
-      final updatedText = "${newText.substring(0, 1)}:${newText.substring(1)}";
-      return TextEditingValue(
-        text: updatedText,
-        selection: TextSelection.collapsed(offset: updatedText.length),
-      );
-    } else if (oldText.length == 3) {
-      // If 4 digits are typed, insert ":" between the second and third digits
-      final updatedText = "${newText.substring(0, 2)}:${newText.substring(2)}";
-      return TextEditingValue(
-        text: updatedText,
-        selection: TextSelection.collapsed(offset: updatedText.length),
-      );
-    } else if (oldText.length == 4) {
-      // If 5 digits are typed, append the fifth digit after the colon
-      final updatedText =
-          "${newText.substring(0, 1)}${newText.substring(2, 3)}:${newText.substring(3, 5)}";
-      return TextEditingValue(
-        text: updatedText,
-        selection: TextSelection.collapsed(offset: updatedText.length),
-      );
-    } else if (oldText.length == 5) {
-      // If 5 digits are typed, append the fifth digit after the colon
-      final updatedText =
-          "${newText.substring(0, 1)}:${newText.substring(1, 2)}${newText.substring(3, 4)}:${newText.substring(4, 6)}";
-      return TextEditingValue(
-        text: updatedText,
-        selection: TextSelection.collapsed(offset: updatedText.length),
+        selection: newSelection,
+        composing: TextRange.empty,
       );
     }
-    return newValue;
+    return oldValue;
   }
 }
 
@@ -310,6 +321,7 @@ int? _timeStringToSeconds(String timeString) {
     int minutes = int.tryParse(parts[1]) ?? 0;
     int seconds = int.tryParse(parts[2]) ?? 0;
     return hours * 3600 + minutes * 60 + seconds;
+  } else {
+    return int.tryParse(parts[0]);
   }
-  return null;
 }

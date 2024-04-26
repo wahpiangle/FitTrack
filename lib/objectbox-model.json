@@ -203,11 +203,6 @@
           "id": "9:1561625142316087456",
           "name": "time",
           "type": 6
-        },
-        {
-          "id": "10:3584652252887315954",
-          "name": "duration",
-          "type": 9
         }
       ],
       "relations": []
@@ -425,7 +420,9 @@
   "modelVersionParserMinimum": 5,
   "retiredEntityUids": [],
   "retiredIndexUids": [],
-  "retiredPropertyUids": [],
+  "retiredPropertyUids": [
+    3584652252887315954
+  ],
   "retiredRelationUids": [],
   "version": 1
 }

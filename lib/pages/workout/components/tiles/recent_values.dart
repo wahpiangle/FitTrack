@@ -20,8 +20,8 @@ class RecentValues extends StatefulWidget {
     required this.exercisesSetsInfo,
     required this.isTapped,
     required this.onTapPreviousTab,
-    required this.recentWeight,
-    required this.recentReps,
+    this.recentWeight,
+    this.recentReps,
     this.recentTime,
     this.recentDuration,
   });
@@ -32,25 +32,26 @@ class RecentValues extends StatefulWidget {
     if (recentWeight != null || recentTime != null || recentReps != null) {
       switch (exercisesSetsInfo.exercise.target?.category.target?.name) {
         case "Assisted Bodyweight":
-          return '-${recentWeight}kg x ${recentReps}';
+          return '-${recentWeight}kg x $recentReps';
         case "Weighted Bodyweight":
-          return '+${recentWeight}kg x ${recentReps}';
+          return '+${recentWeight}kg x $recentReps';
         case "Reps Only":
-          return '${recentReps} reps';
+          return '$recentReps reps';
         case "Duration":
           return formatDurationFromSeconds(recentTime!);
         default:
-          return '${recentWeight}kg x ${recentReps}';
+          return '${recentWeight}kg x $recentReps';
       }
     } else {
       return '-';
     }
   }
+
   String formatDurationFromSeconds(int totalSeconds) {
     final duration = Duration(seconds: totalSeconds);
     final hours = duration.inHours;
-    final minutes = (duration.inMinutes % 60).toString().padLeft(2, '0'); // Pad minutes with leading zero if necessary
-    final seconds = (totalSeconds % 60).toString().padLeft(2, '0'); // Pad seconds with leading zero if necessary
+    final minutes = (duration.inMinutes % 60).toString().padLeft(2, '0');
+    final seconds = (totalSeconds % 60).toString().padLeft(2, '0');
 
     if (hours > 0) {
       return '$hours:$minutes:$seconds';
@@ -58,8 +59,6 @@ class RecentValues extends StatefulWidget {
       return '$minutes:$seconds';
     }
   }
-
-
 }
 
 class _RecentValuesState extends State<RecentValues>

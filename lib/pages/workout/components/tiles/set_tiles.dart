@@ -37,6 +37,7 @@ class _SetTilesState extends State<SetTiles> {
           child: ListView.builder(
             itemCount: widget.exercisesSetsInfo.exerciseSets.length,
             shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
             itemBuilder: (context, index) {
               int setIndex = index;
               ExerciseSet set = widget.exercisesSetsInfo.exerciseSets[setIndex];

@@ -147,19 +147,22 @@ class ExerciseService {
 
   void completeExerciseSet(int exerciseSetId) {
     ExerciseSet exerciseSet = exerciseSetBox.get(exerciseSetId)!;
+    print(exerciseSet.time);
     ExercisesSetsInfo? exercisesSetsInfo = exerciseSet.exerciseSetInfo.target;
-    if (exercisesSetsInfo?.exercise.target?.category.target?.name == "Reps Only") {
+    String categoryName =
+        exercisesSetsInfo?.exercise.target?.category.target?.name ?? "";
+    if (categoryName == "Reps Only") {
       if (exerciseSet.reps == null) {
         return;
       }
-    }
-    else if (exercisesSetsInfo?.exercise.target?.category.target?.name == "Duration") {
+    } else if (categoryName == "Duration") {
       if (exerciseSet.time == null) {
         return;
       }
-    }
-    else if (exerciseSet.reps == null || exerciseSet.weight == null) {
-      return;
+    } else {
+      if (exerciseSet.weight == null) {
+        return;
+      }
     }
     exerciseSet.isCompleted = !exerciseSet.isCompleted;
     if (isPersonalRecord(exerciseSet) == true) {
@@ -183,6 +186,7 @@ class ExerciseService {
 
   void updateExerciseSet(ExerciseSet exerciseSet) {
     exerciseSetBox.put(exerciseSet);
+    print(exerciseSetBox.get(exerciseSet.id)?.time);
   }
 
   void deselectExercise(Exercise exercise) {
@@ -191,18 +195,19 @@ class ExerciseService {
   }
 
   int getOneRepMaxValue(int weight, int reps, ExerciseSet exerciseSet) {
-    final category = exerciseSet.exerciseSetInfo.target?.exercise.target?.category.target?.name;
+    final category = exerciseSet
+        .exerciseSetInfo.target?.exercise.target?.category.target?.name;
 
     if (category != "Reps Only" && category != "Duration") {
       return (weight * (1 + reps / 30)).toInt();
     } else {
-      return 0; // Return some default value if category is not "Dumbbell"
+      return 0;
     }
   }
 
-
   bool isPersonalRecord(ExerciseSet exerciseSet) {
-    final category = exerciseSet.exerciseSetInfo.target?.exercise.target?.category.target?.name;
+    final category = exerciseSet
+        .exerciseSetInfo.target?.exercise.target?.category.target?.name;
     if (category == "Duration") {
       // If the category is "Duration", we'll determine personal records based on time
       ExercisesSetsInfo exercisesSetsInfo = exerciseSet.exerciseSetInfo.target!;
@@ -226,8 +231,7 @@ class ExerciseService {
       }
       // If no other set has a higher duration, it's a personal record
       return true;
-    }
-    else if (category == "Reps Only") {
+    } else if (category == "Reps Only") {
       // If the category is "Reps Only", we'll determine personal records based on reps
       ExercisesSetsInfo exercisesSetsInfo = exerciseSet.exerciseSetInfo.target!;
       Exercise exercise = exercisesSetsInfo.exercise.target!;
@@ -255,11 +259,12 @@ class ExerciseService {
       List<ExerciseSet> exerciseSets = exercise.exercisesSetsInfo
           .expand((element) => element.exerciseSets)
           .toList();
-      int currentOneRepMax =
-      getOneRepMaxValue(exerciseSet.weight ?? 0, exerciseSet.reps ?? 0, exerciseSet);
+      int currentOneRepMax = getOneRepMaxValue(
+          exerciseSet.weight ?? 0, exerciseSet.reps ?? 0, exerciseSet);
       for (ExerciseSet set in exerciseSets) {
         if (set.id != exerciseSet.id) {
-          int oneRepMax = getOneRepMaxValue(set.weight ?? 0, set.reps ?? 0, set);
+          int oneRepMax =
+              getOneRepMaxValue(set.weight ?? 0, set.reps ?? 0, set);
           if (oneRepMax > currentOneRepMax) {
             return false;
           }
@@ -271,18 +276,20 @@ class ExerciseService {
     }
   }
 
-
-
-
   ExerciseSet getBestSet(WorkoutSession workoutSession) {
     List<ExerciseSet> allSets = [];
     for (var exerciseSetInfo in workoutSession.exercisesSetsInfo) {
       allSets.addAll(exerciseSetInfo.exerciseSets);
     }
-    List<ExerciseSet> dumbbellSets = allSets.where((exerciseSet) =>
-    exerciseSet.exerciseSetInfo.target?.exercise.target?.category.target?.name != "Reps Only" &&
-        exerciseSet.exerciseSetInfo.target?.exercise.target?.category.target?.name != "Duration"
-    ).toList();
+    List<ExerciseSet> dumbbellSets = allSets
+        .where((exerciseSet) =>
+            exerciseSet.exerciseSetInfo.target?.exercise.target?.category.target
+                    ?.name !=
+                "Reps Only" &&
+            exerciseSet.exerciseSetInfo.target?.exercise.target?.category.target
+                    ?.name !=
+                "Duration")
+        .toList();
     if (dumbbellSets.isNotEmpty) {
       dumbbellSets.sort((a, b) => getOneRepMaxValue(b.weight!, b.reps!, b)
           .compareTo(getOneRepMaxValue(a.weight!, a.reps!, a)));
@@ -293,7 +300,8 @@ class ExerciseService {
   }
 
   int getDurationMaxValue(int timeInSeconds, ExerciseSet exerciseSet) {
-    final category = exerciseSet.exerciseSetInfo.target?.exercise.target?.category.target?.name;
+    final category = exerciseSet
+        .exerciseSetInfo.target?.exercise.target?.category.target?.name;
 
     if (category == "Duration") {
       // If the category is "Duration", simply return the timeInSeconds
@@ -308,9 +316,12 @@ class ExerciseService {
     for (var exerciseSetInfo in workoutSession.exercisesSetsInfo) {
       allSets.addAll(exerciseSetInfo.exerciseSets);
     }
-    List<ExerciseSet> durationSets = allSets.where((exerciseSet) =>
-    exerciseSet.exerciseSetInfo.target?.exercise.target?.category.target?.name == "Duration"
-    ).toList();
+    List<ExerciseSet> durationSets = allSets
+        .where((exerciseSet) =>
+            exerciseSet.exerciseSetInfo.target?.exercise.target?.category.target
+                ?.name ==
+            "Duration")
+        .toList();
     if (durationSets.isNotEmpty) {
       // There are "Duration" sets available
       durationSets.sort((a, b) => getDurationMaxValue(b.time!, b)
@@ -322,7 +333,8 @@ class ExerciseService {
   }
 
   int getOneRepMaxValueRepsOnly(int reps, ExerciseSet exerciseSet) {
-    final category = exerciseSet.exerciseSetInfo.target?.exercise.target?.category.target?.name;
+    final category = exerciseSet
+        .exerciseSetInfo.target?.exercise.target?.category.target?.name;
 
     if (category == "Reps Only") {
       // If the category is "Duration", simply return the timeInSeconds
@@ -337,9 +349,12 @@ class ExerciseService {
     for (var exerciseSetInfo in workoutSession.exercisesSetsInfo) {
       allSets.addAll(exerciseSetInfo.exerciseSets);
     }
-    List<ExerciseSet> repsOnlySets = allSets.where((exerciseSet) =>
-    exerciseSet.exerciseSetInfo.target?.exercise.target?.category.target?.name == "Reps Only"
-    ).toList();
+    List<ExerciseSet> repsOnlySets = allSets
+        .where((exerciseSet) =>
+            exerciseSet.exerciseSetInfo.target?.exercise.target?.category.target
+                ?.name ==
+            "Reps Only")
+        .toList();
     if (repsOnlySets.isNotEmpty) {
       repsOnlySets.sort((a, b) => (b.reps ?? 0).compareTo(a.reps ?? 0));
       return repsOnlySets.first;
@@ -422,8 +437,10 @@ class ExerciseService {
     return null;
   }
 
-  List<Exercise> getRecentExercises(int count, {String? category, String? bodyPart}) {
-    final recentSessions = workoutSessionBox.query()
+  List<Exercise> getRecentExercises(int count,
+      {String? category, String? bodyPart}) {
+    final recentSessions = workoutSessionBox
+        .query()
         .order(WorkoutSession_.date, flags: Order.descending)
         .build()
         .find();

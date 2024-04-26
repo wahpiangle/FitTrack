@@ -31,9 +31,7 @@ class SetTileRepsOnly extends StatefulWidget {
 }
 
 class _SetTileRepsOnlyState extends State<SetTileRepsOnly> {
-  int? recentWeight;
   int? recentReps;
-  late TextEditingController weightController;
   late TextEditingController repsController;
   bool isTapped = false;
 
@@ -41,13 +39,11 @@ class _SetTileRepsOnlyState extends State<SetTileRepsOnly> {
   void initState() {
     super.initState();
     fetchRecentWeightAndReps();
-    weightController = TextEditingController();
     repsController = TextEditingController();
   }
 
   @override
   void dispose() {
-    weightController.dispose();
     repsController.dispose();
     super.dispose();
   }
@@ -57,12 +53,9 @@ class _SetTileRepsOnlyState extends State<SetTileRepsOnly> {
     if (exercisesSetsInfo != null) {
       final exercise = exercisesSetsInfo.exercise.target;
       if (exercise != null) {
-        final recentWeight = objectBox.exerciseService
-            .getRecentWeight(exercise.id, widget.setIndex);
         final recentReps = objectBox.exerciseService
             .getRecentReps(exercise.id, widget.setIndex);
         setState(() {
-          this.recentWeight = recentWeight;
           this.recentReps = recentReps;
         });
       }
@@ -72,10 +65,8 @@ class _SetTileRepsOnlyState extends State<SetTileRepsOnly> {
   void onTapPreviousTab(
       ExercisesSetsInfo exercisesSetsInfo, AnimationController controller) {
     if (!widget.isCurrentEditing) {
-      weightController.text = recentWeight?.toString() ?? '';
       repsController.text = recentReps?.toString() ?? '';
       setState(() {
-        widget.set.weight = recentWeight;
         widget.set.reps = recentReps;
         isTapped = true;
       });
@@ -129,12 +120,12 @@ class _SetTileRepsOnlyState extends State<SetTileRepsOnly> {
             ),
             const SizedBox(width: 10),
             RecentValues(
-                isCurrentEditing: widget.isCurrentEditing,
-                exercisesSetsInfo: widget.exercisesSetsInfo,
-                isTapped: isTapped,
-                onTapPreviousTab: onTapPreviousTab,
-                recentWeight: recentWeight,
-                recentReps: recentReps),
+              isCurrentEditing: widget.isCurrentEditing,
+              exercisesSetsInfo: widget.exercisesSetsInfo,
+              isTapped: isTapped,
+              onTapPreviousTab: onTapPreviousTab,
+              recentReps: recentReps,
+            ),
             const SizedBox(width: 10),
             Expanded(
               flex: 1,
