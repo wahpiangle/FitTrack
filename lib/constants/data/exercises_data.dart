@@ -965,6 +965,15 @@ Map<String, String> halfImageMap = {
 };
 
 Map<String, List<String>> descriptionMap = {
+  'Bench Press (Barbel)': [
+    "Lie flat on a bench with your feet firmly planted on the ground and your back pressed against the bench.",
+    "Grip the barbell with your hands slightly wider than shoulder-width apart, palms facing away from you.",
+    "Unrack the barbell and lower it towards your chest, keeping your elbows at a 45-degree angle to your body.",
+    "Pause briefly at the bottom of the movement, then press the barbell back up to the starting position.",
+    "Lock out your elbows at the top of the movement, then repeat for the desired number of repetitions.",
+    "Focus on engaging your chest, shoulders, and triceps throughout the exercise, and maintain proper form and technique.",
+    "Remember to breathe steadily throughout the exercise, inhaling as you lower the barbell and exhaling as you press it back up."
+  ],
   'Wide Grip Seated Row (Cable)': [
     "Sit on the rowing machine with your feet firmly planted on the footrests and your knees slightly bent.",
     "Grasp the wide grip handles with an overhand grip, making sure your palms are facing downward.",
@@ -3037,6 +3046,10 @@ List<Exercise> generateExerciseData() {
     value,
   ) {
     final int index = exerciseMap.keys.toList().indexOf(key);
+    // if exercise already exists then return
+    if (exerciseData.any((element) => element.name == key)) {
+      return;
+    }
     Exercise exercise = Exercise(
       id: index,
       name: key,
