@@ -147,7 +147,6 @@ class ExerciseService {
 
   void completeExerciseSet(int exerciseSetId) {
     ExerciseSet exerciseSet = exerciseSetBox.get(exerciseSetId)!;
-    print(exerciseSet.time);
     ExercisesSetsInfo? exercisesSetsInfo = exerciseSet.exerciseSetInfo.target;
     String categoryName =
         exercisesSetsInfo?.exercise.target?.category.target?.name ?? "";
@@ -186,7 +185,6 @@ class ExerciseService {
 
   void updateExerciseSet(ExerciseSet exerciseSet) {
     exerciseSetBox.put(exerciseSet);
-    print(exerciseSetBox.get(exerciseSet.id)?.time);
   }
 
   void deselectExercise(Exercise exercise) {
