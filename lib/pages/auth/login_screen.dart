@@ -79,14 +79,11 @@ class _LoginScreenState extends State<LoginScreen> {
                   onPressed: () async {
                     try {
                       showDialog(
-                        context: context,
-                        builder: (context) {
-                          return const Center(
-                              child: CircularProgressIndicator());
-                        },
-                      );
+                          context: context,
+                          builder: (context) => const Center(
+                                child: CircularProgressIndicator(),
+                              ));
                       await _auth.signInWithGoogle();
-                      Future.microtask(() => Navigator.of(context).pop());
                     } catch (e) {
                       if (mounted) {
                         Future.microtask(() => Navigator.of(context).pop());

@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:group_project/main.dart';
 import 'package:group_project/pages/layout/user_profile_provider.dart';
@@ -93,6 +94,7 @@ class AuthService {
       Provider.of<UserProfileProvider>(navigatorKey.currentContext!,
               listen: false)
           .loadAll();
+      Navigator.pop(navigatorKey.currentContext!);
       return user;
     } catch (e) {
       rethrow;

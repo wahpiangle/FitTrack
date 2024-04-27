@@ -231,7 +231,6 @@ class WorkoutSessionService {
           postId: workoutSession['postId'],
           isCurrentEditing: false,
         );
-
         for (var exercisesSetsInfo in workoutSession['exercisesSetsInfo']) {
           final newExercisesSetsInfo = ExercisesSetsInfo();
           final Exercise? exercise = exerciseBox.get(
@@ -240,20 +239,18 @@ class WorkoutSessionService {
           exercise?.exercisesSetsInfo.add(newExercisesSetsInfo);
           newExercisesSetsInfo.exercise.target = exercise;
           for (var exerciseSet in exercisesSetsInfo['exerciseSets']) {
-            final newExerciseSet = ExerciseSet();
-            newExerciseSet.reps = exerciseSet['reps'];
-            newExerciseSet.weight = exerciseSet['weight'];
-            newExerciseSet.time = exerciseSet['time'];
-            // newExerciseSet.duration = exerciseSet['duration'];
-            newExerciseSet.isPersonalRecord =
-                exerciseSet['isPersonalRecord'] ?? false;
+            final newExerciseSet = ExerciseSet(
+              reps: exerciseSet['reps'] ?? 0,
+              weight: exerciseSet['weight'] ?? 0,
+              time: exerciseSet['time'] ?? 0,
+              isPersonalRecord: exerciseSet['isPersonalRecord'] ?? false,
+            );
             newExerciseSet.exerciseSetInfo.target = newExercisesSetsInfo;
             newExercisesSetsInfo.exerciseSets.add(newExerciseSet);
           }
           exerciseBox.put(exercise!);
           newWorkoutSession.exercisesSetsInfo.add(newExercisesSetsInfo);
         }
-
         workoutSessionBox.put(newWorkoutSession);
       }
     }

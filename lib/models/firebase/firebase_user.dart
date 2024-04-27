@@ -37,8 +37,8 @@ class FirebaseUser {
       requestReceived: data['requestReceived'] ?? [],
       email: data['email'],
       friends: data['friends'] ?? [],
-      createdAt: data['createdAt'].toDate(),
-      updatedAt: data['updatedAt'].toDate(),
+      createdAt: data['createdAt']?.toDate() ?? DateTime.now(),
+      updatedAt: data['updatedAt']?.toDate() ?? DateTime.now(),
     ));
   }
 }

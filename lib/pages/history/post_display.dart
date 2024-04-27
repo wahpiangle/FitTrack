@@ -223,7 +223,6 @@ class _PostDisplay extends State<PostDisplay> {
                         return Column(
                           children: snapshot.data!.docs.map((doc) {
                             final Comment comment = Comment.fromDocument(doc);
-                            print(comment.postedBy);
                             return GestureDetector(
                               onLongPress: () {
                                 if (comment.postedBy ==

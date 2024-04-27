@@ -26,13 +26,13 @@ class UserProfileProvider extends ChangeNotifier {
 
   Future<void> updateProfileImage(String image) async {
     await FirebaseUserService.storeProfilePicture(image);
-    _loadUserProfile();
+    await _loadUserProfile();
     notifyListeners();
   }
 
   Future<void> updateUsername(String username) async {
     await FirebaseUserService.updateUsername(username);
-    _loadUserProfile();
+    await _loadUserProfile();
     notifyListeners();
   }
 
