@@ -150,4 +150,10 @@ class FirebaseUserService {
       return null;
     }
   }
+
+  static Future<int> getFriendRequests() async {
+    final User user = auth.currentUser!;
+    final DocumentSnapshot doc = await usersCollectionRef.doc(user.uid).get();
+    return doc['requestReceived'] != null ? doc['requestReceived'].length : 0;
+  }
 }

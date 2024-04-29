@@ -22,186 +22,183 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Container(
-          decoration: const BoxDecoration(
-            image: DecorationImage(
-              fit: BoxFit.cover,
-              image: AssetImage('assets/background.png'),
-            ),
+      body: Container(
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            fit: BoxFit.cover,
+            image: AssetImage('assets/background.png'),
           ),
-          constraints: const BoxConstraints.expand(),
-          child: Padding(
-            padding: const EdgeInsets.all(35.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  'Fitness\nUnleashed,',
-                  style: TextStyle(
-                    fontSize: 40,
+        ),
+        constraints: const BoxConstraints.expand(),
+        child: Padding(
+          padding: const EdgeInsets.all(35.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Fitness\nUnleashed,',
+                style: TextStyle(
+                  fontSize: 40,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+              const SizedBox(height: 20),
+              Container(
+                margin: const EdgeInsets.only(left: 120),
+                child: MagicText(
+                  "Socially\nEnhanced",
+                  breakWordCharacter: "-",
+                  minFontSize: 24,
+                  maxFontSize: 40,
+                  smartSizeMode: true,
+                  asyncMode: true,
+                  textStyle: const TextStyle(
+                    fontSize: 24,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
                   ),
                 ),
-                const SizedBox(height: 20),
-                Container(
-                  margin: const EdgeInsets.only(left: 120),
-                  child: MagicText(
-                    "Socially\nEnhanced",
-                    breakWordCharacter: "-",
-                    minFontSize: 24,
-                    maxFontSize: 40,
-                    smartSizeMode: true,
-                    asyncMode: true,
-                    textStyle: const TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
+              ),
+              const SizedBox(height: 20),
+              SizedBox(
+                width: double.infinity,
+                child: TextButton.icon(
+                  label: const Padding(
+                    padding: EdgeInsets.fromLTRB(0, 12, 0, 12),
+                    child: Text(
+                      'Sign in with Google',
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ),
+                  onPressed: () async {
+                    try {
+                      showDialog(
+                          context: context,
+                          builder: (context) => const Center(
+                                child: CircularProgressIndicator(),
+                              ));
+                      await _auth.signInWithGoogle();
+                    } catch (e) {
+                      if (mounted) {
+                        Future.microtask(() => Navigator.of(context).pop());
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(e.toString()),
+                          ),
+                        );
+                      }
+                    }
+                  },
+                  icon: Image.asset(
+                    'assets/icons/google.png',
+                    height: 30,
+                    width: 30,
+                  ),
+                  style: ButtonStyle(
+                    backgroundColor:
+                        MaterialStateProperty.all(const Color(0xffe1f0cf)),
+                    shape: MaterialStateProperty.all(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30),
+                      ),
                     ),
                   ),
                 ),
-                const SizedBox(height: 20),
-                SizedBox(
-                  width: double.infinity,
-                  child: TextButton.icon(
-                    label: const Padding(
-                      padding: EdgeInsets.fromLTRB(0, 12, 0, 12),
-                      child: Text(
-                        'Sign in with Google',
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
-                        ),
-                      ),
-                    ),
-                    onPressed: () async {
-                      try {
-                        showDialog(
-                            context: context,
-                            builder: (context) => const Center(
-                                  child: CircularProgressIndicator(),
-                                ));
-                        await _auth.signInWithGoogle();
-                      } catch (e) {
-                        if (mounted) {
-                          Future.microtask(() => Navigator.of(context).pop());
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(e.toString()),
+              ),
+              const SizedBox(height: 20),
+              SizedBox(
+                width: double.infinity,
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: TextButton(
+                        onPressed: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => const RegisterScreen(),
                             ),
                           );
-                        }
-                      }
-                    },
-                    icon: Image.asset(
-                      'assets/icons/google.png',
-                      height: 30,
-                      width: 30,
-                    ),
-                    style: ButtonStyle(
-                      backgroundColor:
-                          MaterialStateProperty.all(const Color(0xffe1f0cf)),
-                      shape: MaterialStateProperty.all(
-                        RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 20),
-                SizedBox(
-                  width: double.infinity,
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: TextButton(
-                          onPressed: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) => const RegisterScreen(),
-                              ),
-                            );
-                          },
-                          style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all(
-                                const Color(0xff1a1a1a)),
-                            shape: MaterialStateProperty.all(
-                              RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(30),
-                              ),
-                            ),
-                            side: MaterialStateProperty.all(
-                              const BorderSide(color: Color(0xffc1c1c1)),
+                        },
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all(
+                              const Color(0xff1a1a1a)),
+                          shape: MaterialStateProperty.all(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30),
                             ),
                           ),
-                          child: const Padding(
-                            padding: EdgeInsets.fromLTRB(20, 12, 20, 12),
-                            child: Text(
-                              'Register',
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold),
-                            ),
+                          side: MaterialStateProperty.all(
+                            const BorderSide(color: Color(0xffc1c1c1)),
                           ),
                         ),
-                      ),
-                      const SizedBox(width: 20),
-                      Expanded(
-                        child: TextButton(
-                          onPressed: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    const EmailPasswordLogin(),
-                              ),
-                            );
-                          },
-                          style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all(
-                                const Color(0xff1a1a1a)),
-                            shape: MaterialStateProperty.all(
-                              RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(30),
-                              ),
-                            ),
-                            side: MaterialStateProperty.all(
-                              const BorderSide(color: Color(0xffc1c1c1)),
-                            ),
-                          ),
-                          child: const Padding(
-                            padding: EdgeInsets.fromLTRB(20, 12, 20, 12),
-                            child: Text(
-                              'Login',
-                              style: TextStyle(
+                        child: const Padding(
+                          padding: EdgeInsets.fromLTRB(20, 12, 20, 12),
+                          child: Text(
+                            'Register',
+                            style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                              ),
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 20),
+                    Expanded(
+                      child: TextButton(
+                        onPressed: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => const EmailPasswordLogin(),
+                            ),
+                          );
+                        },
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all(
+                              const Color(0xff1a1a1a)),
+                          shape: MaterialStateProperty.all(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                          ),
+                          side: MaterialStateProperty.all(
+                            const BorderSide(color: Color(0xffc1c1c1)),
+                          ),
+                        ),
+                        child: const Padding(
+                          padding: EdgeInsets.fromLTRB(20, 12, 20, 12),
+                          child: Text(
+                            'Login',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
                         ),
                       ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 20),
-                const Align(
-                  alignment: Alignment.center,
-                  child: Text(
-                    'By continuing you agree to the Terms & Conditions',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 12,
                     ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 20),
+              const Align(
+                alignment: Alignment.center,
+                child: Text(
+                  'By continuing you agree to the Terms & Conditions',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 12,
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),

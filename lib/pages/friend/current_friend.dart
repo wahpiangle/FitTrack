@@ -20,7 +20,9 @@ class CurrentFriendsTabState extends State<CurrentFriendsTab> {
   @override
   void initState() {
     super.initState();
-    loadCurrentFriends();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      loadCurrentFriends();
+    });
   }
 
   Future<void> loadCurrentFriends() async {

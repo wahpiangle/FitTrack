@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:group_project/main.dart';
 import 'package:group_project/pages/friend/friend_tab.dart';
+import 'package:group_project/pages/layout/friend_request_icon.dart';
 import 'package:provider/provider.dart';
 import 'package:group_project/pages/layout/user_profile_provider.dart';
 import 'package:group_project/pages/exercise/components/custom_exercise.dart';
@@ -52,7 +53,7 @@ class TopNavBar extends StatelessWidget implements PreferredSizeWidget {
       );
     } else if (pageIndex == 0) {
       leadingWidget = IconButton(
-        icon: const Icon(Icons.person_add_alt_1, color: Colors.white),
+        icon: const FriendRequestIcon(),
         onPressed: () {
           Navigator.push(
             context,
