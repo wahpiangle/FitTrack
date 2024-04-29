@@ -73,13 +73,18 @@ dependencies:
   peek_and_pop_dialog: ^0.0.2
   keyboard_attachable: ^2.2.0
   flutter_smart_watch: ^1.0.0
+  flutter_launcher_icons: ^0.13.1
 
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
-
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/icons/fittrack_logo.png"
+  remove_alpha_ios: true
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
