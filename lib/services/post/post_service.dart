@@ -1,6 +1,5 @@
 import 'package:group_project/models/post.dart';
 import 'package:group_project/objectbox.g.dart';
-import 'package:objectbox/objectbox.dart';
 
 class PostService {
   Box<Post> postBox;

@@ -5,7 +5,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:group_project/pages/auth/email_password_login.dart';
 import 'package:group_project/pages/auth/forgot_password.dart';
 import 'package:group_project/pages/auth/register_screen.dart';
-import 'package:group_project/pages/auth_wrapper.dart';
+import 'package:group_project/pages/layout/auth_wrapper.dart';
 import 'package:group_project/pages/complete_workout/capture_image/upload_image_provider.dart';
 import 'package:group_project/pages/complete_workout/congratulation_screen.dart';
 import 'package:group_project/pages/complete_workout/capture_image/post_workout_prompt.dart';
@@ -86,9 +86,9 @@ class MyApp extends StatelessWidget {
         navigatorKey: navigatorKey,
         debugShowCheckedModeBanner: false,
         title: 'FitTrack',
-        home: const Wrapper(),
+        home: const AuthWrapper(),
         routes: {
-          '/auth': (context) => const Wrapper(),
+          '/auth': (context) => const AuthWrapper(),
           "login": (context) => const EmailPasswordLogin(),
           "register": (context) => const RegisterScreen(),
           "app_layout": (context) => const AppLayout(),
@@ -112,7 +112,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
-
-
-
