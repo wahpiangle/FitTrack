@@ -7,4 +7,4 @@ FitTrack - A workout tracking application with built-in social media features (P
 
 ## Getting Started
 
-To run the application, run `flutter pub run build_runner build` followed by `flutter run`
+To run the application, run `flutter pub get`, then run `flutter pub run build_runner build` followed by `flutter run`. 
