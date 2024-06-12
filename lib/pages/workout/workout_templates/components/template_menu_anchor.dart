@@ -43,7 +43,7 @@ class TemplateMenuAnchor extends StatelessWidget {
                       Navigator.of(context).pop();
                     },
                     style: ButtonStyle(
-                      backgroundColor: MaterialStateColor.resolveWith(
+                      backgroundColor: WidgetStateColor.resolveWith(
                         (states) => const Color(0xFF333333),
                       ),
                       shape: WidgetStateProperty.all(
@@ -65,7 +65,7 @@ class TemplateMenuAnchor extends StatelessWidget {
                 Expanded(
                   child: TextButton(
                     style: ButtonStyle(
-                      backgroundColor: MaterialStateColor.resolveWith(
+                      backgroundColor: WidgetStateColor.resolveWith(
                         (states) => Colors.red,
                       ),
                       shape: WidgetStateProperty.all(
@@ -100,10 +100,10 @@ class TemplateMenuAnchor extends StatelessWidget {
   Widget build(BuildContext context) {
     return MenuAnchor(
       style: MenuStyle(
-        backgroundColor: MaterialStateColor.resolveWith(
+        backgroundColor: WidgetStateColor.resolveWith(
           (states) => const Color(0xFF333333),
         ),
-        surfaceTintColor: MaterialStateColor.resolveWith(
+        surfaceTintColor: WidgetStateColor.resolveWith(
           (states) => const Color(0xFF333333),
         ),
       ),
