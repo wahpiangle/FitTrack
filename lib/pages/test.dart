@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:group_project/constants/apple_watch_methods_enums.dart';
 
 class Test extends StatefulWidget {
   const Test({super.key});
@@ -10,7 +11,7 @@ class Test extends StatefulWidget {
 
 class _TestState extends State<Test> {
   int _counter = 0;
-  final channel = MethodChannel('com.example.fittrack');
+  final channel = const MethodChannel('com.example.fittrack');
 
   @override
   void initState() {
@@ -30,8 +31,8 @@ class _TestState extends State<Test> {
           break;
       }
     });
-    channel.invokeMethod(
-        "flutterToWatch", {"method": "sendCounterToNative", "data": _counter});
+    channel.invokeMethod(AppleWatchMethods.flutterToWatch,
+        {"method": "sendCounterToNative", "data": _counter});
   }
 
   Future<void> _incrementCounter() async {
@@ -46,15 +47,13 @@ class _TestState extends State<Test> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text("Title"),
+        title: const Text("Title"),
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text(
+            const Text(
               'You have pushed the button this many times:',
             ),
             Text(
@@ -66,8 +65,8 @@ class _TestState extends State<Test> {
       floatingActionButton: FloatingActionButton(
         onPressed: _incrementCounter,
         tooltip: 'Increment',
-        child: Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+        child: const Icon(Icons.add),
+      ),
     );
   }
 }
