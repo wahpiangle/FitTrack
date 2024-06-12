@@ -83,8 +83,8 @@ class _SetTilesState extends State<SetTiles> {
           child: ElevatedButton(
             style: ButtonStyle(
               backgroundColor:
-                  MaterialStateProperty.all<Color>(AppColours.primaryBright),
-              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                  WidgetStateProperty.all<Color>(AppColours.primaryBright),
+              shape: WidgetStateProperty.all<RoundedRectangleBorder>(
                 RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(15.0),
                 ),

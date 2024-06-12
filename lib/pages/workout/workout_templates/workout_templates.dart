@@ -43,10 +43,10 @@ class _WorkoutTemplatesState extends State<WorkoutTemplates> {
                 size: 18,
               ),
               style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all(
+                backgroundColor: WidgetStateProperty.all(
                   AppColours.secondary,
                 ),
-                padding: MaterialStateProperty.all(const EdgeInsets.symmetric(
+                padding: WidgetStateProperty.all(const EdgeInsets.symmetric(
                   horizontal: 8,
                 )),
               ),

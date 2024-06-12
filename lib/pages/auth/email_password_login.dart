@@ -139,10 +139,10 @@ class _EmailPasswordLoginState extends State<EmailPasswordLogin> {
                     },
                     style: ButtonStyle(
                       minimumSize:
-                          MaterialStateProperty.all(const Size(290, 40)),
+                          WidgetStateProperty.all(const Size(290, 40)),
                       backgroundColor:
-                          MaterialStateProperty.all(const Color(0xffe1f0cf)),
-                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                          WidgetStateProperty.all(const Color(0xffe1f0cf)),
+                      shape: WidgetStateProperty.all<RoundedRectangleBorder>(
                         RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(40),
                         ),

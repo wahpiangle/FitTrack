@@ -46,7 +46,7 @@ class TemplateMenuAnchor extends StatelessWidget {
                       backgroundColor: MaterialStateColor.resolveWith(
                         (states) => const Color(0xFF333333),
                       ),
-                      shape: MaterialStateProperty.all(
+                      shape: WidgetStateProperty.all(
                         RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
@@ -68,7 +68,7 @@ class TemplateMenuAnchor extends StatelessWidget {
                       backgroundColor: MaterialStateColor.resolveWith(
                         (states) => Colors.red,
                       ),
-                      shape: MaterialStateProperty.all(
+                      shape: WidgetStateProperty.all(
                         RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
@@ -128,14 +128,14 @@ class TemplateMenuAnchor extends StatelessWidget {
           case 0:
             return MenuItemButton(
               style: ButtonStyle(
-                padding: MaterialStateProperty.all(
+                padding: WidgetStateProperty.all(
                   const EdgeInsets.symmetric(
                     horizontal: 20,
                   ),
                 ),
-                surfaceTintColor: MaterialStateProperty.all(Colors.transparent),
+                surfaceTintColor: WidgetStateProperty.all(Colors.transparent),
                 backgroundColor:
-                    MaterialStateProperty.all(const Color(0xFF333333)),
+                    WidgetStateProperty.all(const Color(0xFF333333)),
               ),
               child: const Text(
                 'Edit',
@@ -159,13 +159,13 @@ class TemplateMenuAnchor extends StatelessWidget {
           case 1:
             return MenuItemButton(
               style: ButtonStyle(
-                surfaceTintColor: MaterialStateProperty.all(
+                surfaceTintColor: WidgetStateProperty.all(
                   Colors.transparent,
                 ),
-                backgroundColor: MaterialStateProperty.all(
+                backgroundColor: WidgetStateProperty.all(
                   const Color(0xFF333333),
                 ),
-                padding: MaterialStateProperty.all(
+                padding: WidgetStateProperty.all(
                   const EdgeInsets.symmetric(
                     horizontal: 20,
                   ),

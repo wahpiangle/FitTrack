@@ -46,15 +46,15 @@ class TemplateDialog extends StatelessWidget {
                       width: double.infinity,
                       child: TextButton(
                         style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all<Color>(
+                          backgroundColor: WidgetStateProperty.all<Color>(
                               AppColours.secondary),
                           shape:
-                              MaterialStateProperty.all<RoundedRectangleBorder>(
+                              WidgetStateProperty.all<RoundedRectangleBorder>(
                             RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(5),
                             ),
                           ),
-                          overlayColor: MaterialStateProperty.all<Color>(
+                          overlayColor: WidgetStateProperty.all<Color>(
                             Colors.grey.withOpacity(0.2),
                           ),
                         ),
@@ -86,12 +86,12 @@ class TemplateDialog extends StatelessWidget {
                       child: TextButton(
                         style: ButtonStyle(
                           backgroundColor:
-                              MaterialStateProperty.all<Color>(Colors.black38),
-                          overlayColor: MaterialStateProperty.all<Color>(
+                              WidgetStateProperty.all<Color>(Colors.black38),
+                          overlayColor: WidgetStateProperty.all<Color>(
                             Colors.grey.withOpacity(0.2),
                           ),
                           shape:
-                              MaterialStateProperty.all<RoundedRectangleBorder>(
+                              WidgetStateProperty.all<RoundedRectangleBorder>(
                             RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(5),
                             ),
@@ -122,14 +122,14 @@ class TemplateDialog extends StatelessWidget {
                       child: TextButton(
                         style: ButtonStyle(
                           backgroundColor:
-                              MaterialStateProperty.all<Color>(Colors.black38),
+                              WidgetStateProperty.all<Color>(Colors.black38),
                           shape:
-                              MaterialStateProperty.all<RoundedRectangleBorder>(
+                              WidgetStateProperty.all<RoundedRectangleBorder>(
                             RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(5),
                             ),
                           ),
-                          overlayColor: MaterialStateProperty.all<Color>(
+                          overlayColor: WidgetStateProperty.all<Color>(
                             Colors.grey.withOpacity(0.2),
                           ),
                         ),
@@ -157,12 +157,12 @@ class TemplateDialog extends StatelessWidget {
                       child: TextButton(
                         style: ButtonStyle(
                           backgroundColor:
-                              MaterialStateProperty.all<Color>(Colors.black38),
-                          overlayColor: MaterialStateProperty.all<Color>(
+                              WidgetStateProperty.all<Color>(Colors.black38),
+                          overlayColor: WidgetStateProperty.all<Color>(
                             Colors.grey.withOpacity(0.2),
                           ),
                           shape:
-                              MaterialStateProperty.all<RoundedRectangleBorder>(
+                              WidgetStateProperty.all<RoundedRectangleBorder>(
                             RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(5),
                             ),

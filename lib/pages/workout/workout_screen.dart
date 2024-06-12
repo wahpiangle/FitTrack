@@ -143,13 +143,13 @@ class WorkoutScreenState extends State<WorkoutScreen> {
                     },
                     style: ButtonStyle(
                       backgroundColor:
-                          MaterialStateProperty.all(const Color(0xFFC1C1C1)),
-                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                          WidgetStateProperty.all(const Color(0xFFC1C1C1)),
+                      shape: WidgetStateProperty.all<RoundedRectangleBorder>(
                         RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(30),
                         ),
                       ),
-                      padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+                      padding: WidgetStateProperty.all<EdgeInsetsGeometry>(
                         const EdgeInsets.symmetric(vertical: 10),
                       ),
                     ),

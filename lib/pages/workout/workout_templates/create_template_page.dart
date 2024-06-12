@@ -82,10 +82,10 @@ class _CreateTemplatePageState extends State<CreateTemplatePage> {
                         Navigator.pop(context);
                       },
                       style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all(
+                        backgroundColor: WidgetStateProperty.all(
                           Colors.black38,
                         ),
-                        shape: MaterialStateProperty.all(
+                        shape: WidgetStateProperty.all(
                           RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10),
                           ),
@@ -116,10 +116,10 @@ class _CreateTemplatePageState extends State<CreateTemplatePage> {
                         Navigator.pop(context);
                       },
                       style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all(
+                        backgroundColor: WidgetStateProperty.all(
                           Colors.red,
                         ),
-                        shape: MaterialStateProperty.all(
+                        shape: WidgetStateProperty.all(
                           RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10),
                           ),
@@ -181,10 +181,10 @@ class _CreateTemplatePageState extends State<CreateTemplatePage> {
                         Navigator.pop(context);
                       },
                       style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all(
+                        backgroundColor: WidgetStateProperty.all(
                           Colors.black38,
                         ),
-                        shape: MaterialStateProperty.all(
+                        shape: WidgetStateProperty.all(
                           RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10),
                           ),
@@ -231,10 +231,10 @@ class _CreateTemplatePageState extends State<CreateTemplatePage> {
                         }
                       },
                       style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all(
+                        backgroundColor: WidgetStateProperty.all(
                           AppColours.secondary,
                         ),
-                        shape: MaterialStateProperty.all(
+                        shape: WidgetStateProperty.all(
                           RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10),
                           ),
@@ -272,15 +272,15 @@ class _CreateTemplatePageState extends State<CreateTemplatePage> {
         backgroundColor: AppColours.primary,
         leading: IconButton(
           style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all(
+            backgroundColor: WidgetStateProperty.all(
               Colors.black26,
             ),
-            shape: MaterialStateProperty.all(
+            shape: WidgetStateProperty.all(
               RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10),
               ),
             ),
-            padding: MaterialStateProperty.all(
+            padding: WidgetStateProperty.all(
               const EdgeInsets.symmetric(horizontal: 10),
             ),
           ),
@@ -308,10 +308,10 @@ class _CreateTemplatePageState extends State<CreateTemplatePage> {
                 _askToSave();
               },
               style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all(
+                backgroundColor: WidgetStateProperty.all(
                   AppColours.secondary,
                 ),
-                shape: MaterialStateProperty.all(
+                shape: WidgetStateProperty.all(
                   RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),

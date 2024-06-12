@@ -52,8 +52,8 @@ class FinishWorkoutDialog extends StatelessWidget {
                   Navigator.of(context).pop();
                 },
                 style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all<Color>(Colors.red),
-                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                  backgroundColor: WidgetStateProperty.all<Color>(Colors.red),
+                  shape: WidgetStateProperty.all<RoundedRectangleBorder>(
                     RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
@@ -112,13 +112,13 @@ class FinishWorkoutDialog extends StatelessWidget {
                 },
                 style: ButtonStyle(
                   backgroundColor:
-                      MaterialStateProperty.all<Color>(AppColours.secondary),
-                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      WidgetStateProperty.all<Color>(AppColours.secondary),
+                  shape: WidgetStateProperty.all<RoundedRectangleBorder>(
                     RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
                   ),
-                  overlayColor: MaterialStateProperty.all<Color>(
+                  overlayColor: WidgetStateProperty.all<Color>(
                     Colors.grey.withOpacity(0.2),
                   ),
                 ),

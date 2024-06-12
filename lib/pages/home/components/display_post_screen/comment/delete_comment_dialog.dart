@@ -53,7 +53,7 @@ class DeleteCommentDialog extends StatelessWidget {
                     width: double.infinity,
                     child: ElevatedButton(
                       style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all(
+                        backgroundColor: WidgetStateProperty.all(
                           AppColours.secondary,
                         ),
                       ),
@@ -74,7 +74,7 @@ class DeleteCommentDialog extends StatelessWidget {
                     width: double.infinity,
                     child: ElevatedButton(
                       style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all(Colors.red),
+                        backgroundColor: WidgetStateProperty.all(Colors.red),
                       ),
                       onPressed: () async {
                         await FirebaseCommentService.deleteCommentById(

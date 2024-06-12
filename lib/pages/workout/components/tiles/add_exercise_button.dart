@@ -17,11 +17,11 @@ class AddExerciseButton extends StatelessWidget {
         objectBox.exerciseService.getAllExercises();
     return TextButton(
       style: ButtonStyle(
-        padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+        padding: WidgetStateProperty.all<EdgeInsetsGeometry>(
             const EdgeInsets.all(15)),
         backgroundColor:
-            MaterialStateProperty.all<Color>(const Color(0xFF1A1A1A)),
-        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+            WidgetStateProperty.all<Color>(const Color(0xFF1A1A1A)),
+        shape: WidgetStateProperty.all<RoundedRectangleBorder>(
           RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15.0),
           ),
