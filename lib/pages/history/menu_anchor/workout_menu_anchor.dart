@@ -26,10 +26,10 @@ class WorkoutMenuAnchor extends StatelessWidget {
     return MenuAnchor(
       alignmentOffset: const Offset(-120, 0),
       style: MenuStyle(
-        backgroundColor: MaterialStateColor.resolveWith(
+        backgroundColor: WidgetStateColor.resolveWith(
           (states) => const Color(0xFF333333),
         ),
-        surfaceTintColor: MaterialStateColor.resolveWith(
+        surfaceTintColor: WidgetStateColor.resolveWith(
           (states) => const Color(0xFF333333),
         ),
       ),
