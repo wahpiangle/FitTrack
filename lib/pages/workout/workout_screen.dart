@@ -138,8 +138,8 @@ class WorkoutScreenState extends State<WorkoutScreen> {
                 child: FractionallySizedBox(
                   widthFactor: 1,
                   child: TextButton(
-                    onPressed: () {
-                      _startNewWorkout(context);
+                    onPressed: () async {
+                      await _startNewWorkout(context);
                     },
                     style: ButtonStyle(
                       backgroundColor:
