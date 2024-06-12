@@ -102,8 +102,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   style: ButtonStyle(
                     backgroundColor:
-                        MaterialStateProperty.all(const Color(0xffe1f0cf)),
-                    shape: MaterialStateProperty.all(
+                        WidgetStateProperty.all(const Color(0xffe1f0cf)),
+                    shape: WidgetStateProperty.all(
                       RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(30),
                       ),
@@ -126,14 +126,14 @@ class _LoginScreenState extends State<LoginScreen> {
                           );
                         },
                         style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all(
+                          backgroundColor: WidgetStateProperty.all(
                               const Color(0xff1a1a1a)),
-                          shape: MaterialStateProperty.all(
+                          shape: WidgetStateProperty.all(
                             RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(30),
                             ),
                           ),
-                          side: MaterialStateProperty.all(
+                          side: WidgetStateProperty.all(
                             const BorderSide(color: Color(0xffc1c1c1)),
                           ),
                         ),
@@ -160,14 +160,14 @@ class _LoginScreenState extends State<LoginScreen> {
                           );
                         },
                         style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all(
+                          backgroundColor: WidgetStateProperty.all(
                               const Color(0xff1a1a1a)),
-                          shape: MaterialStateProperty.all(
+                          shape: WidgetStateProperty.all(
                             RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(30),
                             ),
                           ),
-                          side: MaterialStateProperty.all(
+                          side: WidgetStateProperty.all(
                             const BorderSide(color: Color(0xffc1c1c1)),
                           ),
                         ),

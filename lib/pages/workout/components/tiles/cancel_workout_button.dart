@@ -76,15 +76,15 @@ class CancelWorkoutButton extends StatelessWidget {
 
     return TextButton(
       style: ButtonStyle(
-        padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+        padding: WidgetStateProperty.all<EdgeInsetsGeometry>(
             const EdgeInsets.all(15)),
-        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+        shape: WidgetStateProperty.all<RoundedRectangleBorder>(
           RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(18.0),
           ),
         ),
         backgroundColor:
-            MaterialStateProperty.all<Color>(const Color(0xFF1A1A1A)),
+            WidgetStateProperty.all<Color>(const Color(0xFF1A1A1A)),
       ),
       onPressed: () {
         cancelWorkout(context);

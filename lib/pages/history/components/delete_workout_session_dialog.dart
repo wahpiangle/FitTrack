@@ -46,13 +46,13 @@ class DeleteWorkoutSessionDialog extends StatelessWidget {
                     Navigator.of(context).pop();
                   },
                   style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(
+                    backgroundColor: WidgetStateProperty.all(
                       Colors.black38,
                     ),
-                    overlayColor: MaterialStateProperty.all(
+                    overlayColor: WidgetStateProperty.all(
                       Colors.grey[900],
                     ),
-                    shape: MaterialStateProperty.all(
+                    shape: WidgetStateProperty.all(
                       RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
@@ -93,13 +93,13 @@ class DeleteWorkoutSessionDialog extends StatelessWidget {
                     }
                   },
                   style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(
+                    backgroundColor: WidgetStateProperty.all(
                       Colors.red,
                     ),
-                    overlayColor: MaterialStateProperty.all(
+                    overlayColor: WidgetStateProperty.all(
                       Colors.red[900],
                     ),
-                    shape: MaterialStateProperty.all(
+                    shape: WidgetStateProperty.all(
                       RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),

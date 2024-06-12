@@ -9,8 +9,8 @@ Widget menuCreatePostButton({
 }) {
   return MenuItemButton(
     style: ButtonStyle(
-      surfaceTintColor: MaterialStateProperty.all(Colors.transparent),
-      backgroundColor: MaterialStateProperty.all(const Color(0xFF333333)),
+      surfaceTintColor: WidgetStateProperty.all(Colors.transparent),
+      backgroundColor: WidgetStateProperty.all(const Color(0xFF333333)),
     ),
     child: const Row(
       children: [

@@ -31,7 +31,7 @@ class RestEndedDialog extends StatelessWidget {
               Navigator.of(context).pop();
             },
             style: ButtonStyle(
-              backgroundColor: MaterialStateProperty.all(
+              backgroundColor: WidgetStateProperty.all(
                 const Color(0xFF333333),
               ),
             ),

@@ -8,10 +8,10 @@ Widget menuDeleteWorkoutButton({
 }) {
   return MenuItemButton(
     style: ButtonStyle(
-      surfaceTintColor: MaterialStateProperty.all(
+      surfaceTintColor: WidgetStateProperty.all(
         Colors.transparent,
       ),
-      backgroundColor: MaterialStateProperty.all(
+      backgroundColor: WidgetStateProperty.all(
         const Color(0xFF333333),
       ),
     ),

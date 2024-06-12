@@ -51,8 +51,8 @@ class CameraControls extends StatelessWidget {
               }
             },
             style: ButtonStyle(
-              backgroundColor: MaterialStateProperty.all(AppColours.secondary),
-              padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+              backgroundColor: WidgetStateProperty.all(AppColours.secondary),
+              padding: WidgetStateProperty.all<EdgeInsetsGeometry>(
                 const EdgeInsets.all(20),
               ),
             ),

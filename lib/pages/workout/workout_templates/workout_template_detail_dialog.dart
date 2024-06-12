@@ -76,8 +76,8 @@ class _WorkoutTemplateDetailsState extends State<WorkoutTemplateDetails> {
                   color: Colors.white,
                 ),
                 style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all(Colors.black45),
-                  shape: MaterialStateProperty.all(
+                  backgroundColor: WidgetStateProperty.all(Colors.black45),
+                  shape: WidgetStateProperty.all(
                     RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
@@ -165,7 +165,7 @@ class _WorkoutTemplateDetailsState extends State<WorkoutTemplateDetails> {
               },
               style: ButtonStyle(
                 backgroundColor:
-                    MaterialStateProperty.all(AppColours.secondary),
+                    WidgetStateProperty.all(AppColours.secondary),
               ),
               child: const Text(
                 'Start workout',

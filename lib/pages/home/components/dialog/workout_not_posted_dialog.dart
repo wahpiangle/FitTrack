@@ -39,7 +39,7 @@ class WorkoutNotPostedDialog extends StatelessWidget {
               },
               style: ButtonStyle(
                 backgroundColor:
-                    MaterialStateProperty.all(AppColours.secondary),
+                    WidgetStateProperty.all(AppColours.secondary),
               ),
               child: const Text(
                 'Post Workout',
@@ -57,7 +57,7 @@ class WorkoutNotPostedDialog extends StatelessWidget {
                 Navigator.pop(context);
               },
               style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all(Colors.black38),
+                backgroundColor: WidgetStateProperty.all(Colors.black38),
               ),
               child: const Text(
                 'No',

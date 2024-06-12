@@ -35,7 +35,7 @@ class ImagePickerOptions extends StatelessWidget {
             child: TextButton.icon(
               style: ButtonStyle(
                 backgroundColor:
-                    MaterialStateProperty.all<Color>(AppColours.primaryBright),
+                    WidgetStateProperty.all<Color>(AppColours.primaryBright),
               ),
               onPressed: () {
                 pickImage(ImageSource.gallery);
@@ -57,7 +57,7 @@ class ImagePickerOptions extends StatelessWidget {
             child: TextButton.icon(
               style: ButtonStyle(
                 backgroundColor:
-                    MaterialStateProperty.all<Color>(AppColours.primaryBright),
+                    WidgetStateProperty.all<Color>(AppColours.primaryBright),
               ),
               onPressed: () {
                 pickImage(ImageSource.camera);

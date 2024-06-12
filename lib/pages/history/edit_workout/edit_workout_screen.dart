@@ -63,15 +63,15 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
         backgroundColor: AppColours.primary,
         leading: IconButton(
           style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all(
+            backgroundColor: WidgetStateProperty.all(
               Colors.black26,
             ),
-            shape: MaterialStateProperty.all(
+            shape: WidgetStateProperty.all(
               RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10),
               ),
             ),
-            padding: MaterialStateProperty.all(
+            padding: WidgetStateProperty.all(
               const EdgeInsets.symmetric(horizontal: 10),
             ),
           ),
@@ -131,8 +131,8 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
               },
               style: ButtonStyle(
                 backgroundColor:
-                    MaterialStateProperty.all(AppColours.secondary),
-                shape: MaterialStateProperty.all(
+                    WidgetStateProperty.all(AppColours.secondary),
+                shape: WidgetStateProperty.all(
                   RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
