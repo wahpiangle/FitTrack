@@ -39,17 +39,6 @@ class _StartNewWorkoutState extends State<StartNewWorkout> {
     }
   }
 
-  void selectExercise(Exercise selectedExercise) {
-    objectBox.currentWorkoutSessionService
-        .addExerciseToCurrentWorkoutSession(selectedExercise);
-  }
-
-  void removeSet(int exerciseSetId) {
-    setState(() {
-      objectBox.exerciseService.removeSetFromExercise(exerciseSetId);
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     final timerProvider = Provider.of<TimerProvider>(context);
@@ -304,8 +293,6 @@ class _StartNewWorkoutState extends State<StartNewWorkout> {
                     exerciseData: widget.exerciseData,
                     exercisesSetsInfo:
                         snapshot.data!.exercisesSetsInfo.toList(),
-                    selectExercise: selectExercise,
-                    removeSet: removeSet,
                     timerProvider: timerProvider,
                   ),
                 ],

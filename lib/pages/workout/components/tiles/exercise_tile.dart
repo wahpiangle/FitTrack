@@ -15,16 +15,12 @@ import 'package:provider/provider.dart';
 class ExerciseTile extends StatefulWidget {
   final List<Exercise> exerciseData;
   final List<ExercisesSetsInfo> exercisesSetsInfo;
-  final void Function(Exercise selectedExercise) selectExercise;
-  final void Function(int exerciseSetId) removeSet;
   final TimerProvider timerProvider;
 
   const ExerciseTile({
     super.key,
     required this.exerciseData,
     required this.exercisesSetsInfo,
-    required this.selectExercise,
-    required this.removeSet,
     required this.timerProvider,
   });
 
@@ -45,6 +41,17 @@ class _ExerciseTileState extends State<ExerciseTile> {
     timerProvider = Provider.of<TimerProvider>(context);
     restTimerProvider = Provider.of<RestTimerProvider>(context);
     customTimerProvider = Provider.of<CustomTimerProvider>(context);
+  }
+
+  void selectExercise(Exercise selectedExercise) {
+    objectBox.currentWorkoutSessionService
+        .addExerciseToCurrentWorkoutSession(selectedExercise);
+  }
+
+  void removeSet(int exerciseSetId) {
+    setState(() {
+      objectBox.exerciseService.removeSetFromExercise(exerciseSetId);
+    });
   }
 
   void addSet(ExercisesSetsInfo exercisesSetsInfo) {
@@ -104,7 +111,7 @@ class _ExerciseTileState extends State<ExerciseTile> {
               children: [
                 const WorkoutHeader(),
                 AddExerciseButton(
-                  selectExercise: widget.selectExercise,
+                  selectExercise: selectExercise,
                 ),
                 CancelWorkoutButton(
                   timerProvider: widget.timerProvider,
@@ -136,7 +143,7 @@ class _ExerciseTileState extends State<ExerciseTile> {
                     const SizedBox(height: 20),
                     SetTiles(
                       exercisesSetsInfo: selectedExercise,
-                      removeSet: widget.removeSet,
+                      removeSet: removeSet,
                       addSet: addSet,
                       setIsCompleted: setIsCompleted,
                       isCurrentEditing: false,
@@ -149,7 +156,7 @@ class _ExerciseTileState extends State<ExerciseTile> {
           if (index == widget.exercisesSetsInfo.length) {
             return Column(children: [
               AddExerciseButton(
-                selectExercise: widget.selectExercise,
+                selectExercise: selectExercise,
               ),
               CancelWorkoutButton(
                 timerProvider: widget.timerProvider,
@@ -177,7 +184,7 @@ class _ExerciseTileState extends State<ExerciseTile> {
                   const SizedBox(height: 20),
                   SetTiles(
                     exercisesSetsInfo: selectedExercise,
-                    removeSet: widget.removeSet,
+                    removeSet: removeSet,
                     addSet: addSet,
                     setIsCompleted: setIsCompleted,
                     isCurrentEditing: false,
