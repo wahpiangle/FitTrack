@@ -230,6 +230,14 @@ class ExerciseListScreenState extends State<ExerciseListScreen> {
                                 itemCount: recentExercises.length,
                                 itemBuilder: (context, index) {
                                   final exercise = recentExercises[index];
+                                  if (selectedBodyPart.isNotEmpty &&
+                                          exercise.bodyPart.target?.name !=
+                                              selectedBodyPart ||
+                                      selectedCategory.isNotEmpty &&
+                                          !selectedCategory.contains(
+                                              exercise.category.target?.name)) {
+                                    return Container();
+                                  }
                                   return ExerciseListItem(
                                     exercise: exercise,
                                     searchText: searchText,
