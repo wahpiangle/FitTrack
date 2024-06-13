@@ -31,7 +31,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     isSignInWithGoogle =
         currentUser?.providerData.first.providerId == 'google.com';
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _handleTimerActive(context); // Add this line to handle timer state
+      _handleTimerActive(context);
     });
   }
 
@@ -42,24 +42,22 @@ class _SettingsScreenState extends State<SettingsScreen> {
     void handleTimerStateChanged() {
       if (timerProvider.isTimerRunning &&
           !TimerManager().isTimerActiveScreenOpen) {
-        TimerManager().showTimerBottomSheet(context,
-            []); // Pass an empty exercise list or provide relevant data
+        TimerManager().showTimerBottomSheet(context, []);
       } else if (!timerProvider.isTimerRunning &&
           TimerManager().isTimerActiveScreenOpen) {
         TimerManager().closeTimerBottomSheet(context);
       }
     }
 
-    void Function()? listener;
-    listener = () {
-      if (mounted) {
-        handleTimerStateChanged();
-      } else {
-        timerProvider.removeListener(listener!);
-      }
-    };
-
-    timerProvider.addListener(listener);
+    timerProvider.addListener(
+      () {
+        if (mounted) {
+          handleTimerStateChanged();
+        } else {
+          timerProvider.removeListener(() {});
+        }
+      },
+    );
   }
 
   void setUserInfo(String username, String image, String displayName,

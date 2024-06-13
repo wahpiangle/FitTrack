@@ -33,13 +33,15 @@ class PostWorkoutPromptState extends State<PostWorkoutPrompt> {
   @override
   void initState() {
     super.initState();
-    flashMode = FlashMode.off;
     _controller = CameraController(
-      widget.cameras.first,
+      widget.cameras.firstWhere(
+        (c) => c.lensDirection == CameraLensDirection.back,
+        orElse: () => widget.cameras.first,
+      ),
       ResolutionPreset.medium,
     );
+    flashMode = FlashMode.off;
     _initializeControllerFuture = _controller.initialize();
-    _controller.setFlashMode(flashMode);
   }
 
   @override
@@ -59,10 +61,9 @@ class PostWorkoutPromptState extends State<PostWorkoutPrompt> {
 
     _controller = CameraController(
       nextCamera,
-      ResolutionPreset.medium,
+      ResolutionPreset.max,
     );
     _initializeControllerFuture = _controller.initialize();
-
     if (resetState) {
       setState(() {});
     }
@@ -108,7 +109,7 @@ class PostWorkoutPromptState extends State<PostWorkoutPrompt> {
       isCapturingImage = false;
       _controller = CameraController(
         widget.cameras.first,
-        ResolutionPreset.medium,
+        ResolutionPreset.max,
       );
       _initializeControllerFuture = _controller.initialize();
       _controller.setFlashMode(flashMode);
@@ -176,36 +177,29 @@ class PostWorkoutPromptState extends State<PostWorkoutPrompt> {
             return Column(
               children: [
                 Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 20,
-                    vertical: 20,
-                  ),
-                  child: SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.65,
-                    child: isCapturingImage
-                        ? firstImageState == null
-                            ? const CapturingLoader()
-                            : FirstImageLoader(
-                                firstImageState: firstImageState!)
-                        : snapshot.connectionState == ConnectionState.done
-                            ? ClipRRect(
-                                borderRadius: BorderRadius.circular(20),
-                                child: CameraPreview(_controller),
-                              )
-                            : Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 20,
-                                  vertical: 20,
-                                ),
-                                child: SizedBox(
-                                  height:
-                                      MediaQuery.of(context).size.height * 0.65,
-                                  child: const Center(
-                                    child: CircularProgressIndicator(),
-                                  ),
+                  padding: const EdgeInsets.all(30),
+                  child: isCapturingImage
+                      ? firstImageState == null
+                          ? const CapturingLoader()
+                          : FirstImageLoader(firstImageState: firstImageState!)
+                      : snapshot.connectionState == ConnectionState.done
+                          ? ClipRRect(
+                              borderRadius: BorderRadius.circular(20),
+                              child: CameraPreview(_controller),
+                            )
+                          : Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 20,
+                                vertical: 20,
+                              ),
+                              child: SizedBox(
+                                height:
+                                    MediaQuery.of(context).size.height * 0.65,
+                                child: const Center(
+                                  child: CircularProgressIndicator(),
                                 ),
                               ),
-                  ),
+                            ),
                 ),
                 CameraControls(
                   flashMode: flashMode,

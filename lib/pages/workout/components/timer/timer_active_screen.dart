@@ -49,13 +49,14 @@ class TimerActiveScreen extends StatelessWidget {
         }
         // If the sheet is closed, reset the flag
         isSheetOpen = false;
+
         return true;
       },
       child: DraggableScrollableSheet(
         expand: false,
         initialChildSize: 0.1,
         maxChildSize: 0.15,
-        minChildSize: 0.01,
+        minChildSize: 0.08,
         builder: (context, controller) {
           return Container(
             color: const Color(0xFF1A1A1A),

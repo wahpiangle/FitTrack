@@ -125,20 +125,11 @@ class _WorkoutTemplateDetailsState extends State<WorkoutTemplateDetails> {
                 TimerProvider timerProvider =
                     Provider.of<TimerProvider>(context, listen: false);
 
-                void handleResumeWorkout() async {
-                  navigatorKey.currentState?.push(MaterialPageRoute(
-                    builder: (context) => StartNewWorkout(
-                      exerciseData: objectBox.exerciseService.getAllExercises(),
-                    ),
-                  ));
-                }
-
                 if (timerProvider.isTimerRunning) {
                   showDialog(
                     context: context,
                     builder: (BuildContext context) {
                       return OngoingExerciseDialog(
-                        handleResumeWorkout: handleResumeWorkout,
                         startFromTemplate: true,
                         workoutTemplateData: widget.workoutTemplateData,
                       );
@@ -164,8 +155,7 @@ class _WorkoutTemplateDetailsState extends State<WorkoutTemplateDetails> {
                 }
               },
               style: ButtonStyle(
-                backgroundColor:
-                    WidgetStateProperty.all(AppColours.secondary),
+                backgroundColor: WidgetStateProperty.all(AppColours.secondary),
               ),
               child: const Text(
                 'Start workout',

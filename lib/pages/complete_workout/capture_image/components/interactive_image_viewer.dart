@@ -27,7 +27,7 @@ class InteractiveImageViewer extends StatefulWidget {
 
 class _InteractiveImageViewerState extends State<InteractiveImageViewer> {
   double xOffset = 20.0;
-  double yOffset = 20.0;
+  double yOffset = 30.0;
   bool displaySecondImage = false;
   bool hideSecondImage = false;
   final TransformationController _transformationController =
@@ -106,7 +106,7 @@ class _InteractiveImageViewerState extends State<InteractiveImageViewer> {
             },
             child: GestureDetector(
               onTap: () {
-                HapticFeedback.vibrate();
+                HapticFeedback.lightImpact();
                 setState(() {
                   displaySecondImage = !displaySecondImage;
                 });

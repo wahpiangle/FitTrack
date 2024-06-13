@@ -5,11 +5,14 @@ class CapturingLoader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Center(
-      child: Column(
+    return SizedBox(
+      height: MediaQuery.of(context).size.height * 0.5,
+      child: const Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          CircularProgressIndicator(),
+          CircularProgressIndicator(
+            color: Colors.white,
+          ),
           SizedBox(height: 20),
           Text(
             'Capturing image...',

@@ -30,20 +30,6 @@ class _HistoryScreenState extends State<HistoryScreen> {
       preferPosition: AutoScrollPosition.begin,
     );
     await _scrollController.highlight(index);
-
-    // Check if the timer is active and the workout sheet is closed
-    bool isTimerActive =
-        Provider.of<TimerProvider>(context, listen: false).isTimerRunning;
-
-    if (isTimerActive) {
-      // Show the new workout bottom sheet
-      TimerManager().closeTimerBottomSheet(context);
-
-      // Wait for a short duration to allow the timer sheet to close
-      await Future.delayed(const Duration(milliseconds: 10));
-    }
-    // Show the new workout bottom sheet
-    TimerManager().showTimerBottomSheet(context, widget.exerciseData);
   }
 
   @override

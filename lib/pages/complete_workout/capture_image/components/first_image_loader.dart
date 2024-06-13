@@ -19,27 +19,28 @@ class FirstImageLoader extends StatelessWidget {
           image: FileImage(
             File(firstImageState.path),
           ),
-          width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height * 0.65,
           fit: BoxFit.cover,
         ),
       ),
-      const Center(
-          child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          CircularProgressIndicator(
-            color: Colors.white,
-          ),
-          SizedBox(
-            height: 20,
-          ),
-          Text(
-            'Smile!.',
-            style: TextStyle(color: Colors.white),
-          ),
-        ],
-      )),
+      SizedBox(
+        height: MediaQuery.of(context).size.height * 0.5,
+        width: MediaQuery.of(context).size.width,
+        child: const Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            CircularProgressIndicator(
+              color: Colors.white,
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            Text(
+              'Smile!.',
+              style: TextStyle(color: Colors.white),
+            ),
+          ],
+        ),
+      ),
     ]);
   }
 }

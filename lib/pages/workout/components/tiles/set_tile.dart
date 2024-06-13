@@ -148,6 +148,9 @@ class _SetTileState extends State<SetTile> {
                     fontSize: 14,
                     color: Colors.white,
                   ),
+                  onTapOutside: (e) {
+                    FocusScope.of(context).unfocus();
+                  },
                   textAlign: TextAlign.center,
                   initialValue: isTapped ? null : "${widget.set.weight ?? ''}",
                   controller: isTapped ? weightController : null,
@@ -191,6 +194,9 @@ class _SetTileState extends State<SetTile> {
                     color: Colors.white,
                   ),
                   textAlign: TextAlign.center,
+                  onTapOutside: (e) {
+                    FocusScope.of(context).unfocus();
+                  },
                   keyboardType: TextInputType.number,
                   initialValue: isTapped ? null : "${widget.set.reps ?? ''}",
                   controller: isTapped ? repsController : null,

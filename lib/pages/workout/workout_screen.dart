@@ -52,38 +52,19 @@ class WorkoutScreenState extends State<WorkoutScreen> {
     TimerProvider timerProvider =
         Provider.of<TimerProvider>(context, listen: false);
 
-    void handleResumeWorkout() async {
-      Navigator.of(context).pop();
-      bool isBottomSheetClosed =
-          await NewWorkoutBottomSheet.show(context, exerciseData);
-
-      if (isBottomSheetClosed) {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          _handleTimerActive(context);
-        });
-      }
-    }
-
     if (timerProvider.isTimerRunning) {
       showDialog(
         context: context,
         builder: (BuildContext context) {
-          return OngoingExerciseDialog(
-            handleResumeWorkout: handleResumeWorkout,
-          );
+          return const OngoingExerciseDialog();
         },
       );
     } else {
       objectBox.currentWorkoutSessionService.createCurrentWorkoutSession();
-
-      bool isBottomSheetClosed =
-          await NewWorkoutBottomSheet.show(context, exerciseData);
-
-      if (isBottomSheetClosed) {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          _handleTimerActive(context);
-        });
-      }
+      NewWorkoutBottomSheet.show(context, exerciseData);
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _handleTimerActive(context);
+      });
     }
   }
 

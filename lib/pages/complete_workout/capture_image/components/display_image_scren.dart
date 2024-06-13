@@ -64,7 +64,6 @@ class _DisplayImageScreenState extends State<DisplayImageScreen> {
   Widget build(BuildContext context) {
     final UploadImageProvider uploadImageProvider =
         context.read<UploadImageProvider>();
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [

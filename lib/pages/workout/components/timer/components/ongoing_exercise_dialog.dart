@@ -10,13 +10,11 @@ import 'package:group_project/pages/workout/components/timer/providers/timer_pro
 import 'package:provider/provider.dart';
 
 class OngoingExerciseDialog extends StatelessWidget {
-  final void Function() handleResumeWorkout;
   final bool? startFromTemplate;
   final WorkoutTemplate? workoutTemplateData;
 
   const OngoingExerciseDialog({
     super.key,
-    required this.handleResumeWorkout,
     this.startFromTemplate,
     this.workoutTemplateData,
   });
@@ -36,7 +34,7 @@ class OngoingExerciseDialog extends StatelessWidget {
       backgroundColor: AppColours.primary,
       surfaceTintColor: Colors.transparent,
       content: const Text(
-        'Finish or pause the current workout before starting a new one.',
+        'Finish or discard the current workout before starting a new one.',
         style: TextStyle(color: Colors.white),
       ),
       actions: [
@@ -77,11 +75,8 @@ class OngoingExerciseDialog extends StatelessWidget {
           margin: const EdgeInsets.symmetric(vertical: 5),
           width: double.infinity,
           child: TextButton(
-            onPressed: () async {
-              if (startFromTemplate == true) {
-                Navigator.of(context).pop();
-              }
-              handleResumeWorkout();
+            onPressed: () {
+              Navigator.of(context).pop();
             },
             style: ButtonStyle(
               backgroundColor: WidgetStateProperty.all<Color>(Colors.black26),
@@ -96,30 +91,6 @@ class OngoingExerciseDialog extends StatelessWidget {
             ),
             child: const Text('Resume Workout',
                 style: TextStyle(color: Colors.white)),
-          ),
-        ),
-        Container(
-          margin: const EdgeInsets.symmetric(vertical: 5),
-          width: double.infinity,
-          child: TextButton(
-            style: ButtonStyle(
-              backgroundColor: WidgetStateProperty.all<Color>(Colors.black26),
-              shape: WidgetStateProperty.all<RoundedRectangleBorder>(
-                RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              ),
-              padding: WidgetStateProperty.all<EdgeInsetsGeometry>(
-                const EdgeInsets.symmetric(vertical: 5),
-              ),
-            ),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            child: const Text('Close',
-                style: TextStyle(
-                  color: Colors.white,
-                )),
           ),
         ),
       ],
