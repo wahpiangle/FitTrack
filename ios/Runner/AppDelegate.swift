@@ -36,7 +36,7 @@ import WatchConnectivity
                         watchSession.isReachable,
                         let methodData = call.arguments as? [String: Any],
                         let method = methodData["method"],
-                        let data = methodData["data"] as? Any
+                        let data = methodData["data"] as Any?
                     else {
                         result(false)
                         return
