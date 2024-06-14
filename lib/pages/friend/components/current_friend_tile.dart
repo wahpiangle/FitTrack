@@ -41,10 +41,8 @@ class CurrentFriendTile extends StatelessWidget {
             ),
             trailing: ElevatedButton(
               onPressed: () {
-                FirebaseFriendsService.removeFriend(currentFriends[index].uid,
-                    () {
-                  loadCurrentFriends();
-                });
+                FirebaseFriendsService.removeFriend(currentFriends[index].uid);
+                loadCurrentFriends();
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.red,

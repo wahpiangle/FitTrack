@@ -9,10 +9,10 @@ class UserPostsGrid extends StatelessWidget {
   final FirebaseUser user;
 
   const UserPostsGrid({
-    Key? key,
+    super.key,
     required this.postsFuture,
     required this.user,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +37,10 @@ class UserPostsGrid extends StatelessWidget {
             itemCount: snapshot.data!.length,
             itemBuilder: (context, index) {
               Post post = snapshot.data![index];
-              List<String> imageUrls = [post.firstImageUrl, post.secondImageUrl];
+              List<String> imageUrls = [
+                post.firstImageUrl,
+                post.secondImageUrl
+              ];
               String firstImageUrl = imageUrls.isNotEmpty ? imageUrls[0] : '';
               String secondImageUrl = imageUrls.isNotEmpty ? imageUrls[1] : '';
               return GestureDetector(
@@ -48,7 +51,9 @@ class UserPostsGrid extends StatelessWidget {
                       builder: (context) => DisplayPostImageScreen(
                         posterInfo: user,
                         index: 0,
-                        firebaseUserPosts: [FirebaseUserPost(post, user, [], [])],
+                        firebaseUserPosts: [
+                          FirebaseUserPost(post, user, [], [])
+                        ],
                       ),
                     ),
                   );
@@ -80,14 +85,14 @@ class UserPostsGrid extends StatelessWidget {
                         ),
                       ),
                     ),
-
                   ],
                 ),
               );
             },
           );
-        }  else {
-          return const Text('No posts found', style: TextStyle(color: Colors.white));
+        } else {
+          return const Text('No posts found',
+              style: TextStyle(color: Colors.white));
         }
       },
     );

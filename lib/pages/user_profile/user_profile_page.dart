@@ -4,13 +4,13 @@ import 'package:group_project/models/firebase/firebase_user.dart';
 import 'package:group_project/models/firebase/firebase_workout_session.dart';
 import 'package:group_project/models/post.dart';
 import 'package:group_project/pages/friend/search/user_image_display.dart';
+import 'package:group_project/pages/user_profile/components/friend_status_button.dart';
 import 'package:group_project/pages/user_profile/friend_status_handler.dart';
 import 'package:group_project/pages/user_profile/overall_workout_best_set.dart';
 import 'package:group_project/pages/user_profile/statistic_items.dart';
 import 'package:group_project/services/firebase/firebase_posts_service.dart';
 import 'package:group_project/services/firebase/firebase_user_profile_service.dart';
 import 'package:group_project/services/firebase/firebase_workouts_service.dart';
-
 
 class UserProfilePage extends StatefulWidget {
   final FirebaseUser user;
@@ -39,10 +39,11 @@ class UserProfilePageState extends State<UserProfilePage> {
     loadOverallBestSet();
   }
 
-
   Future<void> loadOverallBestSet() async {
     try {
-      List<FirebaseWorkoutSession> sessions = await FirebaseWorkoutsService.getWorkoutSessionsByUserId(widget.user.uid);
+      List<FirebaseWorkoutSession> sessions =
+          await FirebaseWorkoutsService.getWorkoutSessionsByUserId(
+              widget.user.uid);
 
       final manager = OverallWorkoutBestSet(sessions: sessions);
       final bestSetInfo = manager.getOverallBestSet();
@@ -56,9 +57,9 @@ class UserProfilePageState extends State<UserProfilePage> {
 
   Future<void> _loadData() async {
     postsCount =
-    await FirebaseUserProfileService.getPostsCount(widget.user.uid);
+        await FirebaseUserProfileService.getPostsCount(widget.user.uid);
     friendsCount =
-    await FirebaseUserProfileService.getFriendsCount(widget.user.uid);
+        await FirebaseUserProfileService.getFriendsCount(widget.user.uid);
   }
 
   @override
@@ -66,13 +67,17 @@ class UserProfilePageState extends State<UserProfilePage> {
     return Scaffold(
       backgroundColor: AppColours.primary,
       appBar: AppBar(
-        title: Text(widget.user.displayName, style: const TextStyle(
-            color: Colors.white, fontWeight: FontWeight.bold, fontSize: 23)),
+        title: Text(
+          widget.user.displayName,
+          style: const TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontSize: 23,
+          ),
+        ),
         centerTitle: true,
         backgroundColor: AppColours.primary,
-        leading: IconButton(
-            icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
-            onPressed: () => Navigator.of(context).pop()),
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: FutureBuilder<void>(
         future: dataFuture,
@@ -90,9 +95,15 @@ class UserProfilePageState extends State<UserProfilePage> {
                         flex: 4,
                         child: Column(
                           children: <Widget>[
-                            ImageDisplay.buildUserProfileImage(widget.user.photoUrl, radius: 50.0, context: context),
+                            ImageDisplay.buildUserProfileImage(
+                                widget.user.photoUrl,
+                                radius: 50.0,
+                                context: context),
                             const SizedBox(height: 12),
-                            Text("@${widget.user.username}", style: const TextStyle(color: AppColours.secondaryLight, fontSize: 18)),
+                            Text("@${widget.user.username}",
+                                style: const TextStyle(
+                                    color: AppColours.secondaryLight,
+                                    fontSize: 18)),
                           ],
                         ),
                       ),
@@ -124,20 +135,36 @@ class UserProfilePageState extends State<UserProfilePage> {
                                         fontSize: 18,
                                       ),
                                     ),
-                                    overallBestSetInfo != null ?
-                                    Stack(
-                                      children: [
-                                        Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            Text(overallBestSetInfo!.exerciseName, style: const TextStyle(color: AppColours.secondaryLight, fontSize: 14)),
-                                            Text('${overallBestSetInfo!.bestSet.weight} kg x ${overallBestSetInfo!.bestSet.reps}', style: const TextStyle(color: AppColours.secondaryLight, fontSize: 14)),
-                                            const SizedBox(height: 20),
-                                          ],
-                                        ),
-                                      ],
-                                    )
-                                        : const Text('No best set', style: TextStyle(color: AppColours.secondaryLight, fontSize: 14)),
+                                    overallBestSetInfo != null
+                                        ? Stack(
+                                            children: [
+                                              Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                      overallBestSetInfo!
+                                                          .exerciseName,
+                                                      style: const TextStyle(
+                                                          color: AppColours
+                                                              .secondaryLight,
+                                                          fontSize: 14)),
+                                                  Text(
+                                                      '${overallBestSetInfo!.bestSet.weight} kg x ${overallBestSetInfo!.bestSet.reps}',
+                                                      style: const TextStyle(
+                                                          color: AppColours
+                                                              .secondaryLight,
+                                                          fontSize: 14)),
+                                                  const SizedBox(height: 20),
+                                                ],
+                                              ),
+                                            ],
+                                          )
+                                        : const Text('No best set',
+                                            style: TextStyle(
+                                                color:
+                                                    AppColours.secondaryLight,
+                                                fontSize: 14)),
                                   ],
                                 ),
                               ],
@@ -150,31 +177,44 @@ class UserProfilePageState extends State<UserProfilePage> {
                   FutureBuilder<FriendStatus>(
                     future: friendStatusFuture,
                     builder: (context, statusSnapshot) {
-                      final isFriend = statusSnapshot.data ==
-                          FriendStatus.friends;
+                      final isFriend =
+                          statusSnapshot.data == FriendStatus.friends;
                       return Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 15.0),
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 15.0, horizontal: 10.0),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: <Widget>[
-                        StatItem(
-                          label: "Posts",
-                          count: postsCount,
-                          userId: widget.user.uid,
-                          onFriendRemoved: () => setState(() {
-                          friendStatusFuture = FirebaseUserProfileService.checkFriendshipStatus(widget.user.uid);
-                        }),
-                        ),
-                        StatItem(
-                          label: "Friends",
-                          count: friendsCount,
-                          isFriend: isFriend,
-                          userId: widget.user.uid,
-                          onFriendRemoved: () => setState(() {
-                            friendStatusFuture = FirebaseUserProfileService.checkFriendshipStatus(widget.user.uid);
-                          }),
-                        ),
-                        ],
+                          children: <Widget>[
+                            StatItem(
+                              label: "Posts",
+                              count: postsCount,
+                              userId: widget.user.uid,
+                              onFriendRemoved: () => setState(() {
+                                friendStatusFuture = FirebaseUserProfileService
+                                    .checkFriendshipStatus(widget.user.uid);
+                              }),
+                            ),
+                            StatItem(
+                              label: "Friends",
+                              count: friendsCount,
+                              isFriend: isFriend,
+                              userId: widget.user.uid,
+                              onFriendRemoved: () => setState(() {
+                                friendStatusFuture = FirebaseUserProfileService
+                                    .checkFriendshipStatus(widget.user.uid);
+                              }),
+                            ),
+                            if (isFriend)
+                              FriendStatusButton(
+                                uid: widget.user.uid,
+                                onStatusChanged: () => setState(() {
+                                  friendStatusFuture =
+                                      FirebaseUserProfileService
+                                          .checkFriendshipStatus(
+                                              widget.user.uid);
+                                }),
+                              )
+                          ],
                         ),
                       );
                     },
@@ -184,7 +224,9 @@ class UserProfilePageState extends State<UserProfilePage> {
                     postsFuture: postsFuture,
                     user: widget.user,
                     onStatusChanged: () => setState(() {
-                       friendStatusFuture = FirebaseUserProfileService.checkFriendshipStatus(widget.user.uid);
+                      friendStatusFuture =
+                          FirebaseUserProfileService.checkFriendshipStatus(
+                              widget.user.uid);
                     }),
                   ),
                 ],
@@ -197,9 +239,6 @@ class UserProfilePageState extends State<UserProfilePage> {
       ),
     );
   }
-
-
 }
-
 
 enum FriendStatus { friends, requestSent, requestReceived, none }

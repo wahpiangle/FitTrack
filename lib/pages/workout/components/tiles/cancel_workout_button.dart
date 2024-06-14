@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:group_project/constants/themes/app_colours.dart';
 import 'package:group_project/main.dart';
 import 'package:group_project/pages/workout/components/timer/providers/custom_timer_provider.dart';
 import 'package:group_project/pages/workout/components/timer/providers/rest_timer_provider.dart';
@@ -23,6 +24,7 @@ class CancelWorkoutButton extends StatelessWidget {
                 'Discard Workout?',
                 style: TextStyle(
                   color: Colors.white,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
               content: const Text(
@@ -33,41 +35,73 @@ class CancelWorkoutButton extends StatelessWidget {
                 ),
               ),
               actions: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: const Text(
-                    'Resume',
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.red,
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      width: double.infinity,
+                      child: TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        style: ButtonStyle(
+                          shape:
+                              WidgetStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(18.0),
+                            ),
+                          ),
+                          backgroundColor: WidgetStateProperty.all<Color>(
+                              AppColours.secondary),
+                        ),
+                        child: const Text(
+                          'Resume',
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                    Navigator.of(context).pop();
-                    objectBox.currentWorkoutSessionService.cancelWorkout();
-                    timerProvider.stopTimer(); // Stop the general workout timer
-                    timerProvider
-                        .resetTimer(); //reset the general workout timer
+                    SizedBox(
+                      width: double.infinity,
+                      child: TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                          Navigator.of(context).pop();
+                          objectBox.currentWorkoutSessionService
+                              .cancelWorkout();
+                          timerProvider.stopTimer();
+                          timerProvider.resetTimer();
 
-                    // Stop the rest timer
-                    Provider.of<RestTimerProvider>(context, listen: false)
-                        .stopRestTimer();
-                    // Stop the custom timer
-                    Provider.of<CustomTimerProvider>(context, listen: false)
-                        .stopCustomTimer();
-                  },
-                  child: const Text(
-                    'Discard Workout',
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.blue,
+                          Provider.of<RestTimerProvider>(context, listen: false)
+                              .stopRestTimer();
+                          Provider.of<CustomTimerProvider>(context,
+                                  listen: false)
+                              .stopCustomTimer();
+                        },
+                        style: ButtonStyle(
+                          shape:
+                              WidgetStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(18.0),
+                            ),
+                          ),
+                          backgroundColor:
+                              WidgetStateProperty.all<Color>(Colors.red),
+                        ),
+                        child: const Text(
+                          'Discard Workout',
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
                     ),
-                  ),
+                  ],
                 ),
               ],
             );
@@ -96,6 +130,7 @@ class CancelWorkoutButton extends StatelessWidget {
             fontSize: 14,
             color: Colors.red,
             letterSpacing: 2,
+            fontWeight: FontWeight.bold,
           ),
         ),
       ),

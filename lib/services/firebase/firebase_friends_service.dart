@@ -125,7 +125,7 @@ class FirebaseFriendsService {
     return friendsOfFriends;
   }
 
-  static removeFriend(String friendUid, VoidCallback onRemoved) async {
+  static removeFriend(String friendUid) async {
     final currentUserUid = FirebaseAuth.instance.currentUser?.uid;
 
     if (currentUserUid != null) {
@@ -144,8 +144,6 @@ class FirebaseFriendsService {
       });
 
       await batch.commit();
-
-      onRemoved();
     }
   }
 

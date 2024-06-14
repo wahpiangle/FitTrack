@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:group_project/constants/themes/app_colours.dart';
+import 'package:group_project/main.dart';
 import 'package:group_project/models/exercise.dart';
 import 'package:group_project/pages/workout/components/timer/providers/timer_provider.dart';
 import 'package:group_project/pages/workout/start_new_workout.dart';
@@ -32,7 +34,7 @@ class TimerActiveScreen extends StatelessWidget {
                 expand: false,
                 initialChildSize: 0.95,
                 maxChildSize: 1.0,
-                minChildSize: 0.2,
+                minChildSize: 0.3,
                 builder: (context, controller) {
                   return Container(
                     color: const Color(0xFF1A1A1A),
@@ -49,31 +51,29 @@ class TimerActiveScreen extends StatelessWidget {
         }
         // If the sheet is closed, reset the flag
         isSheetOpen = false;
-
         return true;
       },
       child: DraggableScrollableSheet(
         expand: false,
         initialChildSize: 0.1,
-        maxChildSize: 0.15,
-        minChildSize: 0.08,
+        maxChildSize: 0.2,
+        minChildSize: 0.1,
         builder: (context, controller) {
           return Container(
-            color: const Color(0xFF1A1A1A),
+            color: AppColours.primary,
             child: ListView(
               controller: controller,
               children: [
                 SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.8,
+                  height: MediaQuery.of(context).size.height,
                   child: Scaffold(
                     appBar: AppBar(
-                      backgroundColor: const Color(0xFF1A1A1A),
+                      backgroundColor: AppColours.primary,
                       elevation: 0.0,
                       automaticallyImplyLeading: false,
                       title: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          const SizedBox(height: 15),
                           Container(
                             width: 50.0,
                             height: 5.0,
@@ -84,10 +84,19 @@ class TimerActiveScreen extends StatelessWidget {
                           ),
                           const SizedBox(height: 10),
                           Text(
-                            'Timer: ${TimerProvider.formatTimerDuration(timerProvider.currentDuration)}',
+                            objectBox.currentWorkoutSessionService
+                                .getCurrentWorkoutSessionTitle(),
                             style: const TextStyle(
                               color: Colors.white,
-                              fontSize: 18,
+                              fontSize: 20,
+                            ),
+                          ),
+                          Text(
+                            TimerProvider.formatTimerDuration(
+                                timerProvider.currentDuration),
+                            style: const TextStyle(
+                              color: Colors.grey,
+                              fontSize: 12,
                             ),
                           ),
                         ],

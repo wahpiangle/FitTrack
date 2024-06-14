@@ -137,6 +137,10 @@ class TemplateMenuAnchor extends StatelessWidget {
                 backgroundColor:
                     WidgetStateProperty.all(const Color(0xFF333333)),
               ),
+              leadingIcon: const Icon(
+                Icons.edit,
+                color: Colors.white,
+              ),
               child: const Text(
                 'Edit',
                 style: TextStyle(color: Colors.white, fontSize: 16),
@@ -170,6 +174,10 @@ class TemplateMenuAnchor extends StatelessWidget {
                     horizontal: 20,
                   ),
                 ),
+              ),
+              leadingIcon: const Icon(
+                Icons.delete,
+                color: Colors.white,
               ),
               child: const Text(
                 'Delete',

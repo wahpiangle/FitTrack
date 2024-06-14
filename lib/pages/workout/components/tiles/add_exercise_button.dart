@@ -46,6 +46,7 @@ class AddExerciseButton extends StatelessWidget {
             fontSize: 14,
             color: Color(0xFFE1F0CF),
             letterSpacing: 2,
+            fontWeight: FontWeight.bold,
           ),
         ),
       ),

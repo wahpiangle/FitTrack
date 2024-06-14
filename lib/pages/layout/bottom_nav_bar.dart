@@ -14,21 +14,21 @@ class CustomBottomNavigationBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return BottomNavigationBar(
       // set this to 0 to disable the text below the icons
-      selectedFontSize: 14,
+      selectedFontSize: 12,
       currentIndex: currentIndex,
       onTap: onTabTapped,
       type: BottomNavigationBarType.fixed,
       items: <BottomNavigationBarItem>[
         const BottomNavigationBarItem(
           icon: Padding(
-            padding: EdgeInsets.all(5.0),
+            padding: EdgeInsets.symmetric(horizontal: 5),
             child: Icon(Icons.home_outlined),
           ),
           label: 'Home',
         ),
         const BottomNavigationBarItem(
           icon: Padding(
-            padding: EdgeInsets.all(5.0),
+            padding: EdgeInsets.symmetric(horizontal: 5),
             child: Icon(Icons.insights_rounded),
           ),
           label: 'History',
@@ -53,14 +53,14 @@ class CustomBottomNavigationBar extends StatelessWidget {
         ), // Nav bar for middle "add workout" button
         const BottomNavigationBarItem(
           icon: Padding(
-            padding: EdgeInsets.all(5.0),
+            padding: EdgeInsets.symmetric(horizontal: 5),
             child: Icon(Icons.fitness_center_rounded),
           ),
           label: 'Exercises',
         ),
         const BottomNavigationBarItem(
           icon: Padding(
-            padding: EdgeInsets.all(5.0),
+            padding: EdgeInsets.symmetric(horizontal: 5),
             child: Icon(Icons.settings_outlined),
           ),
           label: 'Settings',
