@@ -4,9 +4,10 @@ import WatchConnectivity
 class WatchViewModel: NSObject, ObservableObject {
     var session: WCSession
     @Published var counter = 0
-    
+    @Published var templates = []
     // Add more cases if you have more receive method
     enum WatchReceiveMethod: String {
+        case sendTemplatesToWatch
         case sendCounterToNative
     }
     
@@ -44,7 +45,15 @@ extension WatchViewModel: WCSessionDelegate {
             switch enumMethod {
             case .sendCounterToNative:
                 self.counter = (message["data"] as? Int) ?? 0
+            
+            case .sendTemplatesToWatch:
+                let workoutTemplatesData = WorkoutTemplate.fromJson(
+                    json: (message["data"] as! Array<[String: Any]>)
+                )
+                self.templates = workoutTemplatesData
+                                                           
             }
+            
         }
     }
     

@@ -13,6 +13,10 @@
 		3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */; };
 		5A72AE75A32BED5333F91A45 /* Pods_RunnerTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8E07E04E0AF38B568848F261 /* Pods_RunnerTests.framework */; };
 		74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74858FAE1ED2DC5600515810 /* AppDelegate.swift */; };
+		902F77112C1EB61C003FAE9F /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = 902F77102C1EB61C003FAE9F /* Color.swift */; };
+		902F77152C1EB970003FAE9F /* WorkoutTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 902F77142C1EB970003FAE9F /* WorkoutTemplate.swift */; };
+		902F77172C1EBDA5003FAE9F /* ExerciseSetsInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 902F77162C1EBDA5003FAE9F /* ExerciseSetsInfo.swift */; };
+		902F77192C1EBDF4003FAE9F /* ExerciseSets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 902F77182C1EBDF4003FAE9F /* ExerciseSets.swift */; };
 		90F5491C2C17603D00918D31 /* FitTrackApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90F5491B2C17603D00918D31 /* FitTrackApp.swift */; };
 		90F5491E2C17603D00918D31 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90F5491D2C17603D00918D31 /* ContentView.swift */; };
 		90F549202C17603F00918D31 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 90F5491F2C17603F00918D31 /* Assets.xcassets */; };
@@ -77,6 +81,10 @@
 		7555AD6AB2FD9A526BFE4BC7 /* Pods-Runner.profile.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.profile.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.profile.xcconfig"; sourceTree = "<group>"; };
 		7AFA3C8E1D35360C0083082E /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Release.xcconfig; path = Flutter/Release.xcconfig; sourceTree = "<group>"; };
 		8E07E04E0AF38B568848F261 /* Pods_RunnerTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RunnerTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		902F77102C1EB61C003FAE9F /* Color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Color.swift; sourceTree = "<group>"; };
+		902F77142C1EB970003FAE9F /* WorkoutTemplate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutTemplate.swift; sourceTree = "<group>"; };
+		902F77162C1EBDA5003FAE9F /* ExerciseSetsInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExerciseSetsInfo.swift; sourceTree = "<group>"; };
+		902F77182C1EBDF4003FAE9F /* ExerciseSets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExerciseSets.swift; sourceTree = "<group>"; };
 		90F549192C17603D00918D31 /* FitTrack Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "FitTrack Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		90F5491B2C17603D00918D31 /* FitTrackApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FitTrackApp.swift; sourceTree = "<group>"; };
 		90F5491D2C17603D00918D31 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -154,9 +162,29 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		902F770F2C1EB605003FAE9F /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				902F77102C1EB61C003FAE9F /* Color.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		902F77122C1EB958003FAE9F /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				902F77142C1EB970003FAE9F /* WorkoutTemplate.swift */,
+				902F77162C1EBDA5003FAE9F /* ExerciseSetsInfo.swift */,
+				902F77182C1EBDF4003FAE9F /* ExerciseSets.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
 		90F5491A2C17603D00918D31 /* FitTrack Watch App */ = {
 			isa = PBXGroup;
 			children = (
+				902F77122C1EB958003FAE9F /* Models */,
+				902F770F2C1EB605003FAE9F /* Extensions */,
 				90F5491B2C17603D00918D31 /* FitTrackApp.swift */,
 				90F5491D2C17603D00918D31 /* ContentView.swift */,
 				90F5491F2C17603F00918D31 /* Assets.xcassets */,
@@ -486,9 +514,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				902F77152C1EB970003FAE9F /* WorkoutTemplate.swift in Sources */,
 				90F5491E2C17603D00918D31 /* ContentView.swift in Sources */,
+				902F77112C1EB61C003FAE9F /* Color.swift in Sources */,
 				90F5491C2C17603D00918D31 /* FitTrackApp.swift in Sources */,
+				902F77172C1EBDA5003FAE9F /* ExerciseSetsInfo.swift in Sources */,
 				90F549362C176DFF00918D31 /* WatchCommunicationManager.swift in Sources */,
+				902F77192C1EBDF4003FAE9F /* ExerciseSets.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -581,7 +613,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
-				SUPPORTED_PLATFORMS = iphoneos;
+				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 			};
@@ -893,7 +925,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
-				SUPPORTED_PLATFORMS = iphoneos;
+				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				TARGETED_DEVICE_FAMILY = "1,2";

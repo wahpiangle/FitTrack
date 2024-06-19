@@ -10,16 +10,32 @@ import SwiftUI
 
 struct ContentView: View {
     @ObservedObject var viewModel: WatchViewModel = WatchViewModel()
-    
     var body: some View {
-        VStack {
-            Text("Counter: \(viewModel.counter)")
+        VStack(alignment: .leading) {
+            
+            Text("Quick Start")
+                .font(.headline)
                 .padding()
-            Button(action: {
-                viewModel.sendDataMessage(for: .sendCounterToFlutter, data: ["counter": viewModel.counter + 1])
-            }) {
-                Text("+ by 2")
-            }
+            Button(action:{
+                print(viewModel.templates)
+            }, label:
+                {
+                Text("Start New Workout")
+                    .foregroundColor(Color.black)
+            })
+                .background(Color.theme.secondary)
+                .clipShape(RoundedRectangle(cornerRadius: 20))
+            Text("My Templates")
+                .font(.headline)
+                .padding()
+            
+//            Text("Counter: \(viewModel.counter)")
+//                .padding()
+//            Button(action: {
+//                viewModel.sendDataMessage(for: .sendCounterToFlutter, data: ["counter": viewModel.counter + 1])
+//            }) {
+//                Text("+ by 2")
+//            }
         }
         
         

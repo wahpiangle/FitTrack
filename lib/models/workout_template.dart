@@ -26,4 +26,29 @@ class WorkoutTemplate {
     this.lastPerformedAt,
     this.isCurrentEditing = false,
   });
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'title': title,
+      'note': note,
+      'exerciseSetsInfo': exercisesSetsInfo
+          .map((exerciseSetInfo) => {
+                'exerciseId': exerciseSetInfo.exercise.targetId,
+                'exerciseName': exerciseSetInfo.exercise.target?.name,
+                'bodyPart':
+                    exerciseSetInfo.exercise.target?.bodyPart.target?.name,
+                'category':
+                    exerciseSetInfo.exercise.target?.category.target?.name,
+                'sets': exerciseSetInfo.exerciseSets
+                    .map((exerciseSet) => {
+                          'id': exerciseSet.id,
+                          'reps': exerciseSet.reps,
+                          'weight': exerciseSet.weight,
+                        })
+                    .toList(),
+              })
+          .toList(),
+    };
+  }
 }
