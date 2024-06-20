@@ -24,7 +24,7 @@ import WatchConnectivity
     private func initFlutterChannel() {
         if let controller = window?.rootViewController as? FlutterViewController {
             let channel = FlutterMethodChannel(
-                name: "com.example.fittrack",
+                name: "com.quanming.fittrack_channel",
                 binaryMessenger: controller.binaryMessenger)
             
             channel.setMethodCallHandler({ [weak self] (
@@ -73,7 +73,7 @@ extension AppDelegate: WCSessionDelegate {
         DispatchQueue.main.async {
             if let method = message["method"] as? String, let controller = self.window?.rootViewController as? FlutterViewController {
                 let channel = FlutterMethodChannel(
-                    name: "com.example.fittrack",
+                    name: "com.quanming.fittrack_channel",
                     binaryMessenger: controller.binaryMessenger)
                 channel.invokeMethod(method, arguments: message)
             }
