@@ -36,6 +36,13 @@
 			remoteGlobalIDString = 97C146ED1CF9000F007C117D;
 			remoteInfo = Runner;
 		};
+		90F114DF2C2401EF00B82CCB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 97C146E61CF9000F007C117D /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 90F549182C17603D00918D31;
+			remoteInfo = "FitTrack Watch App";
+		};
 		90F549242C17603F00918D31 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 97C146E61CF9000F007C117D /* Project object */;
@@ -309,6 +316,7 @@
 			);
 			dependencies = (
 				90F549252C17603F00918D31 /* PBXTargetDependency */,
+				90F114E02C2401EF00B82CCB /* PBXTargetDependency */,
 			);
 			name = Runner;
 			productName = Runner;
@@ -540,6 +548,11 @@
 			isa = PBXTargetDependency;
 			target = 97C146ED1CF9000F007C117D /* Runner */;
 			targetProxy = 331C8085294A63A400263BE5 /* PBXContainerItemProxy */;
+		};
+		90F114E02C2401EF00B82CCB /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 90F549182C17603D00918D31 /* FitTrack Watch App */;
+			targetProxy = 90F114DF2C2401EF00B82CCB /* PBXContainerItemProxy */;
 		};
 		90F549252C17603F00918D31 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -997,7 +1010,7 @@
 				331C808A294A63A400263BE5 /* Profile */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Profile;
+			defaultConfigurationName = Debug;
 		};
 		90F5492B2C17603F00918D31 /* Build configuration list for PBXNativeTarget "FitTrack Watch App" */ = {
 			isa = XCConfigurationList;
@@ -1007,7 +1020,7 @@
 				90F5492A2C17603F00918D31 /* Profile */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Profile;
+			defaultConfigurationName = Debug;
 		};
 		97C146E91CF9000F007C117D /* Build configuration list for PBXProject "Runner" */ = {
 			isa = XCConfigurationList;
@@ -1017,7 +1030,7 @@
 				249021D3217E4FDB00AE95B9 /* Profile */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Profile;
+			defaultConfigurationName = Debug;
 		};
 		97C147051CF9000F007C117D /* Build configuration list for PBXNativeTarget "Runner" */ = {
 			isa = XCConfigurationList;
@@ -1027,7 +1040,7 @@
 				249021D4217E4FDB00AE95B9 /* Profile */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Profile;
+			defaultConfigurationName = Debug;
 		};
 /* End XCConfigurationList section */
 	};

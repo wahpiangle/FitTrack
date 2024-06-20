@@ -28,6 +28,16 @@ class WorkoutTemplateService {
         .map((query) => query.find());
   }
 
+  List<WorkoutTemplate> getAllWorkoutTemplates() {
+    return workoutTemplateBox
+        .query(
+          WorkoutTemplate_.isCurrentEditing.equals(false),
+        )
+        .order(WorkoutTemplate_.createdAt, flags: Order.descending)
+        .build()
+        .find();
+  }
+
   void createEditingWorkoutTemplateCopy(WorkoutTemplate workoutTemplate) {
     workoutTemplateBox
         .query(WorkoutTemplate_.isCurrentEditing.equals(true))

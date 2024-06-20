@@ -5,13 +5,14 @@ class WatchViewModel: NSObject, ObservableObject {
     var session: WCSession
     @Published var counter = 0
     @Published var templates = []
-    // Add more cases if you have more receive method
+    
+    // receiving from phone to watch
     enum WatchReceiveMethod: String {
         case sendTemplatesToWatch
         case sendCounterToNative
     }
     
-    // Add more cases if you have more sending method
+    // sending from watch to phone
     enum WatchSendMethod: String {
         case sendCounterToFlutter
     }

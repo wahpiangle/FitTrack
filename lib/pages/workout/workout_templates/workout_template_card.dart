@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:group_project/constants/apple_watch_methods_enums.dart';
 import 'package:group_project/constants/themes/app_colours.dart';
+import 'package:group_project/main.dart';
 import 'package:group_project/models/workout_template.dart';
 import 'package:group_project/models/exercise.dart';
 import 'package:group_project/pages/workout/workout_templates/components/template_menu_anchor.dart';
@@ -27,7 +29,17 @@ class WorkoutTemplateCard extends StatelessWidget {
       ),
       color: Colors.transparent,
       child: InkWell(
-        onTap: () {
+        onTap: () async {
+          final allWorkoutTemplatesInJson = objectBox.workoutTemplateService
+              .getAllWorkoutTemplates()
+              .map((workoutTemplate) => workoutTemplate.toJson())
+              .toList();
+          await AppleWatchMethods.channel
+              .invokeMethod(AppleWatchMethods.flutterToWatch, {
+            "method": AppleWatchMethods.sendTemplatesToWatch,
+            "data": allWorkoutTemplatesInJson,
+          });
+          print(allWorkoutTemplatesInJson);
           showDialog(
               context: context,
               builder: (BuildContext context) {
