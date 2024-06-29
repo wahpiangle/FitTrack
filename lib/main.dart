@@ -18,6 +18,7 @@ import 'package:group_project/pages/workout/components/timer/providers/custom_ti
 import 'package:group_project/pages/workout/components/timer/providers/rest_timer_provider.dart';
 import 'package:group_project/services/firebase/auth_service.dart';
 import 'package:group_project/services/objectbox_service.dart';
+import 'package:group_project/services/watch_methods_service.dart';
 import 'package:provider/provider.dart';
 import 'firebase_options.dart';
 import 'package:group_project/pages/workout/components/timer/providers/timer_provider.dart';
@@ -50,10 +51,9 @@ Future<void> main() async {
     appleProvider: AppleProvider.debug,
   );
 
-  notificationManager = PhoneNotification();
-  await notificationManager.initializeNotifications();
+  await PhoneNotification().initializeNotifications();
+  WatchMethodsService.sendTemplatesToWatch();
   final cameras = await availableCameras();
-
   runApp(MyApp(
     cameras: cameras,
   ));

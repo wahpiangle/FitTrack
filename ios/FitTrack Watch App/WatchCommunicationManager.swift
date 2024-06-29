@@ -4,7 +4,8 @@ import WatchConnectivity
 class WatchViewModel: NSObject, ObservableObject {
     var session: WCSession
     @Published var counter = 0
-    @Published var templates = []
+    @Published var templates: Array<WorkoutTemplate> = []
+    
     
     // receiving from phone to watch
     enum WatchReceiveMethod: String {
@@ -22,6 +23,11 @@ class WatchViewModel: NSObject, ObservableObject {
         super.init()
         self.session.delegate = self
         session.activate()
+        self.templates.append(WorkoutTemplate(id: 1, title: "Test", note: "Test", exerciseSetsInfo: [
+            ExerciseSetsInfo(exerciseId: 1, exerciseName: "Test", bodyPart: "Test", category: "Test", sets: [
+                ExerciseSets(id: 1, reps: 1, weight: 1.0)
+            ])
+        ]))
     }
     
     func sendDataMessage(for method: WatchSendMethod, data: [String: Any] = [:]) {
@@ -51,6 +57,7 @@ extension WatchViewModel: WCSessionDelegate {
                 let workoutTemplatesData = WorkoutTemplate.fromJson(
                     json: (message["data"] as! Array<[String: Any]>)
                 )
+                print(message["data"] as! Array<[String: Any]>)
                 self.templates = workoutTemplatesData
                                                            
             }
