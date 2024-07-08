@@ -31,6 +31,7 @@ class WorkoutTemplate {
             for exerciseSetInfoData in exerciseSetsInfoData! {
                 let exerciseId = exerciseSetInfoData["exerciseId"] as? Int
                 let exerciseName = exerciseSetInfoData["exerciseName"] as? String
+                let exerciseImage = exerciseSetInfoData["exerciseImage"] as? String
                 let bodyPart = exerciseSetInfoData["bodyPart"] as? String
                 let category = exerciseSetInfoData["category"] as? String
                 let setsData = exerciseSetInfoData["sets"] as? Array<[String: Any]>
@@ -42,7 +43,7 @@ class WorkoutTemplate {
                     let exerciseSet = ExerciseSets(id: id, reps: reps, weight: weight)
                     sets.append(exerciseSet)
                 }
-                exerciseSetsInfo.append(ExerciseSetsInfo(exerciseId: exerciseId!, exerciseName: exerciseName!, bodyPart: bodyPart!, category: category!, sets: sets))
+                exerciseSetsInfo.append(ExerciseSetsInfo(exerciseId: exerciseId!, exerciseName: exerciseName!, exerciseImage: exerciseImage!, bodyPart: bodyPart!, category: category!, sets: sets))
             }
              workoutTemplates.append(WorkoutTemplate(id: id!, title: title!, note: note!, exerciseSetsInfo: exerciseSetsInfo))
         }

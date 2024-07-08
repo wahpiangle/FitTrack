@@ -13,6 +13,7 @@
 		3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */; };
 		5A72AE75A32BED5333F91A45 /* Pods_RunnerTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8E07E04E0AF38B568848F261 /* Pods_RunnerTests.framework */; };
 		74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74858FAE1ED2DC5600515810 /* AppDelegate.swift */; };
+		90293B592C3BB2380028312C /* TemplateDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90293B582C3BB2370028312C /* TemplateDetailView.swift */; };
 		902F77112C1EB61C003FAE9F /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = 902F77102C1EB61C003FAE9F /* Color.swift */; };
 		902F77152C1EB970003FAE9F /* WorkoutTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 902F77142C1EB970003FAE9F /* WorkoutTemplate.swift */; };
 		902F77172C1EBDA5003FAE9F /* ExerciseSetsInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 902F77162C1EBDA5003FAE9F /* ExerciseSetsInfo.swift */; };
@@ -88,6 +89,7 @@
 		7555AD6AB2FD9A526BFE4BC7 /* Pods-Runner.profile.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.profile.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.profile.xcconfig"; sourceTree = "<group>"; };
 		7AFA3C8E1D35360C0083082E /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Release.xcconfig; path = Flutter/Release.xcconfig; sourceTree = "<group>"; };
 		8E07E04E0AF38B568848F261 /* Pods_RunnerTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RunnerTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		90293B582C3BB2370028312C /* TemplateDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplateDetailView.swift; sourceTree = "<group>"; };
 		902F77102C1EB61C003FAE9F /* Color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Color.swift; sourceTree = "<group>"; };
 		902F77142C1EB970003FAE9F /* WorkoutTemplate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutTemplate.swift; sourceTree = "<group>"; };
 		902F77162C1EBDA5003FAE9F /* ExerciseSetsInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExerciseSetsInfo.swift; sourceTree = "<group>"; };
@@ -169,6 +171,14 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		90293B552C3BB2070028312C /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				90293B582C3BB2370028312C /* TemplateDetailView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
 		902F770F2C1EB605003FAE9F /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
@@ -190,6 +200,7 @@
 		90F5491A2C17603D00918D31 /* FitTrack Watch App */ = {
 			isa = PBXGroup;
 			children = (
+				90293B552C3BB2070028312C /* Views */,
 				902F77122C1EB958003FAE9F /* Models */,
 				902F770F2C1EB605003FAE9F /* Extensions */,
 				90F5491B2C17603D00918D31 /* FitTrackApp.swift */,
@@ -527,6 +538,7 @@
 				902F77112C1EB61C003FAE9F /* Color.swift in Sources */,
 				90F5491C2C17603D00918D31 /* FitTrackApp.swift in Sources */,
 				902F77172C1EBDA5003FAE9F /* ExerciseSetsInfo.swift in Sources */,
+				90293B592C3BB2380028312C /* TemplateDetailView.swift in Sources */,
 				90F549362C176DFF00918D31 /* WatchCommunicationManager.swift in Sources */,
 				902F77192C1EBDF4003FAE9F /* ExerciseSets.swift in Sources */,
 			);

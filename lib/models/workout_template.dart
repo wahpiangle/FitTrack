@@ -36,6 +36,8 @@ class WorkoutTemplate {
           .map((exerciseSetInfo) => {
                 'exerciseId': exerciseSetInfo.exercise.targetId,
                 'exerciseName': exerciseSetInfo.exercise.target?.name,
+                'exerciseImage':
+                    stripName(exerciseSetInfo.exercise.target!.halfImagePath),
                 'bodyPart':
                     exerciseSetInfo.exercise.target?.bodyPart.target?.name,
                 'category':
@@ -50,5 +52,9 @@ class WorkoutTemplate {
               })
           .toList(),
     };
+  }
+
+  String stripName(String imagePath) {
+    return imagePath.split('/').last;
   }
 }

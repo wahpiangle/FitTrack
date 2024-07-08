@@ -24,7 +24,7 @@ class WatchViewModel: NSObject, ObservableObject {
         self.session.delegate = self
         session.activate()
         self.templates.append(WorkoutTemplate(id: 1, title: "Test", note: "Test", exerciseSetsInfo: [
-            ExerciseSetsInfo(exerciseId: 1, exerciseName: "Test", bodyPart: "Test", category: "Test", sets: [
+            ExerciseSetsInfo(exerciseId: 1, exerciseName: "Test", exerciseImage: "belt-squat-muscles-1024x581-half.png", bodyPart: "Test", category: "Test", sets: [
                 ExerciseSets(id: 1, reps: 1, weight: 1.0)
             ])
         ]))
