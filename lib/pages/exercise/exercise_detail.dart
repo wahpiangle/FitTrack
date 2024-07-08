@@ -37,7 +37,7 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
       backgroundColor: AppColours.primary,
       appBar: AppBar(
         backgroundColor: const Color(0xFF1A1A1A),
-        actions: <Widget>[
+        actions: [
           widget.exercise.isCustom
               ? TextButton(
                   onPressed: () async {
@@ -56,7 +56,7 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
                     ),
                   ),
                 )
-              : Container(),
+              : const SizedBox.shrink(),
         ],
         leading: IconButton(
           onPressed: () {
@@ -64,12 +64,12 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
           },
           icon: const Icon(Icons.close_sharp, color: Colors.white),
         ),
-        title: Center(
-          child: Text(
-            widget.exercise.name,
-            style: const TextStyle(fontSize: 18, color: Colors.white),
-          ),
+        title: Text(
+          widget.exercise.name,
+          style: const TextStyle(
+              fontSize: 18, color: Colors.white, fontWeight: FontWeight.bold),
         ),
+        centerTitle: true,
       ),
       body: SingleChildScrollView(
         child: Row(
