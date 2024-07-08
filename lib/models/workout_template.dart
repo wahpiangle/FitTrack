@@ -55,6 +55,6 @@ class WorkoutTemplate {
   }
 
   String stripName(String imagePath) {
-    return imagePath.split('/').last;
+    return imagePath.split('/').last.split('.').first;
   }
 }
