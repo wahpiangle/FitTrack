@@ -4,6 +4,7 @@ import 'package:group_project/models/workout_template.dart';
 import 'package:group_project/models/exercise.dart';
 import 'package:group_project/pages/workout/workout_templates/components/template_menu_anchor.dart';
 import 'package:group_project/pages/workout/workout_templates/workout_template_detail_dialog.dart';
+import 'package:group_project/services/watch_methods_service.dart';
 
 class WorkoutTemplateCard extends StatelessWidget {
   final WorkoutTemplate workoutTemplateData;
@@ -28,6 +29,7 @@ class WorkoutTemplateCard extends StatelessWidget {
       color: Colors.transparent,
       child: InkWell(
         onTap: () {
+          WatchMethodsService.sendTemplatesToWatch();
           showDialog(
               context: context,
               builder: (BuildContext context) {
